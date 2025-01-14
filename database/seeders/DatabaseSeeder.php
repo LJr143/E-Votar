@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             ProgramMajorSeeder::class,
             ElectionTypeSeeder::class,
             PositionSeeder::class,
+            PartyListSeeder::class,
         ]);
 
     }

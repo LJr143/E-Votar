@@ -92,6 +92,16 @@ class User extends Authenticatable
 
     public function program(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(program::class);
+        return $this->belongsTo(Program::class, 'program_id');
+    }
+
+    public function programMajor(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(program_major::class, 'program_major_id');
+    }
+
+    public function candidates(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Candidate::class, 'user_id');
     }
 }

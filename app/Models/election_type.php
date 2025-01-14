@@ -12,4 +12,8 @@ class election_type extends Model
     {
         return $this->hasMany(Election::class);
     }
+    public function positions(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Position::class);
+    }
 }

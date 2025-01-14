@@ -3,15 +3,15 @@
         <div class="border-b border-gray-200">
             <nav class="-mb-px flex space-x-8" aria-label="Tabs">
                 <button wire:click="$set('filter', 'all_elections')"
-                        class=" whitespace-nowrap border-b-2 pb-1 px-1 text-xs font-medium {{ $filter === 'all_elections' ? 'border-black text-black' : 'text-gray-500 hover:text-black' }}">
+                        class=" whitespace-nowrap border-b-2 pb-1 px-1 text-[10px] font-medium {{ $filter === 'all_elections' ? 'border-black text-black' : 'text-gray-500 hover:text-black' }}">
                     All Elections
                 </button>
                 <button wire:click="$set('filter', 'ongoing_elections')"
-                        class="whitespace-nowrap border-b-2 pb-1 px-1 text-xs font-medium {{ $filter === 'ongoing_elections' ? 'border-black text-black' : 'text-gray-500 hover:text-black' }}">
+                        class="whitespace-nowrap border-b-2 pb-1 px-1 text-[10px] font-medium {{ $filter === 'ongoing_elections' ? 'border-black text-black' : 'text-gray-500 hover:text-black' }}">
                     Ongoing
                 </button>
                 <button wire:click="$set('filter', 'completed_elections')"
-                        class="whitespace-nowrap border-b-2 pb-1 px-1 text-xs font-medium {{ $filter === 'completed_elections' ? 'border-black text-black' : 'text-gray-500 hover:text-black' }}">
+                        class="whitespace-nowrap border-b-2 pb-1 px-1 text-[10px] font-medium {{ $filter === 'completed_elections' ? 'border-black text-black' : 'text-gray-500 hover:text-black' }}">
                     Completed
                 </button>
             </nav>

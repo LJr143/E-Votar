@@ -43,7 +43,7 @@
             <div class="flex justify-between items-center mb-4 border-b border-gray-300 pb-2">
                 <div>
                     <h2 class="text-sm font-bold text-left w-full sm:w-auto">Add Election</h2>
-                    <p>To add an election please fill out the required information.</p>
+                    <p class="text-[10px] text-gray-500 italic">To add an election please fill out the required information.</p>
                 </div>
 
                 <!-- Close Button (X) -->

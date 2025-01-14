@@ -7,6 +7,7 @@ use Livewire\Component;
 
 class ElectionsTable extends Component
 {
+    protected $listeners = ['election-created' => '$refresh'];
     public $elections;
     public $filter = 'all_elections';
     public $search = '';
@@ -29,7 +30,7 @@ class ElectionsTable extends Component
     public function setFilter(string $filter): void
     {
         $this->filter = $filter;
-        $this->fetchElections(); // Refetch elections when the filter changes
+        $this->fetchElections();
     }
 
     public function fetchElections(): void

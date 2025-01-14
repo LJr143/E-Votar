@@ -1,4 +1,4 @@
-<x-app-layout mainClass="flex">
+<x-app-layout mainClass="flex" page_title="- Candidates">
     <x-slot name="sidebar">
         <x-sidebar></x-sidebar>
     </x-slot>
@@ -42,7 +42,7 @@
                                     </button>
                                 </x-slot>
 
-                                <x-slot name="content" class="mt-10">
+                                <x-slot name="content" class="relative mt-10">
                                     <a href="" class="block px-4 py-2 text-[11px] text-gray-700 hover:bg-gray-100">Account Settings</a>
                                     <!-- Logout Form -->
 
@@ -66,6 +66,7 @@
                 </div>
             </div>
 
+            <livewire:superadmin.candidates/>
         </div>
     </x-slot>
 </x-app-layout>

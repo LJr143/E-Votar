@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class program extends Model
+class Program extends Model
 {
     protected $table = 'programs';
     protected $fillable = ['college_id', 'name'];
@@ -17,6 +17,11 @@ class program extends Model
     public function majors(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(program_major::class);
+    }
+
+    public function users(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(User::class);
     }
 
 }

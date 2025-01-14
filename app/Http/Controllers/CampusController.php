@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\campus;
 use App\Models\college;
-use App\Models\program;
+use App\Models\Program;
 use App\Models\program_major;
 use Illuminate\Http\Request;
 

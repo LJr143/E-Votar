@@ -13,4 +13,11 @@ class Position extends Model
     {
         return $this->belongsToMany(Election::class, 'election_positions');
     }
+
+    public function electionType(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(election_type::class, 'election_type_id');
+    }
+
+
 }

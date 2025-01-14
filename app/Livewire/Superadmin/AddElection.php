@@ -6,8 +6,9 @@ use App\Models\campus;
 use App\Models\college;
 use App\Models\Election;
 use App\Models\election_type;
+use App\Models\ElectionPosition;
 use App\Models\Position;
-use App\Models\program;
+use App\Models\Program;
 use App\Models\User;
 use Livewire\Component;
 
@@ -151,8 +152,22 @@ class AddElection extends Component
         ]);
 
         $this->dispatch('election-created');
-        // Attach selected positions to the election
-        $election->positions()->attach($this->selectedPositions);
+
+// Attach selected positions to the election
+        foreach ($this->selectedPositions as $positionId) {
+            // Ensure the position exists
+            $position = Position::find($positionId);
+
+            if ($position) {
+                // Create a new ElectionPosition instance
+                $electionPosition = new ElectionPosition();
+                $electionPosition->election_id = $election->id; // Assign the election ID
+                $electionPosition->position_id = $position->id; // Assign the position ID
+                $electionPosition->save(); // Save the ElectionPosition record
+            }
+        }
+
+
 
         //Reset the form
         $this->reset();

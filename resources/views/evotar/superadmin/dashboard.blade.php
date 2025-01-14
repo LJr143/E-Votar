@@ -9,23 +9,21 @@
     </x-slot>
 
     <x-slot name="main">
-        <div class="bg-transparent px-2 py-0 ">
-            <div class="mx-auto ">
-                <div class="flex flex-row justify-between items-start mb-4">
-                    <div class="mb-2 md:mb-0 text-left">
-                        <h1 class="text-base font-semibold leading-6 text-gray-900">Dashboard</h1>
-                        <p class=" text-[11px]">Hi, {{ auth()->user()->first_name }}. Welcome back!</p>
+        <div class="container mx-auto">
+            <div class="flex flex-row justify-between items-start mb-4">
+                <div class="mb-2 md:mb-0 text-left">
+                    <h1 class="text-base font-semibold leading-6 text-gray-900">Dashboard</h1>
+                    <p class=" text-[11px]">Hi, {{ auth()->user()->first_name }} . Welcome back!</p>
+                </div>
+                <div class="relative bg-white p-2 rounded-lg shadow-md flex items-center cursor-pointer space-x-2">
+                    <div class="bg-gray-200 p-2 rounded-full flex items-center justify-center">
+                        <i class="fas fa-calendar-alt text-gray-600 text-[11px]"></i> <!-- Decreased icon size -->
                     </div>
-                    <div class="relative bg-white p-2 rounded-lg shadow-md flex items-center cursor-pointer space-x-2">
-                        <div class="bg-gray-200 p-2 rounded-full flex items-center justify-center">
-                            <i class="fas fa-calendar-alt text-gray-600 text-[11px]"></i> <!-- Decreased icon size -->
-                        </div>
-                        <div>
-                            <p class="text-gray-800 text-[10px] font-semibold">Election Title</p>
-                            <p class="text-gray-600 text-[9px]">Year</p>
-                        </div>
-                        <i class="fas fa-chevron-down text-gray-600 text-[11px]"></i> <!-- Decreased icon size -->
+                    <div>
+                        <p class="text-gray-800 text-[10px] font-semibold">Election Title</p>
+                        <p class="text-gray-600 text-[9px]">Year</p>
                     </div>
+                    <i class="fas fa-chevron-down text-gray-600 text-[11px]"></i> <!-- Decreased icon size -->
                 </div>
             </div>
 
@@ -38,7 +36,7 @@
                             <i class="fas fa-users text-white text-lg"></i> <!-- Icon size -->
                         </div>
                         <div class="ml-3">
-                            <h2 class="text-sm text-gray-900 font-bold">{{ \App\Models\User::role('voter')->count() }}</h2>
+                            <h2 class="text-sm text-gray-900 font-bold">0</h2> <!-- Font size -->
                             <p class="text-[10px] mb-2 font-normal text-gray-500">TOTAL VOTERS</p> <!-- Font size -->
                         </div>
                     </div>
@@ -61,7 +59,7 @@
                             <i class="fas fa-users-cog text-white text-lg"></i> <!-- Icon size -->
                         </div>
                         <div class="ml-3">
-                            <h2 class="text-sm text-gray-900 font-bold">{{ \App\Models\User::has('roles')->count() }}</h2>
+                            <h2 class="text-sm text-gray-900 font-bold">{{ \App\Models\User::has('roles')->count() }}</h2> <!-- Font size -->
                             <p class="text-[10px] mb-2 font-normal text-gray-500">TOTAL SYSTEM USER</p>
                             <!-- Font size -->
                         </div>
@@ -73,7 +71,7 @@
                             <i class="fas fa-tasks text-white text-lg"></i> <!-- Icon size -->
                         </div>
                         <div class="ml-3">
-                            <h2 class="text-sm text-gray-900 font-bold">0</h2> <!-- Font size -->
+                            <h2 class="text-sm text-gray-900 font-bold">24</h2> <!-- Font size -->
                             <p class="text-[10px] mb-2 font-normal text-gray-500">TOTAL POSITION</p> <!-- Font size -->
                         </div>
                     </div>
@@ -88,7 +86,7 @@
                         <div class="flex justify-between items-center">
                             <div class="flex items-center space-x-2">
                                 <i class="fas fa-stopwatch text-white text-sm"></i>
-                                <span class="text-sm font-semibold text-white">Election Ends In:</span>
+                                <span class="text-sm font-bold text-white">Election Ends In:</span>
                             </div>
 
                             <div class="text-white">
@@ -125,7 +123,7 @@
                         class="bg-white p-4 rounded-lg shadow-md w-full max-w-3xl transition-transform transform hover:scale-100">
                         <div class="flex items-center space-x-2">
 
-                            <span class="text-center text-sm font-semibold">Votes Information</span>
+                            <span class="text-center text-sm font-bold">Votes Information</span>
                         </div>
                         <!-- <p class="text-xs text-gray-400">As of mm-dd-yyyy hh:mm:ss am</p>  -->
                         <div class="flex flex-wrap justify-around mt-4">
@@ -136,7 +134,7 @@
                                         <path class="text-gray-200"
                                               d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                                               fill="none" stroke-width="3" stroke="currentColor"></path>
-                                        <path id="circular-progress-1" class="text-red-500"
+                                        <path id="circular-progress-1" class="text-red-600"
                                               d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                                               fill="none" stroke-width="3" stroke-dasharray="81, 100"
                                               stroke="currentColor"></path>
@@ -153,7 +151,7 @@
                                         <path class="text-gray-200"
                                               d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                                               fill="none" stroke-width="3" stroke="currentColor"></path>
-                                        <path id="circular-progress-2" class="text-pink-500"
+                                        <path id="circular-progress-2" class="text-gray-500"
                                               d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                                               fill="none" stroke-width="3" stroke-dasharray="22, 100"
                                               stroke="currentColor"></path>
@@ -170,7 +168,7 @@
                                         <path class="text-gray-200"
                                               d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                                               fill="none" stroke-width="3" stroke="currentColor"></path>
-                                        <path id="circular-progress-3" class="text-blue-500"
+                                        <path id="circular-progress-3" class="text-red-400"
                                               d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                                               fill="none" stroke-width="3" stroke-dasharray="62, 100"
                                               stroke="currentColor"></path>
@@ -183,12 +181,11 @@
                             </div>
                         </div>
                     </div>
-
-
                 </div>
 
+
                 <div class="bg-white p-6 rounded-lg shadow-md max-w-4xl w-full lg:h-[328px] mb-4">
-                    <h1 class="text-center text-sm font-semibold mb-6">Campus Course Vote Turnout</h1>
+                    <h1 class="text-sm font-bold mb-6">Campus Course Vote Turnout</h1>
                     <div class="flex flex-col md:flex-row justify-center mb-4">
                         <div class="w-full md:w-2/5">
                             <canvas id="voteChart"
@@ -233,77 +230,174 @@
                         most accurate and up-to-date voting trends across the campus.
                     </p>
                 </div>
-
-
             </div>
 
 
-            <div class="grid grid-cols-1 lg:grid-cols-1 gap-6 mb-8">
+            <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
+                <!-- First Card -->
+                <div class="w-full mx-auto bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
+                        <h1 class="text-sm font-bold mb-4 sm:mb-0">
+                            Tagum Student Council - Vote Tally
+                        </h1>
 
-
-                <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
-                    <!-- First Card -->
-                    <div class="bg-white shadow-md rounded-lg p-6 w-full">
-                        <div class="flex justify-between items-center mb-4">
-                            <h2 class="text-sm font-semibold">Vote Tally</h2>
-                            <span class="text-xs text-gray-500">Position <i class="fas fa-chevron-down"></i></span>
-                        </div>
-                        <p class="text-sm text-gray-500 mb-4">Tagum Student Council</p>
-                        <div class="flex items-center mb-4">
-                            <img alt="Candidate's photo" class="w-10 h-10 rounded-full mr-4" height="40"
-                                 src="https://storage.googleapis.com/a1aa/image/jf1Ozudbg43eVEqoknjodHhQdRbLI5LWukyTprdtIfGaA1MnA.jpg"
-                                 width="40"/>
-                            <div>
-                                <p class="font-medium text-sm">Candidates Name</p>
-                                <p class="text-xs text-gray-500">Yanong Agila</p>
-                            </div>
-                            <p class="ml-auto font-medium text-sm">56 votes</p>
-                        </div>
-                        <div class="flex items-center mb-20">
-                            <div class="w-10 h-10 bg-gray-200 rounded-full mr-4"></div>
-                            <div>
-                                <p class="font-medium text-sm">Abstain</p>
-                                <p class="text-xs text-gray-500">-</p>
-                            </div>
-                            <p class="ml-auto font-medium text-sm">12 votes</p>
-                        </div>
-                        <a class="text-gray-800 text-sm flex items-center" href="#">View more <i
-                                class="fas fa-arrow-right ml-1"></i></a>
                     </div>
-                    <!-- Second Card -->
-                    <div class="bg-white shadow-md rounded-lg p-6 w-full">
-                        <div class="flex justify-between items-center mb-4">
-                            <h2 class="text-sm font-semibold">Vote Tally</h2>
-                            <span class="text-xs text-gray-500">Organization <i class="fas fa-chevron-down mr-2"></i> Position <i
-                                    class="fas fa-chevron-down"></i></span>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white text-xs">
+                            <thead>
+                            <tr>
+                                <th class="py-2 px-4 border-b text-left">Profile</th>
+                                <th class="py-2 px-4 border-b text-left">Candidate</th>
+                                <th class="py-2 px-4 border-b text-left">Position</th>
+                                <th class="py-2 px-4 border-b text-left">Partylist</th>
+                                <th class="py-2 px-4 border-b text-left">Abstain</th>
+                                <th class="py-2 px-4 border-b text-left">Vote Garnered</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td class="py-2 px-4 border-b">
+                                    <img alt="Profile picture of candidate" height="50"
+                                         src="{{ asset('storage/evotar_assets/default.jpg') }}" width="50"/>
+                                </td>
+                                <td class="py-2 px-4 border-b">Fname M. Lname</td>
+                                <td class="py-2 px-4 border-b">President</td>
+                                <td class="py-2 px-4 border-b">Yanong Agila</td>
+                                <td class="py-2 px-4 border-b">10%</td>
+                                <td class="py-2 px-4 border-b">50%</td>
+                            </tr>
+                            <tr>
+                                <td class="py-2 px-4 border-b">
+                                    <img alt="Profile picture of candidate" height="50"
+                                         src="{{ asset('storage/evotar_assets/default.jpg') }}" width="50"/>
+                                </td>
+                                <td class="py-2 px-4 border-b">Fname M. Lname</td>
+                                <td class="py-2 px-4 border-b">President</td>
+                                <td class="py-2 px-4 border-b">Yanong Agila</td>
+                                <td class="py-2 px-4 border-b">10%</td>
+                                <td class="py-2 px-4 border-b">50%</td>
+                            </tr>
+                            <tr>
+                                <td class="py-2 px-4 border-b">
+                                    <img alt="Profile picture of candidate" height="50"
+                                         src="{{ asset('storage/evotar_assets/default.jpg') }}" width="50"/>
+                                </td>
+                                <td class="py-2 px-4 border-b">Fname M. Lname</td>
+                                <td class="py-2 px-4 border-b">President</td>
+                                <td class="py-2 px-4 border-b">Yanong Agila</td>
+                                <td class="py-2 px-4 border-b">10%</td>
+                                <td class="py-2 px-4 border-b">50%</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- Second Card -->
+                <div class="w-full mx-auto bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex flex-row justify-between items-start sm:items-center">
+                        <h1 class="text-sm font-bold mb-2 sm:mb-0">
+                            Local Council - Vote Tally
+                        </h1>
+                        <div class="relative">
+                            <button class="text-xs bg-gray-100 text-gray-700 px-4 py-2 rounded-md flex items-center">
+                                Organization
+                                <i class="fas fa-chevron-down ml-2">
+                                </i>
+                            </button>
                         </div>
-                        <p class="text-sm text-gray-500 mb-4">Local Council</p>
-                        <div class="flex items-center mb-4">
-                            <img alt="Candidate's photo" class="w-10 h-10 rounded-full mr-4" height="40"
-                                 src="https://storage.googleapis.com/a1aa/image/jf1Ozudbg43eVEqoknjodHhQdRbLI5LWukyTprdtIfGaA1MnA.jpg"
-                                 width="40"/>
-                            <div>
-                                <p class="font-medium text-sm">Candidates Name</p>
-                                <p class="text-xs text-gray-500">Yanong Agila</p>
-                            </div>
-                            <p class="ml-auto font-medium text-sm">56 votes</p>
-                        </div>
-                        <div class="flex items-center mb-20">
-                            <div class="w-10 h-10 bg-gray-200 rounded-full mr-4"></div>
-                            <div>
-                                <p class="font-medium text-sm">Abstain</p>
-                                <p class="text-xs text-gray-500">-</p>
-                            </div>
-                            <p class="ml-auto font-medium text-sm">12 votes</p>
-                        </div>
+                    </div>
+
+                    <h1 class="text-xs font-bold ">
+                        BSIT
+                    </h1>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white text-xs">
+                            <thead>
+                            <tr>
+                                <th class="py-2 px-4 border-b text-left">Profile</th>
+                                <th class="py-2 px-4 border-b text-left">Candidate</th>
+                                <th class="py-2 px-4 border-b text-left">Position</th>
+                                <th class="py-2 px-4 border-b text-left">Partylist</th>
+                                <th class="py-2 px-4 border-b text-left">Abstain</th>
+                                <th class="py-2 px-4 border-b text-left">Vote Garnered</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td class="py-2 px-4 border-b">
+                                    <img alt="Profile picture of candidate" height="50"
+                                         src="{{ asset('storage/evotar_assets/default.jpg') }}" width="50"/>
+                                </td>
+                                <td class="py-2 px-4 border-b">Fname M. Lname</td>
+                                <td class="py-2 px-4 border-b">President</td>
+                                <td class="py-2 px-4 border-b">Yanong Agila</td>
+                                <td class="py-2 px-4 border-b">10%</td>
+                                <td class="py-2 px-4 border-b">50%</td>
+                            </tr>
+                            <tr>
+                                <td class="py-2 px-4 border-b">
+                                    <img alt="Profile picture of candidate" height="50"
+                                         src="{{ asset('storage/evotar_assets/default.jpg') }}" width="50"/>
+                                </td>
+                                <td class="py-2 px-4 border-b">Fname M. Lname</td>
+                                <td class="py-2 px-4 border-b">President</td>
+                                <td class="py-2 px-4 border-b">Yanong Agila</td>
+                                <td class="py-2 px-4 border-b">10%</td>
+                                <td class="py-2 px-4 border-b">50%</td>
+                            </tr>
+                            <tr>
+                                <td class="py-2 px-4 border-b">
+                                    <img alt="Profile picture of candidate" height="50"
+                                         src="{{ asset('storage/evotar_assets/default.jpg') }}" width="50"/>
+                                </td>
+                                <td class="py-2 px-4 border-b">Fname M. Lname</td>
+                                <td class="py-2 px-4 border-b">President</td>
+                                <td class="py-2 px-4 border-b">Yanong Agila</td>
+                                <td class="py-2 px-4 border-b">10%</td>
+                                <td class="py-2 px-4 border-b">50%</td>
+                            </tr>
+                            </tbody>
+                        </table>
                         <a class="text-gray-800 text-sm flex items-center" href="#">View more <i
                                 class="fas fa-arrow-right ml-1"></i></a>
                     </div>
                 </div>
+
+
+                <!-- <div class="bg-white shadow-md rounded-lg p-6 w-full">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-sm font-semibold">Local Council - Vote Tally</h2>
+                        <span class="text-xs text-gray-500">Organization <i class="fas fa-chevron-down mr-2"></i> Position <i class="fas fa-chevron-down"></i></span>
+                    </div>
+
+                    <div class="flex items-center mb-4">
+                        <img alt="Candidate's photo" class="w-10 h-10 rounded-full mr-4" height="40" src="https://storage.googleapis.com/a1aa/image/jf1Ozudbg43eVEqoknjodHhQdRbLI5LWukyTprdtIfGaA1MnA.jpg" width="40"/>
+                        <div>
+                            <p class="font-medium text-sm">Candidates Name</p>
+                            <p class="text-[11px] text-gray-500">Yanong Agila</p>
+                        </div>
+                        <p class="ml-auto font-medium text-sm">56 votes</p>
+                    </div>
+                    <div class="flex items-center mb-20">
+                        <div class="w-10 h-10 bg-gray-200 rounded-full mr-4"></div>
+                        <div>
+                            <p class="font-medium text-sm">Abstain</p>
+                            <p class="text-xs text-gray-500">-</p>
+                        </div>
+                        <p class="ml-auto font-medium text-sm">12 votes</p>
+                    </div>
+                    <a class="text-gray-800 text-sm flex items-center" href="#">View more <i class="fas fa-arrow-right ml-1"></i></a>
+                </div>
+                -->
             </div>
 
-        </div>
 
+            <div class="flex flex-row justify-between text-gray-500 text-[10px] mt-4">
+                <i>Copyright@2024</i>
+                <i>E-Votara@2024</i>
+            </div>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script>
             //campus turnout
             const ctx = document.getElementById('voteChart').getContext('2d');
@@ -341,7 +435,6 @@
                     }
                 }
             });
-
         </script>
     </x-slot>
 </x-app-layout>

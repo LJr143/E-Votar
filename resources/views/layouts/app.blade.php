@@ -16,6 +16,12 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
+    <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
+    <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css" rel="stylesheet">
+
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -24,6 +30,13 @@
 </head>
 
 <body class="font-barlow antialiased bg-[#F7F7F9]">
+
+@if(session('showSplash'))
+    <div id="splash-screen" class="splash-screen">
+        <div class="loading-line"></div>
+        <h1>Your App Name</h1>
+    </div>
+@endif
 
 <div class="min-h-screen max-w-screen-2xl mx-auto bg-[#F7F7F9] {{ $mainClass }}">
     @if (isset($sidebar))
@@ -48,6 +61,8 @@
             <!-- Page Content -->
             <main class="relative flex-1 max-lg:h-dvh lg:overflow-y-auto  w-full px-6 pt-2">
                 {{ $main }}
+                <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+                <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
             </main>
         @endif
 
@@ -62,6 +77,20 @@
 @if(session('script'))
     {!! session('script') !!}
 @endif
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://unpkg.com/filepond@^4/dist/filepond.js"></script>
+<script>
+    // JavaScript to hide the splash screen after a delay
+    window.addEventListener('load', function() {
+        setTimeout(function() {
+            const splashScreen = document.getElementById('splash-screen');
+            if (splashScreen) {
+                splashScreen.style.display = 'none'; // Hide the splash screen
+            }
+        }, 2000); // Delay in milliseconds (e.g., 2000ms = 2 seconds)
+    });
+</script>
 
 </body>
 
