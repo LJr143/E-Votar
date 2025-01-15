@@ -1,4 +1,4 @@
-<x-app-layout mainClass="flex" page_title="- Vote Tally">
+<x-app-layout mainClass="flex" page_title="- System Users">
     <x-slot name="sidebar">
         <x-sidebar></x-sidebar>
     </x-slot>
@@ -14,12 +14,14 @@
                     <!-- Header Section -->
                     <div class="flex flex-row justify-between items-start mb-4">
                         <div class="text-left">
-                            <h1 class="text-base font-semibold leading-6 text-gray-900">Vote Tally</h1>
-                            <p class="text-[11px] text-gray-500">Tally of Votes</p>
+                            <h1 class="text-base font-semibold leading-6 text-gray-900">System Users</h1>
+                            <p class="text-[11px] text-gray-500">List of USeP E-votar System Users</p>
                         </div>
                     </div>
                 </div>
             </div>
+        <livewire:superadmin.system-users-table/>
         </div>
+
     </x-slot>
 </x-app-layout>

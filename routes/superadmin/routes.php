@@ -17,6 +17,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/dashboard', [SuperadminAuth::class, 'dashboard'])->name('dashboard');
             Route::get('/elections', [SuperadminAuth::class, 'elections'])->name('elections');
             Route::get('/candidates', [SuperadminAuth::class, 'candidates'])->name('candidates');
+            Route::get('/vote/tally', [SuperadminAuth::class, 'voteTally'])->name('vote.tally');
+            Route::get('/election/results',[SuperadminAuth::class, 'electionResult'])->name('election.result');
+            Route::get('/voters', [SuperadminAuth::class, 'voter'])->name('voters');
+            Route::get('/system/users', [SuperadminAuth::class, 'systemUsers'])->name('system.user');
+            Route::get('/election/party list', [SuperadminAuth::class, 'partyList'])->name('election.party.list');
+            Route::get('/system/logs', [SuperadminAuth::class, 'systemLogs'])->name('system.logs');
+            Route::get('/unregistered/admins', [SuperadminAuth::class, 'unregisteredAdmins'])->name('unregistered.admin');
+            Route::post('/unregistered/admins', [SuperadminAuth::class, 'registerAdmins'])->name('unregistered.admin');
         });
     });
 });

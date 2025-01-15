@@ -1,4 +1,4 @@
-<x-app-layout mainClass="flex" page_title="- Vote Tally">
+<x-app-layout mainClass="flex" page_title="- Party List">
     <x-slot name="sidebar">
         <x-sidebar></x-sidebar>
     </x-slot>
@@ -14,8 +14,8 @@
                     <!-- Header Section -->
                     <div class="flex flex-row justify-between items-start mb-4">
                         <div class="text-left">
-                            <h1 class="text-base font-semibold leading-6 text-gray-900">Vote Tally</h1>
-                            <p class="text-[11px] text-gray-500">Tally of Votes</p>
+                            <h1 class="text-base font-semibold leading-6 text-gray-900">Party List</h1>
+                            <p class="text-[11px] text-gray-500">List of USeP Election's Party lists</p>
                         </div>
                     </div>
                 </div>

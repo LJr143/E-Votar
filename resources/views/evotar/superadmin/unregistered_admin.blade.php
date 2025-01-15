@@ -30,13 +30,13 @@
             <h2 class="text-[30px] text-primary text-black font-semibold text-center ">
                 ACCOUNT REGISTRATION<h3
                     class="text-primary font-light text-black mb-3 text-[12px] text-center capitalize ">
-                    to start using the university of southeastern philippines tagum unit voting system please create a
-                    superadmin account</h3></h2>
+                    register account to assign role and permission and to start using the E-Votar System
+                    </h3></h2>
 
             <!--form container-->
             <div class="px-2 h-screen overflow-x-hidden ml-0 w-full flex justify-center ">
                 <div>
-                    <form action="{{route('admin.register')}}" method="POST" class="">
+                    <form action="{{route('admin.super-admin.unregistered.admin')}}" method="POST" class="">
                         @csrf
                         <div class="w-[977px] bg-white shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] p-4">
                             <em class="text-[12px] text-black font-semibold">Personal Information</em>
@@ -270,11 +270,20 @@
                             </div>
                         </div>
 
-                        <div class="w-full flex justify-end mt-4">
-                            <button type="submit"
-                                    class="uppercase font-bold bg-gray-900 w-1/5 text-[14px] text-white rounded p-2 hover:bg-gray-800 transition duration-200">
-                                Register
-                            </button>
+                        <div class="w-full flex justify-between mt-4 space-x-4">
+                            <!-- Back/Cancel Button -->
+                            <a href="{{ route('admin.super-admin.system.user') }}"
+                               class="uppercase font-bold bg-gray-300 w-1/5 text-[14px] text-black rounded p-2 hover:bg-gray-200 transition duration-200 text-center">
+                                Cancel
+                            </a>
+
+                            <!-- Other Buttons -->
+                            <div class="flex space-x-4 w-1/5">
+                                <button type="submit"
+                                        class="uppercase font-bold bg-gray-900 w-full text-[14px] text-white rounded p-2 hover:bg-gray-800 transition duration-200">
+                                    {{ session('registered') ? 'Register Another' : 'Register' }}
+                                </button>
+                            </div>
                         </div>
                     </form>
                 </div>

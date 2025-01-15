@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -88,24 +89,7 @@ class SuperadminAuth extends Controller
     public function createUser(array $validator)
     {
         // Create the user
-        $user = User::create([
-            'first_name' => $validator['first_name'],
-            'middle_initial' => $validator['middle_initial'],
-            'last_name' => $validator['last_name'],
-            'extension' => $validator['extension'],
-            'gender' => $validator['gender'],
-            'birth_date' => $validator['birth_date'],
-            'email' => $validator['email'],
-            'phone_number' => $validator['phone_number'],
-            'year_level' => $validator['year_level'],
-            'student_id' => $validator['student_id'],
-            'campus_id' => $validator['campus'],
-            'college_id' => $validator['college'],
-            'program_id' => $validator['program'],
-            'program_major_id' => $validator['program_major'],
-            'username' => $validator['username'],
-            'password' => bcrypt($validator['password']),
-        ]);
+        $user = $this->getUser($validator);
 
         // Assign the role (make sure the role exists)
         if ($user->assignRole('superadmin')) {
@@ -155,4 +139,113 @@ class SuperadminAuth extends Controller
     {
         return view('evotar.superadmin.candidate');
     }
+
+    public function voteTally()
+    {
+        return view('evotar.superadmin.vote_tally');
+    }
+
+    public function electionResult()
+    {
+        return view('evotar.superadmin.election_result');
+    }
+
+    public function partyList()
+    {
+        return view('evotar.superadmin.party_list');
+    }
+
+    public function voter()
+    {
+        return view('evotar.superadmin.voter');
+    }
+
+    public function systemUsers()
+    {
+        return view('evotar.superadmin.user');
+    }
+
+    public function systemLogs()
+    {
+        return view('evotar.superadmin.system_logs');
+    }
+
+    public function unregisteredAdmins()
+    {
+        return view('evotar.superadmin.unregistered_admin');
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function createUserAdmin(array $validator)
+    {
+        // Check if a user with the same email or username already exists
+        $existingUser = User::where('email', $validator['email'])
+            ->orWhere('username', $validator['username'])
+            ->orWhere('student_id', $validator['student_id'])
+            ->first();
+
+        if ($existingUser) {
+            // You can throw a custom exception or return an error response
+            throw new Exception('A user with this email, username, or student ID already exists.');
+        }
+
+        // Create the user
+        $user = $this->getUser($validator);
+
+        // Assign the role (make sure the role exists)
+        if ($user->assignRole('admin')) {
+            Log::info('Role assigned successfully');
+        } else {
+            Log::info('Role assignment failed');
+        }
+
+        // Return the created user
+        return $user;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function registerAdmins(Request $request)
+    {
+        // Validate input
+        $validator = $this->validateInput($request);
+        $this->createUserAdmin($validator);
+
+        // Set a session variable to track the state
+        session()->flash('registered', true);
+
+        // Redirect back to the same form
+        return redirect()->route('register.admins');
+    }
+
+    /**
+     * @param array $validator
+     * @return mixed
+     */
+    public function getUser(array $validator)
+    {
+        $user = User::create([
+            'first_name' => $validator['first_name'],
+            'middle_initial' => $validator['middle_initial'],
+            'last_name' => $validator['last_name'],
+            'extension' => $validator['extension'],
+            'gender' => $validator['gender'],
+            'birth_date' => $validator['birth_date'],
+            'email' => $validator['email'],
+            'phone_number' => $validator['phone_number'],
+            'year_level' => $validator['year_level'],
+            'student_id' => $validator['student_id'],
+            'campus_id' => $validator['campus'],
+            'college_id' => $validator['college'],
+            'program_id' => $validator['program'],
+            'program_major_id' => $validator['program_major'],
+            'username' => $validator['username'],
+            'password' => bcrypt($validator['password']),
+        ]);
+        return $user;
+    }
+
 }
