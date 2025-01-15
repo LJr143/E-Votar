@@ -117,10 +117,7 @@
                                     <td class="px-4 py-4"><input class="rounded-full"
                                                                  type="checkbox"></td>
                                     <td class="px-4 py-4">{{ $user->id }}</td>
-                                    <td class="px-4 py-4 flex justify-items-center items-center">
-                                        <img class="w-[20px] rounded-full mr-2"
-                                             src="{{ asset('storage/assets/profile/'. $user->profile_photo_path) }}"
-                                             alt="">
+                                    <td class="px-4 py-4">
                                         {{ $user->first_name }}
                                         {{ $user->middle_initial ? $user->middle_initial . '. ' : '' }}
                                         {{ $user->last_name }}
@@ -130,7 +127,6 @@
                                     <td class="px-4 py-4 capitalize">
                                         @foreach ($user->roles as $role)
                                             {{ $role->name }}@if (!$loop->last)
-                                                ,
                                             @endif
                                         @endforeach
                                     </td>

@@ -17,6 +17,7 @@
         "vite": "^6.0"
     },
     "dependencies": {
+        "@pqina/flip": "^1.8.4",
         "aos": "^3.0.0-beta.6",
         "filepond": "^4.32.6",
         "simple-notify": "^1.0.6"

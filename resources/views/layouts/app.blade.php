@@ -22,6 +22,8 @@
     <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
     <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css" rel="stylesheet">
 
+    <link href="https://unpkg.com/@pqina/flip/dist/flip.min.css" rel="stylesheet">
+
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -80,6 +82,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://unpkg.com/filepond@^4/dist/filepond.js"></script>
+<script src="https://unpkg.com/@pqina/flip/dist/flip.min.js"></script>
 <script>
     // JavaScript to hide the splash screen after a delay
     window.addEventListener('load', function() {

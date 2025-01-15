@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             ElectionTypeSeeder::class,
             PositionSeeder::class,
             PartyListSeeder::class,
+            PermissionsSeeder::class,
         ]);
 
     }

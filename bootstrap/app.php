@@ -13,10 +13,9 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
-            'superadmin.check' => \App\Http\Middleware\SuperAdminChecker::class,
             'role' => \App\Http\Middleware\RoleMiddleware::class,
-            'superadmin.auth'=> \App\Http\Middleware\SuperAdminAuth::class,
-            'redirect.auth'=> \App\Http\Middleware\RedirectMiddleware::class,
+            'admin.auth'=> \App\Http\Middleware\AdminAuth::class,
+            'superadmin.check' => \App\Http\Middleware\SuperadminChecker::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

@@ -16,7 +16,7 @@
                     </div>
                 </div>
             </div>
-                    <livewire:superadmin.elections-table/>
+            <livewire:superadmin.elections-table/>
         </div>
     </x-slot>
 </x-app-layout>

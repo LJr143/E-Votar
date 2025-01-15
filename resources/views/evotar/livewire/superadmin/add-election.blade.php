@@ -4,20 +4,6 @@
             class="w-[90px] mr-2 rounded py-[6px] px-2 bg-black text-white text-[10px] hover:bg-gray-700">
         Add Election
     </button>
-    <style>
-        table td, th {
-            font-size: 10px!important;
-        }
-        tr {
-            height: 15px;
-            line-height: 15px;
-        }
-
-        td, th {
-            padding: 0;
-        }
-
-    </style>
     <!-- Modal -->
     <div
         x-show="open"

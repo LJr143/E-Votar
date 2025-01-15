@@ -44,7 +44,7 @@
             </div>
             <div class="ml-2">
                 <h3 class="text-gray-900 text-[12px] tracking-tight uppercase font-semibold">{{auth()->user()->first_name}} {{auth()->user()->middle_initial}}. {{auth()->user()->last_name}}</h3>
-                <p class="text-gray-500 text-[10px]">Superadmin - Chairperson</p>
+                <p class="text-gray-500 text-[10px] capitalize">{{ auth()->user()->getRoleNames()->join(', ') }}</p>
             </div>
             <div class="flex justify-center items-center px-4">
                 <svg width="11" height="5" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg">
