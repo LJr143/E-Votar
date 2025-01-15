@@ -20,6 +20,7 @@
                     </div>
                 </div>
             </div>
+            <livewire:superadmin.party-list-table/>
         </div>
     </x-slot>
 </x-app-layout>

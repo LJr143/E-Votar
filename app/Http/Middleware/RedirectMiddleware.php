@@ -19,6 +19,9 @@ class RedirectMiddleware
         if (Auth::check() && Auth::user()->hasRole('superadmin')) {
             return redirect()->route('admin.super-admin.dashboard');
         }
+        if (Auth::check() && Auth::user()->hasRole('admin')) {
+            return redirect()->route('ad');
+        }
 
         return $next($request);
     }

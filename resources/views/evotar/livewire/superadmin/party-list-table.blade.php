@@ -1,26 +1,4 @@
 <div>
-    <div class="hidden sm:block mb-4">
-        <div class="border-b border-gray-200">
-            <nav class="-mb-px flex space-x-8" aria-label="Tabs">
-                <button wire:click="$set('filter', 'all_users')"
-                        class=" whitespace-nowrap border-b-2 pb-1 px-1 text-[10px] font-medium {{ $filter === 'all_users' ? 'border-black text-black' : 'text-gray-500 hover:text-black' }}">
-                    All System User
-                </button>
-                <button wire:click="$set('filter', 'admin')"
-                        class="whitespace-nowrap border-b-2 pb-1 px-1 text-[10px] font-medium {{ $filter === 'admin' ? 'border-black text-black' : 'text-gray-500 hover:text-black' }}">
-                    Administrators
-                </button>
-                <button wire:click="$set('filter', 'watcher')"
-                        class="whitespace-nowrap border-b-2 pb-1 px-1 text-[10px] font-medium {{ $filter === 'watcher' ? 'border-black text-black' : 'text-gray-500 hover:text-black' }}">
-                    Election Watchers
-                </button>
-                <button wire:click="$set('filter', 'technical_officer')"
-                        class="whitespace-nowrap border-b-2 pb-1 px-1 text-[10px] font-medium {{ $filter === 'technical_officer' ? 'border-black text-black' : 'text-gray-500 hover:text-black' }}">
-                    Technical Officers
-                </button>
-            </nav>
-        </div>
-    </div>
     <div class="flex w-full gap-4 min">
         <div id="all_elections" class="w-full">
             <div class="bg-white shadow-md rounded p-6">
@@ -66,7 +44,7 @@
                             </button>
                         </div>
                         <div class="w-1/2 flex justify-end">
-                            <livewire:superadmin.add-system-user/>
+                            <livewire:superadmin.add-party-list/>
                             <div class="relative w-[250px] mb-4">
                                 <!-- Search Input -->
                                 <input type="text" wire:model.live="search"
@@ -86,7 +64,7 @@
                     <style>
                         table th {
                             font-weight: bold !important;
-                            border-bottom: 1px solid #b8b6b6;
+                            border-bottom: 1px solid #b8b6b6 !important;
                         }
 
                         table .rows:hover {
@@ -98,53 +76,22 @@
                     <div class="mt-4 min-h-[350px]">
                         <table class="min-w-full ">
                             <thead class="bg-gray-50 text-left text-[12px] ">
-                            <tr class="text-center">
+                            <tr class="text-center border border-gray-100">
                                 <th class="px-4 py-2 font-light w-[50px]"></th>
-                                <th class="px-4 py-2 font-light w-[65px]">User Id</th>
-                                <th class="px-4 py-2 font-light">Full Name</th>
-                                <th class="px-4 py-2 font-light">Access Role</th>
-                                <th class="px-4 py-2 font-light text-center">Email</th>
-                                <th class="px-4 py-2 font-light text-center">Year Level</th>
-                                <th class="px-4 py-2 font-light text-center">College</th>
-                                <th class="px-4 py-2 font-light text-center">Program</th>
-                                <th class="px-4 py-2 font-light text-center"></th>
+                                <th class="px-4 py-2 font-light w-[65px]">Id</th>
+                                <th class="px-4 py-2 font-light">Party List Name</th>
+                                <th class="px-4 py-2 font-light"></th>
+
                             </tr>
                             </thead>
                             <tbody>
                             <tr></tr>
-                            @foreach($users as $user)
+                            @foreach($party_lists as $party_list)
                                 <tr class=" rows text-[12px] border border-gray-100  font-light bg-white shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)]">
-                                    <td class="px-4 py-4"><input class="rounded-full"
-                                                                 type="checkbox"></td>
-                                    <td class="px-4 py-4">{{ $user->id }}</td>
-                                    <td class="px-4 py-4 flex justify-items-center items-center">
-                                        <img class="w-[20px] rounded-full mr-2"
-                                             src="{{ asset('storage/assets/profile/'. $user->profile_photo_path) }}"
-                                             alt="">
-                                        {{ $user->first_name }}
-                                        {{ $user->middle_initial ? $user->middle_initial . '. ' : '' }}
-                                        {{ $user->last_name }}
-                                        {{ optional($user->extension)->name ?? '' }}
-                                    </td>
+                                    <td class="px-4 py-4"><input class="rounded-full" type="checkbox"></td>
+                                    <td class="px-4 py-4">{{ $party_list->id }}</td>
+                                    <td class="px-4 py-4">{{ $party_list->name }}</td>
 
-                                    <td class="px-4 py-4 capitalize">
-                                        @foreach ($user->roles as $role)
-                                            {{ $role->name }}@if (!$loop->last)
-                                            @endif
-                                        @endforeach
-                                    </td>
-                                    <td class="px-4 py-4">{{ $user->email }}</td>
-                                    <td class="px-4 py-4 ">{{ $user->year_level  . ' Year' }}</td>
-                                    <td class="px-4 py-4 ">{{ $user->college->name }}</td>
-                                    <td class="px-4 py-4">
-                                        @php
-                                            $programName = $user->program->name;
-                                            $programName = str_starts_with($programName, 'Bachelor of Science') ? 'BS ' . substr($programName, strlen('Bachelor of Science')) : $programName;
-                                        @endphp
-                                        <span class="program-name" title="{{ $programName }}">
-                                                {{ strlen($programName) > 15 ? substr($programName, 0, 15) . '...' : $programName }}
-                                            </span>
-                                    </td>
                                     <td class="px-4 py-4 text-center">
                                         <button
                                             class="bg-white rounded p-1 w-[30px] flex-row  items-center justify-items-center">
@@ -177,3 +124,4 @@
 
     </div>
 </div>
+
