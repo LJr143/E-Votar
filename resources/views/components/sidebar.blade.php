@@ -16,15 +16,15 @@
     !important;
     }
 
-    .sidebar ul li:hover {
+    li:hover {
         background-color: black;
     }
 
-    .sidebar ul li:hover a {
+    li:hover a {
         color: white;
     }
 
-    .sidebar li:hover .icon path {
+    li:hover .icon path {
         fill: white;
     }
 </style>
@@ -36,27 +36,26 @@
         </div>
     </div>
 
-    <div class=" sidebar relative px-[5px]">
+    <div class=" relative px-[5px]">
         <div class="flex justify-center items-center w-full">
             <ul class="py-2 px-4 w-full flex-row justify-center">
                 <li class="flex space-x-2 px-4 py-2 mb-2
-           {{ request()->routeIs('admin.super-admin.dashboard') || request()->routeIs('admin.dashboard')  ? 'bg-black' : '' }}">
+           {{ request()->routeIs('admin.super-admin.dashboard') ? 'bg-black' : '' }}">
                     <div class="flex">
                         <svg class="icon mr-2" width="15" height="15" viewBox="0 0 17 17" fill="none"
                              xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd" clip-rule="evenodd"
                                   d="M8.5013 0.647461C7.73992 0.647461 6.99308 0.856085 6.34193 1.25067L2.17526 3.77567C1.56254 4.14697 1.0559 4.66999 0.70429 5.29421C0.352676 5.91843 0.167957 6.62276 0.167969 7.3392V12.5825C0.167969 13.6876 0.606956 14.7474 1.38836 15.5288C2.16976 16.3102 3.22957 16.7492 4.33463 16.7492H12.668C13.773 16.7492 14.8328 16.3102 15.6142 15.5288C16.3956 14.7474 16.8346 13.6876 16.8346 12.5825V7.33837C16.8345 6.6221 16.6497 5.91778 16.2981 5.29375C15.9465 4.66973 15.4399 4.14688 14.8274 3.77568L10.6607 1.25068C10.0095 0.856092 9.26269 0.647461 8.5013 0.647461ZM7.20569 2.67605C7.59638 2.4393 8.04447 2.31413 8.5013 2.31413C8.95813 2.31413 9.40622 2.4393 9.79691 2.67605L13.9636 5.20105C14.3311 5.42377 14.6351 5.73749 14.846 6.1119C15.057 6.48626 15.1678 6.90867 15.168 7.33837V12.5825C15.168 13.2456 14.9046 13.8815 14.4357 14.3503C13.9669 14.8191 13.331 15.0825 12.668 15.0825H11.8346V12.5825C11.8346 11.6985 11.4834 10.8506 10.8583 10.2255C10.2332 9.60039 9.38535 9.2492 8.5013 9.2492C7.61725 9.2492 6.7694 9.60039 6.14428 10.2255C5.51916 10.8506 5.16797 11.6985 5.16797 12.5825V15.0825H4.33463C3.67159 15.0825 3.03571 14.8191 2.56687 14.3503C2.09803 13.8815 1.83464 13.2456 1.83464 12.5825V7.3392C1.83463 6.90933 1.94546 6.48671 2.15643 6.11218C2.3674 5.73764 2.67138 5.42383 3.03901 5.20106L7.20569 2.67605ZM9.67981 11.404C9.99237 11.7166 10.168 12.1405 10.168 12.5825V15.0825H6.83463V12.5825C6.83463 12.1405 7.01023 11.7166 7.32279 11.404C7.63535 11.0915 8.05927 10.9159 8.5013 10.9159C8.94333 10.9159 9.36725 11.0915 9.67981 11.404Z"
-                                  fill="{{ request()->routeIs('admin.super-admin.dashboard') || request()->routeIs('admin.dashboard') ? 'white' : '#757575' }}"/>
+                                  fill="{{ request()->routeIs('admin.super-admin.dashboard') ? 'white' : '#757575' }}"/>
                         </svg>
 
-                        <a href="@if(auth()->user()->hasRole('superadmin')){{  auth()->user()->hasRole('superadmin') ? route('admin.super-admin.dashboard') : '#' }} @endif"
-                           class="{{ request()->routeIs('admin.super-admin.dashboard') || request()->routeIs('admin.dashboard') ? 'text-white font-normal' : 'text-[#757575] font-normal' }}">
+                        <a href="{{ auth()->user()->hasRole('superadmin') ? route('admin.super-admin.dashboard') : '#' }}"
+                           class="{{ request()->routeIs('admin.super-admin.dashboard') ? 'text-white font-normal' : 'text-[#757575] font-normal' }}">
                             Dashboard
                         </a>
                     </div>
                 </li>
 
-                @can('view election')
                 <li class="flex space-x-2 px-4 py-2 mb-2  w-full  {{ request()->routeIs('admin.super-admin.elections') ? 'bg-black' : '' }}">
                     <div class="flex">
                         <svg class="icon mr-1" width="13" height="17" viewBox="0 0 15 19" fill="none"
@@ -80,9 +79,6 @@
                         </a>
                     </div>
                 </li>
-                @endcan
-
-                @can('vie candidate')
                 <li class="flex space-x-2 px-4 py-2 mb-2  w-full {{ request()->routeIs('admin.super-admin.candidates') ? 'bg-black' : '' }}">
                     <div class="flex">
                         <svg class="icon mr-2" width="16" height="16" viewBox="0 0 18 18" fill="none"
@@ -97,9 +93,6 @@
                         </a>
                     </div>
                 </li>
-
-                @endcan
-                @can('view vote tally')
                 <li class="flex space-x-2 px-4 py-2 mb-2  w-full {{ request()->routeIs('admin.super-admin.vote.tally') ? 'bg-black' : '' }}">
                     <div class="flex">
                         <svg class="icon mr-2" width="13" height="17" viewBox="0 0 15 19" fill="none"
@@ -123,9 +116,6 @@
                         </a>
                     </div>
                 </li>
-                @endcan
-
-                @can('view election results')
                 <li class="flex space-x-2 px-4 py-2 mb-2  w-full {{ request()->routeIs('admin.super-admin.election.result') ? 'bg-black' : '' }}">
                     <div class="flex">
                         <svg class="icon mr-2" width="17" height="17" viewBox="0 0 19 19" fill="none"
@@ -140,10 +130,7 @@
                         </a>
                     </div>
                 </li>
-                @endcan
-
-                @can('view voter')
-                <li class="flex space-x-2 px-4 py-2 mb-2  w-full {{ request()->routeIs('admin.super-admin.voters')  ? 'bg-black' : '' }}">
+                <li class="flex space-x-2 px-4 py-2 mb-2  w-full {{ request()->routeIs('admin.super-admin.voters') ? 'bg-black' : '' }}">
                     <div class="flex">
                         <svg class="icon mr-2" width="16" height="16" viewBox="0 0 18 18" fill="none"
                              xmlns="http://www.w3.org/2000/svg">
@@ -157,9 +144,6 @@
                         </a>
                     </div>
                 </li>
-                @endcan
-
-                @can('view users')
                 <li class="flex space-x-2 px-4 py-2 mb-2 w-full {{ request()->routeIs('admin.super-admin.system.user') ? 'bg-black' : '' }}">
                     <div class="flex">
                         <svg class="icon mr-2" width="25" height="17" viewBox="0 0 27 19" fill="none"
@@ -196,9 +180,6 @@
                         </a>
                     </div>
                 </li>
-                @endcan
-
-                @can('view party list')
                 <li class="flex space-x-2 px-4 py-2 mb-2  w-full {{ request()->routeIs('admin.super-admin.election.party.list') ? 'bg-black' : '' }}">
                     <div class="flex">
                         <svg class="icon mr-2" width="25" height="17" viewBox="0 0 27 19" fill="none"
@@ -235,9 +216,6 @@
                         </a>
                     </div>
                 </li>
-                @endcan
-
-                @can('view system logs')
                 <li class="flex space-x-2 px-4 py-2 mb-2  w-full {{ request()->routeIs('admin.super-admin.system.logs') ? 'bg-black' : '' }}">
                     <div class="flex">
                         <svg class="icon mr-2" width="19" height="19" viewBox="0 0 21 21" fill="none"
@@ -264,19 +242,19 @@
                         </a>
                     </div>
                 </li>
-                @endcan
-
                 <li class="flex space-x-2 px-4 py-2 mb-2 w-full">
-                    <div class="flex justify-items-center w-full items-center">
-                        <svg width="16" class="icon mr-2" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M8.78056 3.59961H5.07468C4.51304 3.59961 3.97441 3.82086 3.57728 4.21468C3.18014 4.60851 2.95703 5.14265 2.95703 5.69961V18.2996C2.95703 18.8566 3.18014 19.3907 3.57728 19.7845C3.97441 20.1784 4.51304 20.3996 5.07468 20.3996H8.78056M9.04375 11.9996H21.0438M21.0438 11.9996L16.4586 7.19961M21.0438 11.9996L16.4586 16.7996" stroke="red" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                        <form action="{{ route('logout') }}" method="POST">
+                    <div class="flex">
+                        <a href="{{ route('logout') }}"
+                           class="text-red-500"
+                           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            Logout
+                        </a>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
                             @csrf
-                            <button type="submit" class="text-red-500 text-[12px]">Logout</button>
                         </form>
                     </div>
                 </li>
+
 
             </ul>
         </div>
