@@ -1,7 +1,8 @@
+
 <div x-data="{ open: false }" x-cloak @election-created.window="open = false">
     <!-- Trigger Button -->
     <button @click="open = true"
-            class="w-[90px] mr-2 rounded py-[6px] px-2 bg-black text-white text-[10px] hover:bg-gray-700">
+            class="w-[100px] mr-2 rounded py-[6px] px-2 bg-black text-white text-[12px] hover:bg-gray-700">
         Add Election
     </button>
     <!-- Modal -->
@@ -29,7 +30,8 @@
             <div class="flex justify-between items-center mb-4 border-b border-gray-300 pb-2">
                 <div>
                     <h2 class="text-sm font-bold text-left w-full sm:w-auto">Add Election</h2>
-                    <p class="text-[10px] text-gray-500 italic">To add an election please fill out the required information.</p>
+                    <p class="text-[10px] text-gray-500 italic">To add an election please fill out the required
+                        information.</p>
                 </div>
 
                 <!-- Close Button (X) -->
@@ -39,8 +41,8 @@
             </div>
 
 
-                <!-- Election Details-->
-                @if ($currentStep === 1)
+            <!-- Election Details-->
+            @if ($currentStep === 1)
                 <form wire:submit.prevent="proceedToVoters">
                     <div>
                         <div class="flex space-x-4">
@@ -86,7 +88,8 @@
                                     @enderror
                                 </div>
                                 <p class="text-[12px] font-medium">Election Period</p>
-                                <div class="flex flex-col md:flex-row md:space-x-4 mb-4 border border-gray-300 rounded-md p-4">
+                                <div
+                                    class="flex flex-col md:flex-row md:space-x-4 mb-4 border border-gray-300 rounded-md p-4">
                                     <div class="flex-1">
                                         <label for="election_start" class="text-[10px] block mb-1">From</label>
                                         <input id="election_start" type="datetime-local"
@@ -178,61 +181,49 @@
                     </div>
                 </form>
 
-                @elseif ($currentStep === 2)
+            @elseif ($currentStep === 2)
                 <form wire:submit.prevent="submit">
                     <!-- Election Voters-->
                     <div>
                         <div>
                             <div class="mb-2">
-                                <p> Manage election voter here</p>
+                                <p class="text-[12px] font-semibold"> Manage election voter here</p>
                             </div>
 
                             <div>
-                                <div class="min-h-[300px] max-h-[300px]">
-                                    <div class="mb-2 flex space-x-2">
-                                        <label for="college">Filter by College:</label>
-                                        <select wire:model.live="selectedCollege" id="college" class="border-gray-300 text-[10px] rounded-lg px-4 py-1 w-1/2">
-                                            <option value="">All Colleges</option>
+                                <div class="min-h-[300px]">
+                                    <div>
+                                        <div class="mb-2">
+                                            <p class="text-[12px] font-semibold">Select Colleges and Programs</p>
+                                        </div>
+
+                                        <div>
                                             @foreach($colleges as $college)
-                                                <option value="{{ $college->id }}">{{ $college->name }}</option>
+                                                <div>
+                                                    <input type="checkbox" wire:model.live="selectedColleges"
+                                                           value="{{ $college->id }}" id="college-{{ $college->id }}">
+                                                    <label for="college-{{ $college->id }}">{{ $college->name }}</label>
+                                                </div>
                                             @endforeach
-                                        </select>
+                                        </div>
 
-                                        <label for="program">Filter by Program:</label>
-                                        <select wire:model.live="selectedProgram" id="program" class="border-gray-300 text-[10px] rounded-lg px-4 py-1 w-1/2">
-                                            <option value="">All Programs</option>
-                                            @foreach($programs as $program)
-                                                <option value="{{ $program->id }}">{{ $program->name }}</option>
+                                        <div class="mt-4">
+                                            @foreach($programsByCollege as $collegeId => $programs)
+                                                <div class="mt-2">
+                                                    <strong>Programs for {{ App\Models\College::find($collegeId)->name }}</strong>
+                                                    @foreach($programs as $program)
+                                                        <div>
+                                                            <input type="checkbox" wire:model="selectedPrograms"
+                                                                   value="{{ $program->id }}"
+                                                                   id="program-{{ $program->id }}">
+                                                            <label
+                                                                for="program-{{ $program->id }}">{{ $program->name }}</label>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
                                             @endforeach
-                                        </select>
+                                        </div>
                                     </div>
-
-                                    <table class="min-w-full bg-white border border-gray-300 rounded-lg shadow-md">
-                                        <thead class="text-[10px] font-light">
-                                        <tr class="bg-gray-200 text-gray-600 uppercase text-[10px] leading-normal">
-                                            <th class="py-3 px-6 text-left">Select</th>
-                                            <th class="py-3 px-6 text-left">Student ID</th>
-                                            <th class="py-3 px-6 text-left">First Name</th>
-                                            <th class="py-3 px-6 text-left">Last Name</th>
-                                            <th class="py-3 px-6 text-left">College</th>
-                                            <th class="py-3 px-6 text-left">Program</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody class="text-gray-600 text-[10px] font-light">
-                                        @foreach($voters as $voter)
-                                            <tr class="border-b border-gray-200 hover:bg-gray-100">
-                                                <td class="py-3 px-6 text-left">
-                                                    <input class="rounded-full" type="checkbox" wire:model="selectedVoters" value="{{ $voter->id }}">
-                                                </td>
-                                                <td class="py-3 px-6 text-left">{{ $voter->student_id }}</td>
-                                                <td class="py-3 px-6 text-left">{{ $voter->first_name }}</td>
-                                                <td class="py-3 px-6 text-left">{{ $voter->last_name }}</td>
-                                                <td class="py-3 px-6 text-left">{{ $voter->college->name ?? 'N/A' }}</td>
-                                                <td class="py-3 px-6 text-left">{{ $voter->program->name ?? 'N/A' }}</td>
-                                            </tr>
-                                        @endforeach
-                                        </tbody>
-                                    </table>
                                 </div>
 
                             </div>
@@ -249,8 +240,8 @@
                             </button>
                         </div>
                     </div>
-                    </form>
-                @endif
+                </form>
+            @endif
 
         </div>
     </div>

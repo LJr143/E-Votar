@@ -36,14 +36,14 @@
 @if(session('showSplash'))
     <div id="splash-screen" class="splash-screen">
         <div class="loading-line"></div>
-        <h1>Your App Name</h1>
+        <h1>E-VOTAR @2025</h1>
     </div>
 @endif
 
 <div class="min-h-screen max-w-screen-2xl mx-auto bg-[#F7F7F9] {{ $mainClass }}">
     @if (isset($sidebar))
         {{-- Sidebar --}}
-        <sidebar class="h-screen w-[280px] flex flex-col shadow bg-white z-10 ">
+        <sidebar class="h-screen w-[290px]  flex flex-col shadow z-10">
             {{ $sidebar }}
         </sidebar>
     @endif
@@ -61,7 +61,7 @@
         @endif
         @if (isset($main))
             <!-- Page Content -->
-            <main class="relative flex-1 max-lg:h-dvh lg:overflow-y-auto  w-full px-6 pt-2">
+            <main class="relative flex-1 max-lg:h-dvh lg:overflow-y-auto  w-full px-6 pt-2 ">
                 {{ $main }}
                 <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
                 <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>

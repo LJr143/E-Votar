@@ -15,15 +15,13 @@ class SplashScreenMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Define the routes where the splash screen should be shown
         $splashRoutes = [
-            'admin.login', // Example route
-            'dashboard', // Another example route
+            'admin.login',
+            'admin.dashboard',
+            'dashboard',
         ];
 
-        // Check if the current route is in the splashRoutes array
         if (in_array($request->route()->getName(), $splashRoutes)) {
-            // Set a session variable to indicate the splash screen should be shown
             session(['showSplash' => true]);
         }
 

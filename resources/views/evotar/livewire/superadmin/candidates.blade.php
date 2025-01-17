@@ -107,8 +107,8 @@
                         @foreach($candidates as $candidate)
                             @if($candidate->election_positions->position->electionType->name == 'Student Council Election')
                                 <div class="bg-white p-6 rounded-lg shadow-lg text-center relative">
-                                    <div class="absolute top-4 right-4">
-                                        <i class="fas fa-ellipsis-v text-gray-500"></i>
+                                    <div class="relative top-4 right-4">
+                                        <livewire:manage-candidate.edit-candidate :candidate_id = "$candidate->id"/>
                                     </div>
                                     <p class="text-gray-700 text-xs font-regular">Running for: <span class="text-red-600 font-semibold ">{{ $candidate->election_positions->position->name }}</span></p>
                                     <div class="mt-6 relative">

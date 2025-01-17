@@ -76,11 +76,19 @@ class PermissionsSeeder extends Seeder
             $permissions['System Logs']
         ));
 
-        $adminRole->syncPermissions($permissions['Voter Management']);
+        $adminRole->syncPermissions(array_merge(
+            $permissions['Candidate Management'],
+            ['view vote tally', 'view election results'],
+            $permissions['Voter Management'],
+            $permissions['Party List Management'],
+            ['view system logs']
+        ));
 
         $watcher->syncPermissions([
             'view election',
             'view election results'
         ]);
+
+        $this->command->info('Roles and permissions have been successfully assigned!');
     }
 }

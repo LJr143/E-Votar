@@ -4,21 +4,6 @@
             class="w-[100px] mr-2 rounded py-[6px] px-2 bg-black text-white text-[10px] hover:bg-gray-700">
         Add System User
     </button>
-    <style>
-        table td, th {
-            font-size: 10px !important;
-        }
-
-        tr {
-            height: 15px;
-            line-height: 15px;
-        }
-
-        td, th {
-            padding: 0;
-        }
-
-    </style>
     <!-- Modal -->
     <div
         x-show="open"
@@ -62,7 +47,7 @@
                             <div class="w-full">
                                 <div class="mb-3 relative w-full" x-data="{ isOpen: false }">
                                     <label for="candidate_name" class="text-[10px] font-normal block mb-1">
-                                        Name of User <span class="text-[10px] font-light italic"><a href="{{ route('admin.super-admin.unregistered.admin') }}"
+                                        Name of User <span class="text-[10px] font-light italic"><a href="{{ route('admin.unregistered.admin') }}"
                                                                                                     class="underline text-red-500">(Please click here if user is not a registered voter).</a></span>
                                     </label>
                                     <input

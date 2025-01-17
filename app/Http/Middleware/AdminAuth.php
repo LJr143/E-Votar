@@ -15,7 +15,7 @@ class AdminAuth
      *
      * @param Closure(Request): (Response) $next
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next, $permission = null): Response
     {
 
         if (!$this->isAuthenticated()) {
@@ -24,6 +24,12 @@ class AdminAuth
 
         if (!$this->isAdmin()) {
             abort(403, 'Unauthorized action.');
+        }
+
+        $user = Auth::user();
+
+        if ($permission && !$user->can($permission)) {
+            abort(403, 'You do not have permission to access this resource.');
         }
 
         return $next($request);
@@ -43,7 +49,7 @@ class AdminAuth
      */
     protected function isAdmin(): bool
     {
-        return Auth::user()->hasRole('admin, ');
+        return Auth::user()->hasAnyRole('admin', 'superadmin');
     }
 
     /**

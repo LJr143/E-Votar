@@ -1,22 +1,34 @@
 <?php
 
-
-use App\Http\Controllers\Auth\AdminAuth;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\ViewController;
+use App\Http\Middleware\AdminAuth;
 use Illuminate\Support\Facades\Route;
 
-// Routes for Super-Admin
-Route::prefix('admin')->name('admin.')->group(function () {
-
-    Route::middleware('admin.auth')->group(function () {
-        Route::get('/dashboard', [AdminAuth::class, 'dashboard'])->name('dashboard');
-        Route::get('/elections', [AdminAuth::class, 'elections'])->name('elections');
-        Route::get('/candidates', [AdminAuth::class, 'candidates'])->name('candidates');
-        Route::get('/vote/tally', [AdminAuth::class, 'voteTally'])->name('vote.tally');
-        Route::get('/election/results', [AdminAuth::class, 'electionResult'])->name('election.result');
-        Route::get('/voters', [AdminAuth::class, 'voter'])->name('voters');
-        Route::get('/system/users', [AdminAuth::class, 'systemUsers'])->name('system.user');
-        Route::get('/election/party list', [AdminAuth::class, 'partyList'])->name('election.party.list');
-        Route::get('/system/logs', [AdminAuth::class, 'systemLogs'])->name('system.logs');
-    });
+Route::middleware(['superadmin.check'])->group(function () {
+    Route::get('admin/login', [LoginController::class, 'login'])->name('admin.login');
+    Route::post('admin/login', [LoginController::class, 'authenticate'])->name('admin.login');
 });
+
+Route::middleware('splash.screen')->group(function () {
+    Route::get('admin/register', [ViewController::class, 'view'])->name('admin.register');
+    Route::post('admin/register', [ViewController::class, 'register'])->name('admin.register');
+
+    Route::get('/dashboard', [ViewController::class, 'dashboard'])->name('admin.dashboard')->middleware('admin.auth');
+    Route::get('/elections', [ViewController::class, 'elections'])->name('admin.elections')->middleware('admin.auth:view elections');
+    Route::get('/election/candidates', [ViewController::class, 'candidates'])->name('admin.candidates')->middleware('admin.auth:view candidates');
+    Route::get('/vote/tally', [ViewController::class, 'voteTally'])->name('admin.vote.tally')->middleware('admin.auth:view vote tally');
+    Route::get('/election/results', [ViewController::class, 'electionResult'])->name('admin.election.result')->middleware('admin.auth:view election results');
+    Route::get('/voters', [ViewController::class, 'voter'])->name('admin.voters')->middleware('admin.auth');
+    Route::get('/system/users', [ViewController::class, 'systemUsers'])->name('admin.system.user')->middleware('admin.auth:view system users');
+
+
+    Route::get('/unregistered/admins', [ViewController::class, 'unregisteredAdmins'])->name('admin.unregistered.admin')->middleware('admin.auth');
+    Route::post('/unregistered/admins', [ViewController::class, 'registerAdmins'])->name('admin.unregistered.admin')->middleware('admin.auth');
+    Route::get('/election/party list', [ViewController::class, 'partyList'])->name('admin.election.party.list')->middleware('admin.auth:view party list');
+    Route::get('/system/logs', [ViewController::class, 'systemLogs'])->name('admin.system.logs')->middleware('admin.auth:view system logs');
+});
+
+
+
 

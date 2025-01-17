@@ -37,4 +37,12 @@ class CampusController extends Controller
         $majors = Program_major::where('program_id', $programId)->get();
         return response()->json($majors);
     }
+
+    public function getRoles()
+    {
+        $roles = \Spatie\Permission\Models\Role::where('name', '!=', 'voter')->get();
+
+        return response()->json($roles);
+    }
+
 }

@@ -21,8 +21,4 @@ Route::middleware(['superadmin.check', 'redirect.auth'])->group(function () {
 
 });
 
-// Campus Management Routes
-Route::get('/campuses', [CampusController::class, 'index']);
-Route::get('/colleges/{campusId}', [CampusController::class, 'getColleges']);
-Route::get('/programs/{collegeId}', [CampusController::class, 'getPrograms']);
-Route::get('/majors/{programId}', [CampusController::class, 'getMajors']);
+

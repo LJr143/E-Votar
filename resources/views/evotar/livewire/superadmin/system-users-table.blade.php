@@ -83,57 +83,44 @@
                             </div>
                         </div>
                     </div>
-                    <style>
-                        table th {
-                            font-weight: bold !important;
-                            border-bottom: 1px solid #b8b6b6;
-                        }
 
-                        table .rows:hover {
-                            background-color: black;
-                            color: white;
-                        }
-
-                    </style>
-                    <div class="mt-4 min-h-[350px]">
+                    <div class="mt-4 min-h-[400px]">
                         <table class="min-w-full ">
-                            <thead class="bg-gray-50 text-left text-[12px] ">
-                            <tr class="text-center">
-                                <th class="px-4 py-2 font-light w-[50px]"></th>
-                                <th class="px-4 py-2 font-light w-[65px]">User Id</th>
-                                <th class="px-4 py-2 font-light">Full Name</th>
-                                <th class="px-4 py-2 font-light">Access Role</th>
-                                <th class="px-4 py-2 font-light text-center">Email</th>
-                                <th class="px-4 py-2 font-light text-center">Year Level</th>
-                                <th class="px-4 py-2 font-light text-center">College</th>
-                                <th class="px-4 py-2 font-light text-center">Program</th>
-                                <th class="px-4 py-2 font-light text-center"></th>
+                            <thead>
+                            <tr class="uppercase" style="background-color: rgba(0,0,0,0.05)">
+                                <th class="font-bold text-[10px] text-left px-4 py-2"><input type="checkbox"></th>
+                                <th class="font-bold text-[10px] text-left px-4 py-2">User Id</th>
+                                <th class="font-bold text-[10px] text-left px-4 py-2">Full Name</th>
+                                <th class="font-bold text-[10px] text-left px-4 py-2">Access Role</th>
+                                <th class="font-bold text-[10px] text-left px-4 py-2">Email</th>
+                                <th class="font-bold text-[10px] text-left px-4 py-2">Year Level</th>
+                                <th class="font-bold text-[10px] text-left px-4 py-2">College</th>
+                                <th class="font-bold text-[10px] text-left px-4 py-2">Program</th>
+                                <th class="font-bold text-[10px] text-left px-4 py-2"></th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr></tr>
                             @foreach($users as $user)
-                                <tr class=" rows text-[12px] border border-gray-100  font-light bg-white shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)]">
-                                    <td class="px-4 py-4"><input class="rounded-full"
-                                                                 type="checkbox"></td>
-                                    <td class="px-4 py-4">{{ $user->id }}</td>
-                                    <td class="px-4 py-4">
+                                <tr class=" rows text-[12px]font-light">
+                                    <td class="px-4 py-2"><input type="checkbox"></td>
+                                    <td class="px-4 py-2">{{ $user->id }}</td>
+                                    <td class="px-4 py-2">
                                         {{ $user->first_name }}
                                         {{ $user->middle_initial ? $user->middle_initial . '. ' : '' }}
                                         {{ $user->last_name }}
                                         {{ optional($user->extension)->name ?? '' }}
                                     </td>
 
-                                    <td class="px-4 py-4 capitalize">
+                                    <td class="px-4 py-2 capitalize">
                                         @foreach ($user->roles as $role)
                                             {{ $role->name }}@if (!$loop->last)
                                             @endif
                                         @endforeach
                                     </td>
-                                    <td class="px-4 py-4">{{ $user->email }}</td>
-                                    <td class="px-4 py-4 ">{{ $user->year_level  . ' Year' }}</td>
-                                    <td class="px-4 py-4 ">{{ $user->college->name }}</td>
-                                    <td class="px-4 py-4">
+                                    <td class="px-4 py-2">{{ $user->email }}</td>
+                                    <td class="px-4 py-2 ">{{ $user->year_level  . ' Year' }}</td>
+                                    <td class="px-4 py-2 ">{{ $user->college->name }}</td>
+                                    <td class="px-4 py-2">
                                         @php
                                             $programName = $user->program->name;
                                             $programName = str_starts_with($programName, 'Bachelor of Science') ? 'BS ' . substr($programName, strlen('Bachelor of Science')) : $programName;
@@ -142,7 +129,8 @@
                                                 {{ strlen($programName) > 15 ? substr($programName, 0, 15) . '...' : $programName }}
                                             </span>
                                     </td>
-                                    <td class="px-4 py-4 text-center">
+                                    <td class="px-4 py-2 text-center">
+                                        {{--                                        edit button--}}
                                         <button
                                             class="bg-white rounded p-1 w-[30px] flex-row  items-center justify-items-center">
                                             <svg width="11" height="15" viewBox="0 0 17 17" fill="none"
@@ -152,6 +140,8 @@
                                                     fill="green"/>
                                             </svg>
                                         </button>
+
+                                        {{--                                        delete button--}}
                                         <button
                                             class="bg-white rounded p-1 w-[30px] flex-row  items-center justify-items-center">
                                             <svg width="13" height="14" viewBox="0 0 15 17" fill="none"
@@ -163,7 +153,6 @@
                                         </button>
                                     </td>
                                 </tr>
-                                <tr class="h-[5px]"></tr>
                             @endforeach
                             </tbody>
                         </table>

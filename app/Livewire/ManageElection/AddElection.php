@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Livewire\Superadmin;
+namespace App\Livewire\ManageElection;
 
-use App\Models\campus;
-use App\Models\college;
+use App\Models\Campus;
+use App\Models\College;
 use App\Models\Election;
 use App\Models\election_type;
 use App\Models\ElectionPosition;
@@ -25,102 +25,98 @@ class AddElection extends Component
     public $selectedPositions = [];
     public $currentStep = 1;
     public $voters = [];
-
-    public $selectedVoters = []; // To hold selected voters
-    public $selectedCollege; // For filtering by college
-    public $selectedProgram; // For filtering by program
-    public $colleges = []; // To hold college options
-    public $programs = []; // To hold program options
-
+    public $selectedVoters = [];
+    public $selectedColleges = [];
+    public $selectedPrograms = [];
+    public $programsByCollege = [];
+    public $colleges = [];
+    public $search = '';
     public $status = '';
 
     public function mount(): void
     {
-        // Default to election type 1 (Student and Local Council)
-        $this->updatedElectionType(1);
-        $this->colleges = College::all();
-        $this->fetchVoters(null);
-
-
+        $this->fetchVoters();
     }
 
     public function updatedElectionCampus($value): void
     {
-        // Fetch voters when the campus changes
-        $this->fetchVoter($value);
+        $this->fetchVoters();
+        $this->fetchCollege($this->election_campus);
     }
 
-    public function updatedSelectedCollege($collegeId): void
+    public function updatedSelectedColleges(): void
     {
-        $this->programs = $collegeId ? Program::where('college_id', $collegeId)->get() : [];
-        $this->selectedProgram = null;
-        $this->filterVoters();
+        $this->programsByCollege = [];
+        foreach ($this->selectedColleges as $collegeId) {
+            $this->programsByCollege[$collegeId] = Program::where('college_id', $collegeId)->get();
+        }
     }
 
-    public function updatedSelectedProgram(): void
+    public function toggleProgramSelection($programId): void
     {
-        $this->filterVoters();
+        if (in_array($programId, $this->selectedPrograms)) {
+            $this->selectedPrograms = array_diff($this->selectedPrograms, [$programId]);
+        } else {
+            $this->selectedPrograms[] = $programId;
+        }
+    }
+
+    public function excludeAllUsersFromSelectedPrograms($electionId): void
+    {
+        // Fetch the IDs of users to be excluded
+        $excludedUserIds = User::whereIn('program_id', $this->selectedPrograms)->pluck('id')->toArray();
+
+        // Insert the excluded users into the ElectionExcludedVoter table
+        foreach ($excludedUserIds as $userId) {
+            \App\Models\ElectionExcludedVoter::updateOrCreate(
+                ['user_id' => $userId], // Unique identifier for the user
+                ['election_id' => $electionId] // Use the passed election ID
+            );
+        }
+
+        // Update the selected voters array
+        $this->selectedVoters = $excludedUserIds;
+    }
+
+    public function updatedElectionType($value): void
+    {
+        $this->selectedPositions = [];
+
+        if ($value == 1) {
+            $this->studentCouncilPositions = Position::where('election_type_id', '2')->pluck('name', 'id');
+            $this->localCouncilPositions = Position::where('election_type_id', '3')->pluck('name', 'id');
+            $this->positions = $this->studentCouncilPositions->merge($this->localCouncilPositions);
+            $this->positions = array_combine(range(1, count($this->positions)), array_values($this->positions->toArray()));
+        } elseif ($value == 2) {
+            $this->studentCouncilPositions = Position::where('election_type_id', '2')->pluck('name', 'id');
+            $this->positions = $this->studentCouncilPositions->toArray();
+        } elseif ($value == 3) {
+            $this->localCouncilPositions = Position::where('election_type_id', '3')->pluck('name', 'id');
+            $this->positions = $this->localCouncilPositions->toArray();
+        } else {
+            $this->studentCouncilPositions = [];
+            $this->localCouncilPositions = [];
+        }
+
+        $this->selectedPositions = array_keys($this->positions);
     }
 
     public function fetchVoters(): void
     {
         $this->voters = User::query()
-            ->when($this->election_campus, fn ($query) => $query->where('campus_id', $this->election_campus))
-            ->when($this->selectedCollege, fn ($query) => $query->where('college_id', $this->selectedCollege))
-            ->when($this->selectedProgram, fn ($query) => $query->where('program_id', $this->selectedProgram))
+            ->when($this->election_campus, fn($query) => $query->where('campus_id', $this->election_campus))
+            ->when($this->selectedColleges, fn($query) => $query->whereIn('college_id', $this->selectedColleges))
+            ->when($this->selectedPrograms, fn($query) => $query->whereIn('program_id', $this->selectedPrograms))
             ->get();
     }
 
-    public function filterVoters(): void
+    public function fetchCollege($campusId): void
     {
-        $this->voters = User::query()
-            ->when($this->election_campus, fn ($query) => $query->where('campus_id', $this->election_campus))
-            ->when($this->selectedCollege, fn ($query) => $query->where('college_id', $this->selectedCollege))
-            ->when($this->selectedProgram, fn ($query) => $query->where('program_id', $this->selectedProgram))
-            ->get();
-    }
-
-    public function updatedElectionType($value): void
-    {
-        // Clear selected positions when election type changes
-        $this->selectedPositions = [];
-
-        if ($value == 1) {
-            // Election type 1: Include both Student and Local Council positions
-            $this->studentCouncilPositions = Position::where('election_type_id', '2')->pluck('name', 'id');
-            $this->localCouncilPositions = Position::where('election_type_id', '3')->pluck('name', 'id');
-
-            // Combine positions
-            $this->positions = $this->studentCouncilPositions->merge($this->localCouncilPositions);
-
-            // Adjust keys to start from 1
-            $this->positions = array_combine(range(1, count($this->positions)), array_values($this->positions->toArray()));
-        } elseif ($value == 2) {
-            // Election type 2: Only Student Council positions
-            $this->studentCouncilPositions = Position::where('election_type_id', '2')->pluck('name', 'id');
-            $this->positions = $this->studentCouncilPositions->toArray();
-        } elseif ($value == 3) {
-            // Election type 3: Only Local Council positions
-            $this->localCouncilPositions = Position::where('election_type_id', '3')->pluck('name', 'id');
-            $this->positions = $this->localCouncilPositions->toArray();
-        } else {
-            // Default: No positions
-            $this->studentCouncilPositions = [];
-            $this->localCouncilPositions = [];
-        }
-
-        // Automatically add fetched positions to selectedPositions
-        $this->selectedPositions = array_keys($this->positions);
-    }
-
-    public function removePosition($positionId): void
-    {
-        $this->selectedPositions = array_diff($this->selectedPositions, [$positionId]);
+        $this->colleges = College::where('campus_id', $campusId)->get();
     }
 
     public function proceedToVoters(): void
     {
-        // Validate election details
         $this->validate([
             'election_name' => 'required|string|max:255',
             'election_type' => 'required',
@@ -130,18 +126,18 @@ class AddElection extends Component
             'selectedPositions' => 'required|array',
         ]);
 
-        //Proceed to step 2
         $this->currentStep = 2;
     }
 
     public function submit(): void
     {
-        if ($this->election_start >= now()){
+        if ($this->election_start >= now()) {
             $this->status = 'ongoing';
-        }else {
+        } else {
             $this->status = 'unverified';
         }
-        //Create the election
+
+        // Create the election
         $election = Election::create([
             'name' => $this->election_name,
             'type' => $this->election_type,
@@ -151,54 +147,41 @@ class AddElection extends Component
             'status' => $this->status
         ]);
 
-        $this->dispatch('election-created');
+        $this->excludeAllUsersFromSelectedPrograms($election->id);
 
-// Attach selected positions to the election
+
         foreach ($this->selectedPositions as $positionId) {
-            // Ensure the position exists
             $position = Position::find($positionId);
-
             if ($position) {
-                // Create a new ElectionPosition instance
                 $electionPosition = new ElectionPosition();
-                $electionPosition->election_id = $election->id; // Assign the election ID
-                $electionPosition->position_id = $position->id; // Assign the position ID
-                $electionPosition->save(); // Save the ElectionPosition record
+                $electionPosition->election_id = $election->id;
+                $electionPosition->position_id = $position->id;
+                $electionPosition->save();
             }
         }
 
+        $this->dispatch('election-created');
 
 
-        //Reset the form
+
+
+        // Reset the form
         $this->reset();
-
-
     }
 
     public function backToStep1(): void
     {
         $this->currentStep = 1;
-
-    }
-
-    public function fetchVoter($campusId): void
-    {
-        // Fetch voters based on the selected campus ID
-        $this->voters = User::where('campus_id', $campusId)->get();
     }
 
     public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory|\Illuminate\Foundation\Application|\Illuminate\View\View
     {
-        //fetch all election type for the form
         $electionTypes = election_type::all();
+        $campus = Campus::all();
 
-        //fetch all campus for the form
-        $campus = campus::all();
-
-
-        return view('evotar.livewire.superadmin.add-election', [
+        return view('evotar.livewire.manage-election.add-election', [
             'colleges' => $this->colleges,
-            'programs' => $this->programs,
+            'programsByCollege' => $this->programsByCollege,
             'campus' => $campus,
             'electionTypes' => $electionTypes,
         ]);

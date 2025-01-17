@@ -3,7 +3,8 @@
         font-size: 10px !important;
 
     }
-    input, select   {
+
+    input, select {
         color: black !important;
     }
 </style>
@@ -31,12 +32,12 @@
                 ACCOUNT REGISTRATION<h3
                     class="text-primary font-light text-black mb-3 text-[12px] text-center capitalize ">
                     register account to assign role and permission and to start using the E-Votar System
-                    </h3></h2>
+                </h3></h2>
 
             <!--form container-->
             <div class="px-2 h-screen overflow-x-hidden ml-0 w-full flex justify-center ">
                 <div>
-                    <form action="{{route('admin.super-admin.unregistered.admin')}}" method="POST" class="">
+                    <form action="{{route('admin.unregistered.admin')}}" method="POST" class="">
                         @csrf
                         <div class="w-[977px] bg-white shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] p-4">
                             <em class="text-[12px] text-black font-semibold">Personal Information</em>
@@ -49,7 +50,7 @@
                                         <input type="text" name="first_name"
                                                class="h-[28px] text-[12px] w-full min-w-[250px] rounded border border-gray-300 @error('first_name') border-red-500 @enderror"
                                                placeholder="Enter first name"
-                                                value="{{ old('first_name') }}">
+                                               value="{{ old('first_name') }}">
                                         @error('first_name')
                                         <div class="text-red-500 text-[10px] italic mt-1">{{ $message }}</div>
                                         @enderror
@@ -128,7 +129,7 @@
                                                class="h-[28px] text-[12px] w-full min-w-[250px] rounded border border-gray-300 @error('email') border-red-500 @enderror"
                                                placeholder="@usep.edu.ph"
                                                value="{{ old('email') }}"
-                                                >
+                                        >
                                         @error('email')
                                         <div class="text-red-500 text-[10px] italic mt-1">{{ $message }}</div>
                                         @enderror
@@ -235,36 +236,56 @@
                             <div class="border mt-2 mb-2 p-4 rounded">
                                 <div class="block">
                                     <div class="">
-                                        <x-label class="!text-black italic text-[10px]">
-                                            Username
-                                        </x-label>
-                                        <input type="text" name="username"
-                                               class="h-[28px] text-[12px] w-full min-w-[250px] rounded border border-gray-300 @error('username') border-red-500 @enderror"
-                                               placeholder="Enter username"
-                                               value="{{ old('username') }}">
-                                        @error('username')
-                                        <div class="text-red-500 text-[10px] italic mt-1">{{ $message }}</div>
-                                        @enderror
-                                        <x-label class="!text-black italic text-[10px]">
-                                            Password
-                                        </x-label>
-                                        <input type="password" name="password"
-                                               class="h-[28px] text-[12px] w-full min-w-[250px] rounded border border-gray-300 @error('password') border-red-500 @enderror"
-                                               placeholder="Enter password"
-                                               value="{{ old('password') }}">
-                                        @error('password')
-                                        <div class="text-red-500 text-[10px] italic mt-1">{{ $message }}</div>
-                                        @enderror
-                                        <x-label class="!text-black italic text-[10px]">
-                                            Confirm Password
-                                        </x-label>
-                                        <input type="password" name="confirm_password"
-                                               class="h-[28px] text-[12px] w-full min-w-[250px] rounded border border-gray-300 @error('confirm_password') border-red-500 @enderror"
-                                               placeholder="Confirm password"
-                                               value="{{ old('confirm_password') }}">
-                                        @error('confirm_password')
-                                        <div class="text-red-500 text-[10px] italic mt-1">{{ $message }}</div>
-                                        @enderror
+                                        <div class="mb-3">
+                                            <x-label class="!text-black italic text-[10px]">
+                                                Access Role
+                                            </x-label>
+                                            <select name="role" id="role"
+                                                    class="px-2 py-0 h-[28px] text-[12px] w-full  rounded border border-gray-300 focus:border-blue-500 focus:outline-none @error('program') border-red-500 @enderror">
+                                                <option value="" disabled selected>Select a role</option>
+
+
+                                            </select>
+                                            @error('role')
+                                            <div class="text-red-500 text-[10px] italic mt-1">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                        <div class="mb-3">
+                                            <x-label class="!text-black italic text-[10px]">
+                                                Username
+                                            </x-label>
+                                            <input type="text" name="username"
+                                                   class="h-[28px] text-[12px] w-full min-w-[250px] rounded border border-gray-300 @error('username') border-red-500 @enderror"
+                                                   placeholder="Enter username"
+                                                   value="{{ old('username') }}">
+                                            @error('username')
+                                            <div class="text-red-500 text-[10px] italic mt-1">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                        <div class="mb-3">
+                                            <x-label class="!text-black italic text-[10px]">
+                                                Password
+                                            </x-label>
+                                            <input type="password" name="password"
+                                                   class="h-[28px] text-[12px] w-full min-w-[250px] rounded border border-gray-300 @error('password') border-red-500 @enderror"
+                                                   placeholder="Enter password"
+                                                   value="{{ old('password') }}">
+                                            @error('password')
+                                            <div class="text-red-500 text-[10px] italic mt-1">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                        <div class="mb-3">
+                                            <x-label class="!text-black italic text-[10px]">
+                                                Confirm Password
+                                            </x-label>
+                                            <input type="password" name="confirm_password"
+                                                   class="h-[28px] text-[12px] w-full min-w-[250px] rounded border border-gray-300 @error('confirm_password') border-red-500 @enderror"
+                                                   placeholder="Confirm password"
+                                                   value="{{ old('confirm_password') }}">
+                                            @error('confirm_password')
+                                            <div class="text-red-500 text-[10px] italic mt-1">{{ $message }}</div>
+                                            @enderror
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -272,7 +293,7 @@
 
                         <div class="w-full flex justify-between mt-4 space-x-4">
                             <!-- Back/Cancel Button -->
-                            <a href="{{ route('admin.super-admin.system.user') }}"
+                            <a href="{{ route('admin.system.user') }}"
                                class="uppercase font-bold bg-gray-300 w-1/5 text-[14px] text-black rounded p-2 hover:bg-gray-200 transition duration-200 text-center">
                                 Cancel
                             </a>
@@ -353,6 +374,18 @@
                     $('#program_major').val('{{ old('program_major') }}');
                 });
             });
+
+
+            $.get('/roles', function (data) {
+
+                $.each(data, function (index, role) {
+                    $('#role').append(new Option(role.name, role.id));
+                });
+
+                // Optionally set the default selected value if using old input
+                $('#role').val('{{ old('role') }}');
+            });
+
         });
     </script>
 </x-guest-layout>

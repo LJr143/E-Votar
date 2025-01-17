@@ -15,6 +15,17 @@
         </div>
     </div>
 
+    <div class=" circle red-circle w-[400px] h-[400px] bg-red-900 absolute rounded-full z-50 left-[300px] top-[80px]"
+         style="background: linear-gradient( #ba0404, #882222);">
+
+    </div>
+
+    <div
+        class="circle yellow-circle w-[400px] h-[400px] bg-yellow-900 absolute rounded-full z-50 right-[250px] bottom-[60px]"
+        style="background: linear-gradient(#9e2323, #ffc800);">
+
+    </div>
+
 
     <x-authentication-card>
         @session('status')
@@ -23,26 +34,26 @@
         </div>
         @endsession
 
-        <div class="w-full h-full grid grid-cols-2">
-            <div class="  w-full px-[20px] py-4 h-full">
+        <div class="w-full h-full grid grid-cols-2 bg-transparent">
+            <div class="w-full  h-full px-6 py-4">
                 <form method="POST" class="mt-2">
                     @csrf
                     <div class="w-full">
-                        <p class="font-medium text-[12px] mb-1">WELCOME BACK!</p>
-                        <div class="w-full text-center mb-8">
-                            <p class="font-bold text-[18px] tracking-tighter">LOGIN TO CONTINUE</p>
-                            <p class="font-light text-[11px]">Integrity, Impartiality and Transparency</p>
+                        <p class="font-medium text-[12px] text-white mb-1">WELCOME BACK!</p>
+                        <div class="w-full text-center mb-8 text-white">
+                            <p class="font-bold text-[18px] text-white tracking-tighter">LOGIN TO CONTINUE</p>
+                            <p class="font-light text-[11px] text-white">Integrity, Impartiality and Transparency</p>
                         </div>
                     </div>
                     <div>
-                        <x-label for="username" value="{{ __('Username') }}"/>
+                        <x-label class="text-white" for="username" value="{{ __('Username') }}"/>
                         <x-input id="username" class="block mt-1 w-full h-[30px] border-[1px] p-2 text-[12px]"
                                  type="username" name="username" :value="old('username')" required autofocus
                                  autocomplete="username" placeholder="Enter username"/>
                     </div>
 
                     <div class="mt-4">
-                        <x-label for="password" value="{{ __('Password') }}"/>
+                        <x-label class="text-white" for="password" value="{{ __('Password') }}"/>
                         <div class="relative">
                             <x-input id="password" class="block mt-1 w-full h-[30px] pr-10 text-[12px]" type="password"
                                      name="password" required autocomplete="current-password"
@@ -78,9 +89,9 @@
 
                     <div class="grid grid-cols-2 gap-4">
                         <div class="block mt-4">
-                            <label for="remember_me" class="flex items-center">
+                            <label for="remember_me" class="flex items-center text-white">
                                 <x-checkbox id="remember_me" name="remember"/>
-                                <span class="ms-2 text-[11px] text-gray-600">{{ __('Remember me') }}</span>
+                                <span class="ms-2 text-[11px] text-white">{{ __('Remember me') }}</span>
                             </label>
                         </div>
 

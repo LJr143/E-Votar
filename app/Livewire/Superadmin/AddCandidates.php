@@ -35,7 +35,7 @@ class AddCandidates extends Component
     {
         $this->users = User::where('first_name', 'like', '%' . $this->search . '%')
             ->orWhere('last_name', 'like', '%' . $this->search . '%')
-            ->take(5) // Limit the number of results
+            ->take(5)
             ->get();
     }
 

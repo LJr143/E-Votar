@@ -17,10 +17,10 @@ class RedirectMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         if (Auth::check() && Auth::user()->hasRole('superadmin')) {
-            return redirect()->route('admin.super-admin.dashboard');
+            return redirect()->route('admin.dashboard');
         }
         if (Auth::check() && Auth::user()->hasRole('admin')) {
-            return redirect()->route('ad');
+            return redirect()->route('admin.dashboard');
         }
 
         return $next($request);

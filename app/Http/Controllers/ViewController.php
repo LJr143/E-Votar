@@ -20,7 +20,7 @@ class ViewController extends Controller
             return redirect()->route('admin.login');
         }
 
-        return view('evotar.superadmin.register');
+        return view('evotar.admin.register');
     }
 
     /**
@@ -136,7 +136,10 @@ class ViewController extends Controller
             'password' => bcrypt($data['password']),
         ]);
 
-        $this->assignRole($user, 'superadmin');
+        if (!$this->superAdminExists()){
+            $this->assignRole($user, 'superadmin');
+        }
+
         return $user;
     }
 
@@ -157,7 +160,7 @@ class ViewController extends Controller
      */
     public function dashboard()
     {
-        return view('evotar.superadmin.dashboard');
+        return view('evotar.admin.dashboard');
     }
 
     /**
@@ -165,7 +168,7 @@ class ViewController extends Controller
      */
     public function elections()
     {
-        return view('evotar.superadmin.election');
+        return view('evotar.admin.election');
     }
 
     /**
@@ -173,7 +176,7 @@ class ViewController extends Controller
      */
     public function candidates()
     {
-        return view('evotar.superadmin.candidate');
+        return view('evotar.admin.candidate');
     }
 
     /**
@@ -181,7 +184,7 @@ class ViewController extends Controller
      */
     public function voteTally()
     {
-        return view('evotar.superadmin.vote_tally');
+        return view('evotar.admin.vote_tally');
     }
 
     /**
@@ -189,7 +192,7 @@ class ViewController extends Controller
      */
     public function electionResult()
     {
-        return view('evotar.superadmin.election_result');
+        return view('evotar.admin.election_result');
     }
 
     /**
@@ -205,7 +208,7 @@ class ViewController extends Controller
      */
     public function voter()
     {
-        return view('evotar.superadmin.voter');
+        return view('evotar.admin.voter');
     }
 
     /**
@@ -213,7 +216,7 @@ class ViewController extends Controller
      */
     public function systemUsers()
     {
-        return view('evotar.superadmin.user');
+        return view('evotar.admin.user');
     }
 
     /**
@@ -221,7 +224,7 @@ class ViewController extends Controller
      */
     public function systemLogs()
     {
-        return view('evotar.superadmin.system_logs');
+        return view('evotar.admin.system_logs');
     }
 
     /**
@@ -229,7 +232,7 @@ class ViewController extends Controller
      */
     public function unregisteredAdmins()
     {
-        return view('evotar.superadmin.unregistered_admin');
+        return view('evotar.admin.unregistered_admin');
     }
 
     /**
@@ -243,11 +246,12 @@ class ViewController extends Controller
         $this->createUserAdmin($request->all());
 
         session()->flash('registered', true);
-        return redirect()->route('admin.super-admin.unregistered.admin');
+        return redirect()->route('admin.unregistered.admin');
     }
 
     /**
-     * Create a user as an admin.
+     * Create a user as an admin and assign role and
+     * give permissions based on role
      *
      * @throws Exception
      */
@@ -256,9 +260,27 @@ class ViewController extends Controller
         $this->checkForExistingUser($data);
 
         $user = $this->createUser($data);
-        $this->assignRole($user, 'admin');
+
+        $roleId = $data['role'];
+
+        $role = Role::find($roleId);
+
+        if (!$role) {
+            throw new \Exception("Role not found.");
+        }
+
+        $this->assignRole($user, $role->name);
+
+        $permissions = $role->permissions;
+
+        $user->syncPermissions($permissions);
+
         return $user;
     }
+
+
+
+
 
     /**
      * Check for existing users before creating a new one.

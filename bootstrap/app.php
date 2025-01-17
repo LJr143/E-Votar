@@ -16,6 +16,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => \App\Http\Middleware\RoleMiddleware::class,
             'admin.auth'=> \App\Http\Middleware\AdminAuth::class,
             'superadmin.check' => \App\Http\Middleware\SuperadminChecker::class,
+            'redirect.auth' =>\App\Http\Middleware\RedirectMiddleware::class,
+            'splash.screen' => \App\Http\Middleware\SplashScreenMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

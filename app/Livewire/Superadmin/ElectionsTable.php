@@ -4,60 +4,47 @@ namespace App\Livewire\Superadmin;
 
 use App\Models\Election;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class ElectionsTable extends Component
 {
+    use WithPagination;
+
     protected $listeners = ['election-created' => '$refresh'];
-    public $elections;
     public $filter = 'all_elections';
     public $search = '';
 
-    public function mount(): void
+    public function updatingSearch(): void
     {
-        $this->fetchElections();
+        $this->resetPage(); // Reset to the first page when search changes
     }
 
-    public function updatedSearch(): void
+    public function updatingFilter(): void
     {
-        $this->fetchElections();
+        $this->resetPage(); // Reset to the first page when filter changes
     }
 
-    public function updatedFilter(): void
+    public function fetchElections()
     {
-        $this->fetchElections();
+        // Fetching logic is now part of the render method using pagination.
     }
 
-    public function setFilter(string $filter): void
+    public function render(): \Illuminate\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\View\View
     {
-        $this->filter = $filter;
-        $this->fetchElections();
-    }
-
-    public function fetchElections(): void
-    {
-        // Start a query on the Election model
         $query = Election::query();
 
-        // Apply search filter if the search term is not empty
         if ($this->search) {
             $query->where('name', 'like', '%' . $this->search . '%');
         }
 
-        // Apply status filter based on the selected filter
         if ($this->filter === 'ongoing_elections') {
             $query->where('status', 'ongoing');
         } elseif ($this->filter === 'completed_elections') {
             $query->where('status', 'completed');
         }
 
-        // Execute the query and get the results
-        $this->elections = $query->get();
-    }
-
-    public function render()
-    {
         return view('evotar.livewire.superadmin.elections-table', [
-            'elections' => $this->elections,
+            'elections' => $query->paginate(10),
         ]);
     }
 }
