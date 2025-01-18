@@ -40,7 +40,8 @@
                 @enderror
             </div>
             <div class="bg-white shadow-md rounded p-6">
-                <div class="flex text-[12px] bg-white mt-0 p-5 rounded-md md:max-w-[800px] min-[90%]:max-w-[100%] lg:max-w-[900px] xl:w-[100%] xl:min-w-[100%] 2xl:max-w-[1190px]">
+                <div
+                    class="flex text-[12px] bg-white mt-0 p-5 rounded-md md:max-w-[800px] min-[90%]:max-w-[100%] lg:max-w-[900px] xl:w-[100%] xl:min-w-[100%] 2xl:max-w-[1190px]">
                     <div class="flex w-full">
                         <div class="w-1/2">
                             <button
@@ -87,10 +88,11 @@
                     <div class="relative w-[250px] mb-4">
                         <!-- Search Input -->
                         <input type="text" wire:model.live="search"
-                               class="rounded h-[27px] text-[10px] border border-gray-400 pl-10 pr-4 focus:border-black focus:ring focus:ring-black-[1px] w-full"
+                               class="rounded h-[30px] text-[12px] border border-gray-400 pl-10 pr-4 focus:border-black focus:ring focus:ring-black-[1px] w-full"
                                placeholder="Search..." aria-label="Search">
                         <span class="absolute left-3 top-1/2 transform -translate-y-1/2">
-                                <svg width="12" height="12" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <svg width="12" height="12" viewBox="0 0 14 14" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
                                     <path fill-rule="evenodd" clip-rule="evenodd"
                                           d="M9.68208 10.7458C8.66576 11.5361 7.38866 12.0067 6.00167 12.0067C2.68704 12.0067 0 9.31891 0 6.00335C0 2.68779 2.68704 0 6.00167 0C9.31631 0 12.0033 2.68779 12.0033 6.00335C12.0033 7.39059 11.533 8.66794 10.743 9.6845L13.7799 12.7186C14.0731 13.0115 14.0734 13.4867 13.7806 13.7799C13.4878 14.0731 13.0128 14.0734 12.7196 13.7805L9.68208 10.7458ZM10.5029 6.00335C10.5029 8.49002 8.48765 10.5059 6.00167 10.5059C3.5157 10.5059 1.50042 8.49002 1.50042 6.00335C1.50042 3.51668 3.5157 1.50084 6.00167 1.50084C8.48765 1.50084 10.5029 3.51668 10.5029 6.00335Z"
                                           fill="#868FA0"/>
@@ -102,63 +104,96 @@
 
 
                 <div class="w-full h-full">
+                    <h3 class="text-[12px] font-semibold px-4 py-2">STUDENT COUNCIL CANDIDATES</h3>
                     <!-- Student Council Section -->
-                    <div id="studentCouncil" class="grid   grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 px-12 py-4">
+                    <div id="studentCouncil"
+                         class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 px-4 py-4">
                         @foreach($candidates as $candidate)
                             @if($candidate->election_positions->position->electionType->name == 'Student Council Election')
-                                <div class="bg-white p-6 rounded-lg shadow-lg text-center relative">
-                                    <div class="relative top-4 right-4">
-                                        <livewire:manage-candidate.edit-candidate :candidate_id = "$candidate->id"/>
+                                <div class="bg-white p-6 shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] min-h-[310px]">
+                                    <div class="flex justify-center items-center">
+                                        <p class="text-[12px]">Running for: <span
+                                                class="text-red-900 uppercase tracking-wide font-semibold">{{ $candidate->election_positions->position->name }}</span>
+                                        </p>
                                     </div>
-                                    <p class="text-gray-700 text-xs font-regular">Running for: <span class="text-red-600 font-semibold ">{{ $candidate->election_positions->position->name }}</span></p>
-                                    <div class="mt-6 relative">
-                                        <div class="relative inline-block">
-                                            <img src="{{ asset('storage/assets/profile/cat_meme.jpg') }}" alt="Candidate Profile" class="w-21 h-20 border relative z-10">
-                                            <img src="{{ asset('storage/assets/logo/usep_logo.jpg') }}" alt="Usep Logo" class="h-11 w-14 absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2">
+                                    <div>
+                                        <div class="flex justify-end mt-2">
+                                            <img class="w-[80px]"
+                                                 src="{{ asset('storage/assets/icon/usep_logo_svg.png') }}" alt="">
+                                        </div>
+                                        <div class="mt-[-38px] flex justify-center">
+                                            <div class="border-2 border-black">
+                                                <img class="w-[110px]"
+                                                     src="{{ asset('storage/assets/profile/cat_meme.jpg') }}" alt="">
+                                            </div>
+                                        </div>
+
+                                        <div class="mt-2 text-center">
+                                            <div class="flex justify-center">
+                                                <p class="text-black uppercase font-black text-[11px]">{{ $candidate->users->first_name }} {{ $candidate->users->middle_initial }}
+                                                    . {{ $candidate->users->last_name }}</p>
+                                            </div>
+                                            <p class="text-black capitalize font-semibold text-[10px]">{{ $candidate->users->year_level }}
+                                                year</p>
+                                            <p class="text-black capitalize font-semibold text-[10px] leading-none">{{ $candidate->users->program->name }}</p>
+                                            <p class="text-black capitalize font-semibold text-[11px] leading-none">{{ optional($candidate->users->programMajor)->name ?? '' }}</p>
+                                            <p class="text-black mt-2 capitalize italic font-semibold text-[11px]">{{ $candidate->partyLists->name }}</p>
+
+
                                         </div>
                                     </div>
-                                    <div class="mt-1">
-                                        <h2 class="text-sm font-semibold">{{ $candidate->users->first_name }} {{ $candidate->users->middle_initial }}. {{ $candidate->users->last_name }}</h2>
-                                        <p class="text-gray-500 text-xs font-regular">{{ $candidate->users->year_level }} year</p>
-                                        <p class="text-gray-500 text-xs font-regular">{{ $candidate->users->program->name }}</p>
-                                        <p class="text-gray-500 text-xs font-regular">{{ optional($candidate->users->programMajor)->name ?? '' }}</p>
-                                    </div>
-                                    <div class="mt-1">
-                                        <p class="font-semibold italic text-xs mb-3">{{ $candidate->partyLists->name }}</p>
-                                    </div>
+
                                 </div>
                             @endif
                         @endforeach
+
                     </div>
 
+
+                    <h3 class="text-[12px] font-semibold mt-3 px-4 py-2">LOCAL COUNCIL CANDIDATES</h3>
                     <!-- Local Council Section -->
-                    <div id="localCouncil" class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 px-12 py-4 items-center">
+                    <div id="studentCouncil" class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 px-4 py-4">
                         @foreach($candidates as $candidate)
                             @if($candidate->election_positions->position->electionType->name == 'Local Council Election')
-                                <div  class="bg-white p-6 rounded-lg shadow-lg text-center relative">
-                                    <div class="absolute top-4 right-4">
-                                        <i class="fas fa-ellipsis-v text-gray-500"></i>
+                                <div class="bg-white p-6 shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] min-h-[310px]">
+                                    <div class="flex justify-center items-center">
+                                        <p class="text-[12px]">Running for: <span
+                                                class="text-red-900 uppercase tracking-wide font-semibold">{{ $candidate->election_positions->position->name }}</span>
+                                        </p>
                                     </div>
-                                    <p class="text-gray-700 text-xs font-regular">Running for: <span class="text-red-600 font-semibold ">{{ $candidate->election_positions->position->name }}</span></p>
-                                    <div class="mt-6 relative">
-                                        <div class="relative inline-block">
-                                            <img src="{{ asset('storage/assets/profile/cat_meme.jpg') }}" alt="Candidate Profile" class="w-21 h-20 border relative z-10">
-                                            <img src="{{ asset('storage/assets/logo/usep_logo.jpg') }}" alt="Usep Logo" class="h-11 w-14 absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2">
+                                    <div>
+                                        <div class="flex justify-end mt-2">
+                                            <img class="w-[80px]"
+                                                 src="{{ asset('storage/assets/icon/usep_logo_svg.png') }}" alt="">
+                                        </div>
+                                        <div class="mt-[-38px] flex justify-center">
+                                            <div class="border-2 border-black">
+                                                <img class="w-[110px]"
+                                                     src="{{ asset('storage/assets/profile/cat_meme.jpg') }}" alt="">
+                                            </div>
+                                        </div>
+
+                                        <div class="mt-2 text-center">
+                                            <div class="flex justify-center">
+                                                <p class="text-black uppercase font-black text-[11px]">{{ $candidate->users->first_name }} {{ $candidate->users->middle_initial }}
+                                                    . {{ $candidate->users->last_name }}</p>
+                                            </div>
+                                            <p class="text-black capitalize font-semibold text-[10px]">{{ $candidate->users->year_level }}
+                                                year</p>
+                                            <p class="text-black capitalize font-semibold text-[10px] leading-none">{{ $candidate->users->program->name }}</p>
+                                            <p class="text-black capitalize font-semibold text-[11px] leading-none">{{ optional($candidate->users->programMajor)->name ?? '' }}</p>
+                                            <p class="text-black mt-2 capitalize italic font-semibold text-[11px]">{{ $candidate->partyLists->name }}</p>
+
+
                                         </div>
                                     </div>
-                                    <div class="mt-1">
-                                        <h2 class="text-sm font-semibold">{{ $candidate->users->first_name }} {{ $candidate->users->middle_initial }}. {{ $candidate->users->last_name }}</h2>
-                                        <p class="text-gray-500 text-xs font-regular">{{ $candidate->users->year_level }} year</p>
-                                        <p class="text-gray-500 text-xs font-regular">{{ $candidate->users->program->name }}</p>
-                                        <p class="text-gray-500 text-xs font-regular">{{ optional($candidate->users->programMajor)->name ?? '' }}</p>
-                                    </div>
-                                    <div class="mt-1">
-                                        <p class="font-semibold italic text-xs mb-3">{{ $candidate->partyLists->name }}</p>
-                                    </div>
+
                                 </div>
                             @endif
                         @endforeach
+
                     </div>
+
                 </div>
 
             </div>

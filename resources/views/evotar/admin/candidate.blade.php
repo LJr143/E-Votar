@@ -66,7 +66,7 @@
                 </div>
             </div>
 
-            <livewire:superadmin.candidates/>
+           <livewire:manage-candidate.view-candidate/>
         </div>
     </x-slot>
 </x-app-layout>

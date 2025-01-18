@@ -15,6 +15,8 @@ use Livewire\Component;
 
 class AddCandidates extends Component
 {
+
+    protected $listeners = ['candidate-created' => '$refresh'];
     public $search = '';
     public $users = [];
     public $elections = [];
@@ -75,7 +77,7 @@ class AddCandidates extends Component
         }
     }
 
-    public function submit()
+    public function submit(): void
     {
         $this->validate([
             'selectedUser' => 'required|exists:users,id',

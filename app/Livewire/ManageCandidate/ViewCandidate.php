@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Livewire\Superadmin;
+namespace App\Livewire\ManageCandidate;
 
 use App\Models\Candidate;
 use App\Models\Election;
-use App\Models\election_type;
 use Livewire\Component;
 
-class Candidates extends Component
+class ViewCandidate extends Component
 {
     protected $listeners = ['candidate-created' => '$refresh'];
     public $candidates = [];
@@ -92,10 +91,9 @@ class Candidates extends Component
             })
             ->get();
     }
-
     public function render()
     {
-        return view('evotar.livewire.superadmin.candidates', [
+        return view('evotar.livewire.manage-candidate.view-candidate', [
             'candidates' => $this->candidates,
             'elections' => $this->elections,
         ]);
