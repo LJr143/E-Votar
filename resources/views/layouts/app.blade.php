@@ -43,7 +43,7 @@
 <div class="min-h-screen max-w-screen-2xl mx-auto bg-[#F7F7F9] {{ $mainClass }}">
     @if (isset($sidebar))
         {{-- Sidebar --}}
-        <sidebar class="h-screen w-[290px]  flex flex-col shadow z-10">
+        <sidebar class="h-screen w-[300px]  flex flex-col shadow z-10">
             {{ $sidebar }}
         </sidebar>
     @endif
