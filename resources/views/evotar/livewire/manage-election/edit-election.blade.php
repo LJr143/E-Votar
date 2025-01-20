@@ -45,7 +45,67 @@
                 </button>
             </div>
 
+            <!-- Election Details-->
+            <form>
+                <div>
+                    <div class="flex space-x-4">
+                        <div class="flex-col">
+                            <div class="mb-3">
+                                <label for="election_name" class="text-xs font-semibold block mb-1 text-left">Election Name</label>
+                                <input id="election_name" type="text" placeholder="Student and Local Election 2023"
+                                       class="border border-gray-300 text-xs rounded-lg px-4 py-2 w-full"
+                                       wire:model="election_name">
+                            </div>
+                            <div class="mb-3">
+                                <label for="election_type" class="text-xs font-semibold block mb-1 text-left">Election Type</label>
+                                <select name="election_type" id="election_type" wire:model.live="election_type"
+                                        class="border-gray-300 text-xs rounded-lg px-4 py-2 w-full ">
+                                    <option value="" selected>Select election type</option>
+                                    <option value=" "> </option>
+                                </select>
 
+                            </div>
+                            <div class="flex-1 mb-3">
+                                <label for="election_campus" class="text-xs font-semibold block mb-1 text-left">Campus</label>
+                                <select name="election_campus" id="election_campus"
+                                        class="border-gray-300 text-xs rounded-lg px-4 py-2 w-full "
+                                        wire:model="election_campus">
+                                    <option value="" selected>Select campus for election</option>
+                                    <option value=""></option>
+                                </select>
+
+                            </div>
+                            <p class="text-[12px] font-medium text-left">Election Period</p>
+                            <div
+                                class="flex flex-col md:flex-row md:space-x-4 mb-4 border border-gray-300 rounded-md p-4">
+                                <div class="flex-1">
+                                    <label for="election_start" class="text-[10px] block mb-1 text-left">From</label>
+                                    <input id="election_start" type="datetime-local"
+                                           class="border border-gray-300 text-xs rounded-md px-4 py-2 w-full focus:ring focus:ring-indigo-200 focus:outline-none"
+                                           wire:model="election_start">
+                                </div>
+                                <div class="flex-1">
+                                    <label for="election_end" class="text-[10px] block mb-1 text-left">To</label>
+                                    <input id="election_end" type="datetime-local"
+                                           class="border border-gray-300 text-xs rounded-md px-4 py-2 w-full focus:ring focus:ring-indigo-200 focus:outline-none"
+                                           wire:model="election_end">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-6 pt-3 flex justify-end space-x-2">
+                        <button type="button"
+                                class="bg-gray-300 text-gray-700 text-[12px] h-7 px-4 py-1 rounded shadow-md hover:bg-gray-400 justify-center text-center"
+                                @click="open = false">
+                            Cancel
+                        </button>
+                        <button type="submit"
+                                class="bg-black text-white px-6 py-1 h-7 rounded shadow-md hover:bg-gray-700 text-[12px] justify-center text-center">
+                            Proceed to Election Voter
+                        </button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>
