@@ -84,7 +84,7 @@ class User extends Authenticatable
 
     public function campus(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(campus::class);
+        return $this->belongsTo(Campus::class);
     }
     public function college(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\campus;
+use App\Models\Campus;
 use App\Models\college;
 use App\Models\Program;
 use App\Models\program_major;
