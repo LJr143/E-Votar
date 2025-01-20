@@ -30,14 +30,15 @@
             x-transition:leave="transition ease-in duration-200"
             x-transition:leave-start="opacity-100 transform scale-100"
             x-transition:leave-end="opacity-0 transform scale-90"
-            class="bg-white p-6 rounded shadow-md w-3/5"
+            class="bg-white p-6 rounded shadow-md max-w-full"
         >
 
             <div class="flex justify-between items-center mb-4 border-b border-gray-300 pb-2">
                 <div>
                     <h2 class="text-sm font-bold text-left w-full sm:w-auto">View Election</h2>
-                    <p class="text-[10px] text-gray-500 italic">To edit an election please fill out the required
-                        information.</p>
+                    <p class="text-[10px] text-gray-500 italic">
+                        To view the details of the selected election, please refer to the information displayed below.
+                    </p>
                 </div>
 
                 <!-- Close Button (X) -->
@@ -45,6 +46,61 @@
                     <i class="fas fa-times"></i>
                 </button>
             </div>
+
+            <!-- Election Details-->
+            <form>
+                <div>
+                    <div class="flex space-x-4">
+                        <div class="flex-col">
+                            <div class="mb-3">
+                                <label for="election_name" class="text-xs font-semibold block mb-1 text-left">Name</label>
+                                <input id="election_name" type="text" value="Election Name"
+                                       class="border border-gray-300 text-xs rounded-lg px-4 py-2 w-full bg-gray-100" readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label for="election_type" class="text-xs font-semibold block mb-1 text-left">Election Type</label>
+                                <input id="election_type" type="text" value="Selected election type"
+                                       class="border border-gray-300 text-xs rounded-lg px-4 py-2 w-full bg-gray-100" readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label for="election_campus" class="text-xs font-semibold block mb-1 text-left">Campus</label>
+                                <input id="election_campus" type="text" value="Selected Campus"
+                                       class="border border-gray-300 text-xs rounded-lg px-4 py-2 w-full bg-gray-100" readonly>
+                            </div>
+
+                            <p class="text-[12px] font-medium text-left">Election Period</p>
+                            <div class="flex flex-col md:flex-row md:space-x-4 mb-4 border border-gray-300 rounded-md p-4">
+                                <div class="flex-1">
+                                    <label for="election_start" class="text-xs font-semibold block mb-1 text-left">Date started</label>
+                                    <input id="election_start" type="datetime-local" value=" "
+                                           class="border border-gray-300 text-xs rounded-lg px-4 py-2 w-full bg-gray-100 focus:ring focus:ring-indigo-200 focus:outline-none" readonly>
+                                </div>
+                                <div class="flex-1">
+                                    <label for="election_end" class="text-xs font-semibold block mb-1 text-left">Date ended</label>
+                                    <input id="election_end" type="datetime-local" value=" "
+                                           class="border border-gray-300 text-xs rounded-lg px-4 py-2 w-full bg-gray-100 focus:ring focus:ring-indigo-200 focus:outline-none" readonly>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="mt-6 pt-3 flex justify-end space-x-2">
+                        <button type="button"
+                                class="bg-gray-300 text-gray-700 text-[12px] h-7 px-4 py-1 rounded shadow-md hover:bg-gray-400 justify-center text-center"
+                                @click="open = false">
+                            Cancel
+                        </button>
+                        <button type=""
+                                class="flex items-center bg-black text-white px-6 py-1 h-7 rounded shadow-md hover:bg-gray-700 text-[12px] justify-center text-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#FFFFFF"><path d="M480-336 288-528l51-51 105 105v-342h72v342l105-105 51 51-192 192ZM263.72-192Q234-192 213-213.15T192-264v-72h72v72h432v-72h72v72q0 29.7-21.16 50.85Q725.68-192 695.96-192H263.72Z"/></svg>
+                            Export Data
+                        </button>
+
+                    </div>
+                </div>
+            </form>
+
+
 
 
         </div>
