@@ -78,7 +78,7 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-2 sm:gap-4">
                 <div class="flex-row space-y-2 mb-6">
-                    <div class="bg-black text-white p-4 rounded-lg shadow-md text-center ">
+                    <div class="bg-black text-white p-4 rounded-lg shadow-md text-center min-h-[160px] ">
                         <div class="flex justify-between items-center">
                             <div class="flex items-center space-x-2">
                                 <i class="fas fa-stopwatch text-white text-sm"></i>
@@ -91,13 +91,16 @@
                             </div>
                         </div>
                         <div class="tick" data-did-init="handleTickInit">
-                            <div data-repeat="true" data-layout="horizontal fit"
-                                 data-transform="preset(d, h, m, s) -> delay">
+                            <div
+                                data-repeat="true"
+                                data-layout="horizontal fit"
+                                data-transform="preset(d, h, m, s) -> delay"
+                                class="tick-container">
+
                                 <div class="tick-group">
                                     <div data-key="value" data-repeat="true" data-transform="pad(00) -> split -> delay">
-                                        <span data-view="flip"></span>
+                                        <span data-view="flip" class="tick-value"></span>
                                     </div>
-
                                     <span data-key="label" data-view="text" class="tick-label"></span>
                                 </div>
                             </div>
@@ -108,64 +111,64 @@
 
                     </div>
 
-                    <div class="bg-white p-4 rounded-lg shadow-md w-full max-w-3xl transition-transform transform hover:scale-100">
+                    <div class="bg-white min-h-[160px] p-4 rounded-lg shadow-md w-full max-w-3xl transition-transform transform hover:scale-100">
                         <div class="flex items-center space-x-2">
                             <span class="text-center text-sm font-bold">Votes Information</span>
                         </div>
-{{--                        <div class="flex flex-wrap justify-around mt-4">--}}
-{{--                            <div class="flex flex-col items-center ">--}}
-{{--                                <div class="relative w-16 h-16">--}}
-{{--                                    <!-- SVG Progress Circle -->--}}
-{{--                                    <svg class="absolute top-0 left-0 w-full h-full" viewBox="0 0 36 36">--}}
-{{--                                        <path class="text-gray-200"--}}
-{{--                                              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"--}}
-{{--                                              fill="none" stroke-width="3" stroke="currentColor"></path>--}}
-{{--                                        <path id="circular-progress-1" class="text-red-600"--}}
-{{--                                              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"--}}
-{{--                                              fill="none" stroke-width="3" stroke-dasharray="81, 100"--}}
-{{--                                              stroke="currentColor"></path>--}}
-{{--                                    </svg>--}}
-{{--                                    <div class="absolute inset-0 flex items-center justify-center">--}}
-{{--                                        <span class="text-sm font-semibold text-gray-800">81%</span>--}}
-{{--                                    </div>--}}
-{{--                                </div>--}}
-{{--                                <p class="mt-2 text-gray-700 text-xs font-bold">Total Votes</p>--}}
-{{--                            </div>--}}
-{{--                            <div class="flex flex-col items-center ">--}}
-{{--                                <div class="relative w-16 h-16">--}}
-{{--                                    <svg class="absolute top-0 left-0 w-full h-full" viewBox="0 0 36 36">--}}
-{{--                                        <path class="text-gray-200"--}}
-{{--                                              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"--}}
-{{--                                              fill="none" stroke-width="3" stroke="currentColor"></path>--}}
-{{--                                        <path id="circular-progress-2" class="text-gray-500"--}}
-{{--                                              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"--}}
-{{--                                              fill="none" stroke-width="3" stroke-dasharray="22, 100"--}}
-{{--                                              stroke="currentColor"></path>--}}
-{{--                                    </svg>--}}
-{{--                                    <div class="absolute inset-0 top-1 flex items-center justify-center">--}}
-{{--                                        <span class="text-sm font-semibold text-gray-800">22%</span>--}}
-{{--                                    </div>--}}
-{{--                                </div>--}}
-{{--                                <p class="mt-2 text-gray-700 text-xs font-bold">Remaining Votes</p>--}}
-{{--                            </div>--}}
-{{--                            <div class="flex flex-col items-center ">--}}
-{{--                                <div class="relative w-16 h-16">--}}
-{{--                                    <svg class="absolute top-0 left-0 w-full h-full" viewBox="0 0 36 36">--}}
-{{--                                        <path class="text-gray-200"--}}
-{{--                                              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"--}}
-{{--                                              fill="none" stroke-width="3" stroke="currentColor"></path>--}}
-{{--                                        <path id="circular-progress-3" class="text-red-400"--}}
-{{--                                              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"--}}
-{{--                                              fill="none" stroke-width="3" stroke-dasharray="62, 100"--}}
-{{--                                              stroke="currentColor"></path>--}}
-{{--                                    </svg>--}}
-{{--                                    <div class="absolute inset-0 flex items-center justify-center">--}}
-{{--                                        <span class="text-sm font-semibold text-gray-800">62%</span>--}}
-{{--                                    </div>--}}
-{{--                                </div>--}}
-{{--                                <p class="mt-2 text-gray-700 text-xs font-bold">Voter Turnout</p>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
+                        <div class="flex flex-wrap justify-around mt-4">
+                            <div class="flex flex-col items-center ">
+                                <div class="relative w-16 h-16">
+                                    <!-- SVG Progress Circle -->
+                                    <svg class="absolute top-0 left-0 w-full h-full" viewBox="0 0 36 36">
+                                        <path class="text-gray-200"
+                                              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                              fill="none" stroke-width="3" stroke="currentColor"></path>
+                                        <path id="circular-progress-1" class="text-red-600"
+                                              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                              fill="none" stroke-width="3" stroke-dasharray="81, 100"
+                                              stroke="currentColor"></path>
+                                    </svg>
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <span class="text-sm font-semibold text-gray-800">81%</span>
+                                    </div>
+                                </div>
+                                <p class="mt-2 text-gray-700 text-xs font-bold">Total Votes</p>
+                            </div>
+                            <div class="flex flex-col items-center ">
+                                <div class="relative w-16 h-16">
+                                    <svg class="absolute top-0 left-0 w-full h-full" viewBox="0 0 36 36">
+                                        <path class="text-gray-200"
+                                              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                              fill="none" stroke-width="3" stroke="currentColor"></path>
+                                        <path id="circular-progress-2" class="text-gray-500"
+                                              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                              fill="none" stroke-width="3" stroke-dasharray="22, 100"
+                                              stroke="currentColor"></path>
+                                    </svg>
+                                    <div class="absolute inset-0 top-1 flex items-center justify-center">
+                                        <span class="text-sm font-semibold text-gray-800">22%</span>
+                                    </div>
+                                </div>
+                                <p class="mt-2 text-gray-700 text-xs font-bold">Remaining Votes</p>
+                            </div>
+                            <div class="flex flex-col items-center ">
+                                <div class="relative w-16 h-16">
+                                    <svg class="absolute top-0 left-0 w-full h-full" viewBox="0 0 36 36">
+                                        <path class="text-gray-200"
+                                              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                              fill="none" stroke-width="3" stroke="currentColor"></path>
+                                        <path id="circular-progress-3" class="text-red-400"
+                                              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                              fill="none" stroke-width="3" stroke-dasharray="62, 100"
+                                              stroke="currentColor"></path>
+                                    </svg>
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <span class="text-sm font-semibold text-gray-800">62%</span>
+                                    </div>
+                                </div>
+                                <p class="mt-2 text-gray-700 text-xs font-bold">Voter Turnout</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

@@ -54,17 +54,17 @@
                         <div class="flex-col">
                             <div class="mb-3">
                                 <label for="election_name" class="text-xs font-semibold block mb-1 text-left">Name</label>
-                                <input id="election_name" type="text" value="Election Name"
+                                <input id="election_name" type="text" value="Election Name" wire:model="election_name"
                                        class="border border-gray-300 text-xs rounded-lg px-4 py-2 w-full bg-gray-100" readonly>
                             </div>
                             <div class="mb-3">
                                 <label for="election_type" class="text-xs font-semibold block mb-1 text-left">Election Type</label>
-                                <input id="election_type" type="text" value="Selected election type"
+                                <input id="election_type" type="text" value="Selected election type" wire:model="election_type"
                                        class="border border-gray-300 text-xs rounded-lg px-4 py-2 w-full bg-gray-100" readonly>
                             </div>
                             <div class="mb-3">
                                 <label for="election_campus" class="text-xs font-semibold block mb-1 text-left">Campus</label>
-                                <input id="election_campus" type="text" value="Selected Campus"
+                                <input id="election_campus" type="text" value="Selected Campus" wire:model="election_campus"
                                        class="border border-gray-300 text-xs rounded-lg px-4 py-2 w-full bg-gray-100" readonly>
                             </div>
 
@@ -72,12 +72,12 @@
                             <div class="flex flex-col md:flex-row md:space-x-4 mb-4 border border-gray-300 rounded-md p-4">
                                 <div class="flex-1">
                                     <label for="election_start" class="text-xs font-semibold block mb-1 text-left">Date started</label>
-                                    <input id="election_start" type="datetime-local" value=" "
+                                    <input id="election_start" type="datetime-local" value=" " wire:model="election_start"
                                            class="border border-gray-300 text-xs rounded-lg px-4 py-2 w-full bg-gray-100 focus:ring focus:ring-indigo-200 focus:outline-none" readonly>
                                 </div>
                                 <div class="flex-1">
                                     <label for="election_end" class="text-xs font-semibold block mb-1 text-left">Date ended</label>
-                                    <input id="election_end" type="datetime-local" value=" "
+                                    <input id="election_end" type="datetime-local" value=" " wire:model="election_end"
                                            class="border border-gray-300 text-xs rounded-lg px-4 py-2 w-full bg-gray-100 focus:ring focus:ring-indigo-200 focus:outline-none" readonly>
                                 </div>
                             </div>

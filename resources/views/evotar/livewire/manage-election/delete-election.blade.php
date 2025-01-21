@@ -37,20 +37,23 @@
                     <h2 class="text-sm font-bold text-left w-full sm:w-auto">Delete Election</h2>
 
                 </div>
+            </div>
+            <form action="" wire:submit.prevent="deleteElection">
+                <div>
+                    <p class="text-gray-600 text-[13px] mt-2">
+                        Are you sure you want to delete this item? This action cannot be undone.
+                    </p>
+                    <div class="flex justify-end mt-4 space-x-2">
+                        <button @click="open = false" type="button"
+                                class="px-4 py-2 border border-gray-300 text-gray-800 rounded-lg hover:bg-gray-400">
+                            Cancel
+                        </button>
+                        <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
+                            Delete
+                        </button>
+                    </div>
+                </div>
+            </form>
         </div>
-            <div>
-                <p class="text-gray-600 text-[13px] mt-2">
-                    Are you sure you want to delete this item? This action cannot be undone.
-                </p>
-                <!-- Buttons -->
-                <div class="flex justify-end mt-4 space-x-2">
-                    <button @click="open = false" type="button"  class="px-4 py-2 border border-gray-300 text-gray-800 rounded-lg hover:bg-gray-400">
-                        Cancel
-                    </button>
-                    <button type="button" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
-                        Delete
-                    </button>
-                </div></div>
     </div>
-</div>
 </div>

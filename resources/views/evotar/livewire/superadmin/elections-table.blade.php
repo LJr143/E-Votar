@@ -45,7 +45,7 @@
                     <div class="flex w-full">
                         <div class="w-1/2">
                             <button
-                                class="bg-white border border-gray-100 rounded p-1 w-[30px] flex-row  items-center justify-items-center">
+                                class="bg-white border border-gray-100 rounded p-1 w-[30px] flex-row  items-center justify-items-center" onclick="printElections()">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
                                      xmlns="http://www.w3.org/2000/svg">
                                     <mask id="mask0_782_22521" style="mask-type:alpha"
@@ -100,7 +100,7 @@
                         </div>
                     </div>
                     <div class="mt-4 min-h-[400px]">
-                        <table class="min-w-full">
+                        <table class="min-w-full" id="electionsTable">
                             <thead class="bg-gray-50 text-left ">
                             <tr class="">
                                 <th class="px-4 py-3 font-bold">ID</th>
@@ -109,7 +109,7 @@
                                 <th class="px-4 py-3 font-bold">Start Date</th>
                                 <th class="px-4 py-3 font-bold">End Date</th>
                                 <th class="px-4 py-3 font-bold text-left">Current Status</th>
-                                <th class="px-4 py-3 font-bold text-center">Actions</th>
+                                <th class="px-4 py-3 font-bold text-center exclude-print">Actions</th>
                             </tr>
                             </thead>
                             <tr></tr>
@@ -124,7 +124,7 @@
                                     <td class="px-4 py-1 text-white text-center">
                                         <p class="bg-green-600 w-[60px] rounded">{{ $election->status }}</p>
                                     </td>
-                                    <td class="px-4 py-1 text-center flex">
+                                    <td class="px-4 py-1 text-center flex exclude-print">
                                         <livewire:manage-election.view-election :election_id="$election->id" :key="'view-election-'.$election->id" />
                                         <div class="text-left">
                                             <livewire:manage-election.edit-election :election_id="$election->id" :key="'edit-election-'.$election->id" />
@@ -144,4 +144,26 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function printElections() {
+            const excludeElements = document.querySelectorAll('.exclude-print');
+            excludeElements.forEach(el => el.style.display = 'none');
+
+            printJS({
+                printable: 'electionsTable',
+                type: 'html',
+                scanStyles: true,
+                style: `
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f4f4f4; font-weight: bold; }
+        `
+            });
+
+            excludeElements.forEach(el => el.style.display = ''); // Show them again
+        }
+    </script>
+
+
 </div>
