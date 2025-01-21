@@ -117,17 +117,19 @@
                             @foreach($elections as $election)
                                 <tr class="font-light">
                                     <td class="px-4 py-1">{{ str_pad($election->id, 7, '0', STR_PAD_LEFT) }}</td>
-                                    <td class=" px-4 py-1">{{ $election->name }}</td>
-                                    <td class=" px-4 py-1">{{ $election->election_type->name }}</td>
-                                    <td class=" px-4 py-1">{{ $election->date_started }}</td>
-                                    <td class=" px-4 py-1">{{ $election->date_ended }}</td>
-                                    <td class=" px-4 py-1 text-white text-center"><p
-                                            class="bg-green-600 w-[60px] rounded">
-                                            {{ $election->status }}</p></td>
-                                    <td class=" px-4 py-1 text-center flex">
-                                        <livewire:manage-election.view-election :election_id="$election->id" />
-                                        <livewire:manage-election.edit-election :election_id="$election->id" />
-                                        <livewire:manage-election.delete-election :election_id="$election->id" />
+                                    <td class="px-4 py-1">{{ $election->name }}</td>
+                                    <td class="px-4 py-1">{{ $election->election_type->name }}</td>
+                                    <td class="px-4 py-1">{{ $election->date_started }}</td>
+                                    <td class="px-4 py-1">{{ $election->date_ended }}</td>
+                                    <td class="px-4 py-1 text-white text-center">
+                                        <p class="bg-green-600 w-[60px] rounded">{{ $election->status }}</p>
+                                    </td>
+                                    <td class="px-4 py-1 text-center flex">
+                                        <livewire:manage-election.view-election :election_id="$election->id" :key="'view-election-'.$election->id" />
+                                        <div class="text-left">
+                                            <livewire:manage-election.edit-election :election_id="$election->id" :key="'edit-election-'.$election->id" />
+                                        </div>
+                                        <livewire:manage-election.delete-election :election_id="$election->id" :key="'delete-election-'.$election->id" />
                                     </td>
                                 </tr>
                             @endforeach

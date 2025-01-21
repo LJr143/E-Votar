@@ -78,6 +78,11 @@ class AddElection extends Component
         $this->selectedVoters = $excludedUserIds;
     }
 
+    public function removePosition($positionId): void
+    {
+        $this->selectedPositions = array_diff($this->selectedPositions, [$positionId]);
+    }
+
     public function updatedElectionType($value): void
     {
         $this->selectedPositions = [];
