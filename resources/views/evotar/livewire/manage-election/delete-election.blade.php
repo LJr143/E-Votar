@@ -29,23 +29,28 @@
             x-transition:leave="transition ease-in duration-200"
             x-transition:leave-start="opacity-100 transform scale-100"
             x-transition:leave-end="opacity-0 transform scale-90"
-            class="bg-white p-6 rounded shadow-md w-3/5"
+            class="bg-white p-6 rounded shadow-md w-2/5"
         >
 
             <div class="flex justify-between items-center mb-4 border-b border-gray-300 pb-2">
                 <div>
                     <h2 class="text-sm font-bold text-left w-full sm:w-auto">Delete Election</h2>
-                    <p class="text-[10px] text-gray-500 italic">To edit an election please fill out the required
-                        information.</p>
+
                 </div>
-
-                <!-- Close Button (X) -->
-                <button @click="open = false" class="text-gray-500 hover:text-gray-700">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-
-
         </div>
+            <div>
+                <p class="text-gray-600 text-[13px] mt-2">
+                    Are you sure you want to delete this item? This action cannot be undone.
+                </p>
+                <!-- Buttons -->
+                <div class="flex justify-end mt-4 space-x-2">
+                    <button @click="open = false" type="button"  class="px-4 py-2 border border-gray-300 text-gray-800 rounded-lg hover:bg-gray-400">
+                        Cancel
+                    </button>
+                    <button type="button" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
+                        Delete
+                    </button>
+                </div></div>
     </div>
+</div>
 </div>
