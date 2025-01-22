@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Superadmin;
+namespace App\Livewire\ManagePartyList;
 
 use App\Models\PartyList;
 use Livewire\Component;
@@ -24,6 +24,6 @@ class AddPartyList extends Component
 
     public function render(): \Illuminate\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\View\View
     {
-        return view('evotar.livewire.superadmin.add-party-list');
+        return view('evotar.livewire.manage-party-list.add-party-list');
     }
 }

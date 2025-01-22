@@ -200,7 +200,7 @@ class ViewController extends Controller
      */
     public function partyList()
     {
-        return view('evotar.superadmin.party_list');
+        return view('evotar.admin.party_list');
     }
 
     /**
