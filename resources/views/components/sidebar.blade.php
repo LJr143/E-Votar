@@ -200,6 +200,45 @@
                     </li>
                 @endcan
 
+                @can('view party list')
+                    <li class="flex space-x-2 px-4 py-2 mb-2 w-full {{ request()->routeIs('admin.election.party.list') ? 'bg-black' : '' }}">
+                        <div class="flex">
+                            <svg class="icon mr-2" width="25" height="17" viewBox="0 0 27 19" fill="none"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M23.5455 6.65797C24.4254 7.53787 24.4254 8.96446 23.5455 9.84435C22.6656 10.7242 21.239 10.7242 20.3591 9.84435C19.4792 8.96446 19.4792 7.53787 20.3591 6.65797C21.239 5.77807 22.6656 5.77807 23.5455 6.65797"
+                                    stroke="{{ request()->routeIs('admin.election.party.list') ? 'white' : '#757575' }}"
+                                    stroke-width="1.67062" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                      d="M16.2038 2.63626C17.5586 3.99111 17.5586 6.18777 16.2038 7.54264C14.8489 8.89749 12.6523 8.89749 11.2974 7.54264C9.94254 6.18778 9.94254 3.99112 11.2974 2.63626C12.6522 1.2814 14.8489 1.2814 16.2038 2.63626Z"
+                                      stroke="{{ request()->routeIs('admin.election.party.list') ? 'white' : '#757575' }}"
+                                      stroke-width="1.67062" stroke-linecap="round"
+                                      stroke-linejoin="round"/>
+                                <path
+                                    d="M7.14318 6.65797C8.02308 7.53787 8.02308 8.96446 7.14318 9.84435C6.26328 10.7242 4.83669 10.7242 3.9568 9.84435C3.0769 8.96446 3.0769 7.53787 3.9568 6.65797C4.83669 5.77807 6.26328 5.77807 7.14318 6.65797"
+                                    stroke="{{ request()->routeIs('admin.election.party.list') ? 'white' : '#757575' }}"
+                                    stroke-width="1.67062" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M26.0007 17.2131V15.9924C26.0007 14.4543 24.7544 13.208 23.2163 13.208H22.3242"
+                                      stroke="{{ request()->routeIs('admin.election.party.list') ? 'white' : '#757575' }}"
+                                      stroke-width="1.67062" stroke-linecap="round"
+                                      stroke-linejoin="round"/>
+                                <path d="M1.5 17.2131V15.9924C1.5 14.4543 2.74629 13.208 4.28437 13.208H5.17649"
+                                      stroke="{{ request()->routeIs('admin.election.party.list') ? 'white' : '#757575' }}"
+                                      stroke-width="1.67062" stroke-linecap="round"
+                                      stroke-linejoin="round"/>
+                                <path
+                                    d="M19.6984 17.2125V15.4294C19.6984 13.2765 17.9532 11.5312 15.8003 11.5312H11.7028C9.54993 11.5312 7.80469 13.2765 7.80469 15.4294V17.2125"
+                                    stroke="{{ request()->routeIs('admin.election.party.list') ? 'white' : '#757575' }}"
+                                    stroke-width="1.67062" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <a href="{{ auth()->user()->hasAnyRole($rolesExceptVoter) ? route('admin.election.party.list') : '#' }}"
+                               class="{{ request()->routeIs('admin.election.party.list') ? 'text-white font-normal' : 'text-[#757575] font-normal' }}">
+                                Party List
+                            </a>
+                        </div>
+                    </li>
+                @endcan
+
                 @can('view system logs')
                     <li class="flex space-x-2 px-4 py-2 mb-2  w-full {{ request()->routeIs('admin.system.logs') ? 'bg-black' : '' }}">
                         <div class="flex">

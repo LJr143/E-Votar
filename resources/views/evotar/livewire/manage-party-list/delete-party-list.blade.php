@@ -35,7 +35,7 @@
             <div class="flex justify-between items-center mb-2">
                 <div class="flex items-center">
                     <i class="fas fa-exclamation-triangle text-red-500 mr-2"></i>
-                    <h2 class="text-sm font-semibold text-red-600">Delete Election</h2>
+                    <h2 class="text-sm font-semibold text-red-600">Delete Party List</h2>
                 </div>
                 <!-- Close Button (X) -->
                 <button @click="open = false" class="text-gray-500 hover:text-gray-700">
@@ -46,9 +46,9 @@
 
 
 
-            <form action="" wire:submit.prevent="deleteElection">
+            <form action="" wire:submit.prevent="deletePartyList">
                 <div>
-                    <p class="text-gray-700 mb-6 ml-5 text-xs text-left">Are you sure you want to remove this election? This process cannot be undone.</p>
+                    <p class="text-gray-700 mb-6 ml-5 text-xs text-left">Are you sure you want to remove this part list? This process cannot be undone.</p>
 
                     <div class="flex justify-end mt-4 space-x-2">
                         <button @click="open = false" type="button"
