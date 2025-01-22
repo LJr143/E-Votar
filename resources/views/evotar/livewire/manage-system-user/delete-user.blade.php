@@ -29,19 +29,29 @@
             x-transition:leave="transition ease-in duration-200"
             x-transition:leave-start="opacity-100 transform scale-100"
             x-transition:leave-end="opacity-0 transform scale-90"
-            class="bg-white p-6 rounded shadow-md w-3/5"
+            class="bg-white p-6 rounded shadow-md max-w-md w-full mx-4 sm:mx-6 md:mx-8 lg:mx-10 xl:mx-12"
         >
 
-            <div class="flex justify-between items-center mb-4 border-b border-gray-300 pb-2">
-                <div>
-                    <h2 class="text-sm font-bold text-left w-full sm:w-auto">Delete System User</h2>
-                    <p class="text-[10px] text-gray-500 italic">To edit an election please fill out the required
-                        information.</p>
+            <div class="flex justify-between items-center mb-2">
+                <div class="flex items-center">
+                    <i class="fas fa-exclamation-triangle text-red-500 mr-2"></i>
+                    <h2 class="text-sm font-semibold text-red-600">Delete User</h2>
                 </div>
-
                 <!-- Close Button (X) -->
                 <button @click="open = false" class="text-gray-500 hover:text-gray-700">
                     <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <p class="text-gray-700 mb-6 ml-5 text-xs text-left">Are you sure you want to remove this user? This process cannot be undone.</p>
+
+            <div class="flex justify-end mt-4 space-x-2">
+                <button @click="open = false" type="button"
+                        class="px-4 py-2 border border-gray-300 text-gray-800 rounded-md shadow-md hover:bg-gray-400 text-xs">
+                    Cancel
+                </button>
+                <button type="submit"
+                        class="px-4 py-2 bg-red-600 text-white rounded-md shadow-md hover:bg-red-700 text-xs">
+                    Delete
                 </button>
             </div>
 
