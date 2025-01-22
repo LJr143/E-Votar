@@ -7,7 +7,7 @@
                     <div class="flex w-full">
                         <div class="w-1/2">
                             <button
-                                class="bg-white border border-gray-100 rounded p-1 w-[30px] flex-row  items-center justify-items-center">
+                                class="bg-white border border-gray-100 rounded p-1 w-[30px] flex-row  items-center justify-items-center" onclick="printPartyList()">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
                                      xmlns="http://www.w3.org/2000/svg">
                                     <mask id="mask0_782_22521" style="mask-type:alpha"
@@ -74,13 +74,13 @@
 
                     </style>
                     <div class="mt-4 min-h-[350px]">
-                        <table class="min-w-full ">
+                        <table class="min-w-full " id="partyListTable">
                             <thead class="bg-gray-50 text-left text-[12px] ">
                             <tr class="text-center border border-gray-100">
-                                <th class="px-4 py-2 font-light w-[50px]"></th>
+                                <th class="px-4 py-2 font-light w-[50px] exclude-print"></th>
                                 <th class="px-4 py-2 font-light w-[65px]">Id</th>
                                 <th class="px-4 py-2 font-light">Party List Name</th>
-                                <th class="px-4 py-2 font-light"></th>
+                                <th class="px-4 py-2 font-light exclude-print"></th>
 
                             </tr>
                             </thead>
@@ -88,12 +88,12 @@
                             <tr></tr>
                             @foreach($party_lists as $party_list)
                                 <tr class=" rows text-[12px] border border-gray-100  font-light bg-white shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)]">
-                                    <td class="px-4 py-4"><input class="rounded-full" type="checkbox"></td>
+                                    <td class="px-4 py-4 exclude-print"><input class="rounded-full" type="checkbox"></td>
                                     <td class="px-4 py-4">{{ $party_list->id }}</td>
                                     <td class="px-4 py-4">{{ $party_list->name }}</td>
 
-                                    <td class="px-4 py-4 text-center flex">
-                                       <livewire:manage-party-list.edit-party-list :partyListId="$party_list->id"/>
+                                    <td class="px-4 py-4 text-center flex exclude-print">
+                                        <livewire:manage-party-list.edit-party-list :partyListId="$party_list->id"/>
                                         <livewire:manage-party-list.delete-party-list :partyListId="$party_list->id"/>
                                     </td>
                                 </tr>
@@ -105,6 +105,26 @@
                 </div>
             </div>
         </div>
+
+        <script>
+            function printPartyList() {
+                const excludeElements = document.querySelectorAll('.exclude-print');
+                excludeElements.forEach(el => el.style.display = 'none');
+
+                printJS({
+                    printable: 'partyListTable',
+                    type: 'html',
+                    scanStyles: true,
+                    style: `
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f4f4f4; font-weight: bold; }
+        `
+                });
+
+                excludeElements.forEach(el => el.style.display = ''); // Show them again
+            }
+        </script>
 
     </div>
 </div>
