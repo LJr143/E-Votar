@@ -152,15 +152,15 @@
                                                 <div
                                                     class="border border-gray-300 rounded-lg p-4 flex justify-between items-center w-[173px]">
                                                     <span class="text-[10px]">{{ $positionName }}</span>
-                                                    <button type="button"
-                                                            wire:click="removePosition({{ $positionId }})"
-                                                            class="text-white px-2 py-1 rounded bg-red-500">
-                                                        <svg width="10" height="10" viewBox="0 0 10 10" fill="none"
-                                                             xmlns="http://www.w3.org/2000/svg">
-                                                            <path d="M9 1L1 9M9 9L1 0.999998" stroke="white"
-                                                                  stroke-width="2" stroke-linecap="round"/>
-                                                        </svg>
-                                                    </button>
+{{--                                                    <button type="button"--}}
+{{--                                                            wire:click="removePosition({{ $positionId }})"--}}
+{{--                                                            class="text-white px-2 py-1 rounded bg-red-500">--}}
+{{--                                                        <svg width="10" height="10" viewBox="0 0 10 10" fill="none"--}}
+{{--                                                             xmlns="http://www.w3.org/2000/svg">--}}
+{{--                                                            <path d="M9 1L1 9M9 9L1 0.999998" stroke="white"--}}
+{{--                                                                  stroke-width="2" stroke-linecap="round"/>--}}
+{{--                                                        </svg>--}}
+{{--                                                    </button>--}}
                                                 </div>
                                             @endif
                                         @endforeach
