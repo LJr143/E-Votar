@@ -24,8 +24,10 @@
             x-transition:leave="transition ease-in duration-200"
             x-transition:leave-start="opacity-100 transform scale-100"
             x-transition:leave-end="opacity-0 transform scale-90"
-            class="bg-white p-6 rounded shadow-md w-3/5"
+            class="bg-white p-6 rounded shadow-md"
+            :class="{ 'w-3/5': $wire.currentStep !== 2, 'w-2/5': $wire.currentStep === 2 }"
         >
+
 
             <div class="flex justify-between items-center mb-4 border-b border-gray-300 pb-2">
                 <div>
@@ -189,46 +191,40 @@
                             <div class="mb-2">
                                 <p class="text-[12px] font-semibold"> Manage election voter here</p>
                             </div>
-
                             <div>
                                 <div class="min-h-[300px]">
-                                    <div>
-                                        <div class="mb-2">
-                                            <p class="text-[12px] font-semibold">Select Colleges and Programs</p>
+                                    <div class="bg-white text-black p-4"> <!-- White background with black text -->
+                                        <div class="mb-4">
+                                            <p class="text-[12px] font-bold">Select Colleges and Programs</p> <!-- Title with bold font -->
                                         </div>
 
                                         <div>
                                             @foreach($colleges as $college)
-                                                <div>
+                                                <div class="flex items-center mb-2"> <!-- Flex for alignment -->
                                                     <input type="checkbox" wire:model.live="selectedColleges"
-                                                           value="{{ $college->id }}" id="college-{{ $college->id }}">
-                                                    <label for="college-{{ $college->id }}">{{ $college->name }}</label>
+                                                           value="{{ $college->id }}" id="college-{{ $college->id }}" class="mr-2"> <!-- Margin-right for spacing -->
+                                                    <label for="college-{{ $college->id }}" class="text-[12px] font-semibold">{{ $college->name }}</label> <!-- College name with semi-bold font -->
                                                 </div>
-                                            @endforeach
-                                        </div>
 
-                                        <div class="mt-4">
-                                            @foreach($programsByCollege as $collegeId => $programs)
-                                                <div class="mt-2">
-                                                    <strong>Programs for {{ App\Models\College::find($collegeId)->name }}</strong>
-                                                    @foreach($programs as $program)
-                                                        <div>
-                                                            <input type="checkbox" wire:model="selectedPrograms"
-                                                                   value="{{ $program->id }}"
-                                                                   id="program-{{ $program->id }}">
-                                                            <label
-                                                                for="program-{{ $program->id }}">{{ $program->name }}</label>
-                                                        </div>
-                                                    @endforeach
-                                                </div>
+                                                @if(in_array($college->id, $selectedColleges))
+                                                    <div class="mt-2 pl-6 mb-4"> <!-- Padding-left for indentation -->
+                                                        <strong class="text-[12px] font-semibold">Programs for {{ $college->name }}</strong>
+                                                        @foreach($programsByCollege[$college->id] ?? [] as $program)
+                                                            <div class="ml-6 mb-1"> <!-- Margin-bottom for spacing between programs -->
+                                                                <input type="checkbox" wire:model="selectedPrograms"
+                                                                       value="{{ $program->id }}"
+                                                                       id="program-{{ $program->id }}" class="mr-2"> <!-- Margin-right for spacing -->
+                                                                <label for="program-{{ $program->id }}" class="text-[12px]">{{ $program->name }}</label> <!-- Program name with regular font -->
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
+                                                @endif
                                             @endforeach
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
-
                         <div class="mt-6 pt-3 flex justify-end space-x-2">
                             <button type="button" wire:click="backToStep1"
                                     class="bg-gray-300 text-gray-700 text-[12px] h-7 px-4 py-1 rounded shadow-md hover:bg-gray-400 justify-center text-center">
