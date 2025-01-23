@@ -61,47 +61,44 @@
                             </div>
                         </div>
                     </div>
-                    <style>
-                        table th {
-                            font-weight: bold !important;
-                            border-bottom: 1px solid #b8b6b6 !important;
-                        }
 
-                        table .rows:hover {
-                            background-color: black;
-                            color: white;
-                        }
 
-                    </style>
-                    <div class="mt-4 min-h-[350px]">
-                        <table class="min-w-full " id="partyListTable">
-                            <thead class="bg-gray-50 text-left text-[12px] ">
-                            <tr class="text-center border border-gray-100">
-                                <th class="px-4 py-2 font-light w-[50px] exclude-print"></th>
-                                <th class="px-4 py-2 font-light w-[65px]">Id</th>
-                                <th class="px-4 py-2 font-light">Party List Name</th>
-                                <th class="px-4 py-2 font-light exclude-print"></th>
-
+                    <div class="overflow-x-auto mt-4 min-h-[350px]">
+                        <table class="min-w-full bg-white" id="partyListTable">
+                            <thead class=" text-left text-[12px] uppercase leading-normal">
+                            <tr class="bg-gray-100 border-b border-gray-300">
+                                <th class="py-3 px-6 rounded-tl-lg border-b border-gray-300 exclude-print">
+                                    <input  class="form-checkbox h-4 w-4 text-black"
+                                            x-model="selectAll" @click="checkboxes.forEach(checkbox => checkbox.checked = $event.target.checked)"
+                                            type="checkbox">
+                                </th>
+                                <th class="py-3 px-6">Id</th>
+                                <th class="py-3 px-6">Party List Name</th>
+                                <th class="py-3 px-6 rounded-tr-lg exclude-print">Actions</th>
                             </tr>
                             </thead>
-                            <tbody>
-                            <tr></tr>
+                            <tbody class="text-black text-[12px] ">
                             @foreach($party_lists as $party_list)
-                                <tr class=" rows text-[12px] border border-gray-100  font-light bg-white shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)]">
-                                    <td class="px-4 py-4 exclude-print"><input class="rounded-full" type="checkbox"></td>
-                                    <td class="px-4 py-4">{{ $party_list->id }}</td>
-                                    <td class="px-4 py-4">{{ $party_list->name }}</td>
+                                <tr class="hover:bg-gray-100 rows text-left border border-gray-100">
+                                    <td class="py-3 px-6 exclude-print">
+                                        <input type="checkbox"
+                                               class="form-checkbox h-4 w-4 text-black row-checkbox">
+                                    </td>
+                                    <td class="py-3 px-6">{{ $party_list->id }}</td>
+                                    <td class="py-3 px-6">{{ $party_list->name }}</td>
 
-                                    <td class="px-4 py-4 text-center flex exclude-print">
+                                    <td class="py-3 px-6 flex exclude-print">
                                         <livewire:manage-party-list.edit-party-list :partyListId="$party_list->id"/>
                                         <livewire:manage-party-list.delete-party-list :partyListId="$party_list->id"/>
                                     </td>
                                 </tr>
-                                <tr class="h-[5px]"></tr>
                             @endforeach
                             </tbody>
                         </table>
                     </div>
+
+
+
                 </div>
             </div>
         </div>
@@ -116,13 +113,32 @@
                     type: 'html',
                     scanStyles: true,
                     style: `
-        table { width: 100%; border-collapse: collapse; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        th { background-color: #f4f4f4; font-weight: bold; }
-        `
+                @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+                body {
+                    font-family: 'Poppins', sans-serif; /* Set Poppins as the overall font */
+                }
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                }
+                th, td {
+                    border: 1px solid #ddd;
+                    padding: 8px;
+                    text-align: left;
+                }
+                thead th {
+                    font-size: 12px;
+                    font-weight: bold;
+                }
+                tbody td {
+                    font-size: 12px;
+                    font-weight: 300;
+                }
+            `
                 });
 
-                excludeElements.forEach(el => el.style.display = ''); // Show them again
+                excludeElements.forEach(el => el.style.display = '');
             }
         </script>
 
