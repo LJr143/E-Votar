@@ -70,7 +70,7 @@
         <!-- Page Heading -->
         @if (isset($header))
             <header class="flex pt-2 {{ $headerClass }}">
-                <div class=" px-4 py-2 sm:px-6 h-[50px] w-full justify-between items-center flex">
+                <div class=" px-4 py-2 sm:px-6 w-full justify-between items-center flex">
                     {{ $header }}
                 </div>
             </header>
@@ -101,29 +101,26 @@
 <script src="https://unpkg.com/@pqina/flip/dist/flip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.1/gsap.min.js"></script>
 <script>
-    // JavaScript to hide the splash screen after a delay
     window.addEventListener('load', function() {
         setTimeout(function() {
             const splashScreen = document.getElementById('splash-screen');
             if (splashScreen) {
-                splashScreen.style.display = 'none'; // Hide the splash screen
+                splashScreen.style.display = 'none';
             }
-        }, 2000); // Delay in milliseconds (e.g., 2000ms = 2 seconds)
+        }, 2000);
     });
 </script>
-
 <script>
     const textElement = document.querySelector('.splash-text');
     const textContent = 'E-VOTAR @2025';
-    const delay = 100; // Delay between letters (ms)
+    const delay = 100;
 
-    // Fade-in text effect
     document.querySelector('.logo').addEventListener('animationend', () => {
         let index = 0;
         const interval = setInterval(() => {
             if (index < textContent.length) {
                 textElement.textContent += textContent[index];
-                textElement.style.opacity = 1; // Ensure text becomes visible
+                textElement.style.opacity = 1;
                 index++;
             } else {
                 clearInterval(interval);

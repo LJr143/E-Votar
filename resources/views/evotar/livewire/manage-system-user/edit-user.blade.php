@@ -45,9 +45,9 @@
                 </button>
             </div>
 
-            <!-- Election Details-->
-
-            <form wire:submit.prevent="proceedToAccessRole">
+            <!-- System User Details-->
+            @if ($currentStep === 1)
+                <form wire:submit.prevent="proceedToAccessRole">
                     <div>
                         <div class="flex space-x-4">
                             <div class="w-full">
@@ -70,6 +70,7 @@
                                         x-on:focus="isOpen = true"
                                         x-on:blur="setTimeout(() => isOpen = false, 200)"
                                         autocomplete="off"
+                                        readonly
                                     />
                                     <div x-show="isOpen && search.length > 0" @click.away="isOpen = false"
                                          class="flex z-10 bg-white border border-gray-300 rounded-lg w-full max-h-[50px] overflow-auto mt-[5px] shadow-lg">
@@ -102,30 +103,23 @@
                                         <label for="username"
                                                class="text-[10px] text-left font-natural px-2 block ">Username</label>
                                         <input type="text" name="username" wire:model="username"
-                                               class="border border-gray-300 text-xs rounded-lg px-4 py-2 w-full">
+                                               class="border border-gray-300 text-xs rounded-lg px-4 py-2 w-full"
+                                               readonly>
                                         @error('username')
                                         <span class="text-red-500 text-[10px] italic">{{ $message }}</span>
                                         @enderror
                                     </div>
+                                </div>
+
+                                <div class="mb-3 relative w-full">
+                                    <p class="text-[12px] text-left font-semibold my-2">Account Status</p>
                                     <div class="flex-1 mb-3">
-                                        <label for="password"
-                                               class="text-[10px] text-left font-natural px-2 block ">Password</label>
-                                        <input type="password" name="password" wire:model="password"
-                                               class="border border-gray-300 text-xs rounded-lg px-4 py-2 w-full">
-                                        @error('password')
-                                        <span class="text-red-500 text-[10px] italic">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                    <div class="flex-1 mb-3">
-                                        <label for="confirm_password" class="text-[10px] text-left font-natural px-2 block ">Confirm
-                                            Password</label>
-                                        <input type="password" name="confirm_password" wire:model="confirm_password"
-                                               class="border border-gray-300 text-xs rounded-lg px-4 py-2 w-full">
-                                        @error('confirm_password')
-                                        <span class="text-red-500 text-[10px] italic">{{ $message }}</span>
-                                        @enderror
+                                        <p class="text-green-500">This Account is Active</p>
                                     </div>
 
+                                    <button class="bg-red-600 p-2 text-white rounded">
+                                        <p>Deactivate Account</p>
+                                    </button>
                                 </div>
 
                             </div>
@@ -144,6 +138,242 @@
                         </div>
                     </div>
                 </form>
+            @elseif($currentStep === 2)
+                <form wire:submit.prevent="submit">
+                    <div>
+                        <div>
+                            <div class="mb-2">
+                                <p class="text-left">Access Role and Permission</p>
+                            </div>
+                            <div>
+                                <div class="min-h-full overflow-y-auto">
+                                    <div class="mb-3">
+                                        <select wire:model.live="selectedRole"
+                                                class="border border-gray-300 text-xs rounded-lg px-4 py-2 w-full">
+                                            <option value="">Select Role</option>
+                                            @foreach ($roles as $role)
+                                                <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <div>
+                                            <h3 class="font-bold mb-4">Assign Permissions</h3>
+
+                                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                                <!-- Election Management Section -->
+                                                <div class="flex-1">
+                                                    <div class="flex flex-col items-start">
+                                                        <h4 class="font-bold text-[11px] mb-2">Election Management</h4>
+                                                        <div class="grid grid-cols-1 gap-2">
+                                                            @foreach ($permissions as $permission)
+                                                                @if (in_array($permission->name, ['view election', 'create election', 'edit election', 'delete election', 'view election results', 'view vote tally']))
+                                                                    <div class="flex items-center">
+                                                                        <input
+                                                                            type="checkbox"
+                                                                            id="permission_{{ $permission->id }}"
+                                                                            value="{{ $permission->name }}"
+                                                                            @if ($userPermissions->contains('name', $permission->name) || $rolePermissions->contains('name', $permission->name)) checked
+                                                                            @endif
+                                                                            wire:change="togglePermission('{{ $permission->name }}')"
+                                                                            class="mr-2"
+                                                                        >
+                                                                        <label for="permission_{{ $permission->id }}"
+                                                                               class="text-[11px]">
+                                                                            {{ $permission->name }}
+                                                                            @if ($rolePermissions->contains('name', $permission->name))
+                                                                                <span class="text-[11px] text-gray-500">(via role)</span>
+                                                                            @endif
+                                                                        </label>
+                                                                    </div>
+                                                                @endif
+                                                            @endforeach
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- End of Election Management Section -->
+
+                                                <!-- Candidate Management Section -->
+                                                <div class="flex-1">
+                                                    <div class="flex flex-col items-start">
+                                                        <h4 class="font-bold mb-2 text-[11px]">Candidate Management</h4>
+                                                        <div class="grid grid-cols-1 gap-2">
+                                                            @foreach ($permissions as $permission)
+                                                                @if (in_array($permission->name, ['create candidate', 'edit candidate', 'delete candidate', 'view candidate']))
+                                                                    <div class="flex items-center">
+                                                                        <input
+                                                                            type="checkbox"
+                                                                            id="permission_{{ $permission->id }}"
+                                                                            value="{{ $permission->name }}"
+                                                                            @if ($userPermissions->contains('name', $permission->name) || $rolePermissions->contains('name', $permission->name)) checked
+                                                                            @endif
+                                                                            wire:change="togglePermission('{{ $permission->name }}')"
+                                                                            class="mr-2"
+                                                                        >
+                                                                        <label for="permission_{{ $permission->id }}"
+                                                                               class="text-[11px]">
+                                                                            {{ $permission->name }}
+                                                                            @if ($rolePermissions->contains('name', $permission->name))
+                                                                                <span class="text-[11px] text-gray-500">(via role)</span>
+                                                                            @endif
+                                                                        </label>
+                                                                    </div>
+                                                                @endif
+                                                            @endforeach
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- End of Candidate Management Section -->
+
+                                                <!-- Party List Management Section -->
+                                                <div class="flex-1">
+                                                    <div class="flex flex-col items-start">
+                                                        <h4 class="font-bold text-[11px] mb-2">Party List
+                                                            Management</h4>
+                                                        <div class="grid grid-cols-1 gap-2">
+                                                            @foreach ($permissions as $permission)
+                                                                @if (in_array($permission->name, ['view party list', 'create party list', 'edit party list', 'delete party list']))
+                                                                    <div class="flex items-center">
+                                                                        <input
+                                                                            type="checkbox"
+                                                                            id="permission_{{ $permission->id }}"
+                                                                            value="{{ $permission->name }}"
+                                                                            @if ($userPermissions->contains('name', $permission->name) || $rolePermissions->contains('name', $permission->name)) checked
+                                                                            @endif
+                                                                            wire:change="togglePermission('{{ $permission->name }}')"
+                                                                            class="mr-2"
+                                                                        >
+                                                                        <label for="permission_{{ $permission->id }}"
+                                                                               class="text-[11px]">
+                                                                            {{ $permission->name }}
+                                                                            @if ($rolePermissions->contains('name', $permission->name))
+                                                                                <span class="text-[11px] text-gray-500">(via role)</span>
+                                                                            @endif
+                                                                        </label>
+                                                                    </div>
+                                                                @endif
+                                                            @endforeach
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- End of Party List Management Section -->
+
+                                                <!-- Voter Management Section -->
+                                                <div class="flex-1">
+                                                    <div class="flex flex-col items-start">
+                                                        <h4 class="font-bold text-[11px] mb-2">Voter Management</h4>
+                                                        <div class="grid grid-cols-1 gap-2">
+                                                            @foreach ($permissions as $permission)
+                                                                @if (in_array($permission->name, ['view voter', 'create voter', 'edit voter', 'delete voter']))
+                                                                    <div class="flex items-center">
+                                                                        <input
+                                                                            type="checkbox"
+                                                                            id="permission_{{ $permission->id }}"
+                                                                            value="{{ $permission->name }}"
+                                                                            @if ($userPermissions->contains('name', $permission->name) || $rolePermissions->contains('name', $permission->name)) checked
+                                                                            @endif
+                                                                            wire:change="togglePermission('{{ $permission->name }}')"
+                                                                            class="mr-2"
+                                                                        >
+                                                                        <label for="permission_{{ $permission->id }}"
+                                                                               class="text-[11px]">
+                                                                            {{ $permission->name }}
+                                                                            @if ($rolePermissions->contains('name', $permission->name))
+                                                                                <span class="text-[11px] text-gray-500">(via role)</span>
+                                                                            @endif
+                                                                        </label>
+                                                                    </div>
+                                                                @endif
+                                                            @endforeach
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- End of Voter Management Section -->
+
+                                                <!-- User Management Section -->
+                                                <div class="flex-1">
+                                                    <div class="flex flex-col items-start">
+                                                        <h4 class="font-bold text-[11px] mb-2">User Management</h4>
+                                                        <div class="grid grid-cols-1 gap-2">
+                                                            @foreach ($permissions as $permission)
+                                                                @if (in_array($permission->name, ['view users', 'create users', 'edit users', 'delete users']))
+                                                                    <div class="flex items-center">
+                                                                        <input
+                                                                            type="checkbox"
+                                                                            id="permission_{{ $permission->id }}"
+                                                                            value="{{ $permission->name }}"
+                                                                            @if ($userPermissions->contains('name', $permission->name) || $rolePermissions->contains('name', $permission->name)) checked
+                                                                            @endif
+                                                                            wire:change="togglePermission('{{ $permission->name }}')"
+                                                                            class="mr-2"
+                                                                        >
+                                                                        <label for="permission_{{ $permission->id }}"
+                                                                               class="text-[11px]">
+                                                                            {{ $permission->name }}
+                                                                            @if ($rolePermissions->contains('name', $permission->name))
+                                                                                <span class="text-[11px] text-gray-500">(via role)</span>
+                                                                            @endif
+                                                                        </label>
+                                                                    </div>
+                                                                @endif
+                                                            @endforeach
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- End of User Management Section -->
+
+                                                <!-- System Logs Management Section -->
+                                                <div class="flex-1">
+                                                    <div class="flex flex-col items-start">
+                                                        <h4 class="font-bold text-[11px] mb-2">System Logs
+                                                            Management</h4>
+                                                        <div class="grid grid-cols-1 gap-2">
+                                                            @foreach ($permissions as $permission)
+                                                                @if (in_array($permission->name, ['view system logs', 'create system logs', 'edit system logs', 'delete system logs']))
+                                                                    <div class="flex items-center">
+                                                                        <input
+                                                                            type="checkbox"
+                                                                            id="permission_{{ $permission->id }}"
+                                                                            value="{{ $permission->name }}"
+                                                                            @if ($userPermissions->contains('name', $permission->name) || $rolePermissions->contains('name', $permission->name)) checked
+                                                                            @endif
+                                                                            wire:change="togglePermission('{{ $permission->name }}')"
+                                                                            class="mr-2"
+                                                                        >
+                                                                        <label for="permission_{{ $permission->id }}"
+                                                                               class="text-[11px]">
+                                                                            {{ $permission->name }}
+                                                                            @if ($rolePermissions->contains('name', $permission->name))
+                                                                                <span class="text-[11px] text-gray-500">(via role)</span>
+                                                                            @endif
+                                                                        </label>
+                                                                    </div>
+                                                                @endif
+                                                            @endforeach
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- End of System Logs Management Section -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mt-3 pt-3 flex justify-end space-x-2">
+                                    <button type="button" wire:click="backToStep1"
+                                            class="bg-gray-300 text-gray-700 text-[12px] h-7 px-4 py-1 rounded shadow-md hover:bg-gray-400 justify-center text-center">
+                                        Back
+                                    </button>
+                                    <button type="submit"
+                                            class="bg-black text-white px-6 py-1 h-7 rounded shadow-md hover:bg-gray-700 text-[12px] justify-center text-center">
+                                        Add System User
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            @endif
         </div>
     </div>
 </div>

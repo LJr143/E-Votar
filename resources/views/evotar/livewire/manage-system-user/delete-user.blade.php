@@ -44,16 +44,18 @@
             </div>
             <p class="text-gray-700 mb-6 ml-5 text-xs text-left">Are you sure you want to remove this user? This process cannot be undone.</p>
 
-            <div class="flex justify-end mt-4 space-x-2">
-                <button @click="open = false" type="button"
-                        class="px-4 py-2 border border-gray-300 text-gray-800 rounded-md shadow-md hover:bg-gray-400 text-xs">
-                    Cancel
-                </button>
-                <button type="submit"
-                        class="px-4 py-2 bg-red-600 text-white rounded-md shadow-md hover:bg-red-700 text-xs">
-                    Delete
-                </button>
-            </div>
+            <form action="" wire:submit.prevent="deleteUser">
+                <div class="flex justify-end mt-4 space-x-2">
+                    <button @click="open = false" type="button"
+                            class="px-4 py-2 border border-gray-300 text-gray-800 rounded-md shadow-md hover:bg-gray-400 text-xs">
+                        Cancel
+                    </button>
+                    <button type="submit"
+                            class="px-4 py-2 bg-red-600 text-white rounded-md shadow-md hover:bg-red-700 text-xs">
+                        Delete
+                    </button>
+                </div>
+            </form>
 
 
         </div>

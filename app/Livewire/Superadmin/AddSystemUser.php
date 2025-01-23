@@ -87,7 +87,7 @@ class AddSystemUser extends Component
         $this->user = User::findOrFail($this->userId);
         $this->roles = Role::with('permissions')->get();
         $this->permissions = Permission::all();
-        $this->userPermissions = $this->user->getDirectPermissions();
+        $this->userPermissions = $this->user->getDirectPermissions()->pluck('id')->toArray();
         $this->rolePermissions = $this->user->getPermissionsViaRoles();
     }
 
@@ -99,9 +99,11 @@ class AddSystemUser extends Component
 
         $user = User::find($this->userId);
 
+        // Convert rolePermissions to an array
+        $rolePermissionsArray = $this->rolePermissions->pluck('name')->toArray();
+
         // Check if the permission is granted via role
-        if ($this->rolePermissions->contains('name', $permissionName)) {
-            // Override the role-based permission by directly assigning or revoking
+        if (in_array($permissionName, $rolePermissionsArray)) {
             if ($user->hasDirectPermission($permissionName)) {
                 $user->revokePermissionTo($permissionName);
                 session()->flash('success', "Permission '{$permissionName}' has been removed.");
@@ -110,7 +112,6 @@ class AddSystemUser extends Component
                 session()->flash('success', "Permission '{$permissionName}' has been added.");
             }
         } else {
-            // Handle direct user permissions
             if ($user->hasDirectPermission($permissionName)) {
                 $user->revokePermissionTo($permissionName);
                 session()->flash('success', "Permission '{$permissionName}' has been removed.");
@@ -120,42 +121,7 @@ class AddSystemUser extends Component
             }
         }
 
-        // Refresh permissions
-        $this->userPermissions = $user->getDirectPermissions();
-    }
-
-    public function addPermission($permissionName): void
-    {
-        if (!Permission::where('name', $permissionName)->exists()) {
-            Permission::create(['name' => $permissionName]);
-        }
-
-        $user = User::find($this->userId);
-        $user->givePermissionTo($permissionName);
-
-        session()->flash('success', "Permission '{$permissionName}' has been added and assigned to the user.");
-        $this->userPermissions = $user->getDirectPermissions();
-    }
-
-    public function removePermission($permissionName): void
-    {
-        $permission = Permission::where('name', $permissionName)->first();
-        if ($permission) {
-            $user = User::find($this->userId);
-            $user->revokePermissionTo($permissionName);
-
-            session()->flash('success', "Permission '{$permissionName}' has been removed.");
-            $this->userPermissions = $user->getDirectPermissions();
-        } else {
-            session()->flash('error', "Permission '{$permissionName}' does not exist.");
-        }
-    }
-
-    // Utility Methods
-    private function resetPermissions(): void
-    {
-        $this->rolePermissions = collect();
-        $this->permissions = collect();
+        $this->userPermissions = $user->getDirectPermissions()->pluck('id')->toArray();
     }
 
     public function submit()
@@ -175,21 +141,27 @@ class AddSystemUser extends Component
             ]);
         }
 
-
-        // Assign the role and permissions
+        // Assign the role
         $user->roles()->attach($this->selectedRole);
-        if (!empty($this->permissions)) {
-            $user->permissions()->sync($this->permissions);
+
+        // Sync only selected permissions
+        if (!empty($this->userPermissions)) {
+            $selectedPermissions = Permission::whereIn('id', $this->userPermissions)->pluck('id');
+            $user->permissions()->sync($selectedPermissions);
         }
 
-        // Reset the form
-        $this->reset(['username', 'password', 'confirm_password', 'selectedRole', 'permissions']);
+        $this->reset(['username', 'password', 'confirm_password', 'selectedRole', 'userPermissions']);
         session()->flash('message', 'User created successfully!');
         $this->dispatch('system-user_added');
     }
 
-    // Rendering
-    public function render()
+    private function resetPermissions(): void
+    {
+        $this->rolePermissions = collect();
+        $this->permissions = collect();
+    }
+
+    public function render(): \Illuminate\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\View\View
     {
         return view('evotar.livewire.superadmin.add-system-user', [
             'user' => $this->user,

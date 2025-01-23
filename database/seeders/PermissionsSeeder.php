@@ -8,9 +8,6 @@ use Spatie\Permission\Models\Role;
 
 class PermissionsSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         $permissions = [
@@ -54,40 +51,53 @@ class PermissionsSeeder extends Seeder
             ],
         ];
 
-        // Create permissions and assign them to roles
+        // Create permissions
         foreach ($permissions as $group => $actions) {
             foreach ($actions as $action) {
                 Permission::firstOrCreate(['name' => $action]);
             }
         }
 
-        // Create roles
-        $superadminRole = Role::firstOrCreate(['name' => 'superadmin']);
-        $adminRole = Role::firstOrCreate(['name' => 'admin']);
-        $watcher = Role::firstOrCreate(['name' => 'watcher']);
+        // Define roles
+        $roles = [
+            'superadmin' => [
+                'Election Management',
+                'Candidate Management',
+                'Party List Management',
+                'Voter Management',
+                'User Management',
+                'System Logs',
+            ],
+            'admin' => [
+                'Candidate Management',
+                'Voter Management',
+                'Party List Management',
+                'System Logs',
+                ['view vote tally', 'view election results'],
+            ],
+            'watcher' => [
+                ['view election', 'view election results'],
+            ],
+        ];
 
-        // Assign specific permissions to roles
-        $superadminRole->syncPermissions(array_merge(
-            $permissions['Election Management'],
-            $permissions['Candidate Management'],
-            $permissions['Party List Management'],
-            $permissions['Voter Management'],
-            $permissions['User Management'],
-            $permissions['System Logs']
-        ));
+        // Assign permissions to roles dynamically
+        foreach ($roles as $roleName => $permissionGroups) {
+            $role = Role::firstOrCreate(['name' => $roleName]);
 
-        $adminRole->syncPermissions(array_merge(
-            $permissions['Candidate Management'],
-            ['view vote tally', 'view election results'],
-            $permissions['Voter Management'],
-            $permissions['Party List Management'],
-            ['view system logs']
-        ));
+            $rolePermissions = [];
+            foreach ($permissionGroups as $groupOrAction) {
+                if (is_array($groupOrAction)) {
+                    // Add specific permissions
+                    $rolePermissions = array_merge($rolePermissions, $groupOrAction);
+                } elseif (isset($permissions[$groupOrAction])) {
+                    // Add permissions from a group
+                    $rolePermissions = array_merge($rolePermissions, $permissions[$groupOrAction]);
+                }
+            }
 
-        $watcher->syncPermissions([
-            'view election',
-            'view election results'
-        ]);
+            // Sync permissions
+            $role->syncPermissions($rolePermissions);
+        }
 
         $this->command->info('Roles and permissions have been successfully assigned!');
     }
