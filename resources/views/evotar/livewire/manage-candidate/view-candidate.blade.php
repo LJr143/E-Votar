@@ -104,144 +104,147 @@
 
 
                 <div class="w-full h-full">
-                    <h3 class="text-[12px] font-semibold px-4 py-2">STUDENT COUNCIL CANDIDATES</h3>
                     <!-- Student Council Section -->
                     <div id="studentCouncil"
-                         class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 px-4 py-4">
+                         class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 px-4 py-4" wire:key="candidates-list" wire:poll="$refresh">
                         @foreach($candidates as $candidate)
                             @if($candidate->election_positions->position->electionType->name == 'Student Council Election')
-                                <div class="bg-white p-6 shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] min-h-[310px]">
-                                    <div class="flex justify-center items-center">
-                                        <p class="text-[12px]">Running for: <span
-                                                class="text-red-900 uppercase tracking-wide font-semibold">{{ $candidate->election_positions->position->name }}</span>
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <div class="flex justify-end mt-2">
-                                            <img class="w-[80px]"
-                                                 src="{{ asset('storage/assets/icon/usep_logo_svg.png') }}" alt="">
-                                        </div>
-                                        <div class="mt-[-38px] flex justify-center">
-                                            <div class="border-2 border-black">
-                                                <img class="w-[110px]"
-                                                     src="{{ asset('storage/assets/profile/cat_meme.jpg') }}" alt="">
+                                    <div wire:key="candidate-{{ $candidate->id }}">
+                                        <div class="bg-white p-6 shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] min-h-[310px]">
+                                            <div class="flex justify-center items-center">
+                                                <p class="text-[12px]">Running for: <span
+                                                        class=" text-[12px] text-red-900 uppercase tracking-tighter font-semibold">{{ $candidate->election_positions->position->name }}</span>
+                                                </p>
                                             </div>
-                                        </div>
+                                            <div>
+                                                <div class="flex justify-end mt-2">
+                                                    <img class="w-[80px]"
+                                                         src="{{ asset('storage/assets/icon/usep_logo_svg.png') }}" alt="">
+                                                </div>
+                                                <div class="mt-[-38px] flex justify-center">
+                                                    <div class="border-2 border-black">
+                                                        <img class="w-[110px]"
+                                                             src="{{ asset('storage/assets/profile/cat_meme.jpg') }}" alt="">
+                                                    </div>
+                                                </div>
 
-                                        <div class="mt-2 text-center">
-                                            <div class="flex justify-center">
-                                                <p class="text-black uppercase font-black text-[11px]">{{ $candidate->users->first_name }} {{ $candidate->users->middle_initial }}
-                                                    . {{ $candidate->users->last_name }}</p>
+                                                <div class="mt-2 text-center">
+                                                    <div class="flex justify-center">
+                                                        <p class="text-black uppercase font-black text-[11px]">{{ $candidate->users->first_name }} {{ $candidate->users->middle_initial }}
+                                                            . {{ $candidate->users->last_name }}</p>
+                                                    </div>
+                                                    <p class="text-black capitalize font-semibold text-[10px]">{{ $candidate->users->year_level }}
+                                                        year</p>
+                                                    <p class="text-black capitalize font-semibold text-[10px] leading-none">{{ $candidate->users->program->name }}</p>
+                                                    <p class="text-black capitalize font-semibold text-[11px] leading-none">{{ optional($candidate->users->programMajor)->name ?? '' }}</p>
+                                                    <p class="text-black mt-2 capitalize italic font-semibold text-[11px]">{{ $candidate->partyLists->name }}</p>
+
+
+                                                </div>
                                             </div>
-                                            <p class="text-black capitalize font-semibold text-[10px]">{{ $candidate->users->year_level }}
-                                                year</p>
-                                            <p class="text-black capitalize font-semibold text-[10px] leading-none">{{ $candidate->users->program->name }}</p>
-                                            <p class="text-black capitalize font-semibold text-[11px] leading-none">{{ optional($candidate->users->programMajor)->name ?? '' }}</p>
-                                            <p class="text-black mt-2 capitalize italic font-semibold text-[11px]">{{ $candidate->partyLists->name }}</p>
-
 
                                         </div>
                                     </div>
-
-                                </div>
                             @endif
                         @endforeach
 
                     </div>
 
-
-                    <h3 class="text-[12px] font-semibold mt-3 px-4 py-2">LOCAL COUNCIL CANDIDATES</h3>
                     <!-- Local Council Section -->
-                    <div id="studentCouncil" class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 px-4 py-4">
+                    <div id="studentCouncil" class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 px-4 py-4" wire:key="candidates-list" wire:poll="$refresh">
                         @foreach($candidates as $candidate)
                             @if($candidate->election_positions->position->electionType->name == 'Local Council Election')
-                                <div class="bg-white p-6 shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] min-h-[310px]">
-                                    <div class="flex justify-center items-center">
-                                        <p class="text-[12px] mx-auto text-center">Running for: <span
-                                                class="text-red-900 uppercase tracking-wide font-semibold">{{ $candidate->election_positions->position->name }}</span>
-                                        </p>
-                                        <div class="relative inline-block">
-                                            <!-- Button to toggle dropdown -->
-                                            <button onclick="toggleDropdown(this)" class="ml-2 focus:outline-none">
-                                                <svg width="4" height="13" viewBox="0 0 4 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M3 2C3 1.44772 2.5523 1 2 1C1.4477 1 1 1.44772 1 2C1 2.55228 1.4477 3 2 3C2.5523 3 3 2.55228 3 2Z"
-                                                          stroke="#3F3E44" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                                    <path d="M3 9C3 8.4477 2.5523 8 2 8C1.4477 8 1 8.4477 1 9C1 9.5523 1.4477 10 2 10C2.5523 10 3 9.5523 3 9Z"
-                                                          stroke="#3F3E44" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                                    <path d="M3 16C3 15.4477 2.5523 15 2 15C1.4477 15 1 15.4477 1 16C1 16.5523 1.4477 17 2 17C2.5523 17 3 16.5523 3 16Z"
-                                                          stroke="#3F3E44" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                                </svg>
-                                            </button>
+                                <div wire:key="candidate-{{ $candidate->id }}">
+                                    <div class="bg-white p-6 shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] min-h-[310px]">
+                                        <div class="flex justify-center items-center">
+                                            <p class="text-[12px] mx-auto text-center">Running for: <span
+                                                    class="text-red-900 uppercase tracking-tighter font-semibold">{{ $candidate->election_positions->position->name }}</span>
+                                            </p>
+                                            <div class="relative inline-block">
+                                                <!-- Button to toggle dropdown -->
+                                                <button onclick="toggleDropdown(this)" class="ml-2 focus:outline-none">
+                                                    <svg width="4" height="13" viewBox="0 0 4 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M3 2C3 1.44772 2.5523 1 2 1C1.4477 1 1 1.44772 1 2C1 2.55228 1.4477 3 2 3C2.5523 3 3 2.55228 3 2Z"
+                                                              stroke="#3F3E44" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                                        <path d="M3 9C3 8.4477 2.5523 8 2 8C1.4477 8 1 8.4477 1 9C1 9.5523 1.4477 10 2 10C2.5523 10 3 9.5523 3 9Z"
+                                                              stroke="#3F3E44" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                                        <path d="M3 16C3 15.4477 2.5523 15 2 15C1.4477 15 1 15.4477 1 16C1 16.5523 1.4477 17 2 17C2.5523 17 3 16.5523 3 16Z"
+                                                              stroke="#3F3E44" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                                    </svg>
+                                                </button>
 
-                                            <!-- Dropdown menu -->
-                                            <div class="hidden absolute left-full ml-2 mt-10 bg-white border border-gray-200 rounded shadow-lg w-28 z-50">
-                                                <ul class="py-1 text-sm text-gray-700">
-                                                    <li>
-                                                        <button class="w-full text-left px-4 py-2 flex items-center space-x-2 hover:bg-gray-500 hover:text-white">
-                                                            <!-- SVG Icon -->
-                                                            <svg width="19" height="19" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                <mask id="mask0_1784_2853" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="25" height="25">
-                                                                    <rect x="0.5" y="0.5" width="24" height="24" fill="#D9D9D9"/>
-                                                                </mask>
-                                                                <g mask="url(#mask0_1784_2853)">
-                                                                    <path d="M5.49997 19.5H6.7615L16.9981 9.2634L15.7366 8.00188L5.49997 18.2385V19.5ZM4.90385 21C4.64777 21 4.43311 20.9133 4.25987 20.7401C4.08662 20.5668 4 20.3522 4 20.0961V18.3635C4 18.1196 4.0468 17.8871 4.1404 17.6661C4.23398 17.4451 4.36282 17.2526 4.52692 17.0885L17.1904 4.43078C17.3416 4.29343 17.5086 4.18729 17.6913 4.11237C17.874 4.03746 18.0656 4 18.2661 4C18.4666 4 18.6608 4.03558 18.8488 4.10675C19.0368 4.1779 19.2032 4.29103 19.348 4.44615L20.5692 5.68268C20.7243 5.82754 20.8349 5.99424 20.9009 6.18278C20.9669 6.37129 21 6.55981 21 6.74833C21 6.94941 20.9656 7.14131 20.8969 7.32403C20.8283 7.50676 20.719 7.67373 20.5692 7.82495L7.91147 20.473C7.74738 20.6371 7.55483 20.766 7.33383 20.8596C7.11281 20.9532 6.88037 21 6.6365 21H4.90385ZM16.3563 8.6437L15.7366 8.00188L16.9981 9.2634L16.3563 8.6437Z" fill="#35353A"/>
-                                                                </g>
-                                                            </svg>
+                                                <!-- Dropdown menu -->
+                                                <div class="hidden absolute left-full ml-2 mt-10 bg-white border border-gray-200 rounded shadow-lg w-28 z-50">
+                                                    <ul class="py-1 text-sm text-gray-700">
+                                                        <li>
+                                                            <button class="w-full text-left px-4 py-2 flex items-center space-x-2 hover:bg-gray-500 hover:text-white">
+                                                                <!-- SVG Icon -->
+                                                                <svg width="19" height="19" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                    <mask id="mask0_1784_2853" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="25" height="25">
+                                                                        <rect x="0.5" y="0.5" width="24" height="24" fill="#D9D9D9"/>
+                                                                    </mask>
+                                                                    <g mask="url(#mask0_1784_2853)">
+                                                                        <path d="M5.49997 19.5H6.7615L16.9981 9.2634L15.7366 8.00188L5.49997 18.2385V19.5ZM4.90385 21C4.64777 21 4.43311 20.9133 4.25987 20.7401C4.08662 20.5668 4 20.3522 4 20.0961V18.3635C4 18.1196 4.0468 17.8871 4.1404 17.6661C4.23398 17.4451 4.36282 17.2526 4.52692 17.0885L17.1904 4.43078C17.3416 4.29343 17.5086 4.18729 17.6913 4.11237C17.874 4.03746 18.0656 4 18.2661 4C18.4666 4 18.6608 4.03558 18.8488 4.10675C19.0368 4.1779 19.2032 4.29103 19.348 4.44615L20.5692 5.68268C20.7243 5.82754 20.8349 5.99424 20.9009 6.18278C20.9669 6.37129 21 6.55981 21 6.74833C21 6.94941 20.9656 7.14131 20.8969 7.32403C20.8283 7.50676 20.719 7.67373 20.5692 7.82495L7.91147 20.473C7.74738 20.6371 7.55483 20.766 7.33383 20.8596C7.11281 20.9532 6.88037 21 6.6365 21H4.90385ZM16.3563 8.6437L15.7366 8.00188L16.9981 9.2634L16.3563 8.6437Z" fill="#35353A"/>
+                                                                    </g>
+                                                                </svg>
 
-                                                            <span>Edit</span>
-                                                        </button>
-                                                    </li>
-                                                    <li>
-                                                        <button class="w-full text-left px-4 py-2 flex items-center space-x-2 hover:bg-gray-500 hover:text-white">
-                                                            <!-- SVG Icon -->
-                                                            <svg width="19" height="19" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                <mask id="mask0_1784_1499" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="25" height="25">
-                                                                    <rect x="0.5" y="0.5" width="24" height="24" fill="#D9D9D9"/>
-                                                                </mask>
-                                                                <g mask="url(#mask0_1784_1499)">
-                                                                    <path d="M7.8077 20.9998C7.31058 20.9998 6.88502 20.8228 6.53102 20.4688C6.17701 20.1148 6 19.6892 6 19.1921V6.49981H5.75C5.5375 6.49981 5.35938 6.4279 5.21563 6.28408C5.07188 6.14028 5 5.96208 5 5.74948C5 5.5369 5.07188 5.35882 5.21563 5.21523C5.35938 5.07163 5.5375 4.99983 5.75 4.99983H9.49997C9.49997 4.75497 9.58619 4.54632 9.75863 4.37388C9.93106 4.20145 10.1397 4.11523 10.3846 4.11523H14.6154C14.8602 4.11523 15.0689 4.20145 15.2413 4.37388C15.4138 4.54632 15.5 4.75497 15.5 4.99983H19.25C19.4625 4.99983 19.6406 5.07174 19.7843 5.21556C19.9281 5.35938 20 5.53758 20 5.75016C20 5.96276 19.9281 6.14085 19.7843 6.28443C19.6406 6.42802 19.4625 6.49981 19.25 6.49981H19V19.1921C19 19.6892 18.8229 20.1148 18.4689 20.4688C18.1149 20.8228 17.6894 20.9998 17.1922 20.9998H7.8077ZM17.5 6.49981H7.49997V19.1921C7.49997 19.2818 7.52883 19.3556 7.58652 19.4133C7.64422 19.471 7.71795 19.4998 7.8077 19.4998H17.1922C17.282 19.4998 17.3557 19.471 17.4134 19.4133C17.4711 19.3556 17.5 19.2818 17.5 19.1921V6.49981ZM10.6542 17.4998C10.8668 17.4998 11.0448 17.4279 11.1884 17.2842C11.332 17.1404 11.4038 16.9623 11.4038 16.7498V9.24979C11.4038 9.0373 11.3319 8.85918 11.1881 8.71543C11.0443 8.57168 10.8661 8.49981 10.6535 8.49981C10.4409 8.49981 10.2628 8.57168 10.1192 8.71543C9.97564 8.85918 9.90385 9.0373 9.90385 9.24979V16.7498C9.90385 16.9623 9.97576 17.1404 10.1196 17.2842C10.2634 17.4279 10.4416 17.4998 10.6542 17.4998ZM14.3464 17.4998C14.559 17.4998 14.7371 17.4279 14.8807 17.2842C15.0243 17.1404 15.0961 16.9623 15.0961 16.7498V9.24979C15.0961 9.0373 15.0242 8.85918 14.8804 8.71543C14.7366 8.57168 14.5584 8.49981 14.3458 8.49981C14.1332 8.49981 13.9551 8.57168 13.8115 8.71543C13.6679 8.85918 13.5961 9.0373 13.5961 9.24979V16.7498C13.5961 16.9623 13.668 17.1404 13.8118 17.2842C13.9557 17.4279 14.1339 17.4998 14.3464 17.4998Z" fill="#35353A"/>
-                                                                </g>
-                                                            </svg>
+                                                                <span>Edit</span>
+                                                            </button>
+                                                        </li>
+                                                        <li>
+                                                            <button class="w-full text-left px-4 py-2 flex items-center space-x-2 hover:bg-gray-500 hover:text-white">
+                                                                <!-- SVG Icon -->
+                                                                <svg width="19" height="19" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                    <mask id="mask0_1784_1499" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="25" height="25">
+                                                                        <rect x="0.5" y="0.5" width="24" height="24" fill="#D9D9D9"/>
+                                                                    </mask>
+                                                                    <g mask="url(#mask0_1784_1499)">
+                                                                        <path d="M7.8077 20.9998C7.31058 20.9998 6.88502 20.8228 6.53102 20.4688C6.17701 20.1148 6 19.6892 6 19.1921V6.49981H5.75C5.5375 6.49981 5.35938 6.4279 5.21563 6.28408C5.07188 6.14028 5 5.96208 5 5.74948C5 5.5369 5.07188 5.35882 5.21563 5.21523C5.35938 5.07163 5.5375 4.99983 5.75 4.99983H9.49997C9.49997 4.75497 9.58619 4.54632 9.75863 4.37388C9.93106 4.20145 10.1397 4.11523 10.3846 4.11523H14.6154C14.8602 4.11523 15.0689 4.20145 15.2413 4.37388C15.4138 4.54632 15.5 4.75497 15.5 4.99983H19.25C19.4625 4.99983 19.6406 5.07174 19.7843 5.21556C19.9281 5.35938 20 5.53758 20 5.75016C20 5.96276 19.9281 6.14085 19.7843 6.28443C19.6406 6.42802 19.4625 6.49981 19.25 6.49981H19V19.1921C19 19.6892 18.8229 20.1148 18.4689 20.4688C18.1149 20.8228 17.6894 20.9998 17.1922 20.9998H7.8077ZM17.5 6.49981H7.49997V19.1921C7.49997 19.2818 7.52883 19.3556 7.58652 19.4133C7.64422 19.471 7.71795 19.4998 7.8077 19.4998H17.1922C17.282 19.4998 17.3557 19.471 17.4134 19.4133C17.4711 19.3556 17.5 19.2818 17.5 19.1921V6.49981ZM10.6542 17.4998C10.8668 17.4998 11.0448 17.4279 11.1884 17.2842C11.332 17.1404 11.4038 16.9623 11.4038 16.7498V9.24979C11.4038 9.0373 11.3319 8.85918 11.1881 8.71543C11.0443 8.57168 10.8661 8.49981 10.6535 8.49981C10.4409 8.49981 10.2628 8.57168 10.1192 8.71543C9.97564 8.85918 9.90385 9.0373 9.90385 9.24979V16.7498C9.90385 16.9623 9.97576 17.1404 10.1196 17.2842C10.2634 17.4279 10.4416 17.4998 10.6542 17.4998ZM14.3464 17.4998C14.559 17.4998 14.7371 17.4279 14.8807 17.2842C15.0243 17.1404 15.0961 16.9623 15.0961 16.7498V9.24979C15.0961 9.0373 15.0242 8.85918 14.8804 8.71543C14.7366 8.57168 14.5584 8.49981 14.3458 8.49981C14.1332 8.49981 13.9551 8.57168 13.8115 8.71543C13.6679 8.85918 13.5961 9.0373 13.5961 9.24979V16.7498C13.5961 16.9623 13.668 17.1404 13.8118 17.2842C13.9557 17.4279 14.1339 17.4998 14.3464 17.4998Z" fill="#35353A"/>
+                                                                    </g>
+                                                                </svg>
 
-                                                            <span>Delete</span>
-                                                        </button>
-                                                    </li>
-                                                </ul>
+                                                                <span>Delete</span>
+                                                            </button>
+                                                        </li>
+                                                    </ul>
+                                                </div>
                                             </div>
                                         </div>
+                                        <div>
+                                            <div class="flex justify-end mt-2">
+                                                <img class="w-[80px]"
+                                                     src="{{ asset('storage/assets/icon/usep_logo_svg.png') }}" alt="">
+                                            </div>
+                                            <div class="mt-[-38px] flex justify-center">
+                                                <div class="border-2 border-black">
+                                                    <img class="w-[110px]"
+                                                         src="{{ asset('storage/assets/profile/cat_meme.jpg') }}" alt="">
+                                                </div>
+                                            </div>
+
+                                            <div class="mt-2 text-center">
+                                                <div class="flex justify-center">
+                                                    <p class="text-black uppercase font-black text-[11px]">{{ $candidate->users->first_name }} {{ $candidate->users->middle_initial }}
+                                                        . {{ $candidate->users->last_name }}</p>
+                                                </div>
+                                                <p class="text-black capitalize font-semibold text-[10px]">{{ $candidate->users->year_level }}
+                                                    year</p>
+                                                <p class="text-black capitalize font-semibold text-[10px] leading-none">{{ $candidate->users->program->name }}</p>
+                                                <p class="text-black capitalize font-semibold text-[11px] leading-none">{{ optional($candidate->users->programMajor)->name ?? '' }}</p>
+                                                <p class="text-black mt-2 capitalize italic font-semibold text-[11px]">{{ $candidate->partyLists->name }}</p>
+
+
+                                            </div>
+                                        </div>
+
                                     </div>
-                                    <div>
-                                        <div class="flex justify-end mt-2">
-                                            <img class="w-[80px]"
-                                                 src="{{ asset('storage/assets/icon/usep_logo_svg.png') }}" alt="">
-                                        </div>
-                                        <div class="mt-[-38px] flex justify-center">
-                                            <div class="border-2 border-black">
-                                                <img class="w-[110px]"
-                                                     src="{{ asset('storage/assets/profile/cat_meme.jpg') }}" alt="">
-                                            </div>
-                                        </div>
-
-                                        <div class="mt-2 text-center">
-                                            <div class="flex justify-center">
-                                                <p class="text-black uppercase font-black text-[11px]">{{ $candidate->users->first_name }} {{ $candidate->users->middle_initial }}
-                                                    . {{ $candidate->users->last_name }}</p>
-                                            </div>
-                                            <p class="text-black capitalize font-semibold text-[10px]">{{ $candidate->users->year_level }}
-                                                year</p>
-                                            <p class="text-black capitalize font-semibold text-[10px] leading-none">{{ $candidate->users->program->name }}</p>
-                                            <p class="text-black capitalize font-semibold text-[11px] leading-none">{{ optional($candidate->users->programMajor)->name ?? '' }}</p>
-                                            <p class="text-black mt-2 capitalize italic font-semibold text-[11px]">{{ $candidate->partyLists->name }}</p>
-
-
-                                        </div>
-                                    </div>
-
                                 </div>
+
                             @endif
                         @endforeach
 
                     </div>
+
                     <script>
                         function toggleDropdown(button) {
                             const dropdown = button.nextElementSibling;

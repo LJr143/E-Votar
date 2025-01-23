@@ -95,7 +95,6 @@ class AddCandidates extends Component
         ]);
 
         $this->dispatch('candidate-created');
-        $this->reset();
 
     }
 

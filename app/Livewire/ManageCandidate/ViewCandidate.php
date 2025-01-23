@@ -1,9 +1,9 @@
 <?php
-
 namespace App\Livewire\ManageCandidate;
 
 use App\Models\Candidate;
 use App\Models\Election;
+use App\Models\ElectionPosition;
 use Livewire\Component;
 
 class ViewCandidate extends Component
@@ -15,6 +15,8 @@ class ViewCandidate extends Component
     public $selectedElection;
     public $elections;
     public $latestElection;
+    public $hasStudentCouncilPositions;
+    public $hasLocalCouncilPositions;
 
     public function mount(): void
     {
@@ -29,10 +31,7 @@ class ViewCandidate extends Component
 
     public function updatedFilter(): void
     {
-        // Fetch the latest election based on the new filter
         $this->fetchElection($this->filter);
-
-        // Fetch candidates based on the new filter and selected election
         $this->fetchCandidates();
     }
 
@@ -45,7 +44,6 @@ class ViewCandidate extends Component
     {
         $query = Candidate::with(['users', 'elections', 'election_positions.position.electionType']);
 
-        // Apply search filter
         if ($this->search) {
             $query->whereHas('users', function ($q) {
                 $q->where('first_name', 'like', '%' . $this->search . '%')
@@ -53,23 +51,18 @@ class ViewCandidate extends Component
             });
         }
 
-        // Apply election filter
         if ($this->selectedElection) {
             $query->whereHas('elections', function ($q) {
                 $q->where('id', $this->selectedElection);
             });
         }
 
-        // Apply election type filter
         if ($this->filter) {
             $query->whereHas('elections.election_type', function ($q) {
                 $q->where('name', $this->filter);
             });
-
-
         }
 
-        // Fetch candidates
         $this->candidates = $query->get();
     }
 
@@ -84,15 +77,35 @@ class ViewCandidate extends Component
 
         $this->selectedElection = $this->latestElection ? $this->latestElection->id : null;
 
+        $this->hasStudentCouncilPositions = false;
+        $this->hasLocalCouncilPositions = false;
+
+        if ($this->latestElection) {
+            $this->hasStudentCouncilPositions = ElectionPosition::where('election_id', $this->latestElection->id)
+                ->whereHas('position.electionType', function ($q) {
+                    $q->where('name', 'Student Council');
+                })
+                ->exists();
+
+            $this->hasLocalCouncilPositions = ElectionPosition::where('election_id', $this->latestElection->id)
+                ->whereHas('position.electionType', function ($q) {
+                    $q->where('name', 'Local Council');
+                })
+                ->exists();
+        }
 
         $this->elections = Election::with('election_type')
             ->whereHas('election_type', function ($q) use ($filter) {
                 $q->where('name', $filter);
             })
             ->get();
+
     }
-    public function render()
+
+    public function render(): \Illuminate\Contracts\View\View
     {
+        $this->fetchCandidates();
+
         return view('evotar.livewire.manage-candidate.view-candidate', [
             'candidates' => $this->candidates,
             'elections' => $this->elections,
