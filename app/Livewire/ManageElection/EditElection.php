@@ -35,6 +35,7 @@ class EditElection extends Component
 
     public $allVoters = [];
     public $excludedVoterIds = [];
+    public $electionId;
 
     public function mount($electionId): void
     {
@@ -42,6 +43,7 @@ class EditElection extends Component
         $this->election = Election::findOrFail($electionId);
 
         // Populate fields
+        $this->electionId = $this->election->id;
         $this->election_name = $this->election->name;
         $this->election_type = $this->election->type;
         $this->election_campus = $this->election->campus_id;
@@ -82,23 +84,63 @@ class EditElection extends Component
         $this->selectedPositions = [];
 
         if ($value == 1) {
-            $this->studentCouncilPositions = Position::where('election_type_id', '2')->pluck('name', 'id');
-            $this->localCouncilPositions = Position::where('election_type_id', '3')->pluck('name', 'id');
+            // Fetch both student and local council positions linked to the election
+            $this->studentCouncilPositions = ElectionPosition::where('election_id', $this->electionId)
+                ->whereHas('position', function ($query) {
+                    $query->where('election_type_id', '2');
+                })
+                ->with('position')
+                ->get()
+                ->pluck('position.name', 'position.id');
+
+            $this->localCouncilPositions = ElectionPosition::where('election_id', $this->electionId)
+                ->whereHas('position', function ($query) {
+                    $query->where('election_type_id', '3');
+                })
+                ->with('position')
+                ->get()
+                ->pluck('position.name', 'position.id');
+
+            // Merge the two collections
             $this->positions = $this->studentCouncilPositions->merge($this->localCouncilPositions);
-            $this->positions = array_combine(range(1, count($this->positions)), array_values($this->positions->toArray()));
+
+            // Re-index the positions
+            $this->positions = array_combine(
+                range(1, count($this->positions)),
+                array_values($this->positions->toArray())
+            );
         } elseif ($value == 2) {
-            $this->studentCouncilPositions = Position::where('election_type_id', '2')->pluck('name', 'id');
+            // Fetch only student council positions
+            $this->studentCouncilPositions = ElectionPosition::where('election_id', $this->electionId)
+                ->whereHas('position', function ($query) {
+                    $query->where('election_type_id', '2');
+                })
+                ->with('position')
+                ->get()
+                ->pluck('position.name', 'position.id');
+
             $this->positions = $this->studentCouncilPositions->toArray();
         } elseif ($value == 3) {
-            $this->localCouncilPositions = Position::where('election_type_id', '3')->pluck('name', 'id');
+            // Fetch only local council positions
+            $this->localCouncilPositions = ElectionPosition::where('election_id', $this->electionId)
+                ->whereHas('position', function ($query) {
+                    $query->where('election_type_id', '3');
+                })
+                ->with('position')
+                ->get()
+                ->pluck('position.name', 'position.id');
+
             $this->positions = $this->localCouncilPositions->toArray();
         } else {
+            // Reset if no valid election type is selected
             $this->studentCouncilPositions = [];
             $this->localCouncilPositions = [];
         }
 
+        // Set the selected positions
         $this->selectedPositions = array_keys($this->positions);
     }
+
 
 
     public function fetchVoters(): void
