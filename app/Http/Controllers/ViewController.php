@@ -180,6 +180,15 @@ class ViewController extends Controller
     }
 
     /**
+     * Candidate management view.
+     */
+    public function positions()
+    {
+        return view('evotar.admin.position');
+    }
+
+
+    /**
      * Vote tally view.
      */
     public function voteTally()

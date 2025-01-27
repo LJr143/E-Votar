@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Livewire\Superadmin;
+namespace App\Livewire\ManageSystemUser;
 
 use App\Models\User;
+use Exception;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
 use Spatie\Permission\Models\Permission;
@@ -64,7 +65,7 @@ class AddSystemUser extends Component
         if ($user) {
             $this->userId = $user->id;
             $this->selectedUser = $user->id;
-            $this->search = $user->first_name . ' ' . $user->middle_initial . '. ' . $user->last_name;
+            $this->search = $user->first_name . ' ' . $user->middle_initial . '. ' . $user->last_name . ' - ' . $user->year_level . ' ' . $user->program->name;
             $this->users = [];
         }
     }
@@ -91,10 +92,13 @@ class AddSystemUser extends Component
         $this->rolePermissions = $this->user->getPermissionsViaRoles();
     }
 
+    /**
+     * @throws Exception
+     */
     public function togglePermission($permissionName): void
     {
         if (!Permission::where('name', $permissionName)->exists()) {
-            throw new \Exception('Invalid permission');
+            throw new Exception('Invalid permission');
         }
 
         $user = User::find($this->userId);
@@ -124,7 +128,7 @@ class AddSystemUser extends Component
         $this->userPermissions = $user->getDirectPermissions()->pluck('id')->toArray();
     }
 
-    public function submit()
+    public function submit(): void
     {
         $this->validate([
             'username' => 'required|min:3|max:255|unique:users,username',
@@ -163,7 +167,7 @@ class AddSystemUser extends Component
 
     public function render(): \Illuminate\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\View\View
     {
-        return view('evotar.livewire.superadmin.add-system-user', [
+        return view('evotar.livewire.manage-system-user.add-system-user', [
             'user' => $this->user,
             'roles' => $this->roles,
             'permissions' => $this->permissions,

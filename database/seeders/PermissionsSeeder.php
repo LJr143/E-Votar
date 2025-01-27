@@ -68,16 +68,6 @@ class PermissionsSeeder extends Seeder
                 'User Management',
                 'System Logs',
             ],
-            'admin' => [
-                'Candidate Management',
-                'Voter Management',
-                'Party List Management',
-                'System Logs',
-                ['view vote tally', 'view election results'],
-            ],
-            'watcher' => [
-                ['view election', 'view election results'],
-            ],
         ];
 
         // Assign permissions to roles dynamically

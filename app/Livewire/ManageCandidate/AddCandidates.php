@@ -1,16 +1,12 @@
 <?php
 
-namespace App\Livewire\Superadmin;
+namespace App\Livewire\ManageCandidate;
 
 use App\Models\Candidate;
 use App\Models\Election;
-use App\Models\election_type;
 use App\Models\ElectionPosition;
 use App\Models\PartyList;
-use App\Models\Position;
 use App\Models\User;
-use GuzzleHttp\Promise\Create;
-use Illuminate\Validation\Rules\Can;
 use Livewire\Component;
 
 class AddCandidates extends Component
@@ -35,10 +31,14 @@ class AddCandidates extends Component
     }
     public function updatedSearch(): void
     {
-        $this->users = User::where('first_name', 'like', '%' . $this->search . '%')
-            ->orWhere('last_name', 'like', '%' . $this->search . '%')
+        $this->users = User::role('voter')
+        ->where(function ($query) {
+            $query->where('first_name', 'like', '%' . $this->search . '%')
+                ->orWhere('last_name', 'like', '%' . $this->search . '%');
+        })
             ->take(5)
             ->get();
+
     }
 
     public function fetchElection(): void
@@ -65,14 +65,13 @@ class AddCandidates extends Component
         $this->partyLists = PartyList::query()->get();
     }
 
-
     public function selectUser($userId): void
     {
         $user = User::find($userId);
 
         if ($user) {
             $this->selectedUser = $user->id;
-            $this->search = $user->first_name . ' ' . $user->middle_initial . '. ' . $user->last_name;
+            $this->search = $user->first_name . ' ' . $user->middle_initial . '. ' . $user->last_name . ' - ' . $user->year_level . ' - ' . $user->program->name;
             $this->users = [];
         }
     }

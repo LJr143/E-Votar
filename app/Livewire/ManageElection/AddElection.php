@@ -167,9 +167,6 @@ class AddElection extends Component
 
         $this->dispatch('election-created');
 
-
-
-
         // Reset the form
         $this->reset();
     }

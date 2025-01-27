@@ -11,7 +11,7 @@ class ElectionsTable extends Component
     use WithPagination;
 
     // Listens for events to refresh the component
-    protected $listeners = ['election-created' => 'refreshComponent'];
+    protected $listeners = ['election-created' => '$refresh', 'election-deleted' => '$refresh'];
 
     // Component properties
     public $filter = 'all_elections'; // Filter for election status
@@ -44,7 +44,7 @@ class ElectionsTable extends Component
     /**
      * Render the Livewire component view.
      */
-    public function render()
+    public function render(): \Illuminate\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\View\View
     {
         // Start a query on the Election model
         $query = Election::query()->with('election_type');

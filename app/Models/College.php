@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class college extends Model
+class College extends Model
 {
     protected $table = 'colleges';
     protected $fillable = ['campus_id', 'name'];

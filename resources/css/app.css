@@ -6,6 +6,7 @@
     display: none;
 }
 
+
 .tick {
     display: flex;
     justify-content: center;
@@ -89,11 +90,11 @@
 
 .logo {
     display: flex;
-    flex-direction: column; /* Stack SVG and text vertically */
-    align-items: center; /* Center horizontally */
-    justify-content: center; /* Center vertically */
-    height: 100vh; /* Full height of viewport */
-    text-align: center; /* Center text alignment */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 80vh;
+    text-align: center;
     opacity: 0;
     animation: fadeIn 1.5s forwards;
 }
@@ -102,9 +103,10 @@
     display: flex;
     gap: 5px; /* Space between letters */
     font-family: "Poppins", sans-serif;
-    font-size: 2rem;
-    color: transparent; /* Makes the inside transparent */
-    -webkit-text-stroke: 2px red;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: red;
+    /*-webkit-text-stroke: 2px red;*/
     transform: translateX(50px);
 }
 
@@ -125,11 +127,11 @@
 .letter:nth-child(3) {
     opacity: 0; /* Start invisible */
     animation:
-        draw 2s ease-in-out forwards, /* Draw animation */
-        fill 2s ease-in-out forwards, /* Fill animation */
-        fadeUp 0.6s ease forwards, /* FadeUp animation */
-        fadeInOut 2s infinite; /* FadeInOut animation */
-    animation-delay: 0s, 0s, 0s, 2.6s; /* Add delay for fadeInOut to start after others */
+        draw 2s ease-in-out forwards,
+        fill 2s ease-in-out forwards,
+        fadeUp 0.6s ease forwards,
+        fadeInOut 2s infinite;
+    animation-delay: 0s, 0s, 0s, 2.6s;
 }
 
 

@@ -88,6 +88,7 @@ class EditUser extends Component
     {
         $this->validate([
             'selectedUser' => 'required'
+
         ]);
 
         $this->currentStep = 2;
@@ -99,6 +100,9 @@ class EditUser extends Component
         $this->rolePermissions = $this->user->getPermissionsViaRoles();
     }
 
+    /**
+     * @throws Exception
+     */
     public function togglePermission($permissionName): void
     {
         if (!Permission::where('name', $permissionName)->exists()) {
@@ -173,14 +177,10 @@ class EditUser extends Component
 
         $user = User::find($this->selectedUser);
 
-        // Assign the role and permissions
+        $user->roles()->detach();
+
         $user->roles()->attach($this->selectedRole);
-        if (!empty($this->permissions)) {
-            $user->permissions()->sync($this->permissions);
-        }
 
-
-        session()->flash('message', 'User created successfully!');
         $this->dispatch('system-user-edited');
     }
 

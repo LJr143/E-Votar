@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('election_excluded_voters', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users');
-            $table->foreignId('election_id')->constrained('elections');
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('election_id')->constrained('elections')->cascadeOnDelete();
             $table->timestamps();
         });
     }

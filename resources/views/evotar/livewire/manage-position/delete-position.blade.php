@@ -1,4 +1,4 @@
-<div x-data="{ open: false }" x-cloak @user-deleted.window="open = false">
+<div x-data="{ open: false }" x-cloak @position-deleted.window="open = false">
     <!-- Trigger Button -->
     <button @click="open = true"
             class="bg-white border border-gray-100 rounded p-1 w-[30px] flex-row  items-center justify-items-center">
@@ -35,35 +35,26 @@
             <div class="flex justify-between items-center mb-2">
                 <div class="flex items-center">
                     <i class="fas fa-exclamation-triangle text-red-500 mr-2"></i>
-                    <h2 class="text-sm font-semibold text-red-600">Delete User</h2>
+                    <h2 class="text-sm font-semibold text-red-600">Delete Position</h2>
                 </div>
                 <!-- Close Button (X) -->
                 <button @click="open = false" class="text-gray-500 hover:text-gray-700">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            @if (session('success'))
-                <div class="alert alert-success">
-                    {{ session('success') }}
-                </div>
-            @endif
+            <p class="text-gray-700 mb-6 ml-5 text-xs text-left">Are you sure you want to remove this position? This process cannot be undone.</p>
 
-            @if (session('error'))
-                <div class="alert alert-danger">
-                    {{ session('error') }}
-                </div>
-            @endif
-            <p class="text-gray-700 mb-6 ml-5 text-xs text-left">Are you sure you want to remove this user? This process cannot be undone {{ $user->first_name }}.</p>
-
-            <form wire:submit.prevent="deleteUser">
-                <div>
+            <form wire:submit.prevent="deletePosition">
+                <div class="flex flex-col">
                     <x-input
                         type="password"
                         wire:model.defer="password"
                         class="border border-gray-300 rounded w-full p-2 text-sm"
                         placeholder="Enter your password"
                     />
-                    @error('password') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                    @error('password')
+                    <div class="text-red-500 text-[10px] italic mt-1 justify-start">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <!-- Buttons -->

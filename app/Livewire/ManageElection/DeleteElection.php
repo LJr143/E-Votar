@@ -18,6 +18,7 @@ class DeleteElection extends Component
     {
         if ($this->election->exists) {
             $this->election->delete();
+            $this->dispatch('election-deleted');
 
         }
     }

@@ -15,12 +15,13 @@ Route::middleware('splash.screen')->group(function () {
     Route::post('admin/register', [ViewController::class, 'register'])->name('admin.register');
 
     Route::get('/dashboard', [ViewController::class, 'dashboard'])->name('admin.dashboard')->middleware('admin.auth');
-    Route::get('/elections', [ViewController::class, 'elections'])->name('admin.elections')->middleware('admin.auth:view elections');
-    Route::get('/election/candidates', [ViewController::class, 'candidates'])->name('admin.candidates')->middleware('admin.auth:view candidates');
+    Route::get('/elections', [ViewController::class, 'elections'])->name('admin.elections')->middleware('admin.auth:view election');
+    Route::get('/election/candidates', [ViewController::class, 'candidates'])->name('admin.candidates')->middleware('admin.auth:view candidate');
+    Route::get('/election/positions', [ViewController::class, 'positions'])->name('admin.positions');
     Route::get('/vote/tally', [ViewController::class, 'voteTally'])->name('admin.vote.tally')->middleware('admin.auth:view vote tally');
     Route::get('/election/results', [ViewController::class, 'electionResult'])->name('admin.election.result')->middleware('admin.auth:view election results');
     Route::get('/voters', [ViewController::class, 'voter'])->name('admin.voters')->middleware('admin.auth');
-    Route::get('/system/users', [ViewController::class, 'systemUsers'])->name('admin.system.user')->middleware('admin.auth:view system users');
+    Route::get('/system/users', [ViewController::class, 'systemUsers'])->name('admin.system.user')->middleware('admin.auth:view users');
 
 
     Route::get('/unregistered/admins', [ViewController::class, 'unregisteredAdmins'])->name('admin.unregistered.admin')->middleware('admin.auth');

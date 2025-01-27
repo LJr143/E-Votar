@@ -72,12 +72,12 @@
                             <div class="flex flex-col md:flex-row md:space-x-4 mb-4 border border-gray-300 rounded-md p-4">
                                 <div class="flex-1">
                                     <label for="election_start" class="text-xs font-semibold block mb-1 text-left">Date started</label>
-                                    <input id="election_start" type="datetime-local" value=" " wire:model="election_start"
+                                    <input id="election_start" type="datetime-local" value="" wire:model="election_start"
                                            class="border border-gray-300 text-xs rounded-lg px-4 py-2 w-full bg-gray-100 focus:ring focus:ring-indigo-200 focus:outline-none" readonly>
                                 </div>
                                 <div class="flex-1">
                                     <label for="election_end" class="text-xs font-semibold block mb-1 text-left">Date ended</label>
-                                    <input id="election_end" type="datetime-local" value=" " wire:model="election_end"
+                                    <input id="election_end" type="datetime-local" value="" wire:model="election_end"
                                            class="border border-gray-300 text-xs rounded-lg px-4 py-2 w-full bg-gray-100 focus:ring focus:ring-indigo-200 focus:outline-none" readonly>
                                 </div>
                             </div>

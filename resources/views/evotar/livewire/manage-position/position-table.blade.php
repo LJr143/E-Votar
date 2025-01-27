@@ -1,22 +1,42 @@
 <div>
+    <style>
+        table td, th {
+            font-size: 14px !important;
+        }
+
+        tr {
+            height: 15px;
+            line-height: 15px;
+        }
+
+        tr td {
+            font-size: 12px !important;
+        }
+
+        td, th {
+            padding: 0;
+        }
+
+    </style>
+
     <div class="hidden sm:block mb-4">
-        <div class="border-b border-gray-200">
+        <div class="border-b-2 border-gray-200">
             <nav class="-mb-px flex space-x-8" aria-label="Tabs">
-                <button wire:click="$set('filter', 'all_users')"
-                        class=" whitespace-nowrap border-b-2 pb-1 px-1 text-[10px] font-medium {{ $filter === 'all_users' ? 'border-black text-black' : 'text-gray-500 hover:text-black' }}">
-                    All System User
+                <button wire:click="$set('filter', 'all_position')"
+                        class=" whitespace-nowrap border-b-2 pb-1 px-1 text-[12px] font-medium {{ $filter === 'all_position' ? 'border-black text-black' : 'text-gray-500 hover:text-black' }}">
+                    All Positions
                 </button>
-                <button wire:click="$set('filter', 'admin')"
-                        class="whitespace-nowrap border-b-2 pb-1 px-1 text-[10px] font-medium {{ $filter === 'admin' ? 'border-black text-black' : 'text-gray-500 hover:text-black' }}">
-                    Administrators
+                <button wire:click="$set('filter', 'student_position')"
+                        class="whitespace-nowrap border-b-2 pb-1 px-1 text-[12px] font-medium {{ $filter === 'student_position' ? 'border-black text-black' : 'text-gray-500 hover:text-black' }}">
+                    Student Council Positions
                 </button>
-                <button wire:click="$set('filter', 'watcher')"
-                        class="whitespace-nowrap border-b-2 pb-1 px-1 text-[10px] font-medium {{ $filter === 'watcher' ? 'border-black text-black' : 'text-gray-500 hover:text-black' }}">
-                    Election Watchers
+                <button wire:click="$set('filter', 'local_position')"
+                        class="whitespace-nowrap border-b-2 pb-1 px-1 text-[12px] font-medium {{ $filter === 'local_position' ? 'border-black text-black' : 'text-gray-500 hover:text-black' }}">
+                    Local Council Positions
                 </button>
-                <button wire:click="$set('filter', 'technical_officer')"
-                        class="whitespace-nowrap border-b-2 pb-1 px-1 text-[10px] font-medium {{ $filter === 'technical_officer' ? 'border-black text-black' : 'text-gray-500 hover:text-black' }}">
-                    Technical Officers
+                <button wire:click="$set('filter', 'special_position')"
+                        class="whitespace-nowrap border-b-2 pb-1 px-1 text-[12px] font-medium {{ $filter === 'special_position' ? 'border-black text-black' : 'text-gray-500 hover:text-black' }}">
+                    Special Election Position
                 </button>
             </nav>
         </div>
@@ -25,11 +45,11 @@
         <div id="all_elections" class="w-full">
             <div class="bg-white shadow-md rounded p-6">
                 <div
-                    class="text-[12px] bg-white mt-0 p-5 rounded-md md:max-w-[800px] min-[90%]:max-w-[100%] lg:max-w-[900px] xl:w-[100%] xl:min-w-[100%] 2xl:max-w-[1190px]">
+                    class="bg-white mt-0 p-5 rounded-md md:max-w-[800px] min-[90%]:max-w-[100%] lg:max-w-[900px] xl:w-[100%] xl:min-w-[100%] 2xl:max-w-[1190px]">
                     <div class="flex w-full">
                         <div class="w-1/2">
                             <button
-                                class="bg-white border border-gray-100 rounded p-1 w-[30px] flex-row  items-center justify-items-center">
+                                class="bg-white border border-gray-100 rounded p-1 w-[30px] flex-row  items-center justify-items-center" onclick="printPositions()">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
                                      xmlns="http://www.w3.org/2000/svg">
                                     <mask id="mask0_782_22521" style="mask-type:alpha"
@@ -66,12 +86,12 @@
                             </button>
                         </div>
                         <div class="w-1/2 flex justify-end">
-                            <livewire:manage-system-user.add-system-user/>
+                            <livewire:manage-position.add-position/>
                             <div class="relative w-[250px] mb-4">
                                 <!-- Search Input -->
-                                <input type="text" wire:model.live="search"
-                                       class="rounded h-[30px] text-[12px] border border-gray-400 pl-10 pr-4 focus:border-black focus:ring focus:ring-black-[1px] w-full"
-                                       placeholder="Search..." aria-label="Search">
+                                <x-input type="text" wire:model.live="search"
+                                         class="rounded h-[30px] text-[12px] border border-gray-400 pl-10 pr-4 focus:border-black  w-full"
+                                         placeholder="Search elections..." aria-label="Search"></x-input>
                                 <span class="absolute left-3 top-1/2 transform -translate-y-1/2">
                                 <svg width="12" height="12" viewBox="0 0 14 14" fill="none"
                                      xmlns="http://www.w3.org/2000/svg">
@@ -83,64 +103,59 @@
                             </div>
                         </div>
                     </div>
-
-                    <div class="mt-4 min-h-[400px]">
-                        <table class="min-w-full ">
-                            <thead>
-                            <tr class="uppercase" style="background-color: rgba(0,0,0,0.05)">
-                                <th class="font-bold text-[10px] text-left px-4 py-2"><input type="checkbox"></th>
-                                <th class="font-bold text-[10px] text-left px-4 py-2">User Id</th>
-                                <th class="font-bold text-[10px] text-left px-4 py-2">Full Name</th>
-                                <th class="font-bold text-[10px] text-left px-4 py-2">Access Role</th>
-                                <th class="font-bold text-[10px] text-left px-4 py-2">Email</th>
-                                <th class="font-bold text-[10px] text-left px-4 py-2">Year Level</th>
-                                <th class="font-bold text-[10px] text-left px-4 py-2">College</th>
-                                <th class="font-bold text-[10px] text-left px-4 py-2">Program</th>
-                                <th class="font-bold text-[10px] text-left px-4 py-2"></th>
+                    <div class="mt-4 min-h-[300px]">
+                        <table class="min-w-full" id="positionsTable">
+                            <thead class="bg-gray-50 text-left ">
+                            <tr class="">
+                                <th class="px-4 py-3 font-bold">ID</th>
+                                <th class="px-4 py-3 font-bold">Position Name</th>
+                                <th class="px-4 py-3 font-bold text-center exclude-print">Actions</th>
                             </tr>
                             </thead>
+                            <tr></tr>
                             <tbody>
-                            @foreach($users as $user)
-                                <tr class=" rows text-[12px]font-light">
-                                    <td class="px-4 py-2"><input type="checkbox"></td>
-                                    <td class="px-4 py-2">{{ $user->id }}</td>
-                                    <td class="px-4 py-2">
-                                        {{ $user->first_name }}
-                                        {{ $user->middle_initial ? $user->middle_initial . '. ' : '' }}
-                                        {{ $user->last_name }}
-                                        {{ optional($user->extension)->name ?? '' }}
+                            @foreach($positions as $position)
+                                <tr class="font-light">
+                                    <td class="px-4 py-1">{{ str_pad($position->id, 7, '0', STR_PAD_LEFT) }}</td>
+                                    <td class="px-4 py-1">{{ $position->name }}</td>
+                                    <td class="px-4 py-1 text-center flex exclude-print">
+                                        <div class="text-left">
+                                            <livewire:manage-position.edit-position :positionId="$position->id" :key="'edit-position-'.$position->id" />
+                                        </div>
+                                        <livewire:manage-position.delete-position :positionId="$position->id" :key="'delete-position-'.$position->id" />
                                     </td>
-
-                                    <td class="px-4 py-2 capitalize">
-                                        @foreach ($user->roles as $role)
-                                            {{ $role->name }}@if (!$loop->last)
-                                            @endif
-                                        @endforeach
-                                    </td>
-                                    <td class="px-4 py-2">{{ $user->email }}</td>
-                                    <td class="px-4 py-2 ">{{ $user->year_level  . ' Year' }}</td>
-                                    <td class="px-4 py-2 ">{{ $user->college->name }}</td>
-                                    <td class="px-4 py-2">
-                                        @php
-                                            $programName = $user->program->name;
-                                            $programName = str_starts_with($programName, 'Bachelor of Science') ? 'BS ' . substr($programName, strlen('Bachelor of Science')) : $programName;
-                                        @endphp
-                                        <span class="program-name" title="{{ $programName }}">
-                                                {{ strlen($programName) > 15 ? substr($programName, 0, 15) . '...' : $programName }}
-                                            </span>
-                                    </td>
-                                    <td class="px-4 py-2 text-center flex">
-                                        <livewire:manage-system-user.edit-user :user_id="$user->id"
-                                                                               :key="'edit-system-user'.$user->id"/>
-                                        <livewire:manage-system-user.delete-user :user_id="$user->id"
-                                                                                 :key="'delete-system-user'.$user->id"/>
                                 </tr>
                             @endforeach
                             </tbody>
                         </table>
+                        <div class="mt-4">
+                            {{ $positions->links('evotar.components.pagination.tailwind-pagination') }}
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        function printElections() {
+            const excludeElements = document.querySelectorAll('.exclude-print');
+            excludeElements.forEach(el => el.style.display = 'none');
+
+            printJS({
+                printable: 'positionsTable',
+                type: 'html',
+                scanStyles: true,
+                style: `
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f4f4f4; font-weight: bold; }
+        `
+            });
+
+            excludeElements.forEach(el => el.style.display = '');
+        }
+    </script>
+
+
 </div>

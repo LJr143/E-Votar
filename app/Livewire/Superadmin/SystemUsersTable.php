@@ -8,7 +8,7 @@ use Livewire\Component;
 
 class SystemUsersTable extends Component
 {
-    protected $listeners = ['system-user_added' => '$refresh'];
+    protected $listeners = ['refreshTable' => '$refresh'];
     public $showEditModal = false;
     public $showDeleteModal = false;
     public $userId;
@@ -36,6 +36,7 @@ class SystemUsersTable extends Component
         $this->filter = $filter;
         $this->fetchUsers();
     }
+
 
     public function fetchUsers(): void
     {
@@ -72,6 +73,7 @@ class SystemUsersTable extends Component
 
     public function render(): \Illuminate\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\View\View
     {
+        $this->fetchUsers();
         return view('evotar.livewire.superadmin.system-users-table', ['users' => $this->users,]);
     }
 }
