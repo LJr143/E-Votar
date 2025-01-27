@@ -160,7 +160,8 @@ class ViewController extends Controller
      */
     public function dashboard()
     {
-        return view('evotar.admin.dashboard');
+        $candidates = app(DashboardController::class)->getCandidates();
+        return view('evotar.admin.dashboard',compact('candidates'));
     }
 
     /**

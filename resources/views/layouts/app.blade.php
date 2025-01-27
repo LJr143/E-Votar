@@ -86,7 +86,7 @@
 
         <!-- Page Heading -->
         @if (isset($header))
-            <header class="flex pt-2 {{ $headerClass }} sticky">
+            <header class="flex pt-2 {{ $headerClass }} sticky z-20">
                 <div class=" px-4 py-2 sm:px-6 w-full justify-between items-center flex">
                     {{ $header }}
                 </div>
@@ -94,7 +94,7 @@
         @endif
         @if (isset($main))
             <!-- Page Content -->
-            <main class="relative flex-1 max-lg:h-dvh lg:overflow-y-auto  w-full px-6 pt-2 sticky ">
+            <main class="relative flex-1 max-lg:h-dvh lg:overflow-y-auto  w-full px-6 pt-2 z-10">
                 {{ $main }}
                 <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
                 <script

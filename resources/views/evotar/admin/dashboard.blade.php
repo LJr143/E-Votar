@@ -15,7 +15,7 @@
                     <h1 class="text-base font-semibold leading-6 text-gray-900">Dashboard</h1>
                     <p class=" text-gray-500 text-[11px]">Hi, {{ auth()->user()->first_name }} . Welcome back!</p>
                 </div>
-                <div class="relative bg-white p-2 rounded-lg shadow-md flex items-center cursor-pointer space-x-2">
+                <div class="relative bg-white p-2 rounded-lg shadow-md flex items-center cursor-pointer space-x-2 z-10">
                     <div class="bg-gray-200 p-2 rounded-full flex items-center justify-center">
                         <i class="fas fa-calendar-alt text-gray-600 text-[11px]"></i>
                     </div>
@@ -173,7 +173,7 @@
                 </div>
 
 
-                <div class="bg-white p-6 rounded-lg shadow-md max-w-4xl w-full lg:h-[328px] mb-4">
+                <div class="bg-white p-6 rounded-lg shadow-md max-w-4xl w-full lg:h-[340px] mb-4">
                     <h1 class="text-sm font-bold mb-6">Campus Course Vote Turnout</h1>
                     <div class="flex flex-col md:flex-row justify-center mb-4">
                         <div class="w-full md:w-2/5">
@@ -201,7 +201,7 @@
                 <div class="w-full mx-auto bg-white p-6 rounded-lg shadow-md">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
                         <h1 class="text-sm font-bold mb-4 sm:mb-0">
-                            Tagum Student Council - Vote Tally
+                            Candidates
                         </h1>
 
                     </div>
@@ -218,119 +218,29 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
+                            @foreach($candidates as $candidate)
+                                <tr>
                                 <td class="py-2 px-4 border-b">
-                                    <img alt="Profile picture of candidate" height="50"
+                                    <img alt="Profile picture of candidate" height="50" class="rounded-full"
                                          src="{{ asset('storage/assets/profile/cat_meme.jpg') }}" width="50"/>
                                 </td>
-                                <td class="py-2 px-4 border-b">Fname M. Lname</td>
+                                <td class="py-2 px-4 border-b">{{ $candidate->user->first_name }}</td>
                                 <td class="py-2 px-4 border-b">President</td>
                                 <td class="py-2 px-4 border-b">Yanong Agila</td>
                                 <td class="py-2 px-4 border-b">10%</td>
                                 <td class="py-2 px-4 border-b">50%</td>
                             </tr>
-                            <tr>
-                                <td class="py-2 px-4 border-b">
-                                    <img alt="Profile picture of candidate" height="50"
-                                         src="{{ asset('storage/assets/profile/cat_meme.jpg') }}" width="50"/>
-                                </td>
-                                <td class="py-2 px-4 border-b">Fname M. Lname</td>
-                                <td class="py-2 px-4 border-b">President</td>
-                                <td class="py-2 px-4 border-b">Yanong Agila</td>
-                                <td class="py-2 px-4 border-b">10%</td>
-                                <td class="py-2 px-4 border-b">50%</td>
-                            </tr>
-                            <tr>
-                                <td class="py-2 px-4 border-b">
-                                    <img alt="Profile picture of candidate" height="50"
-                                         src="{{ asset('storage/assets/profile/cat_meme.jpg') }}" width="50"/>
-                                </td>
-                                <td class="py-2 px-4 border-b">Fname M. Lname</td>
-                                <td class="py-2 px-4 border-b">President</td>
-                                <td class="py-2 px-4 border-b">Yanong Agila</td>
-                                <td class="py-2 px-4 border-b">10%</td>
-                                <td class="py-2 px-4 border-b">50%</td>
-                            </tr>
+                            @endforeach
                             </tbody>
                         </table>
-                    </div>
-                </div>
-                <!-- Second Card -->
-                <div class="w-full mx-auto bg-white p-6 rounded-lg shadow-md">
-                    <div class="flex flex-row justify-between items-start sm:items-center">
-                        <h1 class="text-sm font-bold mb-2 sm:mb-0">
-                            Local Council - Vote Tally
-                        </h1>
-                        <div class="relative">
-                            <button class="text-xs bg-gray-100 text-gray-700 px-4 py-2 rounded-md flex items-center">
-                                Organization
-                                <i class="fas fa-chevron-down ml-2">
-                                </i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <h1 class="text-xs font-bold ">
-                        BSIT
-                    </h1>
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full bg-white text-xs">
-                            <thead>
-                            <tr>
-                                <th class="py-2 px-4 border-b text-left">Profile</th>
-                                <th class="py-2 px-4 border-b text-left">Candidate</th>
-                                <th class="py-2 px-4 border-b text-left">Position</th>
-                                <th class="py-2 px-4 border-b text-left">Partylist</th>
-                                <th class="py-2 px-4 border-b text-left">Abstain</th>
-                                <th class="py-2 px-4 border-b text-left">Vote Garnered</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td class="py-2 px-4 border-b">
-                                    <img alt="Profile picture of candidate" height="50"
-                                         src="{{ asset('storage/assets/profile/cat_meme.jpg') }}" width="50"/>
-                                </td>
-                                <td class="py-2 px-4 border-b">Fname M. Lname</td>
-                                <td class="py-2 px-4 border-b">President</td>
-                                <td class="py-2 px-4 border-b">Yanong Agila</td>
-                                <td class="py-2 px-4 border-b">10%</td>
-                                <td class="py-2 px-4 border-b">50%</td>
-                            </tr>
-                            <tr>
-                                <td class="py-2 px-4 border-b">
-                                    <img alt="Profile picture of candidate" height="50"
-                                         src="{{ asset('storage/assets/profile/cat_meme.jpg') }}" width="50"/>
-                                </td>
-                                <td class="py-2 px-4 border-b">Fname M. Lname</td>
-                                <td class="py-2 px-4 border-b">President</td>
-                                <td class="py-2 px-4 border-b">Yanong Agila</td>
-                                <td class="py-2 px-4 border-b">10%</td>
-                                <td class="py-2 px-4 border-b">50%</td>
-                            </tr>
-                            <tr>
-                                <td class="py-2 px-4 border-b">
-                                    <img alt="Profile picture of candidate" height="50"
-                                         src="{{ asset('storage/assets/profile/cat_meme.jpg') }}" width="50"/>
-                                </td>
-                                <td class="py-2 px-4 border-b">Fname M. Lname</td>
-                                <td class="py-2 px-4 border-b">President</td>
-                                <td class="py-2 px-4 border-b">Yanong Agila</td>
-                                <td class="py-2 px-4 border-b">10%</td>
-                                <td class="py-2 px-4 border-b">50%</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <a class="text-gray-800 text-sm flex items-center" href="#">View more <i
-                                class="fas fa-arrow-right ml-1"></i></a>
                     </div>
                 </div>
 
             </div>
 
             <div class="flex flex-row justify-between text-gray-500 text-[10px] mt-4">
-                <i>Copyright@2024</i>
-                <i>E-Votara@2024</i>
+                <i>Copyright@2025</i>
+                <i>E-Votar@2024</i>
             </div>
         </div>
 

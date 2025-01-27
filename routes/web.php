@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\CampusController;
-use App\Http\Controllers\ElectionDashboardController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Models\Election;
 
@@ -18,7 +18,8 @@ Route::group(['middleware' => ['superadmin.check', 'redirect.auth']], function (
 });
 
 
-Route::get('/labels', [ElectionDashboardController::class, 'getLabels']);
+Route::get('/labels', [DashboardController::class, 'getLabels']);
+
 
 Route::get('/api/election-end-time', function () {
     $latestElection = Election::latest()->first();

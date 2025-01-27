@@ -2,11 +2,30 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Candidate;
 use App\Models\Program;
 use Illuminate\Http\Request;
 
-class ElectionDashboardController extends Controller
+class DashboardController extends Controller
 {
+    public function index()
+    {
+        $this->showCandidates();
+    }
+    public function showCandidates()
+    {
+        $candidates = $this->getCandidates();
+
+        return view('evotar.admin.dashboard', compact('candidates'));
+    }
+
+    public function getCandidates()
+    {
+        $candidates = Candidate::all();
+
+        return $candidates;
+    }
+
     public function getLabels()
     {
         $labels = Program::pluck('name')->toArray();
