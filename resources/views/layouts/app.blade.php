@@ -85,16 +85,19 @@
             x-on:user-created.window="pushNotification('success', 'System User Added', 'User has been added successfully.');"></div>
 
         <!-- Page Heading -->
-        @if (isset($header))
-            <header class="flex pt-2 {{ $headerClass }} sticky z-20">
-                <div class=" px-4 py-2 sm:px-6 w-full justify-between items-center flex">
-                    {{ $header }}
-                </div>
-            </header>
-        @endif
+
         @if (isset($main))
             <!-- Page Content -->
             <main class="relative flex-1 max-lg:h-dvh lg:overflow-y-auto  w-full px-6 pt-2 z-10">
+                <div class="sticky">
+                    @if (isset($header))
+                        <header class="flex pt-2 w-full {{ $headerClass }} z-20">
+                            <div class=" py-2 w-full justify-between items-center flex">
+                                {{ $header }}
+                            </div>
+                        </header>
+                    @endif
+                </div>
                 {{ $main }}
                 <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
                 <script
@@ -118,6 +121,8 @@
 <script src="https://unpkg.com/filepond@^4/dist/filepond.js"></script>
 <script src="https://unpkg.com/@pqina/flip/dist/flip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.1/gsap.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/face-api.js"></script>
+
 <script>
     window.addEventListener('load', function () {
         setTimeout(function () {

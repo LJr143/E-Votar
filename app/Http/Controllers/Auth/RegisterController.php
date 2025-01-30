@@ -1,58 +1,62 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\DashboardController;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
 
-class ViewController extends Controller
+class RegisterController extends Controller
 {
-    /**
-     * Show the registration view for superadmin if not already registered.
-     */
-    public function view()
-    {
-        if ($this->superAdminExists()) {
-            return redirect()->route('admin.login');
-        }
-
-        return view('evotar.admin.register');
-    }
-
-    /**
-     * Handle superadmin registration.
-     */
     public function register(Request $request)
     {
-        $this->validateInput($request);
-        $user = $this->createUser($request->all());
+        $request->validate([
+            'username' => 'required|string|unique:users',
+            'password' => 'required|string|min:6',
+        ]);
 
-        return redirect()->route('admin.login')->with('success', 'Superadmin registered successfully.');
+        $user = User::create([
+            'username' => $request->username,
+            'password' => bcrypt($request->password),
+        ]);
+
+        return response()->json(['message' => 'User registered successfully!']);
     }
 
-    /**
-     * Check if a superadmin already exists.
-     */
+    public function registerFace(Request $request)
+    {
+        $request->validate([
+            'username' => 'required|string|exists:users,username',
+            'face_descriptor' => 'required|json',
+        ]);
+
+        $user = User::where('username', $request->username)->first();
+        $user->face_descriptor = json_encode($request->face_descriptor);
+        $user->save();
+
+        return response()->json(['message' => 'Face registered successfully!']);
+    }
+
+    public function viewFacialRegistration()
+    {
+        return view('evotar.auth.facial-registration');
+    }
+
     protected function superAdminExists(): bool
     {
         return Role::where('name', 'superadmin')->whereHas('users')->exists();
     }
-
-    /**
-     * Validate the user input.
-     */
     protected function validateInput(Request $request)
     {
         return Validator::make($request->all(), $this->validationRules(), $this->validationMessages())->validate();
     }
 
-    /**
-     * Get the validation rules for registration.
-     */
     protected function validationRules(): array
     {
         return [
@@ -76,9 +80,6 @@ class ViewController extends Controller
         ];
     }
 
-    /**
-     * Get the custom error messages for validation.
-     */
     protected function validationMessages(): array
     {
         return [
@@ -112,9 +113,6 @@ class ViewController extends Controller
         ];
     }
 
-    /**
-     * Create a new user.
-     */
     protected function createUser(array $data): User
     {
         $user = User::create([
@@ -143,9 +141,6 @@ class ViewController extends Controller
         return $user;
     }
 
-    /**
-     * Assign a role to the user.
-     */
     protected function assignRole(User $user, string $role): void
     {
         if ($user->assignRole($role)) {
@@ -155,150 +150,40 @@ class ViewController extends Controller
         }
     }
 
-    /**
-     * Dashboard view.
-     */
-    public function dashboard()
-    {
-        $candidates = app(DashboardController::class)->getCandidates();
-        return view('evotar.admin.dashboard',compact('candidates'));
-    }
-
-    /**
-     * Election management view.
-     */
-    public function elections()
-    {
-        return view('evotar.admin.election');
-    }
-
-    /**
-     * Candidate management view.
-     */
-    public function candidates()
-    {
-        return view('evotar.admin.candidate');
-    }
-
-    /**
-     * Candidate management view.
-     */
-    public function positions()
-    {
-        return view('evotar.admin.position');
-    }
-
-
-    /**
-     * Vote tally view.
-     */
-    public function voteTally()
-    {
-        return view('evotar.admin.vote_tally');
-    }
-
-    /**
-     * Election result view.
-     */
-    public function electionResult()
-    {
-        return view('evotar.admin.election_result');
-    }
-
-    /**
-     * Party list view.
-     */
-    public function partyList()
-    {
-        return view('evotar.admin.party_list');
-    }
-
-    /**
-     * Voter management view.
-     */
-    public function voter()
-    {
-        return view('evotar.admin.voter');
-    }
-
-    public function voterRegistration()
-    {
-        return view('evotar.admin.voter_registration');
-    }
-
-
-    /**
-     * System users management view.
-     */
-    public function systemUsers()
-    {
-        return view('evotar.admin.user');
-    }
-
-    /**
-     * System logs view.
-     */
-    public function systemLogs()
-    {
-        return view('evotar.admin.system_logs');
-    }
-
-    /**
-     * Unregistered admins view.
-     */
-    public function unregisteredAdmins()
-    {
-        return view('evotar.admin.unregistered_admin');
-    }
-
-    /**
-     * Register an admin user.
-     *
-     * @throws Exception
-     */
-    public function registerAdmins(Request $request)
+    public function registerVoter(Request $request)
     {
         $this->validateInput($request);
-        $this->createUserAdmin($request->all());
+        $this->createVoter($request->all());
 
         session()->flash('registered', true);
-        return redirect()->route('admin.unregistered.admin');
+        return redirect()->route('voter.facial.registration.get');
     }
 
-    /**
-     * Create a user as an admin and assign role and
-     * give permissions based on role
-     *
-     * @throws Exception
-     */
-    public function createUserAdmin(array $data)
+    public function createVoter(array $data)
     {
+        // Check for existing user before creating a new one
         $this->checkForExistingUser($data);
 
+        // Create the user
         $user = $this->createUser($data);
 
-        $roleId = $data['role'];
+        // Find the role by name
+        $role = Role::where('name', 'voter')->first();
 
-        $role = Role::find($roleId);
-
+        // Handle the case where the role is not found
         if (!$role) {
-            throw new \Exception("Role not found.");
+            throw new \Exception("Role 'voter' not found.");
         }
 
+        // Assign the role to the user
         $this->assignRole($user, $role->name);
 
+        // Sync permissions with the role
         $permissions = $role->permissions;
-
         $user->syncPermissions($permissions);
 
         return $user;
     }
-
-    /**
-     * Check for existing users before creating a new one.
-     *
-     * @throws Exception
-     */
     protected function checkForExistingUser(array $data)
     {
         $existingUser = User::where('email', $data['email'])
@@ -309,5 +194,22 @@ class ViewController extends Controller
         if ($existingUser) {
             throw new Exception('A user with this email, username, or student ID already exists.');
         }
+    }
+
+    public function uploadFace(Request $request) {
+        $imageData = $request->input('image');
+
+        // Convert base64 to image file
+        list($type, $imageData) = explode(';', $imageData);
+        list(, $imageData)      = explode(',', $imageData);
+        $imageData = base64_decode($imageData);
+
+        $filename = 'face_' . time() . '.png';
+        $path = 'public/assets/profile/' . $filename;
+
+        // Store image
+        Storage::put($path, $imageData);
+
+        return response()->json(['message' => 'Face captured successfully!', 'path' => $path]);
     }
 }

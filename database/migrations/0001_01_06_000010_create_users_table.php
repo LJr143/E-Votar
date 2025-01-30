@@ -34,6 +34,7 @@ return new class extends Migration
             $table->foreignId('current_team_id')->nullable();
             $table->string('profile_photo_path', 2048)->nullable();
             $table->string('Account Status')->default('Active');
+            $table->json('face_descriptor')->nullable();
             $table->timestamps();
         });
 

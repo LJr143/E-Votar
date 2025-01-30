@@ -46,6 +46,7 @@ class User extends Authenticatable
         'program_major_id',
         'username',
         'password',
+        'face_descriptor',
     ];
 
     /**

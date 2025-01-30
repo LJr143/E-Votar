@@ -1,9 +1,7 @@
 <?php
 
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ViewController;
-use App\Http\Middleware\AdminAuth;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['superadmin.check'])->group(function () {
