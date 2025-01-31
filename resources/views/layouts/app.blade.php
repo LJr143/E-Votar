@@ -88,7 +88,7 @@
 
         @if (isset($main))
             <!-- Page Content -->
-            <main class="relative flex-1 max-lg:h-dvh lg:overflow-y-auto  w-full px-6 pt-2 z-10">
+            <main class="relative flex-1 max-lg:h-dvh lg:overflow-y-auto  w-full px-6 pt-2">
                 <div class="sticky">
                     @if (isset($header))
                         <header class="flex pt-2 w-full {{ $headerClass }} z-20">
