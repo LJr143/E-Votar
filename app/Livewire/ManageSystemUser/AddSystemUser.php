@@ -44,7 +44,7 @@ class AddSystemUser extends Component
                 $query->where('first_name', 'like', '%' . $this->search . '%')
                     ->orWhere('last_name', 'like', '%' . $this->search . '%');
             })
-            ->whereDoesntHave('roles', fn ($query) => $query->whereIn('name', ['superadmin', 'admin', 'watcher', 'technical-officer']))
+            ->whereDoesntHave('roles', fn($query) => $query->whereIn('name', ['superadmin', 'admin', 'watcher', 'technical-officer']))
             ->take(5)
             ->get();
     }
@@ -144,9 +144,12 @@ class AddSystemUser extends Component
                 'password' => Hash::make($this->password),
             ]);
         }
+// Detach all roles from the user
+        $user->roles()->detach();
 
-        // Assign the role
+// Assign the selected role
         $user->roles()->attach($this->selectedRole);
+
 
         // Sync only selected permissions
         if (!empty($this->userPermissions)) {

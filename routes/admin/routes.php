@@ -13,7 +13,7 @@ Route::middleware('splash.screen')->group(function () {
     Route::get('admin/register', [ViewController::class, 'view'])->name('admin.register');
     Route::post('admin/register', [ViewController::class, 'register'])->name('admin.register');
 
-    Route::get('/dashboard', [ViewController::class, 'dashboard'])->name('admin.dashboard')->middleware('admin.auth');
+    Route::get('/dashboard', [ViewController::class, 'adminDashboard'])->name('admin.dashboard')->middleware('admin.auth');
     Route::get('/elections', [ViewController::class, 'elections'])->name('admin.elections')->middleware('admin.auth:view election');
     Route::get('/election/candidates', [ViewController::class, 'candidates'])->name('admin.candidates')->middleware('admin.auth:view candidate');
     Route::get('/election/positions', [ViewController::class, 'positions'])->name('admin.positions');
@@ -27,6 +27,9 @@ Route::middleware('splash.screen')->group(function () {
     Route::post('/unregistered/admins', [ViewController::class, 'registerAdmins'])->name('admin.unregistered.admin')->middleware('admin.auth');
     Route::get('/election/party list', [ViewController::class, 'partyList'])->name('admin.election.party.list')->middleware('admin.auth:view party list');
     Route::get('/system/logs', [ViewController::class, 'systemLogs'])->name('admin.system.logs')->middleware('admin.auth:view system logs');
+
+
+    Route::get('/dashboard/technical-officer', [ViewController::class, 'technicalOfficerDashboard'])->name('technical-officer.dashboard');
 });
 
 
