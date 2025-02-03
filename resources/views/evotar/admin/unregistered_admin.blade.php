@@ -7,6 +7,12 @@
     input, select {
         color: black !important;
     }
+    .red-line {
+        height: 2px;  /* Adjust the thickness of the line */
+        background-color: red;  /* Red color */
+        width: 100%;  /* Makes the line span the full width of its container */
+        margin: 6px 0;  /* Optional: Adds spacing around the line */
+    }
 </style>
 <x-guest-layout>
     <div class="flex justify-between items-center align-middle p-3 bg-white sm:flex w-full h-[55px]">
@@ -26,9 +32,9 @@
     </div>
     <div class="bg-white py-0 pt-0 flex justify-center items-center w-full">
         <div class="w-full">
-
+            <div class="red-line"></div>
             <!--header logo and form title-->
-            <h2 class="text-[30px] text-primary text-black font-semibold text-center ">
+            <h2 class="text-[30px] text-primary text-black font-semibold text-center mt-5 ">
                 ACCOUNT REGISTRATION<h3
                     class="text-primary font-light text-black mb-3 text-[12px] text-center capitalize ">
                     register account to assign role and permission and to start using the E-Votar System
@@ -39,11 +45,20 @@
                 <div>
                     <form action="{{route('admin.unregistered.admin')}}" method="POST" class="">
                         @csrf
-                        <div class="w-[977px] bg-white shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] p-4">
-                            <em class="text-[12px] text-black font-semibold">Personal Information</em>
+                        <div class="w-[1200px] bg-white shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] p-4">
+                            <em class="text-[12px] text-black font-semibold">
+                                <svg width="50" height="40" viewBox="0 0 53 42" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                    <rect width="53" height="42" fill="url(#pattern0_1840_9316)"/>
+                                    <defs>
+                                        <pattern id="pattern0_1840_9316" patternContentUnits="objectBoundingBox" width="1" height="1">
+                                            <use xlink:href="#image0_1840_9316" transform="matrix(0.00825472 0 0 0.0104167 0.103774 0)"/>
+                                        </pattern>
+                                        <image id="image0_1840_9316" width="96" height="96" xlink:href="data:image/png;base64,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"/>
+                                    </defs>
+                                </svg>Personal Information</em>
                             <div class="border mt-2 mb-2 p-4 rounded">
-                                <div class="flex gap-4">
-                                    <div class="flex flex-col">
+                                <div class="flex gap-4 gap-4 mt-2">
+                                    <div class="flex flex-col flex-grow">
                                         <x-label class="!text-black italic text-[10px]">
                                             First Name
                                         </x-label>
@@ -55,6 +70,7 @@
                                         <div class="text-red-500 text-[10px] italic mt-1">{{ $message }}</div>
                                         @enderror
                                     </div>
+
                                     <div class="flex flex-col">
                                         <x-label class="!text-black italic text-[10px]">
                                             Middle Initial
@@ -92,7 +108,7 @@
                                         @enderror
                                     </div>
 
-                                    <div class="flex flex-col">
+                                    <div class="flex flex-col ">
                                         <x-label class="!text-black italic text-[10px]">
                                             Gender
                                         </x-label>
@@ -109,6 +125,7 @@
                                         @enderror
                                     </div>
                                 </div>
+
                                 <div class="flex gap-4 mt-2">
                                     <div class="flex flex-col">
                                         <x-label class="!text-black italic text-[10px]">
@@ -147,7 +164,7 @@
                                         @enderror
                                     </div>
 
-                                    <div class="flex flex-col">
+                                    <div class="flex flex-col flex-grow">
                                         <x-label class="!text-black italic text-[10px]">
                                             Year Level
                                         </x-label>
@@ -178,7 +195,7 @@
                                     </div>
                                 </div>
                                 <div class="flex gap-4 mt-2">
-                                    <div class="flex flex-col">
+                                    <div class="flex flex-col ">
                                         <x-label class="!text-black italic text-[10px]">
                                             Campus
                                         </x-label>
@@ -191,7 +208,7 @@
                                         <div class="text-red-500 text-[10px] italic mt-1">{{ $message }}</div>
                                         @enderror
                                     </div>
-                                    <div class="flex flex-col">
+                                    <div class="flex flex-col ">
                                         <x-label class="!text-black italic text-[10px]">
                                             College
                                         </x-label>
@@ -232,7 +249,16 @@
                                     </div>
                                 </div>
                             </div>
-                            <em class="text-[12px] text-black font-semibold mt-4">Account Information</em>
+                            <em class="text-[12px] text-black font-semibold mt-4">
+                                <svg width="40" height="40" viewBox="0 0 49 47" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                    <rect width="49" height="47" fill="url(#pattern0_1840_9317)"/>
+                                    <defs>
+                                        <pattern id="pattern0_1840_9317" patternContentUnits="objectBoundingBox" width="1" height="1">
+                                            <use xlink:href="#image0_1840_9317" transform="matrix(0.0099915 0 0 0.0104167 0.0204082 0)"/>
+                                        </pattern>
+                                        <image id="image0_1840_9317" width="96" height="96" xlink:href="data:image/png;base64,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"/>
+                                    </defs>
+                                </svg>Account Information</em>
                             <div class="border mt-2 mb-2 p-4 rounded">
                                 <div class="block">
                                     <div class="">
@@ -250,6 +276,7 @@
                                             <div class="text-red-500 text-[10px] italic mt-1">{{ $message }}</div>
                                             @enderror
                                         </div>
+
                                         <div class="mb-3">
                                             <x-label class="!text-black italic text-[10px]">
                                                 Username
@@ -262,6 +289,7 @@
                                             <div class="text-red-500 text-[10px] italic mt-1">{{ $message }}</div>
                                             @enderror
                                         </div>
+
                                         <div class="mb-3">
                                             <x-label class="!text-black italic text-[10px]">
                                                 Password
@@ -274,6 +302,7 @@
                                             <div class="text-red-500 text-[10px] italic mt-1">{{ $message }}</div>
                                             @enderror
                                         </div>
+
                                         <div class="mb-3">
                                             <x-label class="!text-black italic text-[10px]">
                                                 Confirm Password
