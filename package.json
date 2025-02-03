@@ -21,6 +21,7 @@
     "dependencies": {
         "@pqina/flip": "^1.8.4",
         "@tensorflow/tfjs": "^4.22.0",
+        "alpinejs": "^3.14.8",
         "aos": "^3.0.0-beta.6",
         "express": "^4.21.2",
         "face-api.js": "^0.22.2",

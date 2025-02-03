@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Campus;
 use App\Models\College;
 use App\Models\Program;
+use Illuminate\Validation\Rule;
 use Livewire\Component;
 use Illuminate\Support\Facades\Validator;
 
@@ -58,6 +59,7 @@ class EditVoter extends Component
     }
 
     // When campus_id changes, fetch colleges and reset dependent fields
+// When campus_id changes, fetch colleges and reset dependent fields
     public function updatedCampusId($value)
     {
         $this->colleges = College::where('campus_id', $value)->get();
@@ -68,7 +70,7 @@ class EditVoter extends Component
         $this->programMajors = []; // Clear program majors
     }
 
-    // When college_id changes, fetch programs and reset dependent fields
+// When college_id changes, fetch programs and reset dependent fields
     public function updatedCollegeId($value)
     {
         $this->programs = Program::where('college_id', $value)->get();
@@ -81,7 +83,17 @@ class EditVoter extends Component
     public function updatedProgramId($value): void
     {
         $this->programMajors = program_major::where('program_id', $value)->get();
-        $this->program_major_id = null; // Reset program_major_id
+
+        // Check if the current program_major_id belongs to the new program_id
+        if ($this->program_major_id) {
+            $programMajorExists = program_major::where('id', $this->program_major_id)
+                ->where('program_id', $value)
+                ->exists();
+
+            if (!$programMajorExists) {
+                $this->program_major_id = null; // Reset program_major_id if it doesn't belong to the new program_id
+            }
+        }
     }
 
     public function updatedSearch(): void
@@ -114,8 +126,10 @@ class EditVoter extends Component
             'campus_id' => 'required|exists:campuses,id',
             'college_id' => 'required|exists:colleges,id',
             'program_id' => 'required|exists:programs,id',
-            'program_major_id' => 'nullable|exists:program_majors,id',
-            'username' => 'required|string|max:255|unique:users,username,' . $this->userId,
+            'program_major_id' => [
+                'nullable',
+                Rule::exists('program_majors', 'id')->where('program_id', $this->program_id),
+            ],
         ]);
 
         // Find the user by ID
@@ -138,7 +152,6 @@ class EditVoter extends Component
                 'college_id' => $this->college_id,
                 'program_id' => $this->program_id,
                 'program_major_id' => $this->program_major_id,
-                'username' => $this->username,
             ]);
 
             // Flash success message

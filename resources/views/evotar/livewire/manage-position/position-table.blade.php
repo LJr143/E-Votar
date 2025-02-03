@@ -22,22 +22,24 @@
     <div class="hidden sm:block mb-4">
         <div class="border-b-2 border-gray-200">
             <nav class="-mb-px flex space-x-8" aria-label="Tabs">
-                <button wire:click="$set('filter', 'all_position')"
-                        class=" whitespace-nowrap border-b-2 pb-1 px-1 text-[12px] font-medium {{ $filter === 'all_position' ? 'border-black text-black' : 'text-gray-500 hover:text-black' }}">
-                    All Positions
-                </button>
-                <button wire:click="$set('filter', 'student_position')"
-                        class="whitespace-nowrap border-b-2 pb-1 px-1 text-[12px] font-medium {{ $filter === 'student_position' ? 'border-black text-black' : 'text-gray-500 hover:text-black' }}">
-                    Student Council Positions
-                </button>
-                <button wire:click="$set('filter', 'local_position')"
-                        class="whitespace-nowrap border-b-2 pb-1 px-1 text-[12px] font-medium {{ $filter === 'local_position' ? 'border-black text-black' : 'text-gray-500 hover:text-black' }}">
-                    Local Council Positions
-                </button>
-                <button wire:click="$set('filter', 'special_position')"
-                        class="whitespace-nowrap border-b-2 pb-1 px-1 text-[12px] font-medium {{ $filter === 'special_position' ? 'border-black text-black' : 'text-gray-500 hover:text-black' }}">
-                    Special Election Position
-                </button>
+                <div wire:loading.delay.class="opacity-50 cursor-not-allowed">
+                    <button wire:click.debounce.500ms="$set('filter', 'all_position')"
+                            class="whitespace-nowrap border-b-2 pb-1 px-1 text-[12px] font-medium {{ $filter === 'all_position' ? 'border-black text-black' : 'text-gray-500 hover:text-black' }}">
+                        All Positions
+                    </button>
+                    <button wire:click.debounce.500ms="$set('filter', 'student_position')"
+                            class="whitespace-nowrap border-b-2 pb-1 px-1 text-[12px] font-medium {{ $filter === 'student_position' ? 'border-black text-black' : 'text-gray-500 hover:text-black' }}">
+                        Student Council Positions
+                    </button>
+                    <button wire:click.debounce.500ms="$set('filter', 'local_position')"
+                            class="whitespace-nowrap border-b-2 pb-1 px-1 text-[12px] font-medium {{ $filter === 'local_position' ? 'border-black text-black' : 'text-gray-500 hover:text-black' }}">
+                        Local Council Positions
+                    </button>
+                    <button wire:click.debounce.500ms="$set('filter', 'special_position')"
+                            class="whitespace-nowrap border-b-2 pb-1 px-1 text-[12px] font-medium {{ $filter === 'special_position' ? 'border-black text-black' : 'text-gray-500 hover:text-black' }}">
+                        Special Election Position
+                    </button>
+                </div>
             </nav>
         </div>
     </div>
@@ -119,9 +121,7 @@
                                     <td class="px-4 py-1">{{ str_pad($position->id, 7, '0', STR_PAD_LEFT) }}</td>
                                     <td class="px-4 py-1">{{ $position->name }}</td>
                                     <td class="px-4 py-1 text-center flex exclude-print">
-                                        <div class="text-left">
-                                            <livewire:manage-position.edit-position :positionId="$position->id" :key="'edit-position-'.$position->id" />
-                                        </div>
+                                        <livewire:manage-position.edit-position :positionId="$position->id" :key="'edit-position-'.$position->id" />
                                         <livewire:manage-position.delete-position :positionId="$position->id" :key="'delete-position-'.$position->id" />
                                     </td>
                                 </tr>

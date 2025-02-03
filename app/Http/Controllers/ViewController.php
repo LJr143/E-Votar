@@ -251,6 +251,11 @@ class ViewController extends Controller
         return view('evotar.admin.system_logs');
     }
 
+    public function activeUsers()
+    {
+        return view('evotar.technical-officer.active-user');
+    }
+
     /**
      * Unregistered admins view.
      */

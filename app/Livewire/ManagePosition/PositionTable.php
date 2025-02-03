@@ -10,7 +10,7 @@ class PositionTable extends Component
 {
     use WithPagination;
 
-    protected $listeners = ['position-created'=>'$refresh','position-edited'=>'$refresh'];
+    protected $listeners = ['position-created' => '$refresh', 'position-edited' => '$refresh'];
 
     // Component properties
     public $filter = 'all_position';
@@ -48,33 +48,41 @@ class PositionTable extends Component
         // Start a query on the Position model
         $query = Position::query()->with('electionType');
 
-// Apply search filter
         if ($this->search) {
             $query->where('name', 'like', '%' . $this->search . '%');
         }
 
-// Apply status filter
-        if ($this->filter === 'student_and_local_position') {
+        if ($this->filter === 'all_position') {
+            // Do not filter anything, return all positions
             $query->whereHas('electionType', function ($query) {
-                $query->where('name', 'Student and Local Council Election');
+                $query->whereIn('name', [
+                    'Student and Local Council Election',
+                    'Student Council Election',
+                    'Local Council Election',
+                    'Special Election'
+                ]);
             });
-        } elseif ($this->filter === 'student_position') {
-            $query->whereHas('electionType', function ($query) {
-                $query->where('name', 'Student Council Election');
-            });
-        } elseif ($this->filter === 'local_position') {
-            $query->whereHas('electionType', function ($query) {
-                $query->where('name', 'Local Council Election');
-            });
-        } elseif ($this->filter === 'special_position') {
-            $query->whereHas('electionType', function ($query) {
-                $query->where('name', 'Special Election');
-            });
-        }
+        } elseif ($this->filter === 'student_and_local_position') {
+                $query->whereHas('electionType', function ($query) {
+                    $query->where('name', 'Student and Local Council Election');
+                });
+            } elseif ($this->filter === 'student_position') {
+                $query->whereHas('electionType', function ($query) {
+                    $query->where('name', 'Student Council Election');
+                });
+            } elseif ($this->filter === 'local_position') {
+                $query->whereHas('electionType', function ($query) {
+                    $query->where('name', 'Local Council Election');
+                });
+            } elseif ($this->filter === 'special_position') {
+                $query->whereHas('electionType', function ($query) {
+                    $query->where('name', 'Special Election');
+                });
+            }
 
 
         return view('evotar.livewire.manage-position.position-table', [
-            'positions' => $query->paginate(10),
+            'positions' => $query->paginate(5),
         ]);
     }
 }

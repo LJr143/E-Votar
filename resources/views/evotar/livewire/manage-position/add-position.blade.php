@@ -71,7 +71,7 @@
 
                                 <div class="flex-1 mb-3">
                                     <label for="election_type_id" class="text-[10px] font-natural px-2 block">Election Type</label>
-                                    <select wire:model="election_type_id" name="election_type_id" id="election_type_id"
+                                    <select wire:model="election_type_id" name="election_type_id"
                                             class="border-gray-300 text-xs rounded-lg px-4 py-2 w-full">
                                         <option value="" selected>Select an election type</option>
                                         @foreach($election_types as $election_type)

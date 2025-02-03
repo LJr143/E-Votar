@@ -30,6 +30,7 @@ Route::middleware('splash.screen')->group(function () {
 
 
     Route::get('/dashboard/technical-officer', [ViewController::class, 'technicalOfficerDashboard'])->name('technical-officer.dashboard');
+    Route::get('/active-users', [ViewController::class, 'activeUsers'])->name('technical-officer.active.user');
 });
 
 

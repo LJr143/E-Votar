@@ -199,7 +199,7 @@
                                         <x-label class="!text-black italic text-[10px]">College</x-label>
                                         <select name="college" id="college" wire:model.live="college_id"
                                                 class="px-2 py-0 h-[28px] text-[12px] w-full min-w-[240px] max-w-[200px] rounded border border-gray-300 focus:border-blue-500 focus:outline-none @error('college') border-red-500 @enderror">
-                                            <option value="" disabled selected>Select your college</option>
+                                            <option value=""  selected>Select your college</option>
                                             @foreach($colleges as $college)
                                                 <option value="{{ $college->id }}">{{ $college->name }}</option>
                                             @endforeach
@@ -214,7 +214,7 @@
                                         <x-label class="!text-black italic text-[10px]">Program</x-label>
                                         <select name="program" id="program" wire:model.live="program_id"
                                                 class="px-2 py-0 h-[28px] text-[12px] w-full min-w-[212px] max-w-[212px] rounded border border-gray-300 focus:border-blue-500 focus:outline-none @error('program') border-red-500 @enderror">
-                                            <option value="" disabled selected>Select program</option>
+                                            <option value=""  selected>Select program</option>
                                             @foreach($programs as $program)
                                                 <option value="{{ $program->id }}">{{ $program->name }}</option>
                                             @endforeach
@@ -229,7 +229,7 @@
                                         <x-label class="!text-black italic text-[10px]">Major</x-label>
                                         <select name="program_major" id="program_major" wire:model="program_major_id"
                                                 class="px-2 py-0 h-[28px] text-[12px] w-full min-w-[212px] max-w-[212px] rounded border border-gray-300 focus:border-blue-500 focus:outline-none @error('program_major') border-red-500 @enderror">
-                                            <option value="" disabled selected>Select program major</option>
+                                            <option value=""  selected>Select program major</option>
                                             @foreach($programMajors as $programMajor)
                                                 <option value="{{ $programMajor->id }}">{{ $programMajor->name }}</option>
                                             @endforeach
@@ -264,9 +264,18 @@
                             Cancel
                         </button>
                         <button type="submit"
-                                class="bg-black text-white px-6 py-1 h-7 rounded shadow-md hover:bg-gray-700 text-[12px] justify-center text-center">
-                            Save User
+                                wire:loading.attr="disabled"
+                                wire:target="saveUser"
+                                class="bg-black text-white px-6 py-1 h-7 rounded shadow-md hover:bg-gray-700 text-[12px] justify-center text-center relative">
+                            <span wire:loading.remove wire:target="saveUser">Save User</span>
+                            <span wire:loading wire:target="saveUser" class="absolute inset-0 flex items-center justify-center">
+        <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 0116 0h-2a6 6 0 00-12 0H4z"></path>
+        </svg>
+    </span>
                         </button>
+
                     </div>
                 </div>
             </form>
