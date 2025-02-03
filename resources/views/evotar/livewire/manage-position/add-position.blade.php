@@ -96,7 +96,7 @@
                         </button>
                         <button type="submit"
                                 class="bg-black text-white px-6 py-1 h-7 rounded shadow-md hover:bg-gray-700 text-[12px] justify-center text-center">
-                            Add Party List
+                            Add Position
                         </button>
                     </div>
                 </div>

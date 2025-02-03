@@ -28,7 +28,7 @@
                 <select name="selectedElection" id="candidate_election"
                         class="border-gray-300 text-xs rounded-lg px-4 py-2 w-full "
                         wire:model.live="selectedElection">
-                    <option value="" selected>Select an election</option>
+                    <option value="" selected disabled>Select an election</option>
                     @foreach($elections as $election)
                         <option value="{{ $election->id }}" {{ $election->id == $selectedElection ? 'selected' : '' }}>
                             {{ $election->name }} - {{ $election->campus->name }} - {{$election->election_type->name }}

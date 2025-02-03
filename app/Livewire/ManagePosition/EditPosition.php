@@ -36,7 +36,7 @@ class EditPosition extends Component
         ]);
 
         // Dispatch an event or notification
-        $this->dispatch('position-edited');
+        $this->dispatch('position-updated');
     }
 
 

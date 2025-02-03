@@ -76,13 +76,20 @@
         <div
             x-on:election-deleted.window="pushNotification('success', 'Election Deleted', 'Election has been deleted successfully.');"></div>
         <div
-            x-on:election-edited.window="pushNotification('success', 'Election Edited', 'Election has been edited successfully.');"></div>
+            x-on:election-updated.window="pushNotification('success', 'Election Updated', 'Election has been updated successfully.');"></div>
         <div
             x-on:candidate-created.window="pushNotification('success', 'Candidate Created', 'Candidate has been created successfully.');"></div>
         <div
             x-on:user-deleted.window="pushNotification('success', 'System User Deleted', 'User has been delete successfully.');"></div>
         <div
             x-on:user-created.window="pushNotification('success', 'System User Added', 'User has been added successfully.');"></div>
+        <div
+            x-on:position-created.window="pushNotification('success', 'Position Added', 'Position has been added successfully.');"></div>
+        <div
+            x-on:position-updated.window="pushNotification('success', 'Position Updated', 'Position has been updated successfully.');"></div>
+        <div
+            x-on:position-deleted.window="pushNotification('success', 'Position Deleted', 'Position has been deleted successfully.');"></div>
+
 
         <!-- Page Heading -->
 

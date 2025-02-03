@@ -218,19 +218,23 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach($candidates as $candidate)
+                            @forelse($candidates as $candidate)
                                 <tr>
-                                <td class="py-2 px-4 border-b">
-                                    <img alt="Profile picture of candidate" height="50" class="rounded-full"
-                                         src="{{ asset('storage/assets/profile/cat_meme.jpg') }}" width="50"/>
-                                </td>
-                                <td class="py-2 px-4 border-b">{{ $candidate->user->first_name }}</td>
-                                <td class="py-2 px-4 border-b">President</td>
-                                <td class="py-2 px-4 border-b">Yanong Agila</td>
-                                <td class="py-2 px-4 border-b">10%</td>
-                                <td class="py-2 px-4 border-b">50%</td>
-                            </tr>
-                            @endforeach
+                                    <td class="py-2 px-4 border-b">
+                                        <img alt="Profile picture of candidate" height="50" class="rounded-full"
+                                             src="{{ asset('storage/assets/profile/cat_meme.jpg') }}" width="50"/>
+                                    </td>
+                                    <td class="py-2 px-4 border-b">{{ $candidate->users->first_name }}</td>
+                                    <td class="py-2 px-4 border-b">{{ $candidate->election_positions->position->name }}</td>
+                                    <td class="py-2 px-4 border-b">{{ $candidate->partyLists->name }}</td>
+                                    <td class="py-2 px-4 border-b"></td>
+                                    <td class="py-2 px-4 border-b"></td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="6" class="py-2 px-4 border-b text-center">No candidates found.</td>
+                                </tr>
+                            @endforelse
                             </tbody>
                         </table>
                     </div>
