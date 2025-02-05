@@ -1,23 +1,4 @@
 <div>
-    <style>
-        table td, th {
-            font-size: 14px !important;
-        }
-
-        tr {
-            height: 15px;
-            line-height: 15px;
-        }
-
-        tr td {
-            font-size: 12px !important;
-        }
-
-        td, th {
-            padding: 0;
-        }
-
-    </style>
     <div class="flex w-full gap-4 min">
         <div class="w-full">
             <div class="bg-white shadow-md rounded p-6">
@@ -26,7 +7,8 @@
                     <div class="flex w-full">
                         <div class="w-1/2">
                             <button
-                                class="bg-white border border-gray-100 rounded p-1 w-[30px] flex-row  items-center justify-items-center" onclick="printVoters()">
+                                class="bg-white border border-gray-100 rounded p-1 w-[30px] flex-row  items-center justify-items-center"
+                                onclick="printVoters()">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
                                      xmlns="http://www.w3.org/2000/svg">
                                     <mask id="mask0_782_22521" style="mask-type:alpha"
@@ -65,10 +47,12 @@
                         <div class="w-1/2 flex justify-end">
 
                             <div class="flex flex-col sm:flex-row sm:justify-center  w-full md:w-auto">
+                                @can('create voter')
                                 <a href="{{ route('votar.registration') }}"
                                    class="w-[120px] px-2 py-[6px] mr-2 rounded h-8 bg-black text-white text-[12px] hover:bg-gray-700">
                                     Voter Registration
                                 </a>
+                                @endcan
                             </div>
                             <div class="relative w-[250px] mb-4">
                                 <!-- Search Input -->
@@ -87,41 +71,59 @@
                         </div>
                     </div>
                     <div class="mt-4 min-h-[400px]">
-                        <table class="min-w-full" id="votersTable">
-                            <thead class="bg-gray-50 text-left ">
-                            <tr class="">
-                                <th class="py-3 px-6 text-left border-b border-gray-300">Voter ID</th>
-                                <th class="py-3 px-6 text-left border-b border-gray-300">Name</th>
-                                <th class="py-3 px-6 text-left border-b border-gray-300">Student ID</th>
-                                <th class="py-3 px-6 text-left border-b border-gray-300">Email</th>
-                                <th class="py-3 px-6 text-left border-b border-gray-300">College</th>
-                                <th class="py-3 px-6 text-left border-b border-gray-300">Program</th>
-                                <th class="py-3 px-6 text-left border-b border-gray-300">Major</th>
-                                <th class="py-3 px-6 text-left border-b border-gray-300">Year Level</th>
-                                <th class="py-3 px-6 text-left rounded-tr-lg border-b border-gray-300">Actions</th>
+                        <table class="min-w-full w-full" id="votersTable">
+                            <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-4 py-3 text-[12px] whitespace-nowrap text-left">Voter ID</th>
+                                <th class="px-4 py-3 text-[12px] text-left">Name</th>
+                                <th class="px-4 py-3 text-[12px] text-left whitespace-nowrap">Student ID</th>
+                                <th class="px-4 py-3 text-[12px] text-left">Email</th>
+                                {{--                                <th class="px-4 py-3 text-[12px] text-left w-[18ch]">College</th>--}}
+                                <th class="px-4 py-3 text-[12px] text-left">Program</th>
+                                <th class="px-4 py-3 text-[12px] text-left">Major</th>
+                                <th class="px-4 py-3 text-[12px] text-left">Year</th>
+                                <th class="px-4 py-3 text-[12px] text-left">Actions</th>
                             </tr>
                             </thead>
-                            <tr></tr>
                             <tbody>
                             @foreach($voters as $voter)
                                 <tr class="font-light">
-                                    <td class="px-4 py-1">{{ str_pad($voter->id, 7, '0', STR_PAD_LEFT) }}</td>
-                                    <td class="px-4 py-1">{{ $voter->first_name }} {{ $voter->last_name }}</td>
-                                    <td class="px-4 py-1">{{ $voter->student_id }}</td>
-                                    <td class="px-4 py-1">{{ $voter->email }}</td>
-                                    <td class="px-4 py-1">{{ $voter->college->name }}</td>
-                                    <td class="px-4 py-1">{{ $voter->program->name }}</td>
-                                    <td class="px-4 py-1">{{ $voter->programMajor->name }}</td>
-                                    <td class="px-4 py-1">{{ $voter->year_level }}</td>
-
-                                    <td class="px-4 py-1 text-center flex exclude-print">
-                                        <livewire:manage-voter.edit-voter :userId="$voter->id" :key="'edit-election-'.$voter->id" />
-                                        <livewire:manage-voter.delete-voter :userId="$voter->id" :key="'delete-election-'.$voter->id" />
+                                    <td class="px-4 py-1 text-[12px]">{{ $voter->id }}</td>
+                                    <td class="px-4 py-1 text-[12px]">{{ $voter->first_name }} {{ $voter->last_name }}</td>
+                                    <td class="px-4 py-1 text-[12px]">{{ $voter->student_id }}</td>
+                                    <td class="px-4 py-1 text-[12px]">{{ $voter->email }}</td>
+                                    {{--                                    <td class="px-4 py-1 text-[12px]">{{ $voter->college->name }}</td>--}}
+                                    <td class="px-4 py-1 text-[12px]">
+                                        @php
+                                            // Convert program names
+                                            $program = $voter->program->name;
+                                            if (str_starts_with($program, 'Bachelor of Science')) {
+                                                $program = 'BS ' . substr($program, strlen('Bachelor of Science '));
+                                            } elseif (str_starts_with($program, 'Bachelor of Education')) {
+                                                $program = 'BE ' . substr($program, strlen('Bachelor of Education '));
+                                            } elseif (str_starts_with($program, 'Bachelor of Technical-Vocation')) {
+                                                $program = 'BTV ' . substr($program, strlen('Bachelor of Technical-Vocation'));
+                                            }
+                                            echo $program;
+                                        @endphp
+                                    </td>
+                                    <td class="px-4 py-1 text-[12px]">{{ $voter->programMajor->name }}</td>
+                                    <td class="px-4 py-1 text-[12px]">{{ $voter->year_level }}</td>
+                                    <td class="px-4 py-1 text-center exclude-print">
+                                        <div class="inline-flex">
+                                            @can('edit voter')
+                                                <livewire:manage-voter.edit-voter :userId="$voter->id"
+                                                                                  :key="'edit-election-'.$voter->id"/>
+                                            @endcan
+                                            @can('delete voter')
+                                            <livewire:manage-voter.delete-voter :userId="$voter->id"
+                                                                                :key="'delete-election-'.$voter->id"/>
+                                                @endcan
+                                        </div>
                                     </td>
                                 </tr>
                             @endforeach
                             </tbody>
-
                         </table>
                         <div class="mt-4">
                             {{ $voters->links('evotar.components.pagination.tailwind-pagination') }}

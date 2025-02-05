@@ -9,7 +9,7 @@ class PartyListTable extends Component
 {
     public $search = '';
 
-    protected $listeners = ['party-list-created' => '$refresh'];
+    protected $listeners = ['party-list-created' => '$refresh', 'party-list-updated'=>'$refresh', 'party-list-deleted' => '$refresh'];
 
 
     public function getPartyListsProperty(): \Illuminate\Database\Eloquent\Collection

@@ -7,7 +7,8 @@
                     <div class="flex w-full">
                         <div class="w-1/2">
                             <button
-                                class="bg-white border border-gray-100 rounded p-1 w-[30px] flex-row  items-center justify-items-center" onclick="printPartyList()">
+                                class="bg-white border border-gray-100 rounded p-1 w-[30px] flex-row  items-center justify-items-center"
+                                onclick="printPartyList()">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
                                      xmlns="http://www.w3.org/2000/svg">
                                     <mask id="mask0_782_22521" style="mask-type:alpha"
@@ -44,7 +45,9 @@
                             </button>
                         </div>
                         <div class="w-1/2 flex justify-end">
-                            <livewire:manage-party-list.add-party-list/>
+                            @can('create party list')
+                                <livewire:manage-party-list.add-party-list/>
+                            @endcan
                             <div class="relative w-[250px] mb-4">
                                 <!-- Search Input -->
                                 <input type="text" wire:model.live="search"
@@ -63,40 +66,46 @@
                     </div>
 
 
-                    <div class="overflow-x-auto mt-4 min-h-[350px]">
-                        <table class="min-w-full bg-white" id="partyListTable">
-                            <thead class=" text-left text-[12px] uppercase leading-normal">
-                            <tr class="bg-gray-100 border-b border-gray-300">
-                                <th class="py-3 px-6 rounded-tl-lg border-b border-gray-300 exclude-print">
-                                    <input  class="form-checkbox h-4 w-4 text-black"
-                                            x-model="selectAll" @click="checkboxes.forEach(checkbox => checkbox.checked = $event.target.checked)"
-                                            type="checkbox">
+                    <div class=" mt-4 min-h-[350px]">
+                        <table class="min-w-full" id="partyListTable">
+                            <thead class="text-left text-[10px]">
+                            <tr>
+                                <th class="py-3 px-4 rounded exclude-print">
+                                    <input class="form-checkbox text-left rounded h-4 w-4 text-black"
+                                           x-model="selectAll"
+                                           @click="checkboxes.forEach(checkbox => checkbox.checked = $event.target.checked)"
+                                           type="checkbox">
                                 </th>
-                                <th class="py-3 px-6">Id</th>
-                                <th class="py-3 px-6">Party List Name</th>
-                                <th class="py-3 px-6 rounded-tr-lg exclude-print">Actions</th>
+                                <th class="py-3 px-4">Id</th>
+                                <th class="py-3 px-4">Party List Name</th>
+                                <th class="py-3 px-4 rounded exclude-print">Actions</th>
                             </tr>
                             </thead>
-                            <tbody class="text-black text-[12px] ">
+                            <tr></tr>
+                            <tbody class="text-black text-[10px]">
                             @foreach($party_lists as $party_list)
-                                <tr class="hover:bg-gray-100 rows text-left border border-gray-100">
-                                    <td class="py-3 px-6 exclude-print">
+                                <tr class="hover:bg-gray-100 rows text-left">
+                                    <td class="py-4 px-1 exclude-print">
                                         <input type="checkbox"
-                                               class="form-checkbox h-4 w-4 text-black row-checkbox">
+                                               class="form-checkbox rounded h-4 w-4 text-black row-checkbox">
                                     </td>
-                                    <td class="py-3 px-6">{{ $party_list->id }}</td>
-                                    <td class="py-3 px-6">{{ $party_list->name }}</td>
+                                    <td class="py-4 px-1">{{ $party_list->id }}</td>
+                                    <td class="py-4 px-1">{{ $party_list->name }}</td>
 
-                                    <td class="py-3 px-6 flex exclude-print">
-                                        <livewire:manage-party-list.edit-party-list :partyListId="$party_list->id"/>
-                                        <livewire:manage-party-list.delete-party-list :partyListId="$party_list->id"/>
+                                    <td class="py-4 px-1 flex exclude-print">
+                                        @can('edit party list')
+                                            <livewire:manage-party-list.edit-party-list :partyListId="$party_list->id" :key="'edit-party-list'.$party_list->id"/>
+                                        @endcan
+
+                                        @can('delete party list')
+                                        <livewire:manage-party-list.delete-party-list :partyListId="$party_list->id" :key="'delete-party-list'.$party_list->id"/>
+                                            @endcan
                                     </td>
                                 </tr>
                             @endforeach
                             </tbody>
                         </table>
                     </div>
-
 
 
                 </div>

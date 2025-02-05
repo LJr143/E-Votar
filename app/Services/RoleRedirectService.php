@@ -15,6 +15,9 @@ class RoleRedirectService
         if ($user->hasRole('technical_officer')) {
             return redirect()->route('technical-officer.dashboard');
         }
+        if($user->hasRole('voter')){
+            return redirect()->route('voter.dashboard');
+        }
 
         return redirect()->route('admin.login');
     }

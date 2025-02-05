@@ -66,7 +66,9 @@
                             </button>
                         </div>
                         <div class="w-1/2 flex justify-end">
-                            <livewire:manage-system-user.add-system-user/>
+                            @can('create users')
+                                <livewire:manage-system-user.add-system-user/>
+                            @endcan
                             <div class="relative w-[250px] mb-4">
                                 <!-- Search Input -->
                                 <input type="text" wire:model.live="search"
@@ -87,40 +89,41 @@
                     <div class="mt-4 min-h-[400px]">
                         <table class="min-w-full ">
                             <thead>
-                            <tr class="uppercase" style="background-color: rgba(0,0,0,0.05)">
-                                <th class="font-bold text-[10px] text-left px-4 py-2"><input type="checkbox"></th>
-                                <th class="font-bold text-[10px] text-left px-4 py-2">User Id</th>
-                                <th class="font-bold text-[10px] text-left px-4 py-2">Full Name</th>
-                                <th class="font-bold text-[10px] text-left px-4 py-2">Access Role</th>
-                                <th class="font-bold text-[10px] text-left px-4 py-2">Email</th>
-                                <th class="font-bold text-[10px] text-left px-4 py-2">Year Level</th>
-                                <th class="font-bold text-[10px] text-left px-4 py-2">College</th>
-                                <th class="font-bold text-[10px] text-left px-4 py-2">Program</th>
-                                <th class="font-bold text-[10px] text-left px-4 py-2"></th>
+                            <tr>
+                                <th class="font-bold text-[10px] text-left px-4 py-3"><input type="checkbox" class="rounded"></th>
+                                <th class="font-bold text-[10px] text-left px-4 py-3">User Id</th>
+                                <th class="font-bold text-[10px] text-left px-4 py-3">Full Name</th>
+                                <th class="font-bold text-[10px] text-left px-4 py-3">Access Role</th>
+                                <th class="font-bold text-[10px] text-left px-4 py-3">Email</th>
+                                <th class="font-bold text-[10px] text-left px-4 py-3">Year Level</th>
+                                <th class="font-bold text-[10px] text-left px-4 py-3">College</th>
+                                <th class="font-bold text-[10px] text-left px-4 py-3">Program</th>
+                                <th class="font-bold text-[10px] text-left px-4 py-3"></th>
                             </tr>
                             </thead>
+                            <tr></tr>
                             <tbody>
                             @foreach($users as $user)
-                                <tr class=" rows text-[12px]font-light">
-                                    <td class="px-4 py-2"><input type="checkbox"></td>
-                                    <td class="px-4 py-2">{{ $user->id }}</td>
-                                    <td class="px-4 py-2">
+                                <tr class="font-light text-[10px]">
+                                    <td class="px-4 py-1"><input type="checkbox" class="rounded"></td>
+                                    <td class="px-4 py-1">{{ $user->id }}</td>
+                                    <td class="px-4 py-1">
                                         {{ $user->first_name }}
                                         {{ $user->middle_initial ? $user->middle_initial . '. ' : '' }}
                                         {{ $user->last_name }}
                                         {{ optional($user->extension)->name ?? '' }}
                                     </td>
 
-                                    <td class="px-4 py-2 capitalize">
+                                    <td class="px-4 py-1 capitalize">
                                         @foreach ($user->roles as $role)
                                             {{ $role->name }}@if (!$loop->last)
                                             @endif
                                         @endforeach
                                     </td>
-                                    <td class="px-4 py-2">{{ $user->email }}</td>
-                                    <td class="px-4 py-2 ">{{ $user->year_level  . ' Year' }}</td>
-                                    <td class="px-4 py-2 ">{{ $user->college->name }}</td>
-                                    <td class="px-4 py-2">
+                                    <td class="px-4 py-1">{{ $user->email }}</td>
+                                    <td class="px-4 py-1 ">{{ $user->year_level  . ' Year' }}</td>
+                                    <td class="px-4 py-1 ">{{ $user->college->name }}</td>
+                                    <td class="px-4 py-1">
                                         @php
                                             $programName = $user->program->name;
                                             $programName = str_starts_with($programName, 'Bachelor of Science') ? 'BS ' . substr($programName, strlen('Bachelor of Science')) : $programName;
@@ -129,11 +132,15 @@
                                                 {{ strlen($programName) > 15 ? substr($programName, 0, 15) . '...' : $programName }}
                                             </span>
                                     </td>
-                                    <td class="px-4 py-2 text-center flex">
+                                    <td class="px-4 py-1 text-center flex">
+                                        @can('edit users')
                                         <livewire:manage-system-user.edit-user :user_id="$user->id"
                                                                                :key="'edit-system-user'.$user->id"/>
+                                        @endcan
+                                        @can('delete users')
                                         <livewire:manage-system-user.delete-user :user_id="$user->id"
                                                                                  :key="'delete-system-user'.$user->id"/>
+                                    @endcan
                                 </tr>
                             @endforeach
                             </tbody>

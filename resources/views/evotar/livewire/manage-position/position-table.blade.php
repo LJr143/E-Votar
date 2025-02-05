@@ -1,24 +1,4 @@
 <div>
-    <style>
-        table td, th {
-            font-size: 14px !important;
-        }
-
-        tr {
-            height: 15px;
-            line-height: 15px;
-        }
-
-        tr td {
-            font-size: 12px !important;
-        }
-
-        td, th {
-            padding: 0;
-        }
-
-    </style>
-
     <div class="hidden sm:block mb-4">
         <div class="border-b-2 border-gray-200">
             <nav class="-mb-px flex space-x-8" aria-label="Tabs">
@@ -44,7 +24,7 @@
         </div>
     </div>
     <div class="flex w-full gap-4 min">
-        <div id="all_elections" class="w-full">
+        <div class="w-full">
             <div class="bg-white shadow-md rounded p-6">
                 <div
                     class="bg-white mt-0 p-5 rounded-md md:max-w-[800px] min-[90%]:max-w-[100%] lg:max-w-[900px] xl:w-[100%] xl:min-w-[100%] 2xl:max-w-[1190px]">
@@ -108,7 +88,7 @@
                     <div class="mt-4 min-h-[300px]">
                         <table class="min-w-full" id="positionsTable">
                             <thead class="bg-gray-50 text-left ">
-                            <tr class="">
+                            <tr>
                                 <th class="px-4 py-3 font-bold">ID</th>
                                 <th class="px-4 py-3 font-bold">Position Name</th>
                                 <th class="px-4 py-3 font-bold text-center exclude-print">Actions</th>

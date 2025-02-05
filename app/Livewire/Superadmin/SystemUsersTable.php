@@ -8,7 +8,7 @@ use Livewire\Component;
 
 class SystemUsersTable extends Component
 {
-    protected $listeners = ['refreshTable' => '$refresh'];
+    protected $listeners = ['system-user-created' => '$refresh', 'system-user-updated'=>'$refresh', 'system-user-deleted' => '$refresh'];
     public $showEditModal = false;
     public $showDeleteModal = false;
     public $userId;

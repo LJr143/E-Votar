@@ -1,4 +1,4 @@
-<div x-data="{ open: false }" x-cloak @voter-edited.window="open = false">
+<div x-data="{ open: false }" x-cloak @voter-updated.window="open = false">
     <!-- Trigger Button -->
     <button @click="open = true"
             class="bg-white border border-gray-300 w-8 h-8 rounded-md flex items-center justify-center hover:bg-gray-200 focus:outline-none">
@@ -50,7 +50,7 @@
                         <div class="md:col-span-2">
                             <x-label class="text-left text-xs font-semibold block mb-1">First Name</x-label>
                             <input type="text" name="first_name" wire:model="first_name"
-                                   class="border border-gray-300 text-xs rounded-lg px-4 py-2 w-full h-[28px] text-[12px] @error('first_name') border-red-500 @enderror"
+                                   class="border border-gray-300 text-xs rounded px-4 py-2 w-full h-[28px] text-[12px] @error('first_name') border-red-500 @enderror"
                                    placeholder="First Name" >
                             @error('first_name')
                             <div class="text-red-500 text-[10px] italic mt-1">{{ $message }}</div>
@@ -59,7 +59,7 @@
                         <div class="md:col-span-1">
                             <x-label class="text-left text-xs font-semibold block mb-1">Middle Initial</x-label>
                             <input type="text" name="middle_initial" wire:model="middle_initial"
-                                   class="border border-gray-300 text-xs rounded-lg px-4 py-2 w-full h-[28px] text-[12px] @error('middle_initial') border-red-500 @enderror"
+                                   class="border border-gray-300 text-xs rounded px-4 py-2 w-full h-[28px] text-[12px] @error('middle_initial') border-red-500 @enderror"
                                    placeholder="MI" >
                             @error('middle_initial')
                             <div class="text-red-500 text-[10px] italic mt-1">{{ $message }}</div>
@@ -68,7 +68,7 @@
                         <div class="md:col-span-2">
                             <x-label class="text-left text-xs font-semibold block mb-1">Last Name</x-label>
                             <input type="text" name="last_name" wire:model="last_name"
-                                   class="border border-gray-300 text-xs rounded-lg px-4 py-2 w-full h-[28px] text-[12px] @error('last_name') border-red-500 @enderror"
+                                   class="border border-gray-300 text-xs rounded px-4 py-2 w-full h-[28px] text-[12px] @error('last_name') border-red-500 @enderror"
                                    placeholder="Last Name" >
                             @error('last_name')
                             <div class="text-red-500 text-[10px] italic mt-1">{{ $message }}</div>
@@ -77,7 +77,7 @@
                         <div class="md:col-span-1">
                             <x-label class="text-left text-xs font-semibold block mb-1">Extension</x-label>
                             <input type="text" name="extension" wire:model="extension"
-                                   class="border border-gray-300 text-xs rounded-lg px-4 py-2 w-full h-[28px] text-[12px] @error('extension') border-red-500 @enderror"
+                                   class="border border-gray-300 text-xs rounded px-4 py-2 w-full h-[28px] text-[12px] @error('extension') border-red-500 @enderror"
                                    placeholder="Extension" >
                             @error('extension')
                             <div class="text-red-500 text-[10px] italic mt-1">{{ $message }}</div>
@@ -88,7 +88,7 @@
                     <div>
                         <x-label class="text-left text-xs font-semibold block mb-1">Birth Date</x-label>
                         <input type="date" name="birth_date" wire:model="birth_date"
-                               class="border border-gray-300 text-xs rounded-lg px-4 py-2 w-full h-[28px] text-[12px] @error('birth_date') border-red-500 @enderror">
+                               class="border border-gray-300 text-xs rounded px-4 py-2 w-full h-[28px] text-[12px] @error('birth_date') border-red-500 @enderror">
                         @error('birth_date')
                         <div class="text-red-500 text-[10px] italic mt-1">{{ $message }}</div>
                         @enderror
@@ -97,7 +97,7 @@
                         <x-label class="text-left text-xs font-semibold block mb-1">Gender</x-label>
                         <div class="relative mt-1">
                             <select name="gender" id="gender" wire:model="gender"
-                                    class="block appearance-none border border-gray-300 text-xs rounded-lg px-2 py-0 w-full h-[28px] text-[12px] @error('gender') border-red-500 @enderror">
+                                    class="block appearance-none border border-gray-300 text-xs rounded px-2 py-0 w-full h-[28px] text-[12px] @error('gender') border-red-500 @enderror">
                                 <option value="" disabled selected>Select your gender</option>
                                 <option value="male">Male</option>
                                 <option value="female">Female</option>
@@ -112,7 +112,7 @@
                     <div>
                         <x-label class="text-left text-xs font-semibold block mb-1">Email Address</x-label>
                         <input type="email" name="email" wire:model="email"
-                               class="border border-gray-300 text-xs rounded-lg px-4 py-2 w-full h-[28px] text-[12px] @error('email') border-red-500 @enderror"
+                               class="border border-gray-300 text-xs rounded px-4 py-2 w-full h-[28px] text-[12px] @error('email') border-red-500 @enderror"
                                placeholder="@usep.edu.ph" >
                         @error('email')
                         <div class="text-red-500 text-[10px] italic mt-1">{{ $message }}</div>
@@ -121,7 +121,7 @@
                     <div>
                         <x-label class="text-left text-xs font-semibold block mb-1">Mobile Number</x-label>
                         <input type="text" name="phone_number" wire:model="phone_number"
-                               class="border border-gray-300 text-xs rounded-lg px-4 py-2 w-full h-[28px] text-[12px] @error('phone_number') border-red-500 @enderror"
+                               class="border border-gray-300 text-xs rounded px-4 py-2 w-full h-[28px] text-[12px] @error('phone_number') border-red-500 @enderror"
                                placeholder="+63">
                         @error('phone_number')
                         <div class="text-red-500 text-[10px] italic mt-1">{{ $message }}</div>
@@ -131,8 +131,8 @@
                         <x-label class="text-left text-xs font-semibold block mb-1">Campus</x-label>
                         <div class="relative mt-1">
                             <select name="campus" id="campus" wire:model.live="campus_id"
-                                    class="border border-gray-300 text-xs rounded-lg px-2 py-0 w-full h-[28px] text-[12px] @error('campus') border-red-500 @enderror">
-                                <option value="" disabled selected>Select your campus</option>
+                                    class="border border-gray-300 text-xs rounded px-2 py-0 w-full h-[28px] text-[12px] @error('campus') border-red-500 @enderror">
+                                <option value="" selected>Select your campus</option>
                                 @foreach($campuses as $campus)
                                     <option value="{{ $campus->id }}">{{ $campus->name }}</option>
                                 @endforeach
@@ -147,8 +147,8 @@
                         <label class="text-left text-xs font-semibold block mb-1">College</label>
                         <div class="relative mt-1">
                             <select name="college" id="college" wire:model.live="college_id"
-                                    class="border border-gray-300 text-xs rounded-lg px-2 py-0 w-full h-[28px] text-[12px] @error('college') border-red-500 @enderror">
-                                <option value="" disabled selected>Select your college</option>
+                                    class="border border-gray-300 text-xs rounded px-2 py-0 w-full h-[28px] text-[12px] @error('college') border-red-500 @enderror">
+                                <option value=""selected>Select your college</option>
                                 @foreach($colleges as $college)
                                     <option value="{{ $college->id }}">{{ $college->name }}</option>
                                 @endforeach
@@ -163,8 +163,8 @@
                         <label class="text-left text-xs font-semibold block mb-1">Program</label>
                         <div class="relative mt-1">
                             <select name="program" id="program" wire:model.live="program_id"
-                                    class="border border-gray-300 text-xs rounded-lg px-2 py-0 w-full h-[28px] text-[12px] @error('program') border-red-500 @enderror">
-                                <option value="" disabled selected>Select program</option>
+                                    class="border border-gray-300 text-xs rounded px-2 py-0 w-full h-[28px] text-[12px] @error('program') border-red-500 @enderror">
+                                <option value=""  selected>Select program</option>
                                 @foreach($programs as $program)
                                     <option value="{{ $program->id }}">{{ $program->name }}</option>
                                 @endforeach
@@ -179,8 +179,8 @@
                         <label class="text-left text-xs font-semibold block mb-1">Major</label>
                         <div class="relative mt-1">
                             <select name="program_major" id="program_major" wire:model="program_major_id"
-                                    class="border border-gray-300 text-xs rounded-lg px-2 py-0 w-full h-[28px] text-[12px] @error('program_major') border-red-500 @enderror">
-                                <option value="" disabled selected>Select program major</option>
+                                    class="border border-gray-300 text-xs rounded px-2 py-0 w-full h-[28px] text-[12px] @error('program_major') border-red-500 @enderror">
+                                <option value=""  selected>Select program major</option>
                                 @foreach($programMajors as $programMajor)
                                     <option value="{{ $programMajor->id }}">{{ $programMajor->name }}</option>
                                 @endforeach
@@ -194,7 +194,7 @@
                     <div>
                         <x-label class="text-left text-xs font-semibold block mb-1">Student ID</x-label>
                         <input type="text" name="student_id" id="student_id" wire:model="student_id"
-                               class="border border-gray-300 text-xs rounded-lg px-4 py-2 w-full h-[28px] text-[12px] @error('student_id') border-red-500 @enderror"
+                               class="border border-gray-300 text-xs rounded px-4 py-2 w-full h-[28px] text-[12px] @error('student_id') border-red-500 @enderror"
                                placeholder="2021-00000" >
                         @error('student_id')
                         <div class="text-red-500 text-[10px] italic mt-1">{{ $message }}</div>
@@ -204,7 +204,7 @@
                         <x-label class="text-left text-xs font-semibold block mb-1">Year Level</x-label>
                         <div class="relative mt-1">
                             <select name="year_level" id="year_level" wire:model="year_level"
-                                    class="border border-gray-300 text-xs rounded-lg px-2 py-0 w-full h-[28px] text-[12px] @error('year_level') border-red-500 @enderror">
+                                    class="border border-gray-300 text-xs rounded px-2 py-0 w-full h-[28px] text-[12px] @error('year_level') border-red-500 @enderror">
                                 <option value="" disabled selected>Select year level</option>
                                 <option value="1st">1st year</option>
                                 <option value="2nd">2nd year</option>
@@ -219,10 +219,10 @@
                     <p class="text-[12px] text-left font-semibold my-2">Account Status</p>
                     <div class="flex justify-start">
                         <div class="flex-1 text-left mb-3">
-                            <p class="text-green-500">This Account is Active</p>
+                            <p class="text-green-500 text-[12px]">This Account is Active</p>
                         </div>
 
-                        <button class="p-2 text-red-500 rounded">
+                        <button class="p-2 text-[12px] text-red-500 rounded">
                             <p>Deactivate Account</p>
                         </button>
                     </div>

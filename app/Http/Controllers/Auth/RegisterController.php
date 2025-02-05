@@ -43,9 +43,10 @@ class RegisterController extends Controller
         return response()->json(['message' => 'Face registered successfully!']);
     }
 
-    public function viewFacialRegistration()
+    public function viewFacialRegistration($id)
     {
-        return view('evotar.auth.facial-registration');
+        $user = User::findOrFail($id);
+        return view('evotar.auth.facial-registration', compact('user'));
     }
 
     protected function superAdminExists(): bool
@@ -150,15 +151,21 @@ class RegisterController extends Controller
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public function registerVoter(Request $request)
     {
         $this->validateInput($request);
-        $this->createVoter($request->all());
+        $user = $this->createVoter($request->all());
 
         session()->flash('registered', true);
-        return redirect()->route('voter.facial.registration.get');
+        return redirect()->route('voter.facial.registration.get', ['id' => $user->id]);
     }
 
+    /**
+     * @throws Exception
+     */
     public function createVoter(array $data)
     {
         // Check for existing user before creating a new one
@@ -184,6 +191,10 @@ class RegisterController extends Controller
 
         return $user;
     }
+
+    /**
+     * @throws Exception
+     */
     protected function checkForExistingUser(array $data)
     {
         $existingUser = User::where('email', $data['email'])
@@ -198,18 +209,30 @@ class RegisterController extends Controller
 
     public function uploadFace(Request $request) {
         $imageData = $request->input('image');
+        $userId = $request->input('user_id');
+
+        // Validate user
+        $user = User::find($userId);
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
 
         // Convert base64 to image file
         list($type, $imageData) = explode(';', $imageData);
-        list(, $imageData)      = explode(',', $imageData);
+        list(, $imageData) = explode(',', $imageData);
         $imageData = base64_decode($imageData);
 
         $filename = 'face_' . time() . '.png';
-        $path = 'public/assets/profile/' . $filename;
+        $path = 'private/assets/profile/' . $filename;
 
-        // Store image
-        Storage::put($path, $imageData);
+        // Store image privately
+        Storage::put($path, $imageData, 'private');
+
+        // Update user face_id_path
+        $user->face_descriptor = $filename;
+        $user->save();
 
         return response()->json(['message' => 'Face captured successfully!', 'path' => $path]);
     }
+
 }

@@ -31,8 +31,7 @@ class EditPartyList extends Component
         $this->partyList->name = $this->name;
         $this->partyList->save();
 
-        // Optionally emit an event or redirect
-        session()->flash('message', 'Party List updated successfully.');
+        $this->dispatch('party-list-updated');
     }
 
     public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Foundation\Application|\Illuminate\Contracts\View\View|\Illuminate\View\View

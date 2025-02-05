@@ -8,6 +8,7 @@ use Livewire\WithPagination;
 class VoterTable extends Component
 {
     use WithPagination;
+    protected $listeners  = ['voter-updated' => '$refresh'];
 
     public string $filter = 'all_users';
     public string $search = '';
@@ -28,7 +29,7 @@ class VoterTable extends Component
         $this->resetPage();
     }
 
-    public function fetchUsers()
+    public function fetchUsers(): array|\LaravelIdea\Helper\App\Models\_IH_User_C|\Illuminate\Pagination\LengthAwarePaginator
     {
         return User::whereHas('roles', function ($q) {
             $q->where('name', 'voter');
@@ -39,7 +40,7 @@ class VoterTable extends Component
             ->paginate(10);
     }
 
-    public function render()
+    public function render(): \Illuminate\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\View\View
     {
         return view('evotar.livewire.manage-voter.voter-table', [
             'voters' => $this->fetchUsers(),

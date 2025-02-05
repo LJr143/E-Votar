@@ -15,7 +15,7 @@ window.Echo = new Echo({
 
 
 // (import.meta.env.VITE_REVERB_SCHEME ?? 'https') === 'https',
-window.Echo.channel('user-actions')
+/** window.Echo.channel('user-actions')
     .listen('UserActionUpdated', (data) => {
         console.log(`${data.user.id} was ${data.action}.`);
 
@@ -28,4 +28,4 @@ window.Echo.channel('user-actions')
         }
     });
 
-
+**/

@@ -89,6 +89,23 @@
             x-on:position-updated.window="pushNotification('success', 'Position Updated', 'Position has been updated successfully.');"></div>
         <div
             x-on:position-deleted.window="pushNotification('success', 'Position Deleted', 'Position has been deleted successfully.');"></div>
+        <div
+            x-on:voter-updated.window="pushNotification('success', 'Voter Updated', 'Voter has been updated successfully.');"></div>
+        <div
+            x-on:voter-deleted.window="pushNotification('success', 'Voter Deleted', 'Voter has been deleted successfully.');"></div>
+        <div
+            x-on:system-user-created.window="pushNotification('success', 'System User Added', 'User has been added successfully.');"></div>
+        <div
+            x-on:system-user-updated.window="pushNotification('success', 'System User Updated', 'User has been updated successfully.');"></div>
+        <div
+            x-on:system-user-deleted.window="pushNotification('success', 'System User Deleted', 'User has been deleted successfully.');"></div>
+        <div
+            x-on:party-list-created.window="pushNotification('success', 'Party List Added', 'Party List has been added successfully.');"></div>
+        <div
+            x-on:party-list-updated.window="pushNotification('success', 'Party List Updated', 'Party List has been updated successfully.');"></div>
+        <div
+            x-on:party-list-deleted.window="pushNotification('success', 'Party List Deleted', 'Party List has been deleted successfully.');"></div>
+
 
 
         <!-- Page Heading -->

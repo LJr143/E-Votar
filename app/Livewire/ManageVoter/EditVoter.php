@@ -58,40 +58,35 @@ class EditVoter extends Component
         }
     }
 
-    // When campus_id changes, fetch colleges and reset dependent fields
-// When campus_id changes, fetch colleges and reset dependent fields
-    public function updatedCampusId($value)
+    public function updatedCampusId($value): void
     {
         $this->colleges = College::where('campus_id', $value)->get();
-        $this->college_id = null; // Reset college_id
-        $this->program_id = null; // Reset program_id
-        $this->program_major_id = null; // Reset program_major_id
-        $this->programs = []; // Clear programs
-        $this->programMajors = []; // Clear program majors
+        $this->college_id = null;
+        $this->program_id = null;
+        $this->program_major_id = null;
+        $this->programs = [];
+        $this->programMajors = [];
     }
 
-// When college_id changes, fetch programs and reset dependent fields
-    public function updatedCollegeId($value)
+    public function updatedCollegeId($value): void
     {
         $this->programs = Program::where('college_id', $value)->get();
-        $this->program_id = null; // Reset program_id
-        $this->program_major_id = null; // Reset program_major_id
-        $this->programMajors = []; // Clear program majors
+        $this->program_id = null;
+        $this->program_major_id = null;
+        $this->programMajors = [];
     }
 
-    // When program_id changes, fetch program majors
     public function updatedProgramId($value): void
     {
         $this->programMajors = program_major::where('program_id', $value)->get();
 
-        // Check if the current program_major_id belongs to the new program_id
         if ($this->program_major_id) {
             $programMajorExists = program_major::where('id', $this->program_major_id)
                 ->where('program_id', $value)
                 ->exists();
 
             if (!$programMajorExists) {
-                $this->program_major_id = null; // Reset program_major_id if it doesn't belong to the new program_id
+                $this->program_major_id = null;
             }
         }
     }
@@ -154,10 +149,9 @@ class EditVoter extends Component
                 'program_major_id' => $this->program_major_id,
             ]);
 
-            // Flash success message
             session()->flash('success', 'Voter updated successfully.');
+            $this->dispatch('voter-updated');
         } else {
-            // Flash error message if user not found
             session()->flash('error', 'User not found.');
         }
     }

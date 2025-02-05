@@ -9,6 +9,7 @@
 
             canvas {
                 position: absolute;
+                transform: scaleX(-1);
                 z-index: 50;
             }
 
@@ -43,7 +44,7 @@
         </div>
 
         <p id="status-message">Initializing camera...</p>
-        <button id="capture-button">Capture Face</button>
+        <button id="capture-button" data-user-id="{{ $user->id}}">Capture Face</button>
 
         <script src="{{ asset('storage/js/face-api.min.js') }}"></script>
         <script>
@@ -136,6 +137,7 @@
 
                     // Convert image to base64
                     const imageData = canvas.toDataURL("image/png");
+                    const userId = captureButton.getAttribute("data-user-id");
 
                     // Send image to backend
                     fetch("{{ route('face.upload') }}", {
@@ -144,7 +146,7 @@
                             "Content-Type": "application/json",
                             "X-CSRF-TOKEN": "{{ csrf_token() }}",
                         },
-                        body: JSON.stringify({ image: imageData }),
+                        body: JSON.stringify({ image: imageData,  user_id: userId }),
                     })
                         .then(response => response.json())
                         .then(data => alert(data.message))

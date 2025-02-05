@@ -15,7 +15,7 @@
                     <p class="text-[11px] text-gray-500">List of IP records</p>
                 </div>
             </div>
-
-        </div>
+                <livewire:manage-ip-records.ip-records/>
+            </div>
     </x-slot>
 </x-app-layout>

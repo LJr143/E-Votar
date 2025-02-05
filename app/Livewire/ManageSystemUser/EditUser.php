@@ -181,7 +181,7 @@ class EditUser extends Component
 
         $user->roles()->attach($this->selectedRole);
 
-        $this->dispatch('system-user-edited');
+        $this->dispatch('system-user-updated');
     }
 
 

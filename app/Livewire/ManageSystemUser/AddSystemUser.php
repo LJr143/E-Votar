@@ -159,7 +159,7 @@ class AddSystemUser extends Component
 
         $this->reset(['username', 'password', 'confirm_password', 'selectedRole', 'userPermissions']);
         session()->flash('message', 'User created successfully!');
-        $this->dispatch('system-user_added');
+        $this->dispatch('system-user-created');
     }
 
     private function resetPermissions(): void

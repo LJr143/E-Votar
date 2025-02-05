@@ -5,10 +5,9 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Spatie\Permission\Models\Role;
 use Symfony\Component\HttpFoundation\Response;
 
-class AdminAuth
+class VoterAuth
 {
     /**
      * Handle an incoming request.
@@ -22,7 +21,7 @@ class AdminAuth
             return $this->redirectToLogin();
         }
 
-        if (!$this->isAdmin()) {
+        if (!$this->isVoter()) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -47,9 +46,9 @@ class AdminAuth
     /**
      * Check if the user has the 'admin' role.
      */
-    protected function isAdmin(): bool
+    protected function isVoter(): bool
     {
-        return Auth::user()->hasAnyRole('admin', 'superadmin', 'technical_officer', 'watcher');
+        return Auth::user()->hasRole('voter');
     }
 
     /**
@@ -57,7 +56,7 @@ class AdminAuth
      */
     protected function redirectToLogin(): Response
     {
-        return redirect()->route('admin.login')->withErrors([
+        return redirect()->route('voter.login')->withErrors([
             'error' => 'You must be logged in to access this page.',
         ]);
     }

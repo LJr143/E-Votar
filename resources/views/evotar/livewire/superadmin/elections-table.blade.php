@@ -82,7 +82,7 @@
                             </button>
                         </div>
                         <div class="w-1/2 flex justify-end">
-                            <livewire:manage-election.add-election/>
+                            @can('create election')<livewire:manage-election.add-election/>@endcan
                             <div class="relative w-[250px] mb-4">
                                 <!-- Search Input -->
                                 <x-input type="text" wire:model.live="search"
@@ -125,11 +125,15 @@
                                         <p class="bg-green-600 w-[60px] rounded">{{ $election->status }}</p>
                                     </td>
                                     <td class="px-4 py-1 text-center flex exclude-print">
-                                        <livewire:manage-election.view-election :election_id="$election->id" :key="'view-election-'.$election->id" />
+                                        @can('view election')
+                                        <livewire:manage-election.view-election :election_id="$election->id" :key="'view-election-'.$election->id" />@endcan
+                                        @can('edit election')
                                         <div class="text-left">
                                             <livewire:manage-election.edit-election :election_id="$election->id" :key="'edit-election-'.$election->id" />
-                                        </div>
+                                        </div>@endcan
+                                            @can('delete election')
                                         <livewire:manage-election.delete-election :election_id="$election->id" :key="'delete-election-'.$election->id" />
+                                            @endcan
                                     </td>
                                 </tr>
                             @endforeach

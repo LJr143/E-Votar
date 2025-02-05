@@ -57,7 +57,7 @@ class DeleteUser extends Component
         $this->password = '';
 
         event(new UserActionUpdated($this->user->id, 'deleted'));
-        $this->dispatch( 'user-deleted');
+        $this->dispatch( 'system-user-deleted');
 
 
     }

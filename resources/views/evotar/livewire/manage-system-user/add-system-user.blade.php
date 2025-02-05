@@ -1,4 +1,4 @@
-<div x-data="{ open: false }" x-cloak @system-user-added.window="open = false">
+<div x-data="{ open: false }" x-cloak @system-user-created.window="open = false">
     <!-- Trigger Button -->
     <button @click="open = true"
             class="w-[110px] mr-2 rounded py-[6px] px-2 bg-black text-white text-[12px] hover:bg-gray-700">

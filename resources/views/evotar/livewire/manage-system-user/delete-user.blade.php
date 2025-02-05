@@ -1,4 +1,4 @@
-<div x-data="{ open: false }" x-cloak @user-deleted.window="open = false">
+<div x-data="{ open: false }" x-cloak @system-user-deleted.window="open = false">
     <!-- Trigger Button -->
     <button @click="open = true"
             class="bg-white border border-gray-100 rounded p-1 w-[30px] flex-row  items-center justify-items-center">

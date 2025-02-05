@@ -29,8 +29,6 @@ class ActiveUserTable extends Component
             $this->dispatch('userSelected', $user->id);
         }
     }
-
-
     public function getActiveUsersProperty(): array|\LaravelIdea\Helper\App\Models\_IH_User_C|\Illuminate\Pagination\LengthAwarePaginator
     {
         return User::whereIn('id', function ($query) {
@@ -40,12 +38,15 @@ class ActiveUserTable extends Component
                 ->where('last_activity', '>=', now()->subMinutes(config('session.lifetime'))->timestamp);
         })
             ->when($this->search, function ($query) {
-                $query->where('first_name', 'like', '%' . $this->search . '%')
-                    ->orWhere('last_name', 'like', '%' . $this->search . '%')
-                    ->orWhere('email', 'like', '%' . $this->search . '%');
+                $query->where(function ($subQuery) {
+                    $subQuery->where('first_name', 'like', '%' . $this->search . '%')
+                        ->orWhere('last_name', 'like', '%' . $this->search . '%')
+                        ->orWhere('email', 'like', '%' . $this->search . '%');
+                });
             })
             ->paginate(10);
     }
+
 
     public function render(): \Illuminate\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\View\View
     {

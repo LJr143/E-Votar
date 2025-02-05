@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('gender');
             $table->date('birth_date');
             $table->string('email')->unique();
+            $table->string('google_id')->nullable();
             $table->string('phone_number')->unique();
             $table->string('year_level');
             $table->string('student_id')->unique();
@@ -34,7 +35,7 @@ return new class extends Migration
             $table->foreignId('current_team_id')->nullable();
             $table->string('profile_photo_path', 2048)->nullable();
             $table->string('Account Status')->default('Active');
-            $table->json('face_descriptor')->nullable();
+            $table->string('face_descriptor')->nullable();
             $table->timestamps();
         });
 

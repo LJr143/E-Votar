@@ -18,6 +18,7 @@ class DeletePartyList extends Component
     {
         if ($this->partyList->exists) {
             $this->partyList->delete();
+            $this->dispatch('party-list-deleted');
 
         }
     }

@@ -172,6 +172,12 @@ class ViewController extends Controller
     }
 
 
+    public function voterDashboard()
+    {
+        return view ('evotar.voter.pages.dashboard');
+    }
+
+
     /**
      * Election management view.
      */
@@ -254,6 +260,11 @@ class ViewController extends Controller
     public function activeUsers()
     {
         return view('evotar.technical-officer.active-user');
+    }
+
+    public function ipRecords()
+    {
+        return view('evotar.technical-officer.ip-record');
     }
 
     /**

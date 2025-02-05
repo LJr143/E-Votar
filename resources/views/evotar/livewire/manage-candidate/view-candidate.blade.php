@@ -83,8 +83,9 @@
                         </div>
 
                     </div>
-
-                    <livewire:manage-candidate.add-candidates/>
+                    @can('create candidate')
+                        <livewire:manage-candidate.add-candidates/>
+                    @endcan
                     <div class="relative w-[250px] mb-4">
                         <!-- Search Input -->
                         <input type="text" wire:model.live="search"

@@ -15,9 +15,12 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'role' => \App\Http\Middleware\RoleMiddleware::class,
             'admin.auth'=> \App\Http\Middleware\AdminAuth::class,
+            'voter.auth' => \App\Http\Middleware\VoterAuth::class,
             'superadmin.check' => \App\Http\Middleware\SuperadminChecker::class,
             'redirect.auth' =>\App\Http\Middleware\RedirectMiddleware::class,
             'splash.screen' => \App\Http\Middleware\SplashScreenMiddleware::class,
+            'track.ip.user' => \App\Http\Middleware\TrackIpAddress::class,
+            'facial.verified' => \App\Http\Middleware\FacialVerificationMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

@@ -203,35 +203,6 @@
                         </h1>
 
                     </div>
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full bg-white text-xs">
-                            <thead>
-                            <tr>
-                                <th class="py-2 px-4 border-b text-left">Profile</th>
-                                <th class="py-2 px-4 border-b text-left">Candidate</th>
-                                <th class="py-2 px-4 border-b text-left">Position</th>
-                                <th class="py-2 px-4 border-b text-left">Party List</th>
-                                <th class="py-2 px-4 border-b text-left">Abstain</th>
-                                <th class="py-2 px-4 border-b text-left">Vote Garnered</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            @foreach($candidates as $candidate)
-                                <tr>
-                                    <td class="py-2 px-4 border-b">
-                                        <img alt="Profile picture of candidate" height="50" class="rounded-full"
-                                             src="{{ asset('storage/assets/profile/cat_meme.jpg') }}" width="50"/>
-                                    </td>
-                                    <td class="py-2 px-4 border-b">{{ $candidate->user->first_name }}</td>
-                                    <td class="py-2 px-4 border-b">President</td>
-                                    <td class="py-2 px-4 border-b">Yanong Agila</td>
-                                    <td class="py-2 px-4 border-b">10%</td>
-                                    <td class="py-2 px-4 border-b">50%</td>
-                                </tr>
-                            @endforeach
-                            </tbody>
-                        </table>
-                    </div>
                 </div>
 
             </div>
