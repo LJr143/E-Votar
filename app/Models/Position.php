@@ -19,5 +19,15 @@ class Position extends Model
         return $this->belongsTo(election_type::class, 'election_type_id');
     }
 
+    public function electionPositions(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(ElectionPosition::class, 'position_id');
+    }
+
+    public function candidates(): \Illuminate\Database\Eloquent\Relations\HasManyThrough
+    {
+        return $this->hasManyThrough(Candidate::class, ElectionPosition::class, 'position_id', 'election_position_id');
+    }
+
 
 }

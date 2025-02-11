@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Election;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Exception;
@@ -172,12 +173,6 @@ class ViewController extends Controller
     }
 
 
-    public function voterDashboard()
-    {
-        return view ('evotar.voter.pages.dashboard');
-    }
-
-
     /**
      * Election management view.
      */
@@ -265,6 +260,24 @@ class ViewController extends Controller
     public function ipRecords()
     {
         return view('evotar.technical-officer.ip-record');
+    }
+
+
+    public function voterElectionRedirect()
+    {
+        return view('evotar.voter.pages.voter-election-redirect');
+    }
+
+
+
+    public function step1Tutorial()
+    {
+        return view('evotar.voter.pages.step-1_tutorial');
+    }
+
+    public function step2Tutorial()
+    {
+        return view('evotar.voter.pages.step-2_tutorial');
     }
 
     /**

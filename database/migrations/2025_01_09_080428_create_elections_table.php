@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('elections', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('slug')->unique();
             $table->foreignId('type')->constrained('election_types');
             $table->foreignId('campus_id')->constrained('campuses');
             $table->timestamp('date_started')->nullable(); // Use timestamp() for custom timestamps
