@@ -143,7 +143,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://unpkg.com/filepond@^4/dist/filepond.js"></script>
-<script src="https://unpkg.com/@pqina/flip/dist/flip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.1/gsap.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/face-api.js"></script>
 
@@ -157,6 +156,12 @@
         }, 2000);
     });
 </script>
+<script>
+    window.addEventListener("beforeunload", function () {
+        navigator.sendBeacon("{{ route('logout') }}");
+    });
+</script>
+
 
 
 </body>

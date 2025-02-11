@@ -21,6 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'splash.screen' => \App\Http\Middleware\SplashScreenMiddleware::class,
             'track.ip.user' => \App\Http\Middleware\TrackIpAddress::class,
             'facial.verified' => \App\Http\Middleware\FacialVerificationMiddleware::class,
+            'voter.access' => \App\Http\Middleware\EnsureVoterCanAccessElection::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

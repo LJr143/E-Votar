@@ -5,14 +5,14 @@ use App\Http\Controllers\CampusController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ViewController;
+use App\Http\Controllers\VoterElectionController;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Route;
 use App\Models\Election;
 
-require __DIR__.'/admin/routes.php';
-require __DIR__.'/voter/routes.php';
-require __DIR__.'/common/routes.php';
-
-
+require __DIR__ . '/admin/routes.php';
+require __DIR__ . '/voter/routes.php';
+require __DIR__ . '/common/routes.php';
 
 
 Route::get('/api/election-end-time', function () {
@@ -56,12 +56,32 @@ Route::get('login/google/callback', [LoginController::class, 'handleGoogleCallba
 
 
 Route::post('/logout', function (Request $request) {
-    Auth::logout(); // Logout from Laravel
+    if (Auth::check()) {
+        Auth::logout();
 
-    // Invalidate the session
-    $request->session()->invalidate();
-    $request->session()->regenerateToken();
+        Session::flush();
+        Auth::logout();
 
+        if (config('session.driver') === 'database') {
+            \DB::table('sessions')->where('user_id', Auth::id())->delete();
+        }
+    }
     // Redirect to Google Logout
     return redirect('https://accounts.google.com/Logout');
 })->name('logout');
+
+
+Route::get('/fetch-elections/{voterId}', [VoterElectionController::class, 'getElectionsForVoter'])->name('fetch.elections');
+Route::get('/api/election-end-time/{electionId?}', [VoterElectionController::class, 'getElectionEndTime']);
+Route::get('/api/election-end-time/{electionId}', function ($electionId) {
+    $election = Election::find($electionId);
+
+    if ($election) {
+        $startTime = Carbon::parse($election->date_started)->toIso8601String();
+        $endTime = Carbon::parse($election->date_ended)->toIso8601String();
+        return response()->json(['start_time' => $startTime, 'end_time' => $endTime]);
+    }
+
+    return response()->json(['error' => 'Election not found'], 404);
+
+});

@@ -6,9 +6,11 @@
                 display: flex;
                 justify-content: center;
                 position: relative;
+                transform: scaleX(-1);
             }
             canvas {
                 position: absolute;
+                transform: scaleX(-1);
             }
         </style>
 
