@@ -12,6 +12,7 @@
                 position: absolute;
                 transform: scaleX(-1);
             }
+
         </style>
 
         <div id="container">
@@ -28,21 +29,30 @@
 
         const run = async () => {
             // Start webcam
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                alert("Your browser does not support camera access. Please use Google Chrome.");
+                return;
+            }
+
             const stream = await navigator.mediaDevices.getUserMedia({
                 video: true,
                 audio: false,
             });
+
             const videoFeedEl = document.getElementById('video-feed');
             videoFeedEl.srcObject = stream;
 
             // Load Face-API models
-            await Promise.all([
-                faceapi.nets.ssdMobilenetv1.loadFromUri('/storage/models'),
-                faceapi.nets.faceLandmark68Net.loadFromUri('/storage/models'),
-                faceapi.nets.faceRecognitionNet.loadFromUri('/storage/models'),
-                faceapi.nets.ageGenderNet.loadFromUri('/storage/models'),
-                faceapi.nets.faceExpressionNet.loadFromUri('/storage/models'),
-            ]);
+            async function loadModels() {
+                const modelPath = "{{ asset('storage/models') }}";
+                await faceapi.nets.ssdMobilenetv1.loadFromUri(modelPath);
+                await faceapi.nets.faceLandmark68Net.loadFromUri(modelPath);
+                await faceapi.nets.faceRecognitionNet.loadFromUri(modelPath);
+                await faceapi.nets.ageGenderNet.loadFromUri(modelPath);
+                await faceapi.nets.faceExpressionNet.loadFromUri(modelPath);
+            }
+            loadModels().then(run);
+
 
             // Load reference face (user's stored profile image)
             const refFace = await faceapi.fetchImage(userProfileImage);
