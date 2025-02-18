@@ -29,11 +29,11 @@ class VoterDashboard extends Component
     {
         if ($this->election->election_type->name == 'Student and Local Council Election') {
             session(['election_slug' => $this->election->slug]);
-            return redirect()->route('voter.step1');
+            return redirect()->route('voter.voting', ['slug' => session('election_slug')]);
         }
         else {
             session(['election_slug' => $this->election->slug]);
-            return redirect()->route('voter.voting');
+            return redirect()->route('voter.voting', ['slug' => session('election_slug')]);
         }
 
     }

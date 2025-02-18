@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Position extends Model
 {
     protected $table = 'positions';
-    protected $fillable = ['election_type_id', 'name'];
+    protected $fillable = ['election_type_id', 'name', 'num_winners'];
 
     public function elections(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {

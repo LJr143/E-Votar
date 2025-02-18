@@ -24,4 +24,9 @@ class Program extends Model
         return $this->hasMany(User::class);
     }
 
+    public function council(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+     return $this->belongsTo(Council::class);
+    }
+
 }

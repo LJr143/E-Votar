@@ -11,11 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('positions', function (Blueprint $table) {
+        Schema::create('councils', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('election_type_id')->constrained('election_types');
             $table->string('name');
-            $table->unsignedInteger('num_winners')->default(1);
+            $table->foreignId('program_id')->constrained('programs');
             $table->timestamps();
         });
     }
@@ -25,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('positions');
+        Schema::dropIfExists('councils');
     }
 };

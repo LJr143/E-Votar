@@ -6,6 +6,8 @@
         </div>
     </x-slot>
     <x-slot name="main">
-        <livewire:voter.voting-process :slug="$slug"/>
+      <div class="h-full">
+            <livewire:voter.voting-process :slug="$slug"/>
+        </div>
     </x-slot>
 </x-app-layout>

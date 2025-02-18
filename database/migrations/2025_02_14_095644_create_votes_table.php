@@ -11,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('positions', function (Blueprint $table) {
+        Schema::create('votes', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('candidate_id')->constrained('candidates');
+            $table->foreignId('election_id')->constrained('elections');
             $table->foreignId('election_type_id')->constrained('election_types');
-            $table->string('name');
-            $table->unsignedInteger('num_winners')->default(1);
+            $table->foreignId('position_id')->constrained('positions');
             $table->timestamps();
         });
     }
@@ -25,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('positions');
+        Schema::dropIfExists('votes');
     }
 };
