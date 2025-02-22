@@ -9,5 +9,6 @@
       <div class="h-full">
             <livewire:voter.voting-process :slug="$slug"/>
         </div>
+
     </x-slot>
 </x-app-layout>

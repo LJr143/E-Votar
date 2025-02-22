@@ -85,3 +85,4 @@ Route::get('/api/election-end-time/{electionId}', function ($electionId) {
     return response()->json(['error' => 'Election not found'], 404);
 
 });
+

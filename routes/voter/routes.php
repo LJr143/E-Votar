@@ -18,4 +18,16 @@ Route::middleware('splash.screen', 'track.ip.user', 'facial.verified')->prefix('
     Route::get('step-1-tutorial', [ViewController::class, 'step1Tutorial'])->name('voter.step1')->middleware('voter.auth');
     Route::get('step-2-tutorial', [ViewController::class, 'step2Tutorial'])->name('voter.step2')->middleware('voter.auth');
     Route::get('/voting-process/{slug}', [VoterElectionController::class, 'voting'])->name('voter.voting')->middleware('voter.auth');
+    Route::get('/voting/vote-submission', [VoterElectionController::class, 'confirmVoting'])->name('voter.voting.confirm')->middleware('voter.auth');
+
+    // Show the verification page
+    Route::get('/verify-vote', [VoterElectionController::class, 'showVerifyVotePage'])
+        ->name('verify.vote.page')
+        ->middleware('auth');
+
+// Handle the verification form submission
+    Route::post('/verify-vote', [VoterElectionController::class, 'verifyVote'])
+        ->name('verify.vote.submit')
+        ->middleware('auth');
 });
+

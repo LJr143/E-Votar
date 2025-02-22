@@ -10,6 +10,11 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "ext-gd": "*",
+        "ext-openssl": "*",
+        "chillerlan/php-qrcode": "^5.0",
+        "intervention/image": "^3.11",
+        "intervention/image-laravel": "^1.5",
         "laravel/framework": "^11.31",
         "laravel/jetstream": "^5.3",
         "laravel/reverb": "^1.0",

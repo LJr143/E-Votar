@@ -99,6 +99,8 @@ return [
 
     'key' => env('APP_KEY'),
 
+    'stegano_secret_key' => env('STEGANO_SECRET_KEY', 'base64:Tpi0YUUaSwaQnzSBOrR6lyzLdIiXu6X0RdFroz1mnMI='),
+
     'previous_keys' => [
         ...array_filter(
             explode(',', env('APP_PREVIOUS_KEYS', ''))
