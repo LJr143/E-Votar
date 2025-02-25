@@ -7,7 +7,7 @@
         <x-header></x-header>
     </x-slot>
     <x-slot name="main">
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        @vite(['resources/js/app.js', 'resources/js/chart.js'])
         <div class="bg-transparent px-2 py-0 min-h-screen ">
             <div class="mx-auto flex w-full">
                 <!-- Left Section -->
@@ -15,8 +15,8 @@
                     <!-- Header Section -->
                     <div class="flex flex-row justify-between items-start mb-4">
                         <div class="text-left">
-                            <h1 class="text-base font-semibold leading-6 text-gray-900">Election Result</h1>
-                            <p class="text-[11px] text-gray-500">Election results</p>
+                            <h1 class="text-base font-semibold leading-6 text-gray-900">Vote Tally</h1>
+                            <p class="text-[11px] text-gray-500">Vote Tally </p>
                         </div>
                     </div>
                 </div>
@@ -176,223 +176,11 @@
                                     </div>
                                 </div>
                             </div>
-                            <script>
-                                Chart.register(ChartDataLabels);
-
-                                function createGradient(ctx, color1, color2) {
-                                    const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-                                    gradient.addColorStop(0, color1);
-                                    gradient.addColorStop(1, color2);
-                                    return gradient;
-                                }
-
-                                const presidentCtx = document.getElementById('presidentChart').getContext('2d');
-                                const presidentGradient = createGradient(presidentCtx, '#000000', '#FFFFFF');
-                                const presidentChart = new Chart(presidentCtx, {
-                                    type: 'bar',
-                                    data: {
-                                        labels: ['Hamisi Mtengti', 'Abstain'],
-                                        datasets: [{
-                                            label: 'Votes',
-                                            data: [9, 5],
-                                            backgroundColor: [presidentGradient, presidentGradient],
-                                            borderColor: ['#000000', '#000000'],
-                                            borderWidth: 1,
-                                            borderRadius: 10,
-                                            barThickness: 50,
-                                            hoverBackgroundColor: ['#333333', '#CCCCCC'],
-                                            hoverBorderColor: ['#333333', '#CCCCCC']
-                                        }]
-                                    },
-                                    options: {
-                                        indexAxis: 'y',
-                                        scales: {
-                                            x: {
-                                                beginAtZero: true,
-                                                grid: {
-                                                    display: false
-                                                },
-                                                ticks: {
-                                                    color: '#000000'
-                                                }
-                                            },
-                                            y: {
-                                                grid: {
-                                                    display: false
-                                                },
-                                                ticks: {
-                                                    color: '#000000'
-                                                }
-                                            }
-                                        },
-                                        plugins: {
-                                            legend: {
-                                                display: false
-                                            },
-                                            tooltip: {
-                                                backgroundColor: '#000000',
-                                                titleColor: '#FFFFFF',
-                                                bodyColor: '#FFFFFF',
-                                                borderColor: '#000000',
-                                                borderWidth: 1
-                                            },
-                                            '3d': {
-                                                enabled: true,
-                                                effect: '3d',
-                                                depth: 10,
-                                                angle: 45
-                                            },
-                                            datalabels: {
-                                                anchor: 'center',
-                                                align: 'center',
-                                                color: function(context) {
-                                                    return context.dataset.backgroundColor[context.dataIndex] === '#FFFFFF' ? '#000000' : '#FFFFFF';
-                                                },
-                                                font: {
-                                                    weight: 'bold'
-                                                },
-                                                formatter: function(value) {
-                                                    return value + ' votes';
-                                                }
-                                            }
-                                        }
-                                    }
-                                });
-
-                                const internalVicePresidentCtx = document.getElementById('internalVicePresidentChart').getContext('2d');
-                                const internalVicePresidentGradient = createGradient(internalVicePresidentCtx, '#000000', '#FFFFFF');
-                                const internalVicePresidentChart = new Chart(internalVicePresidentCtx, {
-                                    type: 'bar',
-                                    data: {
-                                        labels: ['Henry Kasembe', 'Abstain'],
-                                        datasets: [{
-                                            label: 'Votes',
-                                            data: [24, 3],
-                                            backgroundColor: [internalVicePresidentGradient, internalVicePresidentGradient],
-                                            borderColor: ['#000000', '#000000'],
-                                            borderWidth: 1,
-                                            borderRadius: 10,
-                                            barThickness: 50,
-                                            hoverBackgroundColor: ['#333333', '#CCCCCC'],
-                                            hoverBorderColor: ['#333333', '#CCCCCC']
-                                        }]
-                                    },
-                                    options: {
-                                        indexAxis: 'y',
-                                        scales: {
-                                            x: {
-                                                beginAtZero: true,
-                                                grid: {
-                                                    display: false
-                                                },
-                                                ticks: {
-                                                    color: '#000000'
-                                                }
-                                            },
-                                            y: {
-                                                grid: {
-                                                    display: false
-                                                },
-                                                ticks: {
-                                                    color: '#000000'
-                                                }
-                                            }
-                                        },
-                                        plugins: {
-                                            legend: {
-                                                display: false
-                                            },
-                                            tooltip: {
-                                                backgroundColor: '#000000',
-                                                titleColor: '#FFFFFF',
-                                                bodyColor: '#FFFFFF',
-                                                borderColor: '#000000',
-                                                borderWidth: 1
-                                            },
-                                            datalabels: {
-                                                anchor: 'center',
-                                                align: 'center',
-                                                color: function(context) {
-                                                    return context.dataset.backgroundColor[context.dataIndex] === '#FFFFFF' ? '#000000' : '#FFFFFF';
-                                                },
-                                                font: {
-                                                    weight: 'bold'
-                                                },
-                                                formatter: function(value) {
-                                                    return value + ' votes';
-                                                }
-                                            }
-                                        }
-                                    }
-                                });
-
-                                const externalVicePresidentCtx = document.getElementById('externalVicePresidentChart').getContext('2d');
-                                const externalVicePresidentGradient = createGradient(externalVicePresidentCtx, '#000000', '#FFFFFF');
-                                const externalVicePresidentChart = new Chart(externalVicePresidentCtx, {
-                                    type: 'bar',
-                                    data: {
-                                        labels: ['Lisa Henry', 'Abstain'],
-                                        datasets: [{
-                                            label: 'Votes',
-                                            data: [11, 7],
-                                            backgroundColor: [externalVicePresidentGradient, externalVicePresidentGradient],
-                                            borderColor: ['#000000', '#000000'],
-                                            borderWidth: 1,
-                                            borderRadius: 10,
-                                            barThickness: 50,
-                                            hoverBackgroundColor: ['#333333', '#CCCCCC'],
-                                            hoverBorderColor: ['#333333', '#CCCCCC']
-                                        }]
-                                    },
-                                    options: {
-                                        indexAxis: 'y',
-                                        scales: {
-                                            x: {
-                                                beginAtZero: true,
-                                                grid: {
-                                                    display: false
-                                                },
-                                                ticks: {
-                                                    color: '#000000'
-                                                }
-                                            },
-                                            y: {
-                                                grid: {
-                                                    display: false
-                                                },
-                                                ticks: {
-                                                    color: '#000000'
-                                                }
-                                            }
-                                        },
-                                        plugins: {
-                                            legend: {
-                                                display: false
-                                            },
-                                            tooltip: {
-                                                backgroundColor: '#000000',
-                                                titleColor: '#FFFFFF',
-                                                bodyColor: '#FFFFFF',
-                                                borderColor: '#000000',
-                                                borderWidth: 1
-                                            },
-                                            datalabels: {
-                                                anchor: 'center',
-                                                align: 'center',
-                                                color: function(context) {
-                                                    return context.dataset.backgroundColor[context.dataIndex] === '#FFFFFF' ? '#000000' : '#FFFFFF';
-                                                },
-                                                font: {
-                                                    weight: 'bold'
-                                                },
-                                                formatter: function(value) {
-                                                    return value + ' votes';
-                                                }
-                                            }
-                                        }
-                                    }
-                                });
-                            </script>
+                            <div class="bg-gray-100 rounded-lg p-2">
+                                <canvas id="presidentChart"></canvas>
+                                <canvas id="internalVicePresidentChart"></canvas>
+                                <canvas id="externalVicePresidentChart"></canvas>
+                            </div>
                         </div>
                     </div>
 
@@ -428,100 +216,7 @@
                                 <canvas id="myChart" class="absolute top-0 left-0 w-full h-full"></canvas>
                             </div>
                         </div>
-
-                        <script>
-                            const ctx = document.getElementById('myChart').getContext('2d');
-                            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-                            gradient.addColorStop(0, 'rgba(0, 0, 0, 1)');
-                            gradient.addColorStop(1, 'rgba(51, 51, 51, 1)');
-
-                            const myChart = new Chart(ctx, {
-                                type: 'bar',
-                                data: {
-                                    labels: ['President', 'Internal Vice President', 'External Vice President', 'General Secretary', 'General Treasurer', 'Senator'],
-                                    datasets: [
-                                        {
-                                            label: 'Candidate A',
-                                            data: [500, 900, 400, 800, 700, 1000],
-                                            backgroundColor: gradient,
-                                            borderColor: 'rgba(0, 0, 0, 1)',
-                                            borderWidth: 1
-                                        },
-                                        {
-                                            label: 'Abstain',
-                                            data: [600, 1000, 500, 900, 800, 1100],
-                                            backgroundColor: 'rgba(102, 102, 102, 1)',
-                                            borderColor: 'rgba(102, 102, 102, 1)',
-                                            borderWidth: 1
-                                        }
-                                    ]
-                                },
-                                options: {
-                                    responsive: true,
-                                    maintainAspectRatio: false,
-                                    scales: {
-                                        y: {
-                                            beginAtZero: true,
-                                            max: 1200,
-                                            ticks: {
-                                                color: 'black'
-                                            },
-                                            grid: {
-                                                color: 'rgba(0, 0, 0, 0.1)'
-                                            }
-                                        },
-                                        x: {
-                                            ticks: {
-                                                color: 'black'
-                                            },
-                                            grid: {
-                                                color: 'rgba(0, 0, 0, 0.1)'
-                                            }
-                                        }
-                                    },
-                                    plugins: {
-                                        tooltip: {
-                                            backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                                            titleColor: 'black',
-                                            bodyColor: 'black',
-                                            borderColor: 'rgba(0, 0, 0, 0.1)',
-                                            borderWidth: 1,
-                                            callbacks: {
-                                                title: function(context) {
-                                                    return context[0].label;
-                                                },
-                                                label: function(context) {
-                                                    let label = context.dataset.label || '';
-                                                    if (label) {
-                                                        label += ': ';
-                                                    }
-                                                    if (context.parsed.y !== null) {
-                                                        label += context.parsed.y + ' votes';
-                                                    }
-                                                    return label;
-                                                }
-                                            }
-                                        },
-                                        legend: {
-                                            display: false
-                                        },
-                                        datalabels: {
-                                            display: true,
-                                            align: 'end',
-                                            anchor: 'end',
-                                            formatter: function(value, context) {
-                                                return context.dataset.label + ': ' + value + ' votes';
-                                            },
-                                            color: 'black',
-                                            font: {
-                                                weight: 'bold'
-                                            }
-                                        }
-                                    }
-                                },
-                                plugins: [ChartDataLabels]
-                            });
-                        </script>
+                        <div><canvas id="myChart"></canvas></div>
                     </div>
 
 
