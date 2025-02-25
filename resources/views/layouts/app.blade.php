@@ -32,6 +32,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/print-js/1.6.0/print.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/print-js/1.6.0/print.min.css">
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -39,8 +41,7 @@
     @livewireStyles
 </head>
 
-<body class="font-barlow antialiased bg-[#F7F7F9]">
-
+<body class="font-poppins antialiased bg-[#F7F7F9]">
 @if(session('showSplash'))
     <div id="splash-screen" class="splash-screen">
         <div class="splash-screen">
@@ -64,8 +65,12 @@
 
 @endif
 
-<div class="min-h-screen max-w-screen-2xl mx-auto bg-[#F7F7F9] {{ $mainClass }}">
-    @if (isset($sidebar))
+
+
+
+
+<div class="min-h-screen mx-auto bg-[#F7F7F9] {{ $mainClass }}">
+@if (isset($sidebar))
         <sidebar class="h-screen w-[300px]  flex flex-col shadow z-10 sticky">
             {{ $sidebar }}
         </sidebar>
