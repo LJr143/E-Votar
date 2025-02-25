@@ -1,4 +1,4 @@
-<x-app-layout mainClass="flex" page_title="- Vote Tally">
+<x-app-layout mainClass="flex" page_title="- Election Result">
     <x-slot name="sidebar">
         <x-sidebar></x-sidebar>
     </x-slot>
@@ -7,23 +7,525 @@
         <x-header></x-header>
     </x-slot>
     <x-slot name="main">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <div class="bg-transparent px-2 py-0 min-h-screen ">
             <div class="mx-auto flex w-full">
                 <!-- Left Section -->
-                <div class="flex flex-col w-1/3 ">
+                <div class="flex flex-col ">
                     <!-- Header Section -->
                     <div class="flex flex-row justify-between items-start mb-4">
                         <div class="text-left">
-                            <h1 class="text-base font-semibold leading-6 text-gray-900">Vote Tally</h1>
-                            <p class="text-[11px] text-gray-500">Tally of Votes</p>
+                            <h1 class="text-base font-semibold leading-6 text-gray-900">Election Result</h1>
+                            <p class="text-[11px] text-gray-500">Election results</p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div>
-                <div class="flex w-full gap-4 min">
-                    <div id="all_elections" class="w-full">
+            <div class="flex flex-col items-start space-y-4 w-full px-4">
+                <div class="flex justify-start items-center border-b-2 border-gray-200 text-[11px] w-full">
+                    <div class="px-4 py-2 border-b-4 border-black font-semibold text-black">
+                        Student and Local Council Election
+                    </div>
+                    <div class="px-4 py-2 text-gray-500">
+                        Student Council Election
+                    </div>
+                    <div class="px-4 py-2 text-gray-500">
+                        Local Council Election
+                    </div>
+                    <div class="px-4 py-2 text-gray-500">
+                        Special Election
+                    </div>
+                </div>
+
+                <div class=" w-full" x-data="{ tab: 'per-position' }">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-gray-500 text-[11px]">
+                         View as:
+                        </span>
+                        <div class="flex border border-gray-300 rounded-lg overflow-hidden text-[11px] w-auto">
+                            <div :class="{ 'bg-black text-white font-bold': tab === 'per-position', 'text-gray-800': tab !== 'per-position' }" @click="tab = 'per-position'" class="px-4 py-2 cursor-pointer">
+                                Per Position
+                            </div>
+                            <div :class="{ 'bg-black text-white font-bold': tab === 'graphical', 'text-gray-800': tab !== 'graphical' }" @click="tab = 'graphical'" class="px-4 py-2 cursor-pointer">
+                                Graphical
+                            </div>
+                            <div :class="{ 'bg-black text-white font-bold': tab === 'tabulated', 'text-gray-800': tab !== 'tabulated' }" @click="tab = 'tabulated'" class="px-4 py-2 cursor-pointer">
+                                Tabulated
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 w-full">
+                        <div x-show="tab === 'per-position'">
+                            <div class="bg-white shadow-md rounded p-6">
+
+                                <div class="flex justify-between items-center mb-4">
+                                    <h2 class=" font-bold text-black text-[12px]">Tagum Student Council</h2>
+                                    <select class="border border-gray-300 rounded p-2 text-black text-[11px]">
+                                        <option value="tsc">TSC</option>
+                                        <option value="bsit">BSIT</option>
+                                        <option value="bsabe">BSABE</option>
+                                    </select>
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div class="bg-white shadow-md rounded-lg border border-black">
+                                        <div class="bg-black p-4 rounded-t-lg">
+                                            <h2 class="text-[12px] font-semibold text-white">
+                                                President
+                                            </h2>
+                                        </div>
+                                        <div class="p-4">
+                                            <div class="flex justify-around items-center mb-4">
+                                                <div class="text-center">
+                                                    <img alt="Portrait of Hamisi Mtengeti" class="rounded-full mx-auto mb-2" height="80" src="https://storage.googleapis.com/a1aa/image/3ZI3Zo335N20-WsLcMyi120yqITv7o4XiZ9Ji_zaBFo.jpg" width="80"/>
+                                                    <p class="font-semibold text-[12px] text-black">
+                                                        Hamisi Mtengeti
+                                                    </p>
+                                                    <p class="text-gray-600 text-[11px]">
+                                                        9 Vote(s)
+                                                    </p>
+                                                </div>
+                                                <div class="text-center">
+                                                    <img alt="Abstain option" class="rounded-full mx-auto mb-2" height="80" src="https://storage.googleapis.com/a1aa/image/Zkw6G75T-ZexAltCPKCkd_i2JYLbT3lre5rz6ujJw-4.jpg" width="80"/>
+                                                    <p class="font-semibold text-[12px] text-black">
+                                                        Abstain
+                                                    </p>
+                                                    <p class="text-gray-600 text-[11px]">
+                                                        5 Vote(s)
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <h3 class="text-center font-semibold mb-4 text-sm text-black">
+                                                    Vote Tally
+                                                </h3>
+                                                <canvas class="w-full h-16" id="presidentChart"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="bg-white shadow-md rounded-lg border border-black">
+                                        <div class="bg-black p-4 rounded-t-lg">
+                                            <h2 class="text-[12px] font-semibold text-white">
+                                                Internal Vice President
+                                            </h2>
+                                        </div>
+                                        <div class="p-4">
+                                            <div class="flex justify-around items-center mb-4">
+                                                <div class="text-center">
+                                                    <img alt="Portrait of Henry Kasembe" class="rounded-full mx-auto mb-2" height="80" src="https://storage.googleapis.com/a1aa/image/R-ruC38gFy0tP8ZKCz9jxwm2FrDdfk1_LypKjzpxBmE.jpg" width="80"/>
+                                                    <p class="font-semibold text-[12px] text-black">
+                                                        Henry Kasembe
+                                                    </p>
+                                                    <p class="text-gray-600 text-[11px]">
+                                                        24 Vote(s)
+                                                    </p>
+                                                </div>
+                                                <div class="text-center">
+                                                    <img alt="Abstain option" class="rounded-full mx-auto mb-2" height="80" src="https://storage.googleapis.com/a1aa/image/Zkw6G75T-ZexAltCPKCkd_i2JYLbT3lre5rz6ujJw-4.jpg" width="80"/>
+                                                    <p class="font-semibold text-[12px] text-black">
+                                                        Abstain
+                                                    </p>
+                                                    <p class="text-gray-600 text-[11px]">
+                                                        3 Vote(s)
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <h3 class="text-center font-semibold mb-4 text-sm text-black">
+                                                    Vote Tally
+                                                </h3>
+                                                <canvas class="w-full h-24" id="internalVicePresidentChart"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="bg-white shadow-md rounded-lg border border-black">
+                                        <div class="bg-black p-4 rounded-t-lg">
+                                            <h2 class="text-[12px] font-semibold text-white">
+                                                External Vice President
+                                            </h2>
+                                        </div>
+                                        <div class="p-4">
+                                            <div class="flex justify-around items-center mb-4">
+                                                <div class="text-center">
+                                                    <img alt="Portrait of Lisa Henry" class="rounded-full mx-auto mb-2" height="80" src="https://storage.googleapis.com/a1aa/image/pOscw8unxPl16ptgQsug2Vd6v844Tbh30QCKkEgsRxw.jpg" width="80"/>
+                                                    <p class="font-semibold text-[12px] text-black">
+                                                        Lisa Henry
+                                                    </p>
+                                                    <p class="text-gray-600 text-[11px]">
+                                                        11 Vote(s)
+                                                    </p>
+                                                </div>
+                                                <div class="text-center">
+                                                    <img alt="Abstain option" class="rounded-full mx-auto mb-2" height="80" src="https://storage.googleapis.com/a1aa/image/Zkw6G75T-ZexAltCPKCkd_i2JYLbT3lre5rz6ujJw-4.jpg" width="80"/>
+                                                    <p class="font-semibold text-[12px] text-black">
+                                                        Abstain
+                                                    </p>
+                                                    <p class="text-gray-600 text-[11px]">
+                                                        7 Vote(s)
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <h3 class="text-center font-semibold mb-4 text-sm text-black">
+                                                    Vote Tally
+                                                </h3>
+                                                <canvas class="w-full h-24" id="externalVicePresidentChart"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <script>
+                                Chart.register(ChartDataLabels);
+
+                                function createGradient(ctx, color1, color2) {
+                                    const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+                                    gradient.addColorStop(0, color1);
+                                    gradient.addColorStop(1, color2);
+                                    return gradient;
+                                }
+
+                                const presidentCtx = document.getElementById('presidentChart').getContext('2d');
+                                const presidentGradient = createGradient(presidentCtx, '#000000', '#FFFFFF');
+                                const presidentChart = new Chart(presidentCtx, {
+                                    type: 'bar',
+                                    data: {
+                                        labels: ['Hamisi Mtengti', 'Abstain'],
+                                        datasets: [{
+                                            label: 'Votes',
+                                            data: [9, 5],
+                                            backgroundColor: [presidentGradient, presidentGradient],
+                                            borderColor: ['#000000', '#000000'],
+                                            borderWidth: 1,
+                                            borderRadius: 10,
+                                            barThickness: 50,
+                                            hoverBackgroundColor: ['#333333', '#CCCCCC'],
+                                            hoverBorderColor: ['#333333', '#CCCCCC']
+                                        }]
+                                    },
+                                    options: {
+                                        indexAxis: 'y',
+                                        scales: {
+                                            x: {
+                                                beginAtZero: true,
+                                                grid: {
+                                                    display: false
+                                                },
+                                                ticks: {
+                                                    color: '#000000'
+                                                }
+                                            },
+                                            y: {
+                                                grid: {
+                                                    display: false
+                                                },
+                                                ticks: {
+                                                    color: '#000000'
+                                                }
+                                            }
+                                        },
+                                        plugins: {
+                                            legend: {
+                                                display: false
+                                            },
+                                            tooltip: {
+                                                backgroundColor: '#000000',
+                                                titleColor: '#FFFFFF',
+                                                bodyColor: '#FFFFFF',
+                                                borderColor: '#000000',
+                                                borderWidth: 1
+                                            },
+                                            '3d': {
+                                                enabled: true,
+                                                effect: '3d',
+                                                depth: 10,
+                                                angle: 45
+                                            },
+                                            datalabels: {
+                                                anchor: 'center',
+                                                align: 'center',
+                                                color: function(context) {
+                                                    return context.dataset.backgroundColor[context.dataIndex] === '#FFFFFF' ? '#000000' : '#FFFFFF';
+                                                },
+                                                font: {
+                                                    weight: 'bold'
+                                                },
+                                                formatter: function(value) {
+                                                    return value + ' votes';
+                                                }
+                                            }
+                                        }
+                                    }
+                                });
+
+                                const internalVicePresidentCtx = document.getElementById('internalVicePresidentChart').getContext('2d');
+                                const internalVicePresidentGradient = createGradient(internalVicePresidentCtx, '#000000', '#FFFFFF');
+                                const internalVicePresidentChart = new Chart(internalVicePresidentCtx, {
+                                    type: 'bar',
+                                    data: {
+                                        labels: ['Henry Kasembe', 'Abstain'],
+                                        datasets: [{
+                                            label: 'Votes',
+                                            data: [24, 3],
+                                            backgroundColor: [internalVicePresidentGradient, internalVicePresidentGradient],
+                                            borderColor: ['#000000', '#000000'],
+                                            borderWidth: 1,
+                                            borderRadius: 10,
+                                            barThickness: 50,
+                                            hoverBackgroundColor: ['#333333', '#CCCCCC'],
+                                            hoverBorderColor: ['#333333', '#CCCCCC']
+                                        }]
+                                    },
+                                    options: {
+                                        indexAxis: 'y',
+                                        scales: {
+                                            x: {
+                                                beginAtZero: true,
+                                                grid: {
+                                                    display: false
+                                                },
+                                                ticks: {
+                                                    color: '#000000'
+                                                }
+                                            },
+                                            y: {
+                                                grid: {
+                                                    display: false
+                                                },
+                                                ticks: {
+                                                    color: '#000000'
+                                                }
+                                            }
+                                        },
+                                        plugins: {
+                                            legend: {
+                                                display: false
+                                            },
+                                            tooltip: {
+                                                backgroundColor: '#000000',
+                                                titleColor: '#FFFFFF',
+                                                bodyColor: '#FFFFFF',
+                                                borderColor: '#000000',
+                                                borderWidth: 1
+                                            },
+                                            datalabels: {
+                                                anchor: 'center',
+                                                align: 'center',
+                                                color: function(context) {
+                                                    return context.dataset.backgroundColor[context.dataIndex] === '#FFFFFF' ? '#000000' : '#FFFFFF';
+                                                },
+                                                font: {
+                                                    weight: 'bold'
+                                                },
+                                                formatter: function(value) {
+                                                    return value + ' votes';
+                                                }
+                                            }
+                                        }
+                                    }
+                                });
+
+                                const externalVicePresidentCtx = document.getElementById('externalVicePresidentChart').getContext('2d');
+                                const externalVicePresidentGradient = createGradient(externalVicePresidentCtx, '#000000', '#FFFFFF');
+                                const externalVicePresidentChart = new Chart(externalVicePresidentCtx, {
+                                    type: 'bar',
+                                    data: {
+                                        labels: ['Lisa Henry', 'Abstain'],
+                                        datasets: [{
+                                            label: 'Votes',
+                                            data: [11, 7],
+                                            backgroundColor: [externalVicePresidentGradient, externalVicePresidentGradient],
+                                            borderColor: ['#000000', '#000000'],
+                                            borderWidth: 1,
+                                            borderRadius: 10,
+                                            barThickness: 50,
+                                            hoverBackgroundColor: ['#333333', '#CCCCCC'],
+                                            hoverBorderColor: ['#333333', '#CCCCCC']
+                                        }]
+                                    },
+                                    options: {
+                                        indexAxis: 'y',
+                                        scales: {
+                                            x: {
+                                                beginAtZero: true,
+                                                grid: {
+                                                    display: false
+                                                },
+                                                ticks: {
+                                                    color: '#000000'
+                                                }
+                                            },
+                                            y: {
+                                                grid: {
+                                                    display: false
+                                                },
+                                                ticks: {
+                                                    color: '#000000'
+                                                }
+                                            }
+                                        },
+                                        plugins: {
+                                            legend: {
+                                                display: false
+                                            },
+                                            tooltip: {
+                                                backgroundColor: '#000000',
+                                                titleColor: '#FFFFFF',
+                                                bodyColor: '#FFFFFF',
+                                                borderColor: '#000000',
+                                                borderWidth: 1
+                                            },
+                                            datalabels: {
+                                                anchor: 'center',
+                                                align: 'center',
+                                                color: function(context) {
+                                                    return context.dataset.backgroundColor[context.dataIndex] === '#FFFFFF' ? '#000000' : '#FFFFFF';
+                                                },
+                                                font: {
+                                                    weight: 'bold'
+                                                },
+                                                formatter: function(value) {
+                                                    return value + ' votes';
+                                                }
+                                            }
+                                        }
+                                    }
+                                });
+                            </script>
+                        </div>
+                    </div>
+
+
+                    <div  x-show="tab === 'graphical'">
+
+                        <div class="bg-white p-4 rounded-lg shadow-lg w-full ">
+                            <div class="flex justify-between items-center mb-4">
+                                <h2 class="text-lg font-bold text-black" style="font-size: 14px;">Tagum Student Council</h2>
+                                <select class="border border-gray-300 rounded p-2 text-black" style="font-size: 12px;">
+                                    <option value="tsc">TSC</option>
+                                    <option value="bsit">BSIT</option>
+                                    <option value="bsabe">BSABE</option>
+                                </select>
+                            </div>
+                            <div class="flex justify-around mb-4">
+                                <div class="text-center">
+                                    <h4 class="text-lg font-semibold text-black" style="font-size: 14px;">Total Voters</h4>
+                                    <p class="text-lg text-black" style="font-size: 12px;">7200</p>
+                                </div>
+                                <div class="border-l border-gray-300 mx-4"></div>
+                                <div class="text-center">
+                                    <h4 class="text-lg font-semibold text-black" style="font-size: 14px;">Total Who Voted</h4>
+                                    <p class="text-lg text-black" style="font-size: 12px;">4900</p>
+                                </div>
+                                <div class="border-l border-gray-300 mx-4"></div>
+                                <div class="text-center">
+                                    <h4 class="text-lg font-semibold text-black" style="font-size: 14px;">Total Who Did Not Vote</h4>
+                                    <p class="text-lg text-black" style="font-size: 12px;">2300</p>
+                                </div>
+                            </div>
+                            <div class="relative h-96">
+                                <canvas id="myChart" class="absolute top-0 left-0 w-full h-full"></canvas>
+                            </div>
+                        </div>
+
+                        <script>
+                            const ctx = document.getElementById('myChart').getContext('2d');
+                            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+                            gradient.addColorStop(0, 'rgba(0, 0, 0, 1)');
+                            gradient.addColorStop(1, 'rgba(51, 51, 51, 1)');
+
+                            const myChart = new Chart(ctx, {
+                                type: 'bar',
+                                data: {
+                                    labels: ['President', 'Internal Vice President', 'External Vice President', 'General Secretary', 'General Treasurer', 'Senator'],
+                                    datasets: [
+                                        {
+                                            label: 'Candidate A',
+                                            data: [500, 900, 400, 800, 700, 1000],
+                                            backgroundColor: gradient,
+                                            borderColor: 'rgba(0, 0, 0, 1)',
+                                            borderWidth: 1
+                                        },
+                                        {
+                                            label: 'Abstain',
+                                            data: [600, 1000, 500, 900, 800, 1100],
+                                            backgroundColor: 'rgba(102, 102, 102, 1)',
+                                            borderColor: 'rgba(102, 102, 102, 1)',
+                                            borderWidth: 1
+                                        }
+                                    ]
+                                },
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                    scales: {
+                                        y: {
+                                            beginAtZero: true,
+                                            max: 1200,
+                                            ticks: {
+                                                color: 'black'
+                                            },
+                                            grid: {
+                                                color: 'rgba(0, 0, 0, 0.1)'
+                                            }
+                                        },
+                                        x: {
+                                            ticks: {
+                                                color: 'black'
+                                            },
+                                            grid: {
+                                                color: 'rgba(0, 0, 0, 0.1)'
+                                            }
+                                        }
+                                    },
+                                    plugins: {
+                                        tooltip: {
+                                            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                                            titleColor: 'black',
+                                            bodyColor: 'black',
+                                            borderColor: 'rgba(0, 0, 0, 0.1)',
+                                            borderWidth: 1,
+                                            callbacks: {
+                                                title: function(context) {
+                                                    return context[0].label;
+                                                },
+                                                label: function(context) {
+                                                    let label = context.dataset.label || '';
+                                                    if (label) {
+                                                        label += ': ';
+                                                    }
+                                                    if (context.parsed.y !== null) {
+                                                        label += context.parsed.y + ' votes';
+                                                    }
+                                                    return label;
+                                                }
+                                            }
+                                        },
+                                        legend: {
+                                            display: false
+                                        },
+                                        datalabels: {
+                                            display: true,
+                                            align: 'end',
+                                            anchor: 'end',
+                                            formatter: function(value, context) {
+                                                return context.dataset.label + ': ' + value + ' votes';
+                                            },
+                                            color: 'black',
+                                            font: {
+                                                weight: 'bold'
+                                            }
+                                        }
+                                    }
+                                },
+                                plugins: [ChartDataLabels]
+                            });
+                        </script>
+                    </div>
+
+
+                    <div  x-show="tab === 'tabulated'">
                         <div class="bg-white shadow-md rounded p-6">
                             <div class="text-[12px] bg-white mt-0 p-5 rounded-md md:max-w-[800px] min-[90%]:max-w-[100%] lg:max-w-[900px] xl:w-[100%] xl:min-w-[100%] 2xl:max-w-[1190px]">
 
