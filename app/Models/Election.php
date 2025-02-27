@@ -38,6 +38,10 @@ class Election extends Model
         return $this->hasMany(Candidate::class, 'election_id');
     }
 
+    public function vote(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Vote::class, 'election_id');
+    }
 
 
 }

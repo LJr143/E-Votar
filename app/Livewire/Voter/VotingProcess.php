@@ -8,10 +8,7 @@ use App\Models\Candidate;
 use App\Models\Election;
 use App\Models\Vote;
 use App\Models\VoterEncodeVote;
-use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Laravel\Facades\Image;
+use Exception;
 use Livewire\Component;
 
 class VotingProcess extends Component
@@ -32,6 +29,7 @@ class VotingProcess extends Component
 
     public function mount($slug)
     {
+
         $this->voter = auth()->user();
         $this->election = Election::where('slug', $slug)->first();
 
@@ -67,6 +65,7 @@ class VotingProcess extends Component
         } elseif ($this->election->election_type->name === 'Local Council Election') {
             $this->currentStage = 'local';
         }
+        return 403;
     }
 
     public function proceedToLocalCouncilElection(): void
@@ -130,6 +129,9 @@ class VotingProcess extends Component
         return false;
     }
 
+    /**
+     * @throws Exception
+     */
     public function submitVotes(): void
     {
         // Check for duplicates
@@ -162,20 +164,18 @@ class VotingProcess extends Component
 
         // Encode the encrypted data into an image
         $imagePath = storage_path('app/public/assets/election-image/student-and-local-council-election-2023.png');
-        $outputPath = storage_path('app/public/encoded_votes/' . auth()->id() . '_vote.png');
+        $outputFileName = auth()->user()->first_name . '_' . auth()->user()->last_name . '_' . $this->election->name . '_vote.png';
+        $relativePath = 'encoded_votes/' . $outputFileName;
+        $outputPath = storage_path('app/public/' . $relativePath);
         SteganographyHelper::encode($imagePath, $encryptedData, $outputPath);
 
-        // Debugging: Log the output image path
         \Log::info('Encoded Image Path:', ['path' => $outputPath]);
 
-        // Save the encoded vote record
         VoterEncodeVote::create([
             'user_id' => auth()->id(),
             'election_id' => $this->election->id,
-            'encoded_image_path' => $outputPath,
+            'encoded_image_path' => $relativePath, // Store the relative path
         ]);
-
-
         // Create regular vote records
         foreach ($this->selectedCandidates as $key => $candidateId) {
             [$positionId, $slot] = explode('_', str_replace('selected_candidate_', '', $key));

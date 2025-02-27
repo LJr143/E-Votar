@@ -36,12 +36,14 @@
             videoFeedEl.srcObject = stream;
 
             // Load Face-API models
+            const modelPath = "{{ asset('storage/models') }}";
+
             await Promise.all([
-                faceapi.nets.ssdMobilenetv1.loadFromUri('/storage/models'),
-                faceapi.nets.faceLandmark68Net.loadFromUri('/storage/models'),
-                faceapi.nets.faceRecognitionNet.loadFromUri('/storage/models'),
-                faceapi.nets.ageGenderNet.loadFromUri('/storage/models'),
-                faceapi.nets.faceExpressionNet.loadFromUri('/storage/models'),
+                faceapi.nets.ssdMobilenetv1.loadFromUri(modelPath),
+                faceapi.nets.faceLandmark68Net.loadFromUri(modelPath),
+                faceapi.nets.faceRecognitionNet.loadFromUri(modelPath),
+                faceapi.nets.ageGenderNet.loadFromUri(modelPath),
+                faceapi.nets.faceExpressionNet.loadFromUri(modelPath),
             ]);
 
             // Load reference face (user's stored profile image)
@@ -120,7 +122,7 @@
                         clearInterval(intervalId); // Stop the interval
 
                         // Send AJAX request to update session on the server side
-                        fetch('/update-face-verified', {
+                        fetch("{{ route('update.face.verified') }}", {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',

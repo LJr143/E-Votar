@@ -22,6 +22,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'track.ip.user' => \App\Http\Middleware\TrackIpAddress::class,
             'facial.verified' => \App\Http\Middleware\FacialVerificationMiddleware::class,
             'voter.access' => \App\Http\Middleware\EnsureVoterCanAccessElection::class,
+            'vote.checker' => \App\Http\Middleware\ElectionVoteChecker::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

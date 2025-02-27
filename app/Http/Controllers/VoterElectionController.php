@@ -66,7 +66,7 @@ class VoterElectionController extends Controller
     {
         // Fetch the latest encoded vote for the authenticated user
         $encodedVote = VoterEncodeVote::where('user_id', auth()->id())
-            ->latest() // Get the most recent vote
+            ->latest()
             ->first();
 
         // Ensure the encoded vote exists
@@ -78,6 +78,23 @@ class VoterElectionController extends Controller
         return view('evotar.voter.pages.vote-confirmation-page', [
             'encodedVote' => $encodedVote,
         ]);
+    }
+
+    public function downloadReceipt($id)
+    {
+        // Fetch the encoded vote
+        $encodedVote = VoterEncodeVote::where('user_id', auth()->id())->latest()->firstOrFail();
+
+        // Ensure the image exists
+        $filePath = $encodedVote->encoded_image_path;
+
+        // Check if the file exists
+        if (!$filePath || !Storage::disk('public')->exists($filePath)) {
+            return redirect()->back()->with('error', 'Image not found.');
+        }
+
+        // Return the image as a downloadable response
+        return response()->download(storage_path("app/public/{$filePath}"));
     }
 
     public function showVerifyVotePage()

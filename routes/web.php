@@ -49,7 +49,7 @@ Route::get('/profile-image/{filename}', function ($filename) {
     return response()->file($path);
 });
 
-Route::post('/update-face-verified', [LoginController::class, 'updateFaceVerified']);
+Route::post('/update-face-verified', [LoginController::class, 'updateFaceVerified'])->name('update.face.verified');
 
 Route::get('login/google', [LoginController::class, 'redirectToGoogle'])->name('login.google');
 Route::get('login/google/callback', [LoginController::class, 'handleGoogleCallback']);
@@ -85,8 +85,6 @@ Route::get('/api/election-end-time/{electionId}', function ($electionId) {
     return response()->json(['error' => 'Election not found'], 404);
 
 });
-
-
 
 
 
