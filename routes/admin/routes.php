@@ -27,6 +27,7 @@ Route::middleware('splash.screen', 'track.ip.user')->prefix('admin')->group(func
     Route::post('unregistered/admins', [ViewController::class, 'registerAdmins'])->name('admin.unregistered.admin')->middleware('admin.auth');
     Route::get('election/party-list', [ViewController::class, 'partyList'])->name('admin.election.party.list')->middleware('admin.auth:view party list');
     Route::get('system/logs', [ViewController::class, 'systemLogs'])->name('admin.system.logs')->middleware('admin.auth:view system logs');
+    Route::get('feedback', [ViewController::class, 'feedback'])->name('admin.feedback')->middleware('admin.auth:view feedback');
 
     // Technical Officer Based Routes
     Route::get('dashboard/technical-officer', [ViewController::class, 'technicalOfficerDashboard'])->name('technical-officer.dashboard');
