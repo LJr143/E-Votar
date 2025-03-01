@@ -10,7 +10,7 @@ class VoterTable extends Component
     use WithPagination;
     protected $listeners  = ['voter-updated' => '$refresh'];
 
-    public string $filter = 'all_users';
+//    public string $filter = 'all_users';
     public string $search = '';
 
     public function updatingSearch(): void
@@ -18,16 +18,16 @@ class VoterTable extends Component
         $this->resetPage();
     }
 
-    public function updatingFilter(): void
-    {
-        $this->resetPage();
-    }
-
-    public function setFilter(string $filter): void
-    {
-        $this->filter = $filter;
-        $this->resetPage();
-    }
+//    public function updatingFilter(): void
+//    {
+//        $this->resetPage();
+//    }
+//
+//    public function setFilter(string $filter): void
+//    {
+//        $this->filter = $filter;
+//        $this->resetPage();
+//    }
 
     public function fetchUsers(): array|\LaravelIdea\Helper\App\Models\_IH_User_C|\Illuminate\Pagination\LengthAwarePaginator
     {

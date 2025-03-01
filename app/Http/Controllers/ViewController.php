@@ -268,6 +268,11 @@ class ViewController extends Controller
         return view('evotar.voter.pages.voter-election-redirect');
     }
 
+    public function feedback()
+    {
+        return view('evotar.admin.feedback');
+    }
+
 
 
     public function step1Tutorial()
