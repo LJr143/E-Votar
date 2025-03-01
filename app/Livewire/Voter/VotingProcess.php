@@ -174,7 +174,8 @@ class VotingProcess extends Component
         VoterEncodeVote::create([
             'user_id' => auth()->id(),
             'election_id' => $this->election->id,
-            'encoded_image_path' => $relativePath, // Store the relative path
+            'encrypted_data' => $encryptedData,
+            'encoded_image_path' => $relativePath,
         ]);
         // Create regular vote records
         foreach ($this->selectedCandidates as $key => $candidateId) {
