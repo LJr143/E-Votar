@@ -1,19 +1,21 @@
 <?php
 
-use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CampusController;
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoginController;
-use App\Http\Controllers\ViewController;
 use App\Http\Controllers\VoterElectionController;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Route;
 use App\Models\Election;
+use Livewire\Livewire;
 
 require __DIR__ . '/admin/routes.php';
 require __DIR__ . '/voter/routes.php';
 require __DIR__ . '/common/routes.php';
 
+Livewire::setUpdateRoute(function ($handle) {
+    return Route::post('/livewire/update', $handle)
+        ->middleware(['web']);
+});
 
 Route::get('/api/election-end-time', function () {
     $latestElection = Election::latest()->first();
@@ -25,7 +27,7 @@ Route::get('/api/election-end-time', function () {
     }
 
     return response()->json(['error' => 'No election found'], 404);
-});
+})->name('election.date.time');
 
 
 // Campus Management Routes
@@ -84,7 +86,7 @@ Route::get('/api/election-end-time/{electionId}', function ($electionId) {
 
     return response()->json(['error' => 'Election not found'], 404);
 
-});
+})->name('election.end.time');
 
 
 

@@ -27,3 +27,4 @@ Route::middleware('splash.screen', 'track.ip.user', 'facial.verified')->prefix('
 
 
 
+

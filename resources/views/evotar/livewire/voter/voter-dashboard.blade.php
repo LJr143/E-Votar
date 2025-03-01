@@ -70,9 +70,11 @@
         <div class="mt-4 text-white w-full flex justify-center items-center">
             <div
                 class="flex justify-center items-center bg-black w-3/5 rounded hover:bg-[#262626] transition duration-300">
-                <button wire:click="submit" class="h-[60px] transform scale-100 hover:scale-110 font-bold transition duration-300">
-                    Vote Now
-                </button>
+                <form wire:submit.prevent="submit">
+                    <button type="submit" class="h-[60px] transform scale-100 hover:scale-110 font-bold transition duration-300">
+                        Vote Now
+                    </button>
+                </form>
             </div>
         </div>
 
@@ -109,7 +111,7 @@
         });
 
         function handleTickInit(tick) {
-            fetch(`/api/election-end-time/{{ $electionId }}`)
+            fetch("{{ route('election.date.time' , ['electionId' => $electionId] ) }}")
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Failed to fetch election data');
@@ -134,6 +136,7 @@
                 .catch(error => {
                     console.error('Error:', error.message);
                 });
+
         }
     </script>
 </div>
