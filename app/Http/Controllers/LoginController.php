@@ -89,7 +89,6 @@ class LoginController extends Controller
             'error' => 'The provided credentials do not match our records.',
         ]);
     }
-
     public function updateFaceVerified(Request $request)
     {
         // Store the face verification status in the session

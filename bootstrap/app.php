@@ -23,6 +23,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'facial.verified' => \App\Http\Middleware\FacialVerificationMiddleware::class,
             'voter.access' => \App\Http\Middleware\EnsureVoterCanAccessElection::class,
             'vote.checker' => \App\Http\Middleware\ElectionVoteChecker::class,
+            'single.voter.session' => \App\Http\Middleware\SingleVoterSession::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

@@ -51,6 +51,7 @@ class VoterAuth
         return Auth::user()->hasRole('voter');
     }
 
+
     /**
      * Redirect to the login route with an error message.
      */

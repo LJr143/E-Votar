@@ -6,6 +6,7 @@ use App\Helpers\EncryptionHelper;
 use App\Helpers\SteganographyHelper;
 use App\Models\Election;
 use App\Models\User;
+use App\Models\Vote;
 use App\Models\VoterEncodeVote;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -25,9 +26,8 @@ class VoterElectionController extends Controller
         $elections = $this->getElectionsForVoter($voter->id);
 
         // Fetch elections the voter has voted in
-        $votedElections = \DB::table('votes')
-            ->where('user_id', $voter->id)
-            ->pluck('election_id') // Get only election IDs
+        $votedElections = Vote::where('user_id', $voter->id)
+            ->pluck('election_id')
             ->toArray();
 
         return view('evotar.voter.pages.voter-election-redirect', [

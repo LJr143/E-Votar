@@ -11,7 +11,7 @@ class TrackIpAddress
     public function handle(Request $request, Closure $next)
     {
         $ipAddress = $request->ip();
-        $userId = Auth::id(); // Get the authenticated user's ID (null for guests)
+        $userId = Auth::id();
 
         // Find or create the IP record
         $ipRecord = IpRecord::firstOrCreate(
