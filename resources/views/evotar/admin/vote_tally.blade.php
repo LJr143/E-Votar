@@ -7,7 +7,6 @@
         <x-header></x-header>
     </x-slot>
     <x-slot name="main">
-        @vite(['resources/js/app.js', 'resources/js/chart.js'])
         <div class="bg-transparent px-2 py-0 min-h-screen ">
             <div class="mx-auto flex w-full">
                 <!-- Left Section -->

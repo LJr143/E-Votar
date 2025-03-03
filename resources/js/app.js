@@ -5,7 +5,7 @@ import 'aos/dist/aos.css';
 import '@pqina/flip/dist/flip.css'
 import '@pqina/flip/dist/flip.js';
 import Tick from '@pqina/flip';
-import './chart';
+import './chart.js';
 
 window.Tick = Tick;
 AOS.init();

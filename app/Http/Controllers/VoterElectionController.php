@@ -24,8 +24,19 @@ class VoterElectionController extends Controller
         $voter = auth()->user();
         $elections = $this->getElectionsForVoter($voter->id);
 
-        return view('evotar.voter.pages.voter-election-redirect', ['elections' => $elections, 'voter' => $voter]);
+        // Fetch elections the voter has voted in
+        $votedElections = \DB::table('votes')
+            ->where('user_id', $voter->id)
+            ->pluck('election_id') // Get only election IDs
+            ->toArray();
+
+        return view('evotar.voter.pages.voter-election-redirect', [
+            'elections' => $elections,
+            'voter' => $voter,
+            'votedElections' => $votedElections
+        ]);
     }
+
 
 
     public function getElectionsForVoter($voterId)

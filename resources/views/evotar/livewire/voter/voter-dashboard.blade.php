@@ -71,7 +71,10 @@
             <div
                 class="flex justify-center items-center bg-black w-3/5 rounded hover:bg-[#262626] transition duration-300">
                 <form wire:submit.prevent="submit">
-                    <button type="submit" class="h-[60px] transform scale-100 hover:scale-110 font-bold transition duration-300">
+                    <button @if($hasVoted) disabled @endif type="submit" class="h-[60px] transform scale-100 hover:scale-110 font-bold transition duration-300">
+                       @if($hasVoted)
+                           You Already Voted
+                       @endif
                         Vote Now
                     </button>
                 </form>
