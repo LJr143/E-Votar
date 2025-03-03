@@ -66,34 +66,56 @@
                     </div>
 
 
-                    <div class=" mt-4 min-h-[350px]">
+                    <div class=" mt-4 overflow-x-auto min-h-[350px]">
                         <table class="min-w-full" id="partyListTable">
                             <thead class="text-left text-[10px]">
-                            <tr>
-                                <th class="py-3 px-4 rounded exclude-print">
+                            <tr class="w-full bg-gray-100 text-black uppercase text-[11px] leading-normal">
+                                <th class="py-3 px-6 rounded-tl-lg  border-b border-gray-300 exclude-print">
                                     <input class="form-checkbox text-left rounded h-4 w-4 text-black"
                                            x-model="selectAll"
                                            @click="checkboxes.forEach(checkbox => checkbox.checked = $event.target.checked)"
                                            type="checkbox">
                                 </th>
-                                <th class="py-3 px-4">Id</th>
-                                <th class="py-3 px-4">Party List Name</th>
-                                <th class="py-3 px-4 rounded exclude-print">Actions</th>
+                                <th class="py-3 px-6 border-b border-gray-300">Id</th>
+                                <th class="py-3 px-6 border-b border-gray-300">Party List Name</th>
+                                <th class="py-3 px-6 border-b border-gray-300 exclude-print">Members</th>
+                                <th class="py-3 px-6 rounded-tr-lg border-b border-gray-300 exclude-print">Actions</th>
                             </tr>
                             </thead>
-                            <tr></tr>
-                            <tbody class="text-black text-[10px]">
+
+                            <tbody class="text-black text-[12px] font-light">
                             @foreach($party_lists as $party_list)
-                                <tr class="hover:bg-gray-100 rows text-left">
-                                    <td class="py-4 px-1 exclude-print">
+                                <tr class="border-b border-gray-100 rows">
+                                    <td class="py-3 px-6 text-left exclude-print">
                                         <input type="checkbox"
                                                class="form-checkbox rounded h-4 w-4 text-black row-checkbox">
                                     </td>
-                                    <td class="py-4 px-1">{{ $party_list->id }}</td>
-                                    <td class="py-4 px-1">{{ $party_list->name }}</td>
+                                    <td class="py-3 px-6 text-left">{{ $party_list->id }}</td>
+                                    <td class="py-3 px-6 text-left font-bold">{{ $party_list->name }}</td>
+                                    <td class="py-3 px-6 text-left font-bold exclude-print">
+                                        <div class="flex -space-x-2">
+                                            <img alt="User  avatar 1" class="w-6 h-6 rounded-full border-2 border-white" height="24" src="https://storage.googleapis.com/a1aa/image/ZuTpJE6pJfJbppzY8Khmg-vOg6u2WXLzLMgz5_Uoc-0.jpg" width="24"/>
+                                            <img alt="User  avatar 2" class="w-6 h-6 rounded-full border-2 border-white" height="24" src="https://storage.googleapis.com/a1aa/image/2pXhDPPK7gfhc2BafGJ_EAzRgUL9U11eKHP90gamIBo.jpg" width="24"/>
+                                            <img alt="User  avatar 3" class="w-6 h-6 rounded-full border-2 border-white" height="24" src="https://storage.googleapis.com/a1aa/image/JiBdvOYQiJDmouspoR7oGEmdSCAvmDX0byxIpKTpbik.jpg" width="24"/>
+                                            <img alt="User  avatar 4" class="w-6 h-6 rounded-full border-2 border-white" height="24" src="https://storage.googleapis.com/a1aa/image/-M0cg3Rd111OQRFnFY0nwtlNhSBGQiLq6cAOyZpeW5M.jpg" width="24"/>
+                                            <img alt="User  avatar 5" class="w-6 h-6 rounded-full border-2 border-white" height="24" src="https://storage.googleapis.com/a1aa/image/gfEX5XQdkQ7irgoTAk4LgYP83FAwCT6UcvkAVb-AG8E.jpg" width="24"/>
+                                            <img alt="User  avatar 6" class="w-6 h-6 rounded-full border-2 border-white" height="24" src="https://storage.googleapis.com/a1aa/image/bnKnpUdroN4U_87nsHuEijIHOY0ugMer4RvXvgjQuVg.jpg" width="24"/>
+                                            <img alt="User  avatar 7" class="w-6 h-6 rounded-full border-2 border-white" height="24" src="https://storage.googleapis.com/a1aa/image/8y98ymkaXo-zARhuMtYOpHC7dVQksFPl3flWReilCps.jpg" width="24"/>
 
-                                    <td class="py-4 px-1 flex exclude-print">
+                                            <!-- +2 Indicator -->
+                                            <div class="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center text-gray-800 text-[11px] font-semibold border-2 border-white">
+                                                +2
+                                            </div>
+                                        </div>
+
+                                    </td>
+
+                                    <td class="py-3 px-6 text-left flex exclude-print">
                                         @can('edit party list')
+                                            <livewire:manage-party-list.view-party-list-members/>
+                                        @endcan
+
+                                    @can('edit party list')
                                             <livewire:manage-party-list.edit-party-list :partyListId="$party_list->id" :key="'edit-party-list'.$party_list->id"/>
                                         @endcan
 
