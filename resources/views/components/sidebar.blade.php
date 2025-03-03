@@ -352,16 +352,16 @@
 
 
                 <li class="group flex items-center space-x-2 w-full px-4 py-2 mb-2 rounded-md
-                {{ request()->routeIs(' ')  ? 'bg-black text-white' : 'hover:bg-black hover:text-white' }}">
+                {{ request()->routeIs('admin.feedback')  ? 'bg-black text-white' : 'hover:bg-black hover:text-white' }}">
                     <div class="flex items-center space-x-1 ">
                         <svg class="icon w-[15px] h-[15px] mr-2 text-[#757575] fill-[#757575]
-                        {{ request()->routeIs(' ')  ? 'text-white fill-white' : 'group-hover:text-white group-hover:fill-white' }}"
+                        {{ request()->routeIs('admin.feedback')  ? 'text-white fill-white' : 'group-hover:text-white group-hover:fill-white' }}"
                              xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="currentColor">
                             <path d="M479.79-359.52q16.73 0 28.27-11.49 11.53-11.48 11.53-28.13 0-16.64-11.32-28.22-11.32-11.57-28.06-11.57-16.73 0-28.27 11.32-11.53 11.32-11.53 28.05 0 16.65 11.32 28.34 11.32 11.7 28.06 11.7Zm-37.7-118.57h75.82V-744h-75.82v265.91ZM87.87-87.87v-701.26q0-34.48 24.26-58.74 24.26-24.26 58.74-24.26h618.26q34.48 0 58.74 24.26 24.26 24.26 24.26 58.74v474.26q0 34.48-24.26 58.74-24.26 24.26-58.74 24.26H231.87l-144 144Zm114-227h587.26v-474.26H170.87v505.5l31-31.24Zm-31 0v-474.26 474.26Z"/>
                         </svg>
-                        <a href=" "
+                        <a href="{{ auth()->user()->hasAnyRole($rolesExceptVoter) ? route('admin.feedback') : '#' }}"
                            class="text-[12px] font-normal text-[#757575]
-                            {{ request()->routeIs('')  ? 'text-white' : 'group-hover:text-white' }}">
+                            {{ request()->routeIs('admin.feedback')  ? 'text-white' : 'group-hover:text-white' }}">
                             User Feedback
                         </a>
                     </div>
