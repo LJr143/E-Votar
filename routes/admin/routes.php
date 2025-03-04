@@ -32,6 +32,7 @@ Route::middleware('splash.screen', 'track.ip.user')->prefix('admin')->group(func
     Route::get('system/logs', [ViewController::class, 'systemLogs'])->name('admin.system.logs')->middleware('admin.auth:view system logs');
     Route::get('feedback', [ViewController::class, 'feedback'])->name('admin.feedback')->middleware('admin.auth:view feedback');
 
+    Route::get('account-settings', [ViewController::class, 'AccountSettings'])->name('admin.account-settings')->middleware('admin.auth:view account-settings');
 
     // Technical Officer Based Routes
     Route::get('dashboard/technical-officer', [ViewController::class, 'technicalOfficerDashboard'])->name('technical-officer.dashboard');

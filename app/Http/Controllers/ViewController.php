@@ -290,6 +290,10 @@ class ViewController extends Controller
     }
 
 
+    public function AccountSettings()
+    {
+        return view('evotar.admin.account-settings');
+    }
 
     public function step1Tutorial()
     {
