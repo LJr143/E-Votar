@@ -1,4 +1,4 @@
-<x-app-layout mainClass="flex" page_title="- Elections">
+<x-app-layout mainClass="flex" page_title="- Manage College">
     <x-slot name="sidebar">
         <x-sidebar></x-sidebar>
     </x-slot>
@@ -13,14 +13,13 @@
             <div class="mx-auto ">
                 <div class="flex flex-row justify-between items-start mb-4">
                     <div class="mb-2 md:mb-0 text-left">
-                        <h1 class="text-base font-semibold leading-6 text-gray-900">Election</h1>
-                        <p class=" text-[11px] text-gray-500">List of Election of USeP Tagum Unit</p>
+                        <h1 class="text-base font-semibold leading-6 text-gray-900">Manage Colleges</h1>
+                        <p class=" text-[11px] text-gray-500">List of Colleges of University of Southeastern Philippines</p>
                     </div>
                 </div>
             </div>
-            <livewire:superadmin.elections-table/>
+            <livewire:manage-college.manage-college-table/>
         </div>
-
 
     </x-slot>
 </x-app-layout>

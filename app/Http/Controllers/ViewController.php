@@ -273,6 +273,22 @@ class ViewController extends Controller
         return view('evotar.admin.feedback');
     }
 
+    public function college()
+    {
+        return view('evotar.admin.college');
+
+    }
+
+    public function program()
+    {
+        return view('evotar.admin.program');
+    }
+
+    public function programMajor()
+    {
+        return view('evotar.admin.program_major');
+    }
+
 
 
     public function step1Tutorial()

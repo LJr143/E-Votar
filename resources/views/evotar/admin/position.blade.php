@@ -4,11 +4,13 @@
     </x-slot>
 
     <x-slot name="header">
-        <x-header></x-header>
+        <div class="px-6 w-full">
+            <x-header></x-header>
+        </div>
     </x-slot>
     <x-slot name="main">
 
-        <div class="bg-transparent px-2 py-0 min-h-screen ">
+        <div class="bg-transparent px-6 mt-2 py-0 min-h-screen ">
             <div class="mx-auto ">
                 <div class="flex flex-row justify-between items-start mb-4">
                     <div class="mb-2 md:mb-0 text-left">

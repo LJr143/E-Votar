@@ -6,16 +6,12 @@ use App\Http\Controllers\VoterElectionController;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Route;
 use App\Models\Election;
-use Livewire\Livewire;
 
 require __DIR__ . '/admin/routes.php';
 require __DIR__ . '/voter/routes.php';
 require __DIR__ . '/common/routes.php';
 
-Livewire::setUpdateRoute(function ($handle) {
-    return Route::post('/livewire/update', $handle)
-        ->middleware(['web']);
-});
+
 
 Route::get('/api/election-end-time', function () {
     $latestElection = Election::latest()->first();

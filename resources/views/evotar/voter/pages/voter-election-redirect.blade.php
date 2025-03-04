@@ -60,8 +60,8 @@
                                 $hasVoted = in_array($election->id, $votedElections);
                             @endphp
                             <a href="{{ route('dashboard', ['slug' => $election->slug]) }}"
-                               class="mt-2 hover:bg-black hover:text-white px-4 py-6 text-center justify-center items-center flex h-[28px] text-[12px] w-full min-w-[150px] rounded border
-                {{ $hasVoted ? 'border-green-500' : 'border-gray-300' }}
+                               class="mt-2  px-4 py-6 text-center justify-center items-center flex h-[28px] text-[12px] w-full min-w-[150px] rounded border
+                {{ $hasVoted ? 'border-green-600 font-bold bg-green-950 text-white hover:bg-green-600'  : 'border-gray-300 hover:bg-black hover:text-white' }}
                 focus:border-blue-500 focus:outline-none">
                                 {{ $election->name . ' ' . \Carbon\Carbon::parse($election->date_start)->format('M d, Y \a\t h:i A') }}
                                 -

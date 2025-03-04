@@ -69,12 +69,17 @@
         </div>
         <div class="mt-4 text-white w-full flex justify-center items-center">
             <div
-                class="flex justify-center items-center bg-black w-3/5 rounded hover:bg-[#262626] transition duration-300">
-                <form wire:submit.prevent="submit">
-                    <button @if($hasVoted) disabled @endif type="submit" class="h-[60px] transform scale-100 hover:scale-110 font-bold transition duration-300">
-                       @if($hasVoted)
-                           You Already Voted
-                       @endif
+                @class([
+                    'flex justify-center items-center w-3/5 rounded transition duration-300',
+                    'bg-green-600 text-white hover:bg-green-500' => $hasVoted,
+                    'bg-black hover:bg-[#262626]' => !$hasVoted
+                ])>
+            <form wire:submit.prevent="submit">
+                    <button @if($hasVoted) disabled @endif type="submit"
+                            class="h-[60px]  transform scale-100 hover:scale-110 font-bold transition duration-300">
+                        @if($hasVoted)
+                            You Already Voted
+                        @endif
                         Vote Now
                     </button>
                 </form>

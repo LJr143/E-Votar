@@ -4,10 +4,12 @@
     </x-slot>
 
     <x-slot name="header">
-        <x-header></x-header>
+        <div class="px-6 w-full">
+            <x-header></x-header>
+        </div>
     </x-slot>
     <x-slot name="main">
-        <div class="bg-transparent px-2 py-0 min-h-screen ">
+        <div class="bg-transparent px-6 mt-2 py-0 min-h-screen ">
             <div class="mx-auto flex w-full">
                 <!-- Left Section -->
                 <div class="flex flex-col w-1/3 ">
