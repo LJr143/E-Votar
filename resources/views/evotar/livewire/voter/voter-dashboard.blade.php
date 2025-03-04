@@ -1,5 +1,5 @@
-<div class="w-full bg-white flex min-h-screen">
-    <div class="bg-white w-1/2 px-20 flex flex-col">
+<div class="w-full bg-white flex flex-col md:flex-row min-h-screen">
+    <div class="bg-white w-full md:w-1/2 px-6 md:px-20 flex flex-col">
         <div class="flex w-full justify-between mt-6">
             <div class="flex justify-center items-center ml-[-50px]">
                 <svg width="250" height="50" viewBox="0 0 433 70" fill="none" xmlns="http://www.w3.org/2000/svg">

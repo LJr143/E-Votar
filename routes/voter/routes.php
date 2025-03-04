@@ -19,6 +19,7 @@ Route::middleware(['splash.screen', 'single.voter.session', 'track.ip.user', 'fa
     Route::get('step-2-tutorial', [ViewController::class, 'step2Tutorial'])->name('voter.step2')->middleware('voter.auth');
     Route::get('/voting-process/{slug}', [VoterElectionController::class, 'voting'])->name('voter.voting')->middleware(['voter.auth', 'vote.checker']);
     Route::get('/voting/vote-submission', [VoterElectionController::class, 'confirmVoting'])->name('voter.voting.confirm')->middleware('voter.auth');
+    Route::get('/accounts-settings', [ViewController::class, 'voterAccountSettings'])    ->name('voter.account.settings')->middleware('voter.auth');
 
     Route::get('/verify-vote', [VoterElectionController::class, 'showVerifyVotePage']) ->name('verify.vote.page')->middleware('auth');
     Route::post('/verify-vote', [VoterElectionController::class, 'verifyVote'])->name('verify.vote.submit')->middleware('auth');
