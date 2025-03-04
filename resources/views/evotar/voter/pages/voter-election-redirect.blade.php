@@ -8,9 +8,9 @@
 
     <x-slot name="main" class="main">
 
-        <div class="w-full bg-white flex min-h-screen">
-            <div class="bg-white w-1/2 px-20 flex flex-col">
-                <div class="flex w-full justify-between mt-6">
+        <div class="w-full bg-white flex min-h-screen flex-col md:flex-row">
+            <div class="bg-white w-full md:w-1/2 px-6 md:px-20 flex flex-col">
+            <div class="flex w-full justify-between mt-6">
                     <div class="flex justify-center items-center ml-[-50px]">
                         <svg width="250" height="50" viewBox="0 0 433 70" fill="none"
                              xmlns="http://www.w3.org/2000/svg">
@@ -80,7 +80,7 @@
                         Website</a>
                 </div>
 
-                <div class="mt-auto flex justify-between text-[12px] italic mb-2 font-light">
+                <div class="mt-auto flex flex-col md:flex-row items-center justify-between text-[12px] italic mb-2 font-light text-center md:text-left gap-2 md:gap-0">
                     <div>
                         <p>Copyright@2025</p>
                     </div>
@@ -91,6 +91,7 @@
                         <p>E-Votar@2025</p>
                     </div>
                 </div>
+
             </div>
             <div class="w-1/2 px-4 flex justify-center items-center"
                  style="background-image: url('{{ asset('storage/assets/image/bg-voter-side.png') }}');">

@@ -304,7 +304,8 @@ class ViewController extends Controller
     {
         return view('evotar.voter.pages.step-2_tutorial');
     }
-
+    public function voterAccountSettings(){
+        return view('evotar.voter.pages.accounts-settings');}
     /**
      * Unregistered admins view.
      */

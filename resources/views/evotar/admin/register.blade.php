@@ -6,11 +6,13 @@
     input, select   {
         color: black !important;
     }
-    .red-line {
-        height: 2px;  /* Adjust the thickness of the line */
-        background-color: red;  /* Red color */
-        width: 100%;  /* Makes the line span the full width of its container */
-        margin: 6px 0;  /* Optional: Adds spacing around the line */
+    .shadow-line {
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2); /* Creates a subtle shadow */
+        width: 100%;  /* Ensures it spans the full width */
+        height: 2px;  /* Adjusts thickness if needed */
+        background-color: transparent; /* Makes the line itself invisible */
+        margin: 6px 0; /* Adds spacing around the shadow */
+
     }
 
 </style>
@@ -35,7 +37,7 @@
 
     <div class="bg-white py-0 pt-0 flex justify-center items-center w-full">
         <div class="w-full">
-            <div class="red-line"></div>
+            <div class="mb-5 shadow-line"></div>
             <!--header logo and form title-->
             <h2 class="text-[30px] mt-5 text-primary text-black font-semibold text-center ">
                 ACCOUNT REGISTRATION<h3
