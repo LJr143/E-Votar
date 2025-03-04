@@ -7,11 +7,13 @@
     input, select {
         color: black !important;
     }
-    .red-line {
-        height: 2px;  /* Adjust the thickness of the line */
-        background-color: red;  /* Red color */
-        width: 100%;  /* Makes the line span the full width of its container */
-        margin: 6px 0;  /* Optional: Adds spacing around the line */
+    .shadow-line {
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2); /* Creates a subtle shadow */
+        width: 100%;  /* Ensures it spans the full width */
+        height: 2px;  /* Adjusts thickness if needed */
+        background-color: transparent; /* Makes the line itself invisible */
+        margin: 6px 0; /* Adds spacing around the shadow */
+
     }
 </style>
 <x-guest-layout>
@@ -32,7 +34,7 @@
     </div>
     <div class="bg-white py-0 pt-0 flex justify-center items-center w-full">
         <div class="w-full">
-            <div class="red-line"></div>
+            <div class="mb-5 shadow-line"></div>
             <!--header logo and form title-->
             <h2 class="text-[30px] text-primary text-black font-semibold text-center mt-5 ">
                 ACCOUNT REGISTRATION<h3
@@ -45,7 +47,7 @@
                 <div>
                     <form action="{{route('admin.unregistered.admin')}}" method="POST" class="">
                         @csrf
-                        <div class="w-[1200px] bg-white shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] p-4">
+                        <div class="w-[1200px] rounded border-2 border-solid border-gray-300  shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] p-4">
                             <em class="text-[12px] text-black font-semibold">
                                 <svg width="50" height="40" viewBox="0 0 53 42" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                     <rect width="53" height="42" fill="url(#pattern0_1840_9316)"/>
@@ -57,13 +59,14 @@
                                     </defs>
                                 </svg>Personal Information</em>
                             <div class="border mt-2 mb-2 p-4 rounded">
-                                <div class="flex gap-4 gap-4 mt-2">
+                                <div class="flex flex-wrap gap-4  mt-2">
+                                    <!-- First Name -->
                                     <div class="flex flex-col flex-grow">
                                         <x-label class="!text-black italic text-[10px]">
                                             First Name
                                         </x-label>
                                         <input type="text" name="first_name"
-                                               class="h-[28px] text-[12px] w-full min-w-[250px] rounded border border-gray-300 @error('first_name') border-red-500 @enderror"
+                                               class="h-[28px] text-[12px] w-full rounded border border-gray-300 focus:border-blue-500 focus:outline-non @error('first_name') border-red-500 @enderror"
                                                placeholder="Enter first name"
                                                value="{{ old('first_name') }}">
                                         @error('first_name')
@@ -71,7 +74,7 @@
                                         @enderror
                                     </div>
 
-                                    <div class="flex flex-col">
+                                    <div class="flex flex-col ">
                                         <x-label class="!text-black italic text-[10px]">
                                             Middle Initial
                                         </x-label>
@@ -83,7 +86,8 @@
                                         <div class="text-red-500 text-[10px] italic mt-1">{{ $message }}</div>
                                         @enderror
                                     </div>
-                                    <div class="flex flex-col">
+                                    <!-- Last Name -->
+                                    <div class="flex flex-col flex-grow">
                                         <x-label class="!text-black italic text-[10px]">
                                             Last Name
                                         </x-label>
@@ -95,7 +99,8 @@
                                         <div class="text-red-500 text-[10px] italic mt-1">{{ $message }}</div>
                                         @enderror
                                     </div>
-                                    <div class="flex flex-col">
+                                    <!-- Extension -->
+                                    <div class="flex flex-col w-[100px]">
                                         <x-label class="!text-black italic text-[10px]">
                                             Extension
                                         </x-label>
@@ -107,8 +112,10 @@
                                         <div class="text-red-500 text-[10px] italic mt-1">{{ $message }}</div>
                                         @enderror
                                     </div>
-
-                                    <div class="flex flex-col ">
+                                </div>
+                                <div class="flex flex-wrap gap-4 mt-4">
+                                    <!-- Gender -->
+                                    <div class="flex flex-col  w-[150px]">
                                         <x-label class="!text-black italic text-[10px]">
                                             Gender
                                         </x-label>
@@ -124,10 +131,10 @@
                                         <div class="text-red-500 text-[10px] italic mt-1">{{ $message }}</div>
                                         @enderror
                                     </div>
-                                </div>
 
-                                <div class="flex gap-4 mt-2">
-                                    <div class="flex flex-col">
+
+                                <!-- Birth Date -->
+                                <div class="flex flex-col w-[180px]">
                                         <x-label class="!text-black italic text-[10px]">
                                             Birth Date
                                         </x-label>
@@ -138,7 +145,8 @@
                                         <div class="text-red-500 text-[10px] italic mt-1">{{ $message }}</div>
                                         @enderror
                                     </div>
-                                    <div class="flex flex-col">
+                                <!-- Email -->
+                                    <div class="flex flex-col flex-grow">
                                         <x-label class="!text-black italic text-[10px]">
                                             Email Address
                                         </x-label>
@@ -151,7 +159,8 @@
                                         <div class="text-red-500 text-[10px] italic mt-1">{{ $message }}</div>
                                         @enderror
                                     </div>
-                                    <div class="flex flex-col">
+                                <!-- Phone Number -->
+                                    <div class="flex flex-col w-[180px]">
                                         <x-label class="!text-black italic text-[10px]">
                                             Mobile Number
                                         </x-label>
@@ -164,23 +173,95 @@
                                         @enderror
                                     </div>
 
-                                    <div class="flex flex-col flex-grow">
-                                        <x-label class="!text-black italic text-[10px]">
-                                            Year Level
-                                        </x-label>
-                                        <select name="year_level" id="year_level"
-                                                class="px-2 py-0 h-[28px] text-[12px] w-full min-w-[150px] rounded border border-gray-300 focus:border-blue-500 focus:outline-none @error('year_level') border-red-500 @enderror">
-                                            <option value="" disabled selected>Select year level</option>
-                                            <option value="1st">1st year</option>
-                                            <option value="2nd">2nd year</option>
-                                            <option value="3rd">3rd year</option>
-                                            <option value="4th">4th year</option>
-                                        </select>
-                                        @error('year_level')
-                                        <div class="text-red-500 text-[10px] italic mt-1">{{ $message }}</div>
-                                        @enderror
-                                    </div>
+                            </div>
 
+                        </div>
+                        <!-- Academic Details Section -->
+                        <em class="text-[12px] text-black font-semibold mt-8">
+                            <svg width="44" height="34" viewBox="0 0 44 34" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <rect width="44" height="34" fill="url(#pattern0_1840_7109)"/>
+                                <defs>
+                                    <pattern id="pattern0_1840_7109" patternContentUnits="objectBoundingBox" width="1" height="1">
+                                        <use xlink:href="#image0_1840_7109" transform="matrix(0.00804924 0 0 0.0104167 0.113636 0)"/>
+                                    </pattern>
+                                    <image id="image0_1840_7109" width="96" height="96" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAACXBIWXMAAAsTAAALEwEAmpwYAAAEZElEQVR4nO2cS4gcRRjHR42KelpQMT4ugngQBTWigo+LR19RxtMi7G79fz29OIcJGsFXH1TwqgdFEKM55KAnieATRWI8xKvRkzHkYNBgILIhKBtGPrcCQV1neumpfuz3g4Jmp6fqe9W/eoqt7vUcx3Ecx3Ecx3Ecx3Ecp4H0+/3zQgg3sMZuST8CPwN7gaeBu/r9/gV129kZ5ufnL7GgxuDulXQcGE9oK5K+lvQK8ECe53N1+9EaFhcXr7SgWfAsiMAfUwR8UluVdFDSm1mWPW4zqG4/mywn40Rt88nWBuVknKh1T7ZmJCfjRK1dspVQTlbPDkye59cmTHRzZCuhnKyUlYYm27Zh2lxl/X/PzoOtk61UctJLRKqCqszg1k3ZksxKtnpV0RQ5SUVVslWZQU2WkybLVmWDt0lOmiRblQ0m6YikPZKeGAwGN9sUrazzjmAxsdhYjGKsjtRtk+M4Th2EEK6OTww7Jb0BfAz8AByOi9Wfkk7btaSjwPeSPgV2Ac8Bj2RZdl0Va431YX1JehR4Po7xWRzzaLThdLTJbDscP/sIeB14ynwxn3pNxByUdFs09EPg16p+SUo6AXwi6QXg9qIozp1kj91j9wJF/O6JCu35xXyU9CSwrbaHkdFodFGWZQ9Jehs4VpWDTBeAd4A+cPEZe+za/ibp3SoLYIp2zGIg6UGLyUyDXhTFligr7wMnEzo5Xqf9HuVkV7yu254V4L0Qwv0Wq0qDL2kUtbFuJ8ctabbWjSpLQAMcGrex1ZmAM3tD9otwp0kXcMvy8vIVcdviHGt5ns9lWXYVcGcI4THgJeADST9VHYzYp/X9oq0XIYQ7bOx/2mM2mq1nPcXtiZtxq41NQHyMOxADeE8VC1Ke53PAw5JeA77bQNDtO6/aw0IVe1Xmk6R7Jb0s6dvoc70JkPR5CEHApb0Zk+f5NcAQ+OJ/nLbPhnbvrO1ZWFi4zPaqLQa1JaCyAUqy6ezZdA6XxBOAJyAp+AzoeMWVxCUIT0BS8BnQ8YoriUsQnoCk4DOg4xVXEpcgPAFJwWdAxyuuJC5BeAKSgs+AjldcSVyC8AQkBZ8BHa+4krgE4QlICj4DOl5xJXEJwhOQFHwGdLziSuIShCcgKfgM6HjFlcQlCE/ApArZOhgMrreThZLus2OoIYTtdh1CuNWOkdq/e6eqOBvLxrSxow3bzaZo27Zo69ZU9lQ2wHA4vDCEcHd8gcVuO7RR5pio1s7p7pf0FrDDTs4A52/UHvtu7GOH9SnpmzLvAoq2H4inL/9+7Y752KgELC0t3STpWUlfAaemda5EOxkPXjwD3DjJHrvH7pX05YxOc54yX83naeyZaQKAQzNwcDyhHWqLPSkS4I31Y+AJoN4C8QTgCdjUEtXzNQBPQN1ViM+A+gOBS1D9waDNa0ATKIpiS/y1Pcnx/f+1feFUwGAwuDy+tXa94O+zezzYM4S1DbYQE/FbbPuyLFvyynccx3Ecx3Ecx3Ecx3F6DeYvquEAdn5yAxoAAAAASUVORK5CYII="/>
+                                </defs>
+                            </svg>
+                            Academic Details</em>
+                        <div class="border mt-2 mb-4 p-4 rounded">
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                <!-- Campus -->
+                                <div class="flex flex-col ">
+                                    <x-label class="!text-black italic text-[10px]">
+                                        Campus
+                                    </x-label>
+                                    <select name="campus" id="campus"
+                                            class="px-2 py-0 h-[28px] text-[12px] w-full min-w-[200px] max-w-[200px] rounded border border-gray-300 focus:border-blue-500 focus:outline-none @error('campus') border-red-500 @enderror">
+                                        <option value="" disabled selected>Select your campus</option>
+
+                                    </select>
+                                    @error('campus')
+                                    <div class="text-red-500 text-[10px] italic mt-1">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <!-- College -->
+                                <div class="flex flex-col ">
+                                    <x-label class="!text-black italic text-[10px]">
+                                        College
+                                    </x-label>
+                                    <select name="college" id="college"
+                                            class="px-2 py-0 h-[28px] text-[12px] w-full min-w-[240px] max-w-[200px] rounded border border-gray-300 focus:border-blue-500 focus:outline-none @error('college') border-red-500 @enderror">
+                                        <option value="" disabled selected>Select your college</option>
+
+                                    </select>
+                                    @error('college')
+                                    <div class="text-red-500 text-[10px] italic mt-1">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <!-- Program -->
+                                <div class="flex flex-col">
+                                    <x-label class="!text-black italic text-[10px]">
+                                        Program
+                                    </x-label>
+                                    <select name="program" id="program"
+                                            class="px-2 py-0 h-[28px] text-[12px] w-full min-w-[212px] max-w-[212px] rounded border border-gray-300 focus:border-blue-500 focus:outline-none @error('program') border-red-500 @enderror">
+                                        <option value="" disabled selected>Select program</option>
+
+                                    </select>
+                                    @error('program')
+                                    <div class="text-red-500 text-[10px] italic mt-1">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <!-- Major -->
+                                <div class="flex flex-col">
+                                    <x-label class="!text-black italic text-[10px]">
+                                        Major
+                                    </x-label>
+                                    <select name="program_major" id="program_major"
+                                            class="px-2 py-0 h-[28px] text-[12px] w-full min-w-[212px] max-w-[212px] rounded border border-gray-300 focus:border-blue-500 focus:outline-none @error('program_major') border-red-500 @enderror">
+                                        <option value="" disabled selected>Select program major</option>
+
+                                    </select>
+                                    @error('program_major')
+                                    <div class="text-red-500 text-[10px] italic mt-1">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="flex flex-col">
+                                    <x-label class="!text-black italic text-[10px]">
+                                        Year Level
+                                    </x-label>
+                                    <select name="year_level" id="year_level"
+                                            class="px-2 py-0 h-[28px] text-[12px] w-full min-w-[150px] rounded border border-gray-300 focus:border-blue-500 focus:outline-none @error('year_level') border-red-500 @enderror">
+                                        <option value="" disabled selected>Select year level</option>
+                                        <option value="1st">1st year</option>
+                                        <option value="2nd">2nd year</option>
+                                        <option value="3rd">3rd year</option>
+                                        <option value="4th">4th year</option>
+                                    </select>
+                                    @error('year_level')
+                                    <div class="text-red-500 text-[10px] italic mt-1">{{ $message }}</div>
+                                    @enderror
+                                </div>
                                     <div class="flex flex-col">
                                         <x-label class="!text-black italic text-[10px]">
                                             Student ID
@@ -193,61 +274,9 @@
                                         <div class="text-red-500 text-[10px] italic mt-1">{{ $message }}</div>
                                         @enderror
                                     </div>
+
                                 </div>
-                                <div class="flex gap-4 mt-2">
-                                    <div class="flex flex-col ">
-                                        <x-label class="!text-black italic text-[10px]">
-                                            Campus
-                                        </x-label>
-                                        <select name="campus" id="campus"
-                                                class="px-2 py-0 h-[28px] text-[12px] w-full min-w-[200px] max-w-[200px] rounded border border-gray-300 focus:border-blue-500 focus:outline-none @error('campus') border-red-500 @enderror">
-                                            <option value="" disabled selected>Select your campus</option>
 
-                                        </select>
-                                        @error('campus')
-                                        <div class="text-red-500 text-[10px] italic mt-1">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                    <div class="flex flex-col ">
-                                        <x-label class="!text-black italic text-[10px]">
-                                            College
-                                        </x-label>
-                                        <select name="college" id="college"
-                                                class="px-2 py-0 h-[28px] text-[12px] w-full min-w-[240px] max-w-[200px] rounded border border-gray-300 focus:border-blue-500 focus:outline-none @error('college') border-red-500 @enderror">
-                                            <option value="" disabled selected>Select your college</option>
-
-                                        </select>
-                                        @error('college')
-                                        <div class="text-red-500 text-[10px] italic mt-1">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                    <div class="flex flex-col">
-                                        <x-label class="!text-black italic text-[10px]">
-                                            Program
-                                        </x-label>
-                                        <select name="program" id="program"
-                                                class="px-2 py-0 h-[28px] text-[12px] w-full min-w-[212px] max-w-[212px] rounded border border-gray-300 focus:border-blue-500 focus:outline-none @error('program') border-red-500 @enderror">
-                                            <option value="" disabled selected>Select program</option>
-
-                                        </select>
-                                        @error('program')
-                                        <div class="text-red-500 text-[10px] italic mt-1">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                    <div class="flex flex-col">
-                                        <x-label class="!text-black italic text-[10px]">
-                                            Major
-                                        </x-label>
-                                        <select name="program_major" id="program_major"
-                                                class="px-2 py-0 h-[28px] text-[12px] w-full min-w-[212px] max-w-[212px] rounded border border-gray-300 focus:border-blue-500 focus:outline-none @error('program_major') border-red-500 @enderror">
-                                            <option value="" disabled selected>Select program major</option>
-
-                                        </select>
-                                        @error('program_major')
-                                        <div class="text-red-500 text-[10px] italic mt-1">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
                             </div>
                             <em class="text-[12px] text-black font-semibold mt-4">
                                 <svg width="40" height="40" viewBox="0 0 49 47" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
