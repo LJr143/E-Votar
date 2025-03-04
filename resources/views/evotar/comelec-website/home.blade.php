@@ -4,7 +4,6 @@
     </x-slot>
 
     <x-slot name="main">
-
         <main class="mt-2">
             <div class="relative">
                 <div class="relative w-full h-64">

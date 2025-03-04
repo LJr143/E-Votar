@@ -40,17 +40,22 @@
                         </li>
                         <li class="mb-1">
                             <a class="hover:underline text-[12px]" href="#">
-                                About Us
+                                About
                             </a>
                         </li>
                         <li class="mb-1">
                             <a class="hover:underline text-[12px]" href="#">
-                                Contact Us
+                                Contact
                             </a>
                         </li>
                         <li class="mb-1">
                             <a class="hover:underline text-[12px]" href="#">
-                                FGS
+                                FAQs
+                            </a>
+                        </li>
+                        <li class="mb-1">
+                            <a class="hover:underline text-[12px]" href="#">
+                                User Feedback
                             </a>
                         </li>
                     </ul>
@@ -72,7 +77,7 @@
                         </li>
                         <li class="mb-1">
                             <a class="hover:underline text-[12px]" href="#">
-                                Candidates
+                                Tutorial
                             </a>
                         </li>
                     </ul>
