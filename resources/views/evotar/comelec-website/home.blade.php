@@ -100,6 +100,7 @@
 
                     <div class="carousel-track ">
                         <div class="carousel-item bg-white p-6 rounded-lg shadow-lg max-w-md w-full sm:mx-3">
+                            <a href="{{ route('comelec-website.selected-announcement') }}" >
                             <div class="relative">
                                 <img alt="Placeholder image for announcement" class="w-full h-32 object-cover rounded-lg" height="200" src="https://storage.googleapis.com/a1aa/image/t5Ven0DNGed3hZXhMLu0NxdFZ8j0gA4pSNriMwZRIK4.jpg" width="600"/>
                                 <div class="absolute bottom-0 left-0 bg-white px-2 py-1 rounded-tr-lg">
@@ -113,6 +114,7 @@
                                 <span> Campus </span>
                                 <span>3 Days Ago</span>
                             </div>
+                            </a>
                         </div>
 
                         <div class="carousel-item bg-white p-6 rounded-lg shadow-lg max-w-md w-full sm:mx-3">
@@ -209,15 +211,16 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-2">
-                                <div class="border rounded-lg overflow-hidden shadow-lg h-full flex flex-col transition-transform transform hover:scale-105 hover:shadow-xl cursor-pointer">
+                                <a href="{{ route('comelec-website.selected-election') }}" class="border rounded-lg overflow-hidden shadow-lg h-full flex flex-col transition-transform transform hover:scale-105 hover:shadow-xl cursor-pointer">
                                     <img alt="Society of Information Technology Students (SITS) poster" class="w-full h-24 object-cover" src="https://storage.googleapis.com/a1aa/image/C6U9OUZyJkg294sb6MJYjumXr2taJqeNCdf46WiNcOI.jpg" />
                                     <div class="p-2 flex-grow">
                                         <h2 class="text-center text-[12px] font-bold">
                                             SOCIETY OF INFORMATION TECHNOLOGY STUDENTS (SITS)
                                         </h2>
                                     </div>
-                                </div>
+                                </a>
                             </div>
                             <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-2">
                                 <div class="border rounded-lg overflow-hidden shadow-lg h-full flex flex-col transition-transform transform hover:scale-105 hover:shadow-xl cursor-pointer">
@@ -293,7 +296,7 @@
 
                             <div class="flex flex-wrap">
                                 <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-2">
-                                    <div class="border rounded-lg overflow-hidden shadow-lg h-full flex flex-col transition-transform transform hover:scale-105 hover:shadow-xl cursor-pointer">
+                                    <a href="{{ route('comelec-website.selected-partylist') }}" class="border rounded-lg overflow-hidden shadow-lg h-full flex flex-col transition-transform transform hover:scale-105 hover:shadow-xl cursor-pointer">
                                         <img alt="Image of Yanong Agila, a majestic eagle with a sharp gaze and spread wings" class="w-full h-16 object-cover" height="400" src="https://storage.googleapis.com/a1aa/image/nCwM01gjm61HpHh9F04TN4hcO6f4V1D4KwLnjXxa3vM.jpg" width="600"/>
                                         <div class="p-2 flex-grow">
                                             <h2 class="text-center text-[12px] font-bold">
@@ -301,31 +304,31 @@
                                             </h2>
                                         </div>
                                         <div class="flex items-center space-x-2 px-2">
-                                           <span class="text-gray-700 font-medium text-[9px]">
-                                            Members
-                                           </span>
+                                            <span class="text-gray-700 font-medium text-[9px]">
+                                                Members
+                                            </span>
                                             <span class="bg-gray-100 text-gray-700 text-[9px] font-medium px-2 py-0.5 rounded-full">
-                                            1.2m
-                                           </span>
+                                                1.2m
+                                            </span>
                                         </div>
                                         <div class="flex items-center space-x-2 p-2">
                                             <div class="flex -space-x-2">
-                                                <img alt="User avatar 1" class="w-6 h-6 rounded-full border-2 border-white" height="24" src="https://storage.googleapis.com/a1aa/image/ZuTpJE6pJfJbppzY8Khmg-vOg6u2WXLzLMgz5_Uoc-0.jpg" width="24"/>
-                                                <img alt="User avatar 2" class="w-6 h-6 rounded-full border-2 border-white" height="24" src="https://storage.googleapis.com/a1aa/image/2pXhDPPK7gfhc2BafGJ_EAzRgUL9U11eKHP90gamIBo.jpg" width="24"/>
-                                                <img alt="User avatar 3" class="w-6 h-6 rounded-full border-2 border-white" height="24" src="https://storage.googleapis.com/a1aa/image/JiBdvOYQiJDmouspoR7oGEmdSCAvmDX0byxIpKTpbik.jpg" width="24"/>
-                                                <img alt="User avatar 4" class="w-6 h-6 rounded-full border-2 border-white" height="24" src="https://storage.googleapis.com/a1aa/image/-M0cg3Rd111OQRFnFY0nwtlNhSBGQiLq6cAOyZpeW5M.jpg" width="24"/>
-                                                <img alt="User avatar 5" class="w-6 h-6 rounded-full border-2 border-white" height="24" src="https://storage.googleapis.com/a1aa/image/gfEX5XQdkQ7irgoTAk4LgYP83FAwCT6UcvkAVb-AG8E.jpg" width="24"/>
-                                                <img alt="User avatar 6" class="w-6 h-6 rounded-full border-2 border-white" height="24" src="https://storage.googleapis.com/a1aa/image/bnKnpUdroN4U_87nsHuEijIHOY0ugMer4RvXvgjQuVg.jpg" width="24"/>
-                                                <img alt="User avatar 7" class="w-6 h-6 rounded-full border-2 border-white" height="24" src="https://storage.googleapis.com/a1aa/image/8y98ymkaXo-zARhuMtYOpHC7dVQksFPl3flWReilCps.jpg" width="24"/>
+                                                <img alt="User  avatar 1" class="w-6 h-6 rounded-full border-2 border-white" height="24" src="https://storage.googleapis.com/a1aa/image/ZuTpJE6pJfJbppzY8Khmg-vOg6u2WXLzLMgz5_Uoc-0.jpg" width="24"/>
+                                                <img alt="User  avatar 2" class="w-6 h-6 rounded-full border-2 border-white" height="24" src="https://storage.googleapis.com/a1aa/image/2pXhDPPK7gfhc2BafGJ_EAzRgUL9U11eKHP90gamIBo.jpg" width="24"/>
+                                                <img alt="User  avatar 3" class="w-6 h-6 rounded-full border-2 border-white" height="24" src="https://storage.googleapis.com/a1aa/image/JiBdvOYQiJDmouspoR7oGEmdSCAvmDX0byxIpKTpbik.jpg" width="24"/>
+                                                <img alt="User  avatar 4" class="w-6 h-6 rounded-full border-2 border-white" height="24" src="https://storage.googleapis.com/a1aa/image/-M0cg3Rd111OQRFnFY0nwtlNhSBGQiLq6cAOyZpeW5M.jpg" width="24"/>
+                                                <img alt="User  avatar 5" class="w-6 h-6 rounded-full border-2 border-white" height="24" src="https://storage.googleapis.com/a1aa/image/gfEX5XQdkQ7irgoTAk4LgYP83FAwCT6UcvkAVb-AG8E.jpg" width="24"/>
+                                                <img alt="User  avatar 6" class="w-6 h-6 rounded-full border-2 border-white" height="24" src="https://storage.googleapis.com/a1aa/image/bnKnpUdroN4U_87nsHuEijIHOY0ugMer4RvXvgjQuVg.jpg" width="24"/>
+                                                <img alt="User  avatar 7" class="w-6 h-6 rounded-full border-2 border-white" height="24" src="https://storage.googleapis.com/a1aa/image/8y98ymkaXo-zARhuMtYOpHC7dVQksFPl3flWReilCps.jpg" width="24"/>
                                             </div>
                                             <span class="text-black font-medium text-[10px]">
-                                            + 1,164,821
-                                           </span>
+                + 1,164,821
+            </span>
                                         </div>
-                                    </div>
+                                    </a>
                                 </div>
                                 <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-2">
-                                    <div class="border rounded-lg overflow-hidden shadow-lg h-full flex flex-col transition-transform transform hover:scale-105 hover:shadow-xl cursor-pointer">
+                                    <a href="{{ route('comelec-website.selected-partylist') }}" class="border rounded-lg overflow-hidden shadow-lg h-full flex flex-col transition-transform transform hover:scale-105 hover:shadow-xl cursor-pointer">
                                         <img alt="Image of Yanong Agila, a majestic eagle with a sharp gaze and spread wings" class="w-full h-16 object-cover" height="400" src="https://storage.googleapis.com/a1aa/image/nCwM01gjm61HpHh9F04TN4hcO6f4V1D4KwLnjXxa3vM.jpg" width="600"/>
                                         <div class="p-2 flex-grow">
                                             <h2 class="text-center text-[12px] font-bold">
@@ -333,33 +336,29 @@
                                             </h2>
                                         </div>
                                         <div class="flex items-center space-x-2 px-2">
-                                           <span class="text-gray-700 font-medium text-[9px]">
-                                            Members
-                                           </span>
+                                            <span class="text-gray-700 font-medium text-[9px]">
+                                                Members
+                                            </span>
                                             <span class="bg-gray-100 text-gray-700 text-[9px] font-medium px-2 py-0.5 rounded-full">
-                                            1.2m
-                                           </span>
+                                                1.2m
+                                            </span>
                                         </div>
                                         <div class="flex items-center space-x-2 p-2">
                                             <div class="flex -space-x-2">
-                                                <img alt="User avatar 1" class="w-6 h-6 rounded-full border-2 border-white" height="24" src="https://storage.googleapis.com/a1aa/image/ZuTpJE6pJfJbppzY8Khmg-vOg6u2WXLzLMgz5_Uoc-0.jpg" width="24"/>
-                                                <img alt="User avatar 2" class="w-6 h-6 rounded-full border-2 border-white" height="24" src="https://storage.googleapis.com/a1aa/image/2pXhDPPK7gfhc2BafGJ_EAzRgUL9U11eKHP90gamIBo.jpg" width="24"/>
-                                                <img alt="User avatar 3" class="w-6 h-6 rounded-full border-2 border-white" height="24" src="https://storage.googleapis.com/a1aa/image/JiBdvOYQiJDmouspoR7oGEmdSCAvmDX0byxIpKTpbik.jpg" width="24"/>
-                                                <img alt="User avatar 4" class="w-6 h-6 rounded-full border-2 border-white" height="24" src="https://storage.googleapis.com/a1aa/image/-M0cg3Rd111OQRFnFY0nwtlNhSBGQiLq6cAOyZpeW5M.jpg" width="24"/>
-                                                <img alt="User avatar 5" class="w-6 h-6 rounded-full border-2 border-white" height="24" src="https://storage.googleapis.com/a1aa/image/gfEX5XQdkQ7irgoTAk4LgYP83FAwCT6UcvkAVb-AG8E.jpg" width="24"/>
-                                                <img alt="User avatar 6" class="w-6 h-6 rounded-full border-2 border-white" height="24" src="https://storage.googleapis.com/a1aa/image/bnKnpUdroN4U_87nsHuEijIHOY0ugMer4RvXvgjQuVg.jpg" width="24"/>
-                                                <img alt="User avatar 7" class="w-6 h-6 rounded-full border-2 border-white" height="24" src="https://storage.googleapis.com/a1aa/image/8y98ymkaXo-zARhuMtYOpHC7dVQksFPl3flWReilCps.jpg" width="24"/>
+                                                <img alt="User  avatar 1" class="w-6 h-6 rounded-full border-2 border-white" height="24" src="https://storage.googleapis.com/a1aa/image/ZuTpJE6pJfJbppzY8Khmg-vOg6u2WXLzLMgz5_Uoc-0.jpg" width="24"/>
+                                                <img alt="User  avatar 2" class="w-6 h-6 rounded-full border-2 border-white" height="24" src="https://storage.googleapis.com/a1aa/image/2pXhDPPK7gfhc2BafGJ_EAzRgUL9U11eKHP90gamIBo.jpg" width="24"/>
+                                                <img alt="User  avatar 3" class="w-6 h-6 rounded-full border-2 border-white" height="24" src="https://storage.googleapis.com/a1aa/image/JiBdvOYQiJDmouspoR7oGEmdSCAvmDX0byxIpKTpbik.jpg" width="24"/>
+                                                <img alt="User  avatar 4" class="w-6 h-6 rounded-full border-2 border-white" height="24" src="https://storage.googleapis.com/a1aa/image/-M0cg3Rd111OQRFnFY0nwtlNhSBGQiLq6cAOyZpeW5M.jpg" width="24"/>
+                                                <img alt="User  avatar 5" class="w-6 h-6 rounded-full border-2 border-white" height="24" src="https://storage.googleapis.com/a1aa/image/gfEX5XQdkQ7irgoTAk4LgYP83FAwCT6UcvkAVb-AG8E.jpg" width="24"/>
+                                                <img alt="User  avatar 6" class="w-6 h-6 rounded-full border-2 border-white" height="24" src="https://storage.googleapis.com/a1aa/image/bnKnpUdroN4U_87nsHuEijIHOY0ugMer4RvXvgjQuVg.jpg" width="24"/>
+                                                <img alt="User  avatar 7" class="w-6 h-6 rounded-full border-2 border-white" height="24" src="https://storage.googleapis.com/a1aa/image/8y98ymkaXo-zARhuMtYOpHC7dVQksFPl3flWReilCps.jpg" width="24"/>
                                             </div>
                                             <span class="text-black font-medium text-[10px]">
-                                            + 1,164,821
-                                           </span>
+                + 1,164,821
+            </span>
                                         </div>
-                                    </div>
+                                    </a>
                                 </div>
-
-
-
-
                             </div>
                         </div>
 
@@ -436,12 +435,13 @@
                                     </div>
                                 </div>
                             </div>
-                            <button class="mt-6 w-full bg-black hover:bg-gray-800 text-white py-2 rounded flex items-center justify-center">
-                        <span class="text-[11px]">
-                            View More
-                        </span>
+                            <a href="{{ route('comelec-website.list-of-elections') }}" class="mt-6 w-full bg-black hover:bg-gray-800 text-white py-2 rounded flex items-center justify-center">
+                                <span class="text-[11px]">
+                                    View More
+                                </span>
                                 <i class="fas fa-chevron-right ml-2 text-[11px]"></i>
-                            </button>
+                            </a>
+
                         </div>
 
 

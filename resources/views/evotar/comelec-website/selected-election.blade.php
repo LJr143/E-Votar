@@ -368,12 +368,12 @@
                                     </div>
                                 </div>
                             </div>
-                            <button class="mt-6 w-full bg-black hover:bg-gray-800 text-white py-2 rounded flex items-center justify-center">
-                        <span class="text-[11px]">
-                            View More
-                        </span>
+                            <a href="{{ route('comelec-website.list-of-elections') }}" class="mt-6 w-full bg-black hover:bg-gray-800 text-white py-2 rounded flex items-center justify-center">
+                                <span class="text-[11px]">
+                                    View More
+                                </span>
                                 <i class="fas fa-chevron-right ml-2 text-[11px]"></i>
-                            </button>
+                            </a>
                         </div>
 
 

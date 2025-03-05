@@ -21,11 +21,9 @@
                 <img alt="USG LOGO" class="w-8 h-8 rounded-full" src="{{ asset('storage/assets/logo/usg_logo.jpg') }}" />
                 <img alt="USG LOGO" class="w-8 h-8 rounded-full" src="{{ asset('storage/assets/logo/usg_logo.png') }}" />
                 <img alt="TSC LOGO" class="w-8 h-8 rounded-full" src="{{ asset('storage/assets/logo/tsc_logo.png') }}" />
-
-
-
             </div>
         </div>
+
         <div class="flex justify-start w-full xl:px-20 mt-4 md:mt-0">
             <div class="flex space-x-10 xl:space-x-20">
                 <div>
@@ -34,7 +32,7 @@
                     </h3>
                     <ul>
                         <li class="mb-1">
-                            <a class="hover:underline text-[12px]" href="#">
+                            <a class="hover:underline text-[12px]" href="{{ route('comelec-website.home') }}">
                                 Home
                             </a>
                         </li>
@@ -44,18 +42,18 @@
                             </a>
                         </li>
                         <li class="mb-1">
-                            <a class="hover:underline text-[12px]" href="#">
-                                Contact
+                            <a class="hover:underline text-[12px]" href="{{ route('comelec-website.contact-us') }}">
+                                Contact Us
                             </a>
                         </li>
                         <li class="mb-1">
-                            <a class="hover:underline text-[12px]" href="#">
-                                FAQs
-                            </a>
-                        </li>
-                        <li class="mb-1">
-                            <a class="hover:underline text-[12px]" href="#">
+                            <a class="hover:underline text-[12px]" href="{{ route('comelec-website.user-feedback') }}">
                                 User Feedback
+                            </a>
+                        </li>
+                        <li class="mb-1">
+                            <a class="hover:underline text-[12px]" href="{{ route('comelec-website.faqs') }}">
+                                FAQs
                             </a>
                         </li>
                     </ul>
@@ -66,22 +64,29 @@
                     </h3>
                     <ul>
                         <li class="mb-1">
-                            <a class="hover:underline text-[12px]" href="#">
-                                Announcement
-                            </a>
-                        </li>
-                        <li class="mb-1">
-                            <a class="hover:underline text-[12px]" href="#">
+                            <a class="hover:underline text-[12px]" href="{{ route('comelec-website.list-of-elections') }}">
                                 Elections
                             </a>
                         </li>
                         <li class="mb-1">
-                            <a class="hover:underline text-[12px]" href="#">
+                            <a class="hover:underline text-[12px]" href="{{ route('comelec-website.tutorial') }}">
                                 Tutorial
+                            </a>
+                        </li>
+                        <li class="mb-1">
+                            <a class="hover:underline text-[12px]" href="#">
+                                Policies
+                            </a>
+                        </li>
+                        <li class="mb-1">
+                            <a class="hover:underline text-[12px]" href="#">
+                                Data Privacy
                             </a>
                         </li>
                     </ul>
                 </div>
+
+
             </div>
         </div>
     </div>

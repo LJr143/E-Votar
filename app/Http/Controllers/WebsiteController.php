@@ -23,9 +23,35 @@ class WebsiteController extends Controller
     }
 
 
+    public function ContactUs()
+    {
+        return view('evotar.comelec-website.contact-us');
+    }
+
     public function UserFeedback()
     {
         return view('evotar.comelec-website.user-feedback');
+    }
+
+    public function FAQs()
+    {
+        return view('evotar.comelec-website.faqs');
+    }
+
+
+    public function SelectedAnnouncement()
+    {
+        return view('evotar.comelec-website.selected-announcement');
+    }
+
+    public function SelectedElection()
+    {
+        return view('evotar.comelec-website.selected-election');
+    }
+
+    public function SelectedPartylist()
+    {
+        return view('evotar.comelec-website.selected-partylist');
     }
 
 

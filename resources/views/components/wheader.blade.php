@@ -15,9 +15,9 @@
             </a>
         </div>
         <div class="flex space-x-4">
-            <a href="#" class="text-white text-xs hover:underline">Contact</a>
+            <a href="{{ route('comelec-website.contact-us') }}" class="text-white text-xs hover:underline">Contact Us</a>
             <a href="{{ route('comelec-website.user-feedback') }}" class="text-white text-xs hover:underline">User Feedback</a>
-            <a href="#" class="text-white text-xs hover:underline">FAQs</a>
+            <a href="{{ route('comelec-website.faqs') }}" class="text-white text-xs hover:underline">FAQs</a>
         </div>
     </div>
     <div class="flex flex-col md:flex-row items-center justify-between px-6 sm:px-12 py-4 bg-white shadow-md" x-data="{ open: false }">
@@ -48,10 +48,6 @@
             <a href="#"
                class="text-xs {{ request()->routeIs('') ? ' font-semibold' : 'text-black hover:text-gray-500' }}">
                 About
-            </a>
-            <a href=""
-               class="text-xs {{ request()->routeIs('') ? ' font-semibold' : 'text-black hover:text-gray-500' }}">
-                Announcements
             </a>
             <a href="{{ route('comelec-website.list-of-elections') }}"
                class="text-xs {{ request()->routeIs('comelec-website.list-of-elections') ? ' font-semibold' : 'text-black hover:text-gray-500' }}">
