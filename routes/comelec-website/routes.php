@@ -9,6 +9,9 @@ Route::get('list-of-elections', [WebsiteController::class, 'List0fElections'])->
 
 Route::get('contact-us', [WebsiteController::class, 'ContactUs'])->name('comelec-website.contact-us');
 Route::get('user-feedback', [WebsiteController::class, 'UserFeedback'])->name('comelec-website.user-feedback');
+
+Route::get('website-login', [WebsiteController::class, 'WebsiteLogin'])->name('comelec-website.website-login');
+
 Route::get('faqs', [WebsiteController::class, 'FAQs'])->name('comelec-website.faqs');
 
 

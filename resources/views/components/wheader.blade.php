@@ -16,7 +16,12 @@
         </div>
         <div class="flex space-x-4">
             <a href="{{ route('comelec-website.contact-us') }}" class="text-white text-xs hover:underline">Contact Us</a>
-            <a href="{{ route('comelec-website.user-feedback') }}" class="text-white text-xs hover:underline">User Feedback</a>
+            @if(Auth::check()) <!-- Check if the user is logged in -->
+            <a href="{{ route('comelec-website.user-feedback') }}" class="text-white text-xs hover:underline">User  Feedback</a>
+            @else
+                <a href="{{ route('comelec-website.website-login') }}" class="text-white text-xs hover:underline">Login to Provide Feedback</a>
+            @endif
+
             <a href="{{ route('comelec-website.faqs') }}" class="text-white text-xs hover:underline">FAQs</a>
         </div>
     </div>
