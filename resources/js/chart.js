@@ -29,8 +29,8 @@ function createBarChart(ctxId, labels, data, color1, color2) {
                 backgroundColor: [gradient, gradient],
                 borderColor: ['#000000', '#000000'],
                 borderWidth: 1,
-                borderRadius: 10,
-                barThickness: 50,
+                borderRadius: 5,
+                barThickness: 30,
                 hoverBackgroundColor: ['#333333', '#CCCCCC'],
                 hoverBorderColor: ['#333333', '#CCCCCC']
             }]
@@ -65,7 +65,7 @@ function createBarChart(ctxId, labels, data, color1, color2) {
 }
 
 // Create each chart
-createBarChart('presidentChart', ['Hamisi Mtengti', 'Abstain'], [9, 5], '#000000', '#FFFFFF');
+createBarChart('presidentChart', ['Hamisi Mtengti', 'Abstain'], [1500, 5], '#000000', '#FFFFFF');
 createBarChart('internalVicePresidentChart', ['Henry Kasembe', 'Abstain'], [24, 3], '#000000', '#FFFFFF');
 createBarChart('externalVicePresidentChart', ['Lisa Henry', 'Abstain'], [11, 7], '#000000', '#FFFFFF');
 

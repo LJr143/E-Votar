@@ -25,7 +25,7 @@
             @if ($currentStage === 'local')
                 @php
                     $council = DB::table('councils')
-                                 ->where('program_id', auth()->user()->program->id)
+                                 ->where('id', auth()->user()->program->council_id)
                                  ->first();
                 @endphp
                 {{ $council ? $council->name : 'No council available' }}

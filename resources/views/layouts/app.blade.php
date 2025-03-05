@@ -151,7 +151,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.1/gsap.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/face-api.js"></script>
 <!-- resources/views/layouts/app.blade.php -->
-<script src="{{ asset('evotar/public/vendor/livewire/livewire.js') }}"></script>
+{{--<script src="{{ asset('evotar/public/vendor/livewire/livewire.js') }}"></script>--}}
+
+
 <script>
     window.addEventListener('load', function () {
         setTimeout(function () {

@@ -32,10 +32,10 @@ class AppServiceProvider extends ServiceProvider
             return Route::get('/evotar/public/livewire/livewire.js', $handle);
         });
 
-//        Livewire::setUpdateRoute(function ($handle) {
-//            return Route::post('/evotar/public/livewire/update', $handle)
-//                ->middleware(['web']);
-//        });
+        Livewire::setUpdateRoute(function ($handle) {
+            return Route::post('/evotar/public/livewire/update', $handle)
+                ->middleware(['web']);
+        });
 
         // Force Livewire to use HTTPS
         Livewire::forceAssetInjection();

@@ -19,7 +19,7 @@ Route::middleware('splash.screen', 'track.ip.user')->prefix('admin')->group(func
     Route::get('elections', [ViewController::class, 'elections'])->name('admin.elections')->middleware('admin.auth:view election');
     Route::get('election/candidates', [ViewController::class, 'candidates'])->name('admin.candidates')->middleware('admin.auth:view candidate');
     Route::get('election/positions', [ViewController::class, 'positions'])->name('admin.positions');
-    Route::get('vote/tally', [ViewController::class, 'voteTally'])->name('admin.vote.tally')->middleware('admin.auth:view vote tally');
+
     Route::get('election/results', [ViewController::class, 'electionResult'])->name('admin.election.result')->middleware('admin.auth:view election results');
     Route::get('voters', [ViewController::class, 'voter'])->name('admin.voters')->middleware('admin.auth');
     Route::get('system/users', [ViewController::class, 'systemUsers'])->name('admin.system.user')->middleware('admin.auth:view users');
@@ -39,3 +39,4 @@ Route::middleware('splash.screen', 'track.ip.user')->prefix('admin')->group(func
     Route::get('active-users', [ViewController::class, 'activeUsers'])->name('technical-officer.active.user');
     Route::get('ip-records', [ViewController::class, 'ipRecords'])->name('technical-officer.ip.records');
 });
+Route::get('vote/tally', [ViewController::class, 'voteTally'])->name('admin.vote.tally')->middleware('admin.auth:view vote tally');

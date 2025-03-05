@@ -20,4 +20,9 @@ class ElectionPosition extends Model
     {
         return $this->hasMany(Candidate::class, 'election_position_id');
     }
+
+    public function election(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Election::class, 'election_id');
+    }
 }
