@@ -10,6 +10,7 @@ use App\Models\Election;
 require __DIR__ . '/admin/routes.php';
 require __DIR__ . '/voter/routes.php';
 require __DIR__ . '/common/routes.php';
+require __DIR__ . '/comelec-website/routes.php';
 
 
 
@@ -87,8 +88,4 @@ Route::get('/api/election-end-time/{electionId}', function ($electionId) {
 
 
 
-//COMELEC WEBSITE
-Route::get('/home', function () {
-    return view('comelec-website.home');
-});
 
