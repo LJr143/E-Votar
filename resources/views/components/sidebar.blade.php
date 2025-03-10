@@ -5,7 +5,7 @@
 
 
 
-<div class="relative w-full h-full overflow-hidden">
+<div class="relative w-full h-full overflow-hidden sm:block hidden">
     <div class="px-4 py-6 flex">
         <div class="flex justify-center items-center text-center w-full  p-2">
             <img class="h-[25px] " src="{{ asset('storage/assets/logo/evotar_red_1.png') }}" alt="evotar_logo"/>
