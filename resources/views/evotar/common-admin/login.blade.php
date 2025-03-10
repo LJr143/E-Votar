@@ -1,4 +1,5 @@
 <x-guest-layout>
+
     <div class="flex justify-between items-center align-middle p-3 bg-white sm:flex w-full h-[55px]">
         <div class="flex space-x-4">
             <img class="h-[28px] " src="{{ asset('storage/assets/logo/evotar_red.png') }}" alt="evotar_logo"/>
@@ -15,15 +16,14 @@
         </div>
     </div>
 
-    <div class=" circle red-circle w-[400px] h-[400px] bg-red-900 absolute rounded-full z-50 left-[300px] top-[80px]"
+    <div class="circle red-circle w-[200px] h-[200px]  sm:w-[300px] sm:h-[300px] md:w-[400px] md:h-[400px] bg-red-900 absolute rounded-full z-50 left-[50px] sm:left-[150px] md:left-[300px] top-[80px]"
          style="background: linear-gradient( #ba0404, #882222);">
 
     </div>
 
     <div
-        class="circle yellow-circle w-[400px] h-[400px] bg-yellow-900 absolute rounded-full z-50 right-[250px] bottom-[60px]"
+        class="circle yellow-circle w-[200px] h-[200px] sm:w-[300px] sm:h-[300px] md:w-[400px] md:h-[400px]  bg-yellow-900 absolute rounded-full z-50 right-[50px] sm:right-[150px] md:right-[250px] bottom-[40px] sm:bottom-[60px]"
         style="background: linear-gradient(#9e2323, #ffc800);">
-
     </div>
 
 
@@ -34,26 +34,26 @@
         </div>
         @endsession
 
-        <div class="w-full h-full grid grid-cols-2 bg-transparent">
-            <div class="w-full  h-full px-6 py-4">
+        <div class="w-full shadow-lg sm:rounded-lg overflow-hidden flex flex-col md:flex-row bg-white sm:bg-transparent">
+            <div class="w-full h-full px-6 py-4">
                 <form method="POST" class="mt-2">
                     @csrf
                     <div class="w-full">
-                        <p class="font-medium text-[12px] text-white mb-1">WELCOME BACK!</p>
-                        <div class="w-full text-center mb-8 text-white">
-                            <p class="font-bold text-[18px] text-white tracking-tighter">LOGIN TO CONTINUE</p>
-                            <p class="font-light text-[11px] text-white">Integrity, Impartiality and Transparency</p>
+                        <p class="font-medium text-[12px] text-gray-700 sm:text-white mb-1">WELCOME BACK!</p>
+                        <div class="w-full text-center mb-8 text-gray-700 sm:text-white">
+                            <p class="font-bold text-[18px] text-gray-700 sm:text-white tracking-tighter">LOGIN TO CONTINUE</p>
+                            <p class="font-light text-[11px] text-gray-700 sm:text-white">Integrity, Impartiality and Transparency</p>
                         </div>
                     </div>
                     <div>
-                        <x-label class="text-white" for="username" value="{{ __('Username') }}"/>
+                        <x-label class="text-gray-700 sm:text-white" for="username" value="{{ __('Username') }}"/>
                         <x-input id="username" class="block mt-1 w-full h-[30px] border-[1px] p-2 text-[12px]"
                                  type="username" name="username" :value="old('username')" required autofocus
                                  autocomplete="username" placeholder="Enter username"/>
                     </div>
 
                     <div class="mt-4">
-                        <x-label class="text-white" for="password" value="{{ __('Password') }}"/>
+                        <x-label class="text-gray-700 sm:text-white" for="password" value="{{ __('Password') }}"/>
                         <div class="relative">
                             <x-input id="password" class="block mt-1 w-full h-[30px] pr-10 text-[12px]" type="password"
                                      name="password" required autocomplete="current-password"
@@ -89,15 +89,15 @@
 
                     <div class="grid grid-cols-2 gap-4">
                         <div class="block mt-4">
-                            <label for="remember_me" class="flex items-center text-white">
+                            <label for="remember_me" class="flex items-center text-gray-700 sm:text-white">
                                 <x-checkbox id="remember_me" name="remember"/>
-                                <span class="ms-2 text-[11px] text-white">{{ __('Remember me') }}</span>
+                                <span class="ms-2 text-[11px] text-gray-700 sm:text-white">{{ __('Remember me') }}</span>
                             </label>
                         </div>
 
                         <div class="flex justify-end items-center mt-4">
                             @if (Route::has('password.request'))
-                                <a class="underline text-[11px] text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                <a class="underline text-[11px] text-gray-700 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                    href="{{ route('password.request') }}">
                                     {{ __('Forgot your password?') }}
                                 </a>
@@ -105,7 +105,7 @@
                         </div>
                     </div>
 
-                    <div class="w-full flex items-center justify-center mt-4">
+                    <div class="w-full flex items-center justify-center mt-7">
                         <x-button class="w-full flex justify-center items-center font-bold">
                             <p class="font-bold">
                                 {{ __('Log in') }}
@@ -114,8 +114,8 @@
                     </div>
                 </form>
             </div>
-            <div class="w-full">
-                <img class="" src="{{ asset('storage/assets/image/login_bg.png') }}" alt="">
+            <div class="w-full h-48 md:h-full order-first md:order-last">
+                <img class="w-full h-full object-cover" src="{{ asset('storage/assets/image/login_bg.png') }}" alt="">
             </div>
         </div>
     </x-authentication-card>
