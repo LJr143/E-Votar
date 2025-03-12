@@ -27,15 +27,30 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
+            'first_name' => $this->faker->firstName,
+            'last_name' => $this->faker->lastName,
+            'middle_initial' => strtoupper($this->faker->randomLetter),
+            'extension' => null,
+            'gender' => $this->faker->randomElement(['Male', 'Female']),
+            'birth_date' => $this->faker->date,
+            'email' => $this->faker->unique()->safeEmail,
+            'google_id' => null,
+            'phone_number' => $this->faker->unique()->numerify('09#########'),
+            'year_level' => $this->faker->randomElement(['1st Year', '2nd Year', '3rd Year', '4th Year']),
+            'student_id' => $this->faker->unique()->numerify('2024####'),
+            'campus_id' => 2, // Change this based on existing campuses
+            'college_id' => 2, // Change this based on existing colleges
+            'program_id' => 1, // Change this based on existing programs
+            'program_major_id' => 1,
+            'username' => $this->faker->unique()->userName,
             'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('password'),
-            'two_factor_secret' => null,
-            'two_factor_recovery_codes' => null,
+            'password' => Hash::make('password123'), // Default password
             'remember_token' => Str::random(10),
             'profile_photo_path' => null,
-            'current_team_id' => null,
+            'Account Status' => 'Active',
+            'face_descriptor' => null,
+            'created_at' => now(),
+            'updated_at' => now(),
         ];
     }
 

@@ -107,4 +107,10 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Candidate::class, 'user_id');
     }
+
+    public function electionExcludedVoters(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(ElectionExcludedVoter::class, 'user_id');
+    }
+
 }

@@ -70,13 +70,14 @@
                         <div class="container mx-auto px-4 py-4">
                             <!-- Student Council Section -->
                             <h2 class="text-[16px] font-bold uppercase text-center mb-4">{{ $selectedElectionCampus->name ?? 'No campus available' }}
-                                Student Council</h2>
+                                Student Council Candidates</h2>
                             <div id="studentCouncil"
                                  class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 px-4 py-4"
                                  wire:key="student-council-list" wire:poll="$refresh">
                                 @foreach($candidates->where('election_positions.position.electionType.name', 'Student Council Election') as $candidate)
                                     <div wire:key="candidate-{{ $candidate->id }}">
                                         <div class="bg-white p-6 shadow-md min-h-[320px]">
+                                            <p class="text-black font-bold text-[10px] mt-2 uppercase">Votes: {{ $candidate->votes_count }}</p>
                                             <div class="flex justify-center items-center">
                                                 <p class="text-[12px]">Running for:
                                                     <span class="text-red-900 uppercase tracking-tighter font-semibold">
@@ -126,14 +127,15 @@
                                 @endforeach
                             </div>
                             <!-- Local Councils Section -->
-                            <h2 class="text-[16px] font-bold uppercase text-center mt-8 mb-4">Local Councils</h2>
+                            <h2 class="text-[16px] font-bold uppercase text-center mt-8 mb-4">Local Councils Candidates</h2>
                             @foreach($candidates->where('election_positions.position.electionType.name', 'Local Council Election')->groupBy('users.program.council.name') as $programName => $localCandidates)
-                                <h3 class="text-[14px] px-4 font-bold uppercase text-gray-700 mt-6">{{ $programName }} Organization</h3>
+                                <h3 class="text-[12px] px-4 font-bold uppercase text-gray-700 mt-6">{{ $programName }} Organization</h3>
                                 <div
                                     class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 px-4 py-4">
                                     @foreach($localCandidates as $candidate)
                                         <div wire:key="candidate-{{ $candidate->id }}">
                                             <div class="bg-white p-6 shadow-md min-h-[320px]">
+                                                <p class="text-black font-bold text-[10px] mt-2 uppercase">Votes: {{ $candidate->votes_count }}</p>
                                                 <div class="flex justify-center items-center">
                                                     <p class="text-[12px] text-center">Running for:
                                                         <span
@@ -175,7 +177,7 @@
                                                         </p>
                                                         <p class="text-black capitalize font-semibold text-[11px] leading-none">{{ optional($candidate->users->programMajor)->name ?? '' }}</p>
                                                         <p class="text-black mt-2 capitalize italic font-semibold text-[11px]">{{ $candidate->partyLists->name }}</p>
-                                                        <p class="text-black font-bold text-[14px]">Votes: {{ $candidate->votes_count }}</p>
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -191,7 +193,7 @@
         </div>
 
 
-        <div x-show="tab === 'graphical'">
+        <div x-show="tab === 'graphical'"  wire:poll="$refresh">
 
             <div class="bg-white p-4 rounded-lg shadow-lg w-full ">
                 <div class="flex justify-between items-center mb-4">
@@ -219,12 +221,9 @@
                         <p class="text-lg text-black" style="font-size: 12px;">2300</p>
                     </div>
                 </div>
-                <div class="relative h-96">
-                    <canvas id="myChart" class="absolute top-0 left-0 w-full h-full"></canvas>
+                <div class="relative h-full">
+                    <livewire:charts.vote-chart :electionId="$selectedElection" />
                 </div>
-            </div>
-            <div>
-                <canvas id="myChart"></canvas>
             </div>
         </div>
 

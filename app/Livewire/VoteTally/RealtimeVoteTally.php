@@ -9,7 +9,7 @@ use Livewire\Component;
 
 class RealtimeVoteTally extends Component
 {
-    protected $listeners = ['candidate-created' => '$refresh'];
+    protected $listeners = ['candidate-created' => '$refresh',];
     public $candidates = [];
     public $filter = 'Student and Local Council Election';
     public $search = '';
@@ -36,6 +36,7 @@ class RealtimeVoteTally extends Component
     {
         $this->fetchElection($this->filter);
         $this->fetchCandidates();
+        $this->dispatch('updateChartData', $this->selectedElection);
     }
 
     public function updatedSelectedElection(): void
@@ -45,6 +46,7 @@ class RealtimeVoteTally extends Component
         $this->selectedElectionCampus = $election?->campus;
 
         $this->fetchCandidates();
+        $this->dispatch('updateChartData', $this->selectedElection);
     }
 
 

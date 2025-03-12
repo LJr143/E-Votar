@@ -196,8 +196,11 @@ class VotingProcess extends Component
 
         // Reset selections and show success message
         $this->selectedCandidates = [];
+        logger()->info("🚀 Dispatching vote-submitted event for election ID: " . $this->election->id);
+        $this->dispatch('updateChartData', $this->election->id);
         session()->flash('success', 'Votes submitted successfully. Download your encoded vote receipt.');
         $this->redirect(route('voter.voting.confirm'));
+
     }
 
     public function render(): \Illuminate\Contracts\View\View
