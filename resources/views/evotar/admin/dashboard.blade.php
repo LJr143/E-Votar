@@ -17,7 +17,7 @@
                     <h1 class="text-base font-semibold leading-6 text-gray-900">Dashboard</h1>
                     <p class=" text-gray-500 text-[11px]">Hi, {{ auth()->user()->first_name }} . Welcome back!</p>
                 </div>
-                <div class="relative bg-white p-2 rounded-lg shadow-md flex items-center cursor-pointer space-x-2 z-10">
+                <div class="relative bg-white p-2 rounded-lg shadow-md flex items-center cursor-pointer space-x-2">
                     <div class="bg-gray-200 p-2 rounded-full flex items-center justify-center">
                         <i class="fas fa-calendar-alt text-gray-600 text-[11px]"></i>
                     </div>
