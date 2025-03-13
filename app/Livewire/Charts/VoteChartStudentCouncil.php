@@ -5,11 +5,10 @@ namespace App\Livewire\Charts;
 use App\Models\Candidate;
 use App\Models\Election;
 use App\Models\ElectionPosition;
-use App\Models\Position;
 use App\Models\User;
 use Livewire\Component;
 
-class VoteChart extends Component
+class VoteChartStudentCouncil extends Component
 {
     public $electionId;
     protected $listeners = ['updateChartData' => 'updateChart'];
@@ -28,13 +27,19 @@ class VoteChart extends Component
 
     public function loadChartData(): void
     {
-        $election  = Election::findOrFail($this->electionId);
+        $election = Election::findOrFail($this->electionId);
+
+        // Filter positions by councilType
         $electionPositions = ElectionPosition::where('election_id', $this->electionId)
-            ->with('position')
+            ->with('position.electionType')
+            ->whereHas('position.electionType', function ($query) {
+                $query->where('name', 'Student Council Election');
+            })
             ->get();
 
         // Get positions as labels (x-axis)
         $labels = $electionPositions->pluck('position.name')->toArray();
+
         $totalVoters = User::where('campus_id', $election->campus_id)
             ->whereHas('roles', function ($query) {
                 $query->where('name', 'voter');
@@ -44,7 +49,7 @@ class VoteChart extends Component
             })
             ->count();
 
-
+        // Get candidates for the filtered positions
         $candidates = Candidate::whereIn('election_position_id', $electionPositions->pluck('id'))
             ->with(['users', 'election_positions.position', 'votes'])
             ->get();
@@ -63,14 +68,16 @@ class VoteChart extends Component
 
             // Set the vote count for the candidate's actual position
             $positionIndex = array_search($positionName, $labels);
-            $data[$positionIndex] = $voteCount;
+            if ($positionIndex !== false) {
+                $data[$positionIndex] = $voteCount;
+            }
 
             $datasets[] = [
                 'label' => $candidateName,
                 'data' => $data,
                 'backgroundColor' => 'rgba(' . rand(50, 255) . ',' . rand(50, 255) . ',' . rand(50, 255) . ', 1)',
                 'borderColor' => 'rgba(0, 0, 0, 1)',
-                'borderWidth' => 1
+                'borderWidth' => 1,
             ];
         }
 
@@ -81,22 +88,21 @@ class VoteChart extends Component
                 'data' => array_fill(0, count($labels), 0),
                 'backgroundColor' => 'rgba(200, 200, 200, 0.5)',
                 'borderColor' => 'rgba(200, 200, 200, 1)',
-                'borderWidth' => 1
+                'borderWidth' => 1,
             ];
         }
 
         logger()->info("📊 Chart Data Sent: ", ['labels' => $labels, 'datasets' => $datasets]);
 
-        $this->dispatch('chartUpdated', [
+        $this->dispatch('chartStudentCouncilUpdated', [
             'labels' => $labels,
             'datasets' => $datasets,
-            'totalVoters'=>$totalVoters,
+            'totalVoters' => $totalVoters,
         ]);
     }
 
-
     public function render()
     {
-        return view('evotar.livewire.charts.vote-chart');
+        return view('evotar.livewire.charts.vote-chart-student-council');
     }
 }

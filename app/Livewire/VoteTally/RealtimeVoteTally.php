@@ -3,17 +3,20 @@
 namespace App\Livewire\VoteTally;
 
 use App\Models\Candidate;
+use App\Models\Council;
 use App\Models\Election;
 use App\Models\ElectionPosition;
+use App\Models\User;
 use Livewire\Component;
 
 class RealtimeVoteTally extends Component
 {
-    protected $listeners = ['candidate-created' => '$refresh',];
+    protected $listeners = ['candidate-created' => '$refresh'];
     public $candidates = [];
     public $filter = 'Student and Local Council Election';
     public $search = '';
     public $selectedElection;
+    public $selectedFilter = 'tsc';
     public $elections;
     public $latestElection;
     public $hasStudentCouncilPositions;
@@ -21,21 +24,29 @@ class RealtimeVoteTally extends Component
     public $selectedElectionName;
     public $selectedElectionCampus;
 
+    public $totalVoters;
+    public $totalVoterVoted;
+    public $councils;
+
     public function mount(): void
     {
         $this->fetchElection($this->filter);
+        $this->councils = Council::all();
         $this->fetchCandidates();
+        $this->fetchVoterTally();
     }
 
     public function updatedSearch(): void
     {
         $this->fetchCandidates();
+        $this->fetchVoterTally();
     }
 
     public function updatedFilter(): void
     {
         $this->fetchElection($this->filter);
         $this->fetchCandidates();
+        $this->fetchVoterTally();
         $this->dispatch('updateChartData', $this->selectedElection);
     }
 
@@ -49,6 +60,33 @@ class RealtimeVoteTally extends Component
         $this->dispatch('updateChartData', $this->selectedElection);
     }
 
+
+    public function fetchVoterTally(): void
+    {
+        $election = Election::find($this->selectedElection);
+        if ($election) {
+            $this->totalVoters = User::where('campus_id', $election->campus_id)->where('program_id')
+                ->whereHas('roles', function ($query) {
+                    $query->where('name', 'voter');
+                })
+                ->whereDoesntHave('electionExcludedVoters', function ($query) use ($election) {
+                    $query->where('election_id', $election->id);
+                })
+                ->count();
+
+            $this->totalVoterVoted = User::where('campus_id', $election->campus_id)
+                ->whereHas('roles', function ($query) {
+                    $query->where('name', 'voter');
+                })
+                ->whereDoesntHave('electionExcludedVoters', function ($query) use ($election) {
+                    $query->where('election_id', $election->id);
+                })
+                ->whereHas('votes', function ($query) use ($election) {
+                    $query->where('election_id', $election->id);
+                })
+                ->count();
+        }
+    }
 
     public function fetchCandidates(): void
     {
@@ -73,6 +111,7 @@ class RealtimeVoteTally extends Component
                 $q->where('name', $this->filter);
             });
         }
+
 
         $this->candidates = $query->get();
     }
@@ -122,7 +161,9 @@ class RealtimeVoteTally extends Component
             'elections' => $this->elections,
             'selectedElectionName' => $this->selectedElectionName,
             'selectedElectionCampus' => $this->selectedElectionCampus,
+            'totalVoters' => $this->totalVoters,
+            'totalVoterVoted' => $this->totalVoterVoted,
+            'councils' => $this->councils,
         ]);
     }
-
 }

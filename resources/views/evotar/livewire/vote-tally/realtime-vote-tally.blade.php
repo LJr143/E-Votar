@@ -198,33 +198,31 @@
             <div class="bg-white p-4 rounded-lg shadow-lg w-full ">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-lg font-bold text-black" style="font-size: 14px;">Tagum Student Council</h2>
-                    <select class="border border-gray-300 rounded p-2 text-black" style="font-size: 12px;">
-                        <option value="tsc">TSC</option>
-                        <option value="bsit">BSIT</option>
-                        <option value="bsabe">BSABE</option>
-                    </select>
                 </div>
                 <div class="flex justify-around mb-4">
                     <div class="text-center">
                         <h4 class="text-lg font-semibold text-black" style="font-size: 14px;">Total Voters</h4>
-                        <p class="text-lg text-black" style="font-size: 12px;">7200</p>
+                        <p class="text-lg text-black" style="font-size: 12px;">{{ $totalVoters }}</p>
                     </div>
                     <div class="border-l border-gray-300 mx-4"></div>
                     <div class="text-center">
                         <h4 class="text-lg font-semibold text-black" style="font-size: 14px;">Total Who Voted</h4>
-                        <p class="text-lg text-black" style="font-size: 12px;">4900</p>
+                        <p class="text-lg text-black" style="font-size: 12px;">{{ $totalVoterVoted }}</p>
                     </div>
                     <div class="border-l border-gray-300 mx-4"></div>
                     <div class="text-center">
                         <h4 class="text-lg font-semibold text-black" style="font-size: 14px;">Total Who Did Not
                             Vote</h4>
-                        <p class="text-lg text-black" style="font-size: 12px;">2300</p>
+                        <p class="text-lg text-black" style="font-size: 12px;">{{ $totalVoters - $totalVoterVoted }}</p>
                     </div>
                 </div>
                 <div class="relative h-full">
-                    <livewire:charts.vote-chart :electionId="$selectedElection" />
+                    <livewire:charts.vote-chart-student-council :electionId="$selectedElection"/>
                 </div>
             </div>
+
+                <livewire:charts.vote-chart-local-council :electionId="$selectedElection"/>
+
         </div>
 
         <div x-show="tab === 'tabulated'">
