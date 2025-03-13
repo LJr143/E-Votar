@@ -43,18 +43,17 @@
                 ACCOUNT REGISTRATION<h3
                     class="text-primary font-light text-black mb-3 text-[12px] text-center capitalize ">
                     to start using the university of southeastern philippines tagum unit voting system please create a
-                    superadmin account</h3></h2>
+                    superadmin account</h3>
+            </h2>
 
 
             <!--form container-->
-            <div class="px-2 h-screen overflow-x-hidden ml-0 w-full flex justify-center ">
+             <div class="px-2 h-screen overflow-x-hidden ml-0 w-full flex justify-center">
                 <div>
                     <form action="{{route('admin.register')}}" method="POST" class="">
                         @csrf
-
-                        <div class="w-[1200px] rounded border-2 border-solid border-gray-300 shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] p-4 ">
+                        <div class="w-full sm:w-[600px] md:w-[800px] lg:w-[1000px] xl:w-[1200px] max-w-[1200px] rounded border-2 border-solid border-gray-300 shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] p-4">
                             <em class="text-[12px] text-black font-semibold">
-
                                 <svg width="50" height="40" viewBox="0 0 53 42" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                     <rect width="53" height="42" fill="url(#pattern0_1840_9316)"/>
                                     <defs>
@@ -362,8 +361,6 @@
                         </div>
                     </form>
                 </div>
-
-
             </div>
         </div>
     </div>

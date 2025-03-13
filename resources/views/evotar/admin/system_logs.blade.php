@@ -4,17 +4,19 @@
     </x-slot>
 
     <x-slot name="header">
-        <x-header></x-header>
+        <div class="px-6 w-full">
+            <x-header></x-header>
+        </div>
     </x-slot>
     <x-slot name="main">
         <div class="bg-transparent px-2 py-0 min-h-screen ">
             <div class="mx-auto flex w-full">
                 <!-- Left Section -->
-                <div class="flex flex-col w-1/3 ">
+                <div class="flex flex-col w-full md:w-1/2 lg:w-1/3">
                     <!-- Header Section -->
                     <div class="flex flex-row justify-between items-start mb-4">
                         <div class="text-left">
-                            <h1 class="text-base font-semibold leading-6 text-gray-900">System Logs</h1>
+                        <h1 class="text-base font-semibold leading-6 text-gray-900">System Logs</h1>
                             <p class="text-[11px] text-gray-500">List of Actions and Activities of USeP E-votar system users</p>
                         </div>
                     </div>
@@ -56,10 +58,11 @@
                                             </svg>
                                         </button>
                                     </div>
-                                    <div class="flex flex-col sm:flex-row sm:justify-center gap-3 md:gap-3 w-full md:w-auto mt-2">
-                                        <div class="relative sm:w-[250px] mb-4">
-                                            <input type="text" placeholder="Search..." aria-label="Search" class="rounded-md text-[10px] border bg-white text-black border-gray-300 h-8 pl-8 pr-4 focus:ring-1 focus:ring-black focus:border-black w-full">
-                                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2">
+                                   <div class="flex flex-col sm:flex-row sm:justify-center gap-3 md:gap-3 w-full md:w-auto mt-2 relative z-50">
+                                    <div class="relative w-full sm:w-[250px] mb-4">
+                                        <input type="text" placeholder="Search..." aria-label="Search"
+                                               class="w-full rounded-md text-[10px] border bg-white text-black border-gray-300 h-8 pl-8 pr-4 focus:ring-1 focus:ring-black focus:border-black">
+                                        <span class="absolute left-3 top-1/2 transform -translate-y-1/2">
                                                 <svg width="12" height="12" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path fill-rule="evenodd" clip-rule="evenodd" d="M9.68208 10.7458C8.66576 11.5361 7.38866 12.0067 6.00167 12.0067C2.68704 12.0067 0 9.31891 0 6.00335C0 2.68779 2.68704 0 6.00167 0C9.31631 0 12.0033 2.68779 12.0033 6.00335C12.0033 7.39059 11.533 8.66794 10.743 9.6845L13.7799 12.7186C14.0731 13.0115 14.0734 13.4867 13.7806 13.7799C13.4878 14.0731 13.0128 14.0734 12.7196 13.7805L9.68208 10.7458ZM10.5029 6.00335C10.5029 8.49002 8.48765 10.5059 6.00167 10.5059C3.5157 10.5059 1.50042 8.49002 1.50042 6.00335C1.50042 3.51668 3.5157 1.50084 6.00167 1.50084C8.48765 1.50084 10.5029 3.51668 10.5029 6.00335Z" fill="#000000"/>
                                                 </svg>
