@@ -20,7 +20,7 @@
         x-transition:leave="transition ease-in duration-200"
         x-transition:leave-start="opacity-100"
         x-transition:leave-end="opacity-0"
-        class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+        class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 px-4 sm:px-8"
     >
         <div
             x-show="open"
@@ -30,11 +30,11 @@
             x-transition:leave="transition ease-in duration-200"
             x-transition:leave-start="opacity-100 transform scale-100"
             x-transition:leave-end="opacity-0 transform scale-90"
-            class="bg-white p-6 rounded shadow-md w-2/5 max-h-[700px]"
+            class="bg-white p-6 rounded shadow-md w-[95%] sm:w-[75%] md:w-[55%] lg:w-2/5 max-h-[90vh] sm:max-h-[85vh] overflow-y-auto"
         >
-
             <div class="flex justify-between items-center mb-4 border-b border-gray-300 pb-2">
-                <div>
+
+            <div>
                     <h2 class="text-sm font-bold text-left text-black w-full sm:w-auto">Edit Position</h2>
                     <p class="text-[10px] text-gray-500 italic">To edit an election position please provide the
                         required

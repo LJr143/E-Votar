@@ -19,7 +19,7 @@
         x-transition:leave="transition ease-in duration-200"
         x-transition:leave-start="opacity-100"
         x-transition:leave-end="opacity-0"
-        class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+        class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 px-4"
     >
         <div
             x-show="open"
@@ -29,9 +29,8 @@
             x-transition:leave="transition ease-in duration-200"
             x-transition:leave-start="opacity-100 transform scale-100"
             x-transition:leave-end="opacity-0 transform scale-90"
-            class="bg-white p-6 rounded shadow-md w-1/3"
+            class="bg-white p-6 rounded shadow-md w-full max-w-md sm:w-3/4 md:w-2/3 lg:w-1/3"
         >
-
             <div class="flex justify-between items-center mb-4 border-b border-gray-300 pb-2">
                 <div>
                     <h2 class="text-sm font-bold text-left w-full sm:w-auto">Edit Program</h2>
