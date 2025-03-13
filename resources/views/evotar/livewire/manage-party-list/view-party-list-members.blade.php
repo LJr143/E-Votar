@@ -26,7 +26,7 @@
             x-transition:leave="transition ease-in duration-200"
             x-transition:leave-start="opacity-100 transform scale-100"
             x-transition:leave-end="opacity-0 transform scale-90"
-            class="bg-white p-6 rounded shadow-md w-full max-w-lg"
+            class="bg-white p-6 rounded shadow-md w-full max-w-lg mx-4 sm:mx-6 md:mx-8 lg:mx-10"
         >
 
             <div class="flex justify-between items-center mb-4 border-b border-gray-300 pb-2">
@@ -46,11 +46,13 @@
             <!-- Modal Content -->
             <div class="relative mb-4">
                 <input
-                        class="border border-gray-300 text-xs rounded-lg px-4 py-2 w-full focus:outline-black"
-                        placeholder="Search partylist members"
-                        type="text"/>
+                    class="border border-gray-300 text-[10px] rounded-lg px-4 py-2 w-full focus:ring-black focus:border-black"
+                    placeholder="Search partylist members"
+                    type="text"/>
             </div>
-            <h3 class="text-gray-600 font-semibold mb-2" style="font-size: 11px;">
+
+
+            <h3 class="text-gray-600 font-semibold mb-2 text-left text-[11px]">
                 PARTYLIST MEMBERS
             </h3>
             <div class="space-y-4 max-h-48 overflow-y-auto">
@@ -134,7 +136,8 @@
                 </div>
             </div>
             <div class="flex justify-end space-x-4 mt-6">
-                <button class="text-gray-600 hover:text-gray-800" style="font-size: 11px;">
+                <button class="text-gray-600 hover:text-gray-800 text-[11px]"
+                        @click="open = false">
                     Close
                 </button>
             </div>
