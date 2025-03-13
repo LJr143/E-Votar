@@ -1,27 +1,7 @@
-<div>
-    <style>
-        table td, th {
-            font-size: 14px !important;
-        }
-
-        tr {
-            height: 15px;
-            line-height: 15px;
-        }
-
-        tr td {
-            font-size: 12px !important;
-        }
-
-        td, th {
-            padding: 0;
-        }
-
-    </style>
-
-    <div class="hidden sm:block mb-4">
+<div class="container mx-auto mt-4">
+    <div class="mb-4">
         <div class="border-b-2 border-gray-200">
-            <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+            <nav class="-mb-px flex space-x-8 overflow-x-auto" aria-label="Tabs">
                 <button wire:click="$set('filter', 'all_elections')"
                         class=" whitespace-nowrap border-b-2 pb-1 px-1 text-[12px] font-medium {{ $filter === 'all_elections' ? 'border-black text-black' : 'text-gray-500 hover:text-black' }}">
                     All Elections
@@ -37,103 +17,96 @@
             </nav>
         </div>
     </div>
-    <div class="flex w-full gap-4 min">
+    <div class="flex flex-col md:flex-row w-full gap-4">
         <div id="all_elections" class="w-full">
             <div class="bg-white shadow-md rounded p-6">
-                <div
-                    class="bg-white mt-0 p-5 rounded-md md:max-w-[800px] min-[90%]:max-w-[100%] lg:max-w-[900px] xl:w-[100%] xl:min-w-[100%] 2xl:max-w-[1190px]">
-                    <div class="flex w-full">
-                        <div class="w-1/2">
-                            <button
-                                class="bg-white border border-gray-100 rounded p-1 w-[30px] flex-row  items-center justify-items-center" onclick="printElections()">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-                                     xmlns="http://www.w3.org/2000/svg">
-                                    <mask id="mask0_782_22521" style="mask-type:alpha"
-                                          maskUnits="userSpaceOnUse"
-                                          x="0" y="0" width="24" height="24">
-                                        <rect width="24" height="24" fill="#D9D9D9"/>
-                                    </mask>
-                                    <g mask="url(#mask0_782_22521)">
-                                        <path
-                                            d="M8.30826 20.4998C7.81115 20.4998 7.38559 20.3228 7.03159 19.9688C6.67757 19.6148 6.50056 19.1893 6.50056 18.6921V16.4998H4.59674C4.09962 16.4998 3.67406 16.3228 3.32006 15.9688C2.96606 15.6148 2.78906 15.1893 2.78906 14.6921V10.8075C2.78906 10.0992 3.03105 9.50548 3.51501 9.02632C3.99898 8.54717 4.59031 8.30759 5.28901 8.30759H18.7121C19.4204 8.30759 20.0141 8.54717 20.4933 9.02632C20.9724 9.50548 21.212 10.0992 21.212 10.8075V14.6921C21.212 15.1893 21.035 15.6148 20.681 15.9688C20.327 16.3228 19.9015 16.4998 19.4043 16.4998H17.5005V18.6921C17.5005 19.1893 17.3235 19.6148 16.9695 19.9688C16.6155 20.3228 16.1899 20.4998 15.6928 20.4998H8.30826ZM4.59674 14.9999H6.50056C6.5134 14.514 6.69493 14.0976 7.04516 13.7508C7.3954 13.404 7.81643 13.2306 8.30826 13.2306H15.6928C16.1846 13.2306 16.6057 13.404 16.9559 13.7508C17.3061 14.0976 17.4877 14.514 17.5005 14.9999H19.4043C19.4941 14.9999 19.5678 14.971 19.6255 14.9133C19.6832 14.8556 19.7121 14.7819 19.7121 14.6921V10.8075C19.7121 10.5242 19.6162 10.2867 19.4246 10.095C19.2329 9.90338 18.9954 9.80754 18.7121 9.80754H5.28901C5.00568 9.80754 4.76818 9.90338 4.57651 10.095C4.38485 10.2867 4.28901 10.5242 4.28901 10.8075V14.6921C4.28901 14.7819 4.31786 14.8556 4.37556 14.9133C4.43326 14.971 4.50699 14.9999 4.59674 14.9999ZM16.0005 8.30759V5.61529C16.0005 5.52554 15.9717 5.45182 15.914 5.39412C15.8563 5.33643 15.7826 5.30759 15.6928 5.30759H8.30826C8.21851 5.30759 8.14479 5.33643 8.08709 5.39412C8.02939 5.45182 8.00054 5.52554 8.00054 5.61529V8.30759H6.50056V5.61529C6.50056 5.11819 6.67757 4.69263 7.03159 4.33862C7.38559 3.98462 7.81115 3.80762 8.30826 3.80762H15.6928C16.1899 3.80762 16.6155 3.98462 16.9695 4.33862C17.3235 4.69263 17.5005 5.11819 17.5005 5.61529V8.30759H16.0005ZM17.8082 12.3075C18.0915 12.3075 18.329 12.2117 18.5207 12.02C18.7124 11.8284 18.8082 11.5909 18.8082 11.3075C18.8082 11.0242 18.7124 10.7867 18.5207 10.595C18.329 10.4034 18.0915 10.3075 17.8082 10.3075C17.5249 10.3075 17.2874 10.4034 17.0957 10.595C16.904 10.7867 16.8082 11.0242 16.8082 11.3075C16.8082 11.5909 16.904 11.8284 17.0957 12.02C17.2874 12.2117 17.5249 12.3075 17.8082 12.3075ZM16.0005 18.6921V15.0383C16.0005 14.9486 15.9717 14.8749 15.914 14.8172C15.8563 14.7595 15.7826 14.7306 15.6928 14.7306H8.30826C8.21851 14.7306 8.14479 14.7595 8.08709 14.8172C8.02939 14.8749 8.00054 14.9486 8.00054 15.0383V18.6921C8.00054 18.7819 8.02939 18.8556 8.08709 18.9133C8.14479 18.971 8.21851 18.9999 8.30826 18.9999H15.6928C15.7826 18.9999 15.8563 18.971 15.914 18.9133C15.9717 18.8556 16.0005 18.7819 16.0005 18.6921Z"
-                                            fill="#35353A"/>
-                                    </g>
-                                </svg>
-                            </button>
-                            <button
-                                class="bg-white border border-gray-100 rounded p-1 w-[30px] flex-row  items-center justify-items-center">
-                                <svg width="12" height="18" viewBox="0 0 22 20" fill="none"
-                                     xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M21 1H1L9 10.46V17L13 19V10.46L21 1Z" stroke="#534D59"
-                                          stroke-width="2"
-                                          stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
+                <div class="sm:p-5 rounded-md md:max-w-[800px] min-[90%]:max-w-[100%] lg:max-w-[900px] xl:w-[100%] xl:min-w-[100%] 2xl:max-w-[1190px]">
+                    <div class="flex flex-col md:flex-row w-full items-center justify-between">
 
-                            </button>
-                            <button
-                                class="bg-white border border-gray-100 rounded p-1 w-[30px] flex-row  items-center justify-items-center">
-                                <svg width="12" height="18" viewBox="0 0 16 19" fill="none"
-                                     xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M9.42969 1.60984V4.87942C9.42969 5.32273 9.42969 5.54439 9.5185 5.71372C9.59662 5.86266 9.72128 5.98375 9.8746 6.05964C10.0489 6.14592 10.2771 6.14592 10.7334 6.14592H14.0992M5.35547 11.6868L7.8 14.0615M7.8 14.0615L10.2445 11.6868M7.8 14.0615L7.8 9.31211M9.42969 1.39648H5.1925C3.82343 1.39648 3.1389 1.39648 2.61599 1.65531C2.15602 1.88298 1.78205 2.24626 1.54769 2.69309C1.28125 3.20106 1.28125 3.86604 1.28125 5.19599V13.4282C1.28125 14.7582 1.28125 15.4232 1.54769 15.9311C1.78205 16.378 2.15602 16.7412 2.61599 16.9689C3.1389 17.2277 3.82343 17.2277 5.1925 17.2277H10.4075C11.7766 17.2277 12.4611 17.2277 12.984 16.9689C13.444 16.7412 13.8179 16.378 14.0523 15.9311C14.3187 15.4232 14.3187 14.7582 14.3187 13.4282V6.14586L9.42969 1.39648Z"
-                                        stroke="#534D59" stroke-width="1.8625" stroke-linecap="round"
-                                        stroke-linejoin="round"/>
-                                </svg>
-                            </button>
-                        </div>
-                        <div class="w-1/2 flex justify-end">
-                            @can('create election')<livewire:manage-election.add-election/>@endcan
-                            <div class="relative w-[250px] mb-4">
-                                <!-- Search Input -->
-                                <x-input type="text" wire:model.live="search"
-                                         class="rounded h-[30px] text-[12px] border border-gray-400 pl-10 pr-4 focus:border-black  w-full"
-                                         placeholder="Search elections..." aria-label="Search"></x-input>
-                                <span class="absolute left-3 top-1/2 transform -translate-y-1/2">
-                                <svg width="12" height="12" viewBox="0 0 14 14" fill="none"
-                                     xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd" clip-rule="evenodd"
-                                          d="M9.68208 10.7458C8.66576 11.5361 7.38866 12.0067 6.00167 12.0067C2.68704 12.0067 0 9.31891 0 6.00335C0 2.68779 2.68704 0 6.00167 0C9.31631 0 12.0033 2.68779 12.0033 6.00335C12.0033 7.39059 11.533 8.66794 10.743 9.6845L13.7799 12.7186C14.0731 13.0115 14.0734 13.4867 13.7806 13.7799C13.4878 14.0731 13.0128 14.0734 12.7196 13.7805L9.68208 10.7458ZM10.5029 6.00335C10.5029 8.49002 8.48765 10.5059 6.00167 10.5059C3.5157 10.5059 1.50042 8.49002 1.50042 6.00335C1.50042 3.51668 3.5157 1.50084 6.00167 1.50084C8.48765 1.50084 10.5029 3.51668 10.5029 6.00335Z"
-                                          fill="#868FA0"/>
-                                </svg>
-                            </span>
+                        <div class="flex items-center justify-between flex-wrap md:flex-nowrap gap-2">
+                            <div class="flex space-x-2 items-center mb-4 sm:mb-0">
+                                <button class="bg-white border border-gray-300 rounded h-8 px-3 py-2 flex items-center space-x-1 hover:drop-shadow hover:bg-gray-200 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110" onclick="printElections()">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#000000">
+                                        <path d="M648-624v-120H312v120h-72v-192h480v192h-72Zm-480 72h625-625Zm539.79 96q15.21 0 25.71-10.29t10.5-25.5q0-15.21-10.29-25.71t-25.5-10.5q-15.21 0-25.71 10.29t-10.5 25.5q0 15.21 10.29 25.71t25.5 10.5ZM648-216v-144H312v144h336Zm72 72H240v-144H96v-240q0-40 28-68t68-28h576q40 0 68 28t28 68v240H720v144Zm73-216v-153.67Q793-530 781-541t-28-11H206q-16.15 0-27.07 11.04Q168-529.92 168-513.6V-360h72v-72h480v72h73Z"/>
+                                    </svg>
+                                    <span class="text-[12px]">Print</span>
+                                </button>
+
+                                <button class="bg-white border border-gray-300 rounded h-8 px-3 py-2 flex items-center space-x-1 hover:drop-shadow hover:bg-gray-200 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#000000">
+                                        <path d="M444-336v-342L339-573l-51-51 192-192 192 192-51 51-105-105v342h-72ZM263.72-192Q234-192 213-213.15T192-264v-72h72v72h432v-72h72v72q0 29.7-21.16 50.85Q725.68-192 695.96-192H263.72Z"/>
+                                    </svg>
+                                    <span class="text-[12px]">Import</span>
+                                </button>
+
+                                <button class="bg-white border border-gray-300 rounded h-8 px-3 py-2 flex items-center space-x-1 hover:drop-shadow hover:bg-gray-200 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#000000">
+                                        <path d="M480-336 288-528l51-51 105 105v-342h72v342l105-105 51 51-192 192ZM263.72-192Q234-192 213-213.15T192-264v-72h72v72h432v-72h72v72q0 29.7-21.16 50.85Q725.68-192 695.96-192H263.72Z"/>
+                                    </svg>
+                                    <span class="text-[12px]">Export</span>
+                                </button>
                             </div>
                         </div>
+
+                        <div class="flex items-center gap-2">
+                            <!-- Search Bar -->
+                            <div class="relative w-full md:w-[250px]">
+                                <x-input type="text" wire:model.live="search"
+                                         class="rounded-md text-[10px] border bg-white text-black border-gray-300 h-8 pl-8 pr-4 focus:ring-1 focus:ring-black focus:border-black w-full"
+                                         placeholder="Search elections..." aria-label="Search"></x-input>
+                                <span class="absolute left-3 top-1/2 transform -translate-y-1/2">
+                                                <svg width="12" height="12" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M9.68208 10.7458C8.66576 11.5361 7.38866 12.0067 6.00167 12.0067C2.68704 12.0067 0 9.31891 0 6.00335C0 2.68779 2.68704 0 6.00167 0C9.31631 0 12.0033 2.68779 12.0033 6.00335C12.0033 7.39059 11.533 8.66794 10.743 9.6845L13.7799 12.7186C14.0731 13.0115 14.0734 13.4867 13.7806 13.7799C13.4878 14.0731 13.0128 14.0734 12.7196 13.7805L9.68208 10.7458ZM10.5029 6.00335C10.5029 8.49002 8.48765 10.5059 6.00167 10.5059C3.5157 10.5059 1.50042 8.49002 1.50042 6.00335C1.50042 3.51668 3.5157 1.50084 6.00167 1.50084C8.48765 1.50084 10.5029 3.51668 10.5029 6.00335Z" fill="#000000"/>
+                                                </svg>
+                                            </span>
+                            </div>
+
+                            <!-- Button -->
+                            @can('create election')<livewire:manage-election.add-election/>@endcan
+                        </div>
+
                     </div>
-                    <div class="mt-4 min-h-[400px]">
+                    <div class="mt-6 min-h-[400px] overflow-x-auto">
                         <table class="min-w-full" id="electionsTable">
-                            <thead class="bg-gray-50 text-left ">
-                            <tr class="">
-                                <th class="px-4 py-3 font-bold">ID</th>
-                                <th class="px-4 py-3 font-bold">Election Name</th>
-                                <th class="px-4 py-3 font-bold">Type of Election</th>
-                                <th class="px-4 py-3 font-bold">Start Date</th>
-                                <th class="px-4 py-3 font-bold">End Date</th>
-                                <th class="px-4 py-3 font-bold text-left">Current Status</th>
-                                <th class="px-4 py-3 font-bold text-center exclude-print">Actions</th>
+                            <thead>
+                            <tr class="w-full bg-gray-100 text-black uppercase text-[11px] leading-normal">
+                                <th class="py-3 px-6 text-left rounded-tl-lg border-b border-gray-300 exclude-print">
+                                    <input type="checkbox" class="form-checkbox h-4 w-4 text-black " x-model="selectAll" @click="checkboxes.forEach(checkbox => checkbox.checked = $event.target.checked)">
+                                </th>
+                                <th class="py-3 px-6 text-left border-b border-gray-300">ID</th>
+                                <th class="py-3 px-6 text-left border-b border-gray-300">Election Name</th>
+                                <th class="py-3 px-6 text-left border-b border-gray-300">Type of Election</th>
+                                <th class="py-3 px-6 text-left border-b border-gray-300">Start Date</th>
+                                <th class="py-3 px-6 text-left border-b border-gray-300">End Date</th>
+                                <th class="py-3 px-6 text-left border-b border-gray-300">Current Status</th>
+                                <th class="py-3 px-6 text-center rounded-tr-lg border-b border-gray-300 exclude-print">Actions</th>
                             </tr>
                             </thead>
                             <tr></tr>
-                            <tbody>
+                            <tbody class="text-black text-[12px] font-light">
                             @foreach($elections as $election)
-                                <tr class="font-light">
-                                    <td class="px-4 py-1">{{ str_pad($election->id, 7, '0', STR_PAD_LEFT) }}</td>
-                                    <td class="px-4 py-1">{{ $election->name }}</td>
-                                    <td class="px-4 py-1">{{ $election->election_type->name }}</td>
-                                    <td class="px-4 py-1">{{ $election->date_started }}</td>
-                                    <td class="px-4 py-1">{{ $election->date_ended }}</td>
-                                    <td class="px-4 py-1 text-white text-center">
+                                <tr class="border-b border-gray-100">
+                                    <td class="py-3 px-6 text-left exclude-print">
+                                        <input type="checkbox" class="form-checkbox h-4 w-4 text-black row-checkbox">
+                                    </td>
+                                    <td class="py-3 px-6 text-left">{{ str_pad($election->id, 7, '0', STR_PAD_LEFT) }}</td>
+                                    <td class="py-3 px-6 text-left font-bold">{{ $election->name }}</td>
+                                    <td class="py-3 px-6 text-left">{{ $election->election_type->name }}</td>
+                                    <td class="py-3 px-6 text-left">{{ $election->date_started }}</td>
+                                    <td class="py-3 px-6 text-left">{{ $election->date_ended }}</td>
+                                    <td class="py-3 px-6 text-white text-center">
                                         <p class="bg-green-600 w-[60px] rounded">{{ $election->status }}</p>
                                     </td>
-                                    <td class="px-4 py-1 text-center flex exclude-print">
+                                    <td class="py-3 px-6 text-center flex justify-center items-center exclude-print">
                                         @can('view election')
-                                        <livewire:manage-election.view-election :election_id="$election->id" :key="'view-election-'.$election->id" />@endcan
+                                            <livewire:manage-election.view-election :election_id="$election->id" :key="'view-election-'.$election->id" />@endcan
                                         @can('edit election')
-                                        <div class="text-left">
-                                            <livewire:manage-election.edit-election :election_id="$election->id" :key="'edit-election-'.$election->id" />
-                                        </div>@endcan
-                                            @can('delete election')
-                                        <livewire:manage-election.delete-election :election_id="$election->id" :key="'delete-election-'.$election->id" />
-                                            @endcan
+                                            <div class="text-left">
+                                                <livewire:manage-election.edit-election :election_id="$election->id" :key="'edit-election-'.$election->id" />
+                                            </div>@endcan
+                                        @can('delete election')
+                                            <livewire:manage-election.delete-election :election_id="$election->id" :key="'delete-election-'.$election->id" />
+                                        @endcan
                                     </td>
                                 </tr>
                             @endforeach
