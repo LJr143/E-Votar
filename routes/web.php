@@ -3,7 +3,7 @@
 use App\Http\Controllers\CampusController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\VoterElectionController;
-use Carbon\Carbon;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Route;
 use App\Models\Election;
 
@@ -14,17 +14,17 @@ require __DIR__ . '/comelec-website/routes.php';
 
 
 
-Route::get('/api/election-end-time', function () {
-    $latestElection = Election::latest()->first();
-
-    if ($latestElection) {
-        $startTime = $latestElection->date_started;
-        $endTime = $latestElection->date_ended;
-        return response()->json(['start_time' => $startTime, 'end_time' => $endTime]);
-    }
-
-    return response()->json(['error' => 'No election found'], 404);
-})->name('election.date.time');
+//Route::get('/api/election-end-time', function () {
+//    $latestElection = Election::latest()->first();
+//
+//    if ($latestElection) {
+//        $startTime = $latestElection->date_started;
+//        $endTime = $latestElection->date_ended;
+//        return response()->json(['start_time' => $startTime, 'end_time' => $endTime]);
+//    }
+//
+//    return response()->json(['error' => 'No election found'], 404);
+//})->name('election.date.time');
 
 
 // Campus Management Routes
@@ -68,7 +68,6 @@ Route::post('/logout', function (Request $request) {
     // Redirect to Google Logout
     return redirect('https://accounts.google.com/Logout');
 })->name('logout');
-
 
 Route::get('/fetch-elections/{voterId}', [VoterElectionController::class, 'getElectionsForVoter'])->name('fetch.elections');
 Route::get('/api/election-end-time/{electionId?}', [VoterElectionController::class, 'getElectionEndTime']);

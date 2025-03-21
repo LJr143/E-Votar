@@ -12,17 +12,49 @@ class VoteChartStudentCouncil extends Component
 {
     public $electionId;
     protected $listeners = ['updateChartData' => 'updateChart'];
+    public $totalVoters, $totalVoterVoted;
 
     public function mount($electionId): void
     {
         $this->electionId = $electionId;
         $this->loadChartData();
+        $this->fetchVoterTally();
     }
 
     public function updateChart($electionId): void
     {
         $this->electionId = $electionId;
         $this->loadChartData();
+        $this->fetchVoterTally();
+    }
+
+    public function fetchVoterTally(): void
+    {
+        $election = Election::find($this->electionId);
+        if ($election) {
+            // Fetch total voters for the selected council
+            $this->totalVoters = User::where('campus_id', $election->campus_id)
+                ->whereHas('roles', function ($query) {
+                    $query->where('name', 'voter');
+                })
+                ->whereDoesntHave('electionExcludedVoters', function ($query) use ($election) {
+                    $query->where('election_id', $election->id);
+                })
+                ->count();
+
+            // Fetch total voters who voted for the selected council
+            $this->totalVoterVoted = User::where('campus_id', $election->campus_id)
+                ->whereHas('roles', function ($query) {
+                    $query->where('name', 'voter');
+                })
+                ->whereDoesntHave('electionExcludedVoters', function ($query) use ($election) {
+                    $query->where('election_id', $election->id);
+                })
+                ->whereHas('votes', function ($query) use ($election) {
+                    $query->where('election_id', $election->id);
+                })
+                ->count();
+        }
     }
 
     public function loadChartData(): void

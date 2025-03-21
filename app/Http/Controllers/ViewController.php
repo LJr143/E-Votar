@@ -289,6 +289,10 @@ class ViewController extends Controller
         return view('evotar.admin.program_major');
     }
 
+    public function council(){
+        return view('evotar.admin.council');
+    }
+
 
     public function AccountSettings()
     {

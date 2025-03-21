@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\VoteTally;
+namespace App\Livewire\ElectionResult;
 
 use App\Models\Candidate;
 use App\Models\Council;
@@ -9,14 +9,14 @@ use App\Models\ElectionPosition;
 use App\Models\User;
 use Livewire\Component;
 
-class RealtimeVoteTally extends Component
+class ElectionResult extends Component
 {
     protected $listeners = ['candidate-created' => '$refresh'];
     public $candidates = [];
     public $filter;
     public $search = '';
     public $selectedElection;
-    public $selectedFilter = 'tsc';
+    public $selectedFilter;
     public $elections;
     public $latestElection;
     public $hasStudentCouncilPositions;
@@ -28,6 +28,9 @@ class RealtimeVoteTally extends Component
     public $totalVoterVoted;
     public $councils;
 
+    public $studentCouncilWinners;
+    public $localCouncilWinners;
+
 
     public function mount(): void
     {
@@ -37,10 +40,11 @@ class RealtimeVoteTally extends Component
             ->name;
         $this->selectedElection = session('selectedElection');
         $this->fetchElection($this->filter);
-        $this->selectedFilter = $this->filter;
         $this->councils = Council::all();
+        $this->selectedFilter = $this->filter;
         $this->fetchCandidates();
         $this->fetchVoterTally();
+        $this->fetchWinners();
     }
 
     public function updatedSearch(): void
@@ -48,6 +52,7 @@ class RealtimeVoteTally extends Component
         $this->fetchElection($this->filter);
         $this->fetchCandidates();
         $this->fetchVoterTally();
+        $this->fetchWinners();
     }
 
     public function updatedFilter(): void
@@ -55,6 +60,7 @@ class RealtimeVoteTally extends Component
         $this->fetchElection($this->filter);
         $this->fetchCandidates();
         $this->fetchVoterTally();
+        $this->fetchWinners();
         $this->dispatch('updateChartData', $this->selectedElection);
     }
 
@@ -67,6 +73,7 @@ class RealtimeVoteTally extends Component
         $this->fetchElection($this->filter);
         $this->fetchCandidates();
         $this->fetchVoterTally();
+        $this->fetchWinners();
         $this->dispatch('updateChartData', $this->selectedElection);
     }
 
@@ -75,7 +82,7 @@ class RealtimeVoteTally extends Component
     {
         $election = Election::find($this->selectedElection);
         if ($election) {
-            $this->totalVoters = User::where('campus_id', $election->campus_id)->where('program_id')
+            $this->totalVoters = User::where('campus_id', $election->campus_id)
                 ->whereHas('roles', function ($query) {
                     $query->where('name', 'voter');
                 })
@@ -139,7 +146,6 @@ class RealtimeVoteTally extends Component
         $this->selectedElectionName = $this->latestElection ? $this->latestElection->name : null;
         $this->selectedElectionCampus = $this->latestElection ? $this->latestElection->campus : null;
 
-
         $this->hasStudentCouncilPositions = false;
         $this->hasLocalCouncilPositions = false;
 
@@ -164,10 +170,103 @@ class RealtimeVoteTally extends Component
             ->get();
     }
 
+
+    public function fetchWinners(): void
+    {
+        if ($this->latestElection) {
+            // Fetch winning candidates for Student Council
+            $this->studentCouncilWinners = $this->getWinnersByElectionType('Student Council Election');
+
+            // Fetch winning candidates for Local Council, grouped by program
+            $this->localCouncilWinners = $this->getWinnersByProgram();
+        } else {
+            $this->studentCouncilWinners = collect();
+            $this->localCouncilWinners = collect();
+        }
+    }
+
+    public function getWinnersByElectionType($electionType): array
+    {
+        $winners = [];
+
+        // Fetch positions for the election type
+        $positions = ElectionPosition::where('election_id', $this->latestElection->id)
+            ->whereHas('position.electionType', function ($q) use ($electionType) {
+                $q->where('name', $electionType);
+            })
+            ->with('position')
+            ->get();
+
+        foreach ($positions as $position) {
+            // Fetch the top N candidates for this position
+            $candidates = Candidate::where('election_position_id', $position->id)
+                ->with('users')
+                ->withCount('votes')
+                ->orderByDesc('votes_count')
+                ->take($position->position->num_winners) // Fetch top N candidates
+                ->get();
+
+            // Add each winner slot, even if there are no candidates
+            for ($i = 0; $i < $position->position->num_winners; $i++) {
+                $winners[] = [
+                    'position' => $position->position->name,
+                    'candidate' => $candidates->get($i) ?? null, // Use null if no candidate exists
+                ];
+            }
+        }
+
+        return $winners;
+    }
+
+    public function getWinnersByProgram(): array
+    {
+        $winnersByProgram = [];
+
+        // Fetch all programs (councils)
+        $programs = Council::all();
+
+        foreach ($programs as $program) {
+            // Fetch positions for Local Council Election
+            $positions = ElectionPosition::where('election_id', $this->latestElection->id)
+                ->whereHas('position.electionType', function ($q) {
+                    $q->where('name', 'Local Council Election');
+                })
+                ->with('position')
+                ->get();
+
+            $winners = [];
+
+            foreach ($positions as $position) {
+                // Fetch the top N candidates for this position within the program
+                $candidates = Candidate::where('election_position_id', $position->id)
+                    ->whereHas('users.program.council', function ($q) use ($program) {
+                        $q->where('id', $program->id);
+                    })
+                    ->with('users')
+                    ->withCount('votes')
+                    ->orderByDesc('votes_count')
+                    ->take($position->position->num_winners) // Fetch top N candidates
+                    ->get();
+
+                // Add each winner slot, even if there are no candidates
+                for ($i = 0; $i < $position->position->num_winners; $i++) {
+                    $winners[] = [
+                        'position' => $position->position->name,
+                        'candidate' => $candidates->get($i) ?? null, // Use null if no candidate exists
+                    ];
+                }
+            }
+
+            if (!empty($winners)) {
+                $winnersByProgram[$program->name] = $winners;
+            }
+        }
+
+        return $winnersByProgram;
+    }
     public function render()
     {
-        $this->fetchCandidates();
-        return view('evotar.livewire.vote-tally.realtime-vote-tally', [
+        return view('evotar.livewire.election-result.election-result', [
             'candidates' => $this->candidates,
             'elections' => $this->elections,
             'selectedElectionName' => $this->selectedElectionName,
@@ -177,6 +276,8 @@ class RealtimeVoteTally extends Component
             'councils' => $this->councils,
             'hasStudentCouncilPositions' => $this->hasStudentCouncilPositions,
             'hasLocalCouncilPositions' => $this->hasLocalCouncilPositions,
+            'studentCouncilWinners' => $this->studentCouncilWinners,
+            'localCouncilWinners' => $this->localCouncilWinners,
         ]);
     }
 }

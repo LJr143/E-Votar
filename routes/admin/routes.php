@@ -11,7 +11,7 @@ Route::middleware(['superadmin.check'])->group(function () {
 });
 
 // Admin Protected Routes
-Route::middleware('splash.screen', 'track.ip.user')->prefix('admin')->group(function () {
+Route::middleware(['splash.screen', 'set.selected.election'])->prefix('admin')->group(function () {
     Route::get('register', [ViewController::class, 'view'])->name('admin.register');
     Route::post('register', [ViewController::class, 'register'])->name('admin.register');
 
@@ -26,6 +26,7 @@ Route::middleware('splash.screen', 'track.ip.user')->prefix('admin')->group(func
     Route::get('college', [ViewController::class, 'college'])->name('admin.college')->middleware('admin.auth');
     Route::get('program', [ViewController::class, 'program'])->name('admin.program')->middleware('admin.auth');
     Route::get('program/major', [ViewController::class, 'programMajor'])->name('admin.program.major')->middleware('admin.auth');
+    Route::get('council', [ViewController::class, 'council'])->name('admin.council')->middleware('admin.auth');
     Route::get('unregistered/admins', [ViewController::class, 'unregisteredAdmins'])->name('admin.unregistered.admin')->middleware('admin.auth');
     Route::post('unregistered/admins', [ViewController::class, 'registerAdmins'])->name('admin.unregistered.admin')->middleware('admin.auth');
     Route::get('election/party-list', [ViewController::class, 'partyList'])->name('admin.election.party.list')->middleware('admin.auth:view party list');

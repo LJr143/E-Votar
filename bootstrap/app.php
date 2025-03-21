@@ -24,6 +24,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'voter.access' => \App\Http\Middleware\EnsureVoterCanAccessElection::class,
             'vote.checker' => \App\Http\Middleware\ElectionVoteChecker::class,
             'single.voter.session' => \App\Http\Middleware\SingleVoterSession::class,
+            'set.selected.election' => \App\Http\Middleware\SetSelectedElection::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

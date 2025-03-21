@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Candidate;
+use App\Models\Election;
 use App\Models\Program;
+use App\Models\User;
+use App\Models\Vote;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -15,8 +18,29 @@ class DashboardController extends Controller
     public function showCandidates()
     {
         $candidates = $this->getCandidates();
+        $elections = $this->getElection();
 
-        return view('evotar.admin.dashboard', compact('candidates'));
+        return view('evotar.admin.dashboard', [
+            'candidates' => $candidates,
+            'elections' => $elections
+        ]);
+    }
+
+    public function getElection()
+    {
+        $elections = Election::with(['campus', 'election_type'])->get(); // Ensure relationships are loaded
+
+        if ($elections->isEmpty()) {
+            \Log::error('No elections found in the database.');
+        }
+
+        return $elections;
+    }
+
+
+    public function getSelectedElection(Request $request)
+    {
+
     }
 
     public function getCandidates()
@@ -28,20 +52,17 @@ class DashboardController extends Controller
 
     public function getLabels()
     {
-        $labels = Program::pluck('name')->toArray();
+        // Fetch user counts per program
+        $votesPerProgram = $this->getVotesPerPrograms();
 
-        $colors = [
-            '#6B46C1',
-            '#5A67D8',
-            '#3182CE',
-            '#ECC94B',
-            '#ED8936',
-            '#D53F8C'
-        ];
+        // Extract program names (labels)
+        $labels = $votesPerProgram->pluck('program_name')->toArray();
 
-        $colors = array_slice($colors, 0, count($labels));
+        // Generate dynamic colors based on the number of programs
+        $colors = $this->generateColors(count($labels));
 
-        $votes = [10, 20, 30, 25, 15, 5];
+        // Extract user counts
+        $votes = $votesPerProgram->pluck('user_count')->toArray();
 
         // Return the data as JSON
         return response()->json([
@@ -51,4 +72,38 @@ class DashboardController extends Controller
         ]);
     }
 
+    private function generateColors($count)
+    {
+        $colors = [];
+        for ($i = 0; $i < $count; $i++) {
+            // Generate a random hex color
+            $colors[] = '#' . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
+        }
+        return $colors;
+    }
+
+    private function getVotesPerPrograms()
+    {
+        $selectedElectionId = session('selectedElection');
+
+        // Fetch all programs
+        $programs = Program::pluck('name', 'id'); // Get all programs with their IDs and names
+
+        // Fetch the count of distinct users who voted for each program in the selected election
+        $votesPerProgram = Vote::where('election_id', $selectedElectionId)
+            ->join('users', 'votes.user_id', '=', 'users.id') // Join the users table
+            ->selectRaw('users.program_id, count(distinct votes.user_id) as user_count')
+            ->groupBy('users.program_id')
+            ->pluck('user_count', 'program_id'); // Get the user count per program
+
+        // Map all programs and include those with zero votes
+        $result = $programs->map(function ($programName, $programId) use ($votesPerProgram) {
+            return [
+                'program_name' => $programName,
+                'user_count' => $votesPerProgram->get($programId, 0), // Default to 0 if no votes exist
+            ];
+        });
+
+        return $result;
+    }
 }

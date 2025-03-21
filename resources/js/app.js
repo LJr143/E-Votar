@@ -103,6 +103,7 @@ function initChart(canvasId, eventName) {
     return chart;
 }
 
+
 // Export the function for reuse
 window.initChart = initChart;
 

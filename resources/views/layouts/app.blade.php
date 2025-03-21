@@ -33,6 +33,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/print-js/1.6.0/print.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -119,14 +120,16 @@
             <main class="relative flex-1 max-lg:h-dvh lg:overflow-y-auto  w-full">
                 <div class="sticky">
                     @if (isset($header))
-                        <header class="flex pt-2 w-full {{ $headerClass }} z-20">
+                        <header class="flex pt-2 w-full {{ $headerClass }} z-50">
                             <div class=" py-2 w-full justify-between items-center flex">
                                 {{ $header }}
                             </div>
                         </header>
                     @endif
                 </div>
-                {{ $main }}
+                <div class="z-10">
+                    {{ $main }}
+                </div>
                 <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
                 <script
                     src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
@@ -138,12 +141,11 @@
 
 {{ $slot }}
 
-
-@stack('modals')
 @livewireScripts
-@if(session('script'))
-    {!! session('script') !!}
-@endif
+@stack('modals')
+{{--@if(session('script'))--}}
+{{--    {!! session('script') !!}--}}
+{{--@endif--}}
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://unpkg.com/filepond@^4/dist/filepond.js"></script>

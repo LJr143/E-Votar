@@ -167,7 +167,7 @@
         });
 
         function handleTickInit(tick) {
-            fetch("{{ route('election.date.time' , ['electionId' => $electionId] ) }}")
+            fetch("{{ route('election.end.time' , ['electionId' => $electionId] ) }}")
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Failed to fetch election data');

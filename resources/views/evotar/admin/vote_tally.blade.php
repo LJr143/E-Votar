@@ -1,4 +1,4 @@
-<x-app-layout mainClass="flex" page_title="- Election Result">
+<x-app-layout mainClass="flex" page_title="- Vote Tally">
     <x-slot name="sidebar">
         <x-sidebar></x-sidebar>
     </x-slot>

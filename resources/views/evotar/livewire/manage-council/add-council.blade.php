@@ -46,7 +46,7 @@
                         </div>
                         <div class="w-1/2 flex justify-end">
                             @can('create party list')
-                                <livewire:manage-party-list.add-party-list/>
+                                <livewire:manage-council.add-council/>
                             @endcan
                             <div class="relative w-[250px] mb-4">
                                 <!-- Search Input -->
@@ -77,30 +77,29 @@
                                            type="checkbox">
                                 </th>
                                 <th class="py-3 px-6 border-b border-gray-300">Id</th>
-                                <th class="py-3 px-6 border-b border-gray-300">Party List Name</th>
-                                <th class="py-3 px-6 border-b border-gray-300 exclude-print">Members</th>
+                                <th class="py-3 px-6 border-b border-gray-300">Council Name</th>
                                 <th class="py-3 px-6 rounded-tr-lg border-b border-gray-300 exclude-print">Actions</th>
                             </tr>
                             </thead>
 
                             <tbody class="text-black text-[12px] font-light">
-                            @foreach($party_lists as $party_list)
+                            @foreach($councils as $council)
                                 <tr class="border-b border-gray-100 rows">
                                     <td class="py-3 px-6 text-left exclude-print">
                                         <input type="checkbox"
                                                class="form-checkbox rounded h-4 w-4 text-black row-checkbox">
                                     </td>
-                                    <td class="py-3 px-6 text-left">{{ $party_list->id }}</td>
-                                    <td class="py-3 px-6 text-left font-bold">{{ $party_list->name }}</td>
+                                    <td class="py-3 px-6 text-left">{{ $council->id }}</td>
+                                    <td class="py-3 px-6 text-left font-bold">{{ $council->name }}</td>
                                     <td class="py-3 px-6 text-left font-bold exclude-print">
                                         <div class="flex -space-x-2">
                                             @php
                                                 $maxDisplay = 4; // Maximum number of profile photos to display
-                                                $candidateCount = $party_list->candidates->count(); // Total number of candidates
+                                                $candidateCount = $council->candidates->count(); // Total number of candidates
                                                 $remainingCount = max(0, $candidateCount - $maxDisplay); // Calculate remaining candidates
                                             @endphp
 
-                                            @foreach($party_list->candidates->take($maxDisplay) as $candidate)
+                                            @foreach($council->candidates->take($maxDisplay) as $candidate)
                                                 <img
                                                     alt="{{ $candidate->users->name }}"
                                                     class="w-6 h-6 rounded-full border-2 border-white"
@@ -119,29 +118,29 @@
                                         </div>
                                     </td>
 
-                                    <td class="py-3 px-6 text-left exclude-print" wire:key="actions-{{ $party_list->id }}">
+                                    <td class="py-3 px-6 text-left exclude-print" wire:key="actions-{{ $council->id }}">
                                         <div class="flex space-x-2"> <!-- Use flex and space-x for consistent spacing -->
                                             @can('edit party list')
                                                 <!-- View Party List Members -->
-                                                <livewire:manage-party-list.view-party-list-members
-                                                    :partyListId="$party_list->id"
-                                                    :key="'view-members-' . $party_list->id"
+                                                <livewire:manage-council.view-council-members
+                                                    :partyListId="$council->id"
+                                                    :key="'view-members-' . $council->id"
                                                 />
                                             @endcan
 
                                             @can('edit party list')
                                                 <!-- Edit Party List -->
-                                                <livewire:manage-party-list.edit-party-list
-                                                    :partyListId="$party_list->id"
-                                                    :key="'edit-party-list-' . $party_list->id"
+                                                <livewire:manage-council.edit-council
+                                                    :partyListId="$council->id"
+                                                    :key="'edit-council-' . $council->id"
                                                 />
                                             @endcan
 
                                             @can('delete party list')
                                                 <!-- Delete Party List -->
-                                                <livewire:manage-party-list.delete-party-list
-                                                    :partyListId="$party_list->id"
-                                                    :key="'delete-party-list-' . $party_list->id"
+                                                <livewire:manage-council.delete-council
+                                                    :partyListId="$council->id"
+                                                    :key="'delete-council-' . $council->id"
                                                 />
                                             @endcan
                                         </div>
