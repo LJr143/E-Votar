@@ -29,7 +29,7 @@
             x-transition:leave="transition ease-in duration-200"
             x-transition:leave-start="opacity-100 transform scale-100"
             x-transition:leave-end="opacity-0 transform scale-90"
-            class="bg-white p-6 rounded shadow-md w-3/5"
+            class="bg-white p-6 rounded shadow-md w-full sm:w-3/5 mx-4 sm:mx-6 md:mx-8 lg:mx-10 xl:mx-12 overflow-y-auto max-h-[90vh]"
         >
 
             <div class="flex justify-between items-center mb-4 border-b border-gray-300 pb-2">
@@ -48,14 +48,13 @@
             <!-- Election Details-->
             <form wire:submit.prevent="update">
                 <div>
-                    <div class="flex space-x-4">
-                        <div class="flex-col">
+                    <div class="flex flex-col md:flex-row md:space-x-4">
+                        <div class="flex-col w-full md:w-1/2">
                             <div class="mb-3">
-                                <label for="election_name" class="text-xs font-semibold block mb-1">Name (eg.
-                                    Student and
-                                    Local Election 2023)</label>
+                                <label for="election_name" class="text-xs font-semibold block mb-1">
+                                    Name (eg. Student and Local Election 2023)</label>
                                 <input id="election_name" type="text" placeholder="Student and Local Election 2023"
-                                       class="border border-gray-300 text-xs rounded-lg px-4 py-2 w-full"
+                                       class="border border-gray-300 text-xs rounded-lg px-4 py-2 w-full focus:ring-black focus:border-black"
                                        wire:model="election_name">
 
                                 @error('election_name')
@@ -63,10 +62,10 @@
                                 @enderror
                             </div>
                             <div class="mb-3">
-                                <label for="election_type" class="text-xs font-semibold block mb-1">Election
-                                    Type</label>
+                                <label for="election_type" class="text-xs font-semibold block mb-1">
+                                    Election Type</label>
                                 <select name="election_type" id="election_type" wire:model.live="election_type"
-                                        class="border-gray-300 text-xs rounded-lg px-4 py-2 w-full " disabled>
+                                        class="border-gray-300 text-xs rounded-lg px-4 py-2 w-full focus:ring-black focus:border-black" disabled>
                                     <option value="" selected>Select election type</option>
                                     @foreach($electionTypes as $type)
                                         <option value="{{ $type->id }}">{{ $type->name }}</option>
@@ -79,7 +78,7 @@
                             <div class="flex-1 mb-3">
                                 <label for="election_campus" class="text-xs font-semibold block mb-1">Campus</label>
                                 <select name="election_campus" id="election_campus"
-                                        class="border-gray-300 text-xs rounded-lg px-4 py-2 w-full "
+                                        class="border-gray-300 text-xs rounded-lg px-4 py-2 w-full focus:ring-black focus:border-black"
                                         wire:model="election_campus">
                                     <option value="" selected>Select campus for election</option>
                                     @foreach($campus as $camp)
@@ -91,21 +90,20 @@
                                 @enderror
                             </div>
                             <p class="text-[12px] font-medium">Election Period</p>
-                            <div
-                                class="flex flex-col md:flex-row md:space-x-4 mb-4 border border-gray-300 rounded-md p-4">
-                                <div class="flex-1">
+                            <div class="flex flex-col md:flex-row md:space-x-4 mb-4 border border-gray-300 rounded-md p-4">
+                                <div class="flex-1 mb-3 md:mb-0 min-w-0">
                                     <label for="election_start" class="text-[10px] block mb-1">From</label>
                                     <input id="election_start" type="datetime-local"
-                                           class="border border-gray-300 text-xs rounded-md px-4 py-2 w-full focus:ring focus:ring-indigo-200 focus:outline-none"
+                                           class="border border-gray-300 text-xs rounded-md px-4 py-2 w-full focus:ring-black focus:border-black"
                                            wire:model="election_start">
                                     @error('election_start')
                                     <span class="text-red-500 text-[10px] italic">{{ $message }}</span>
                                     @enderror
                                 </div>
-                                <div class="flex-1">
+                                <div class="flex-1 min-w-0">
                                     <label for="election_end" class="text-[10px] block mb-1">To</label>
                                     <input id="election_end" type="datetime-local"
-                                           class="border border-gray-300 text-xs rounded-md px-4 py-2 w-full focus:ring focus:ring-indigo-200 focus:outline-none"
+                                           class="border border-gray-300 text-xs rounded-md px-4 py-2 w-full focus:ring-black focus:border-black"
                                            wire:model="election_end">
                                     @error('election_end')
                                     <span class="text-red-500 text-[10px] italic">{{ $message }}</span>
@@ -113,19 +111,19 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="flex-col h-[355px] w-full  overflow-auto">
+                        <div class="flex-col h-[355px] w-full md:w-1/2  overflow-auto">
                             <div class="mb-4">
                                 <p class="text-xs font-semibold block mb-1">Election Positions</p>
 
                                 <!-- Student Council Positions -->
                                 @if(!empty($studentCouncilPositions))
-                                    <p class="text-[10px] font-normal mb-2">Student Council Positions</p>
+                                    <p class="text-[11px] font-normal text-center mt-4 sm:mt-1 mb-2">Student Council Positions</p>
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         @foreach($studentCouncilPositions as $positionId => $positionName)
                                             @if(in_array($positionId, $selectedPositions))
                                                 <!-- Only show selected positions -->
                                                 <div
-                                                    class="border border-gray-300 rounded-lg p-4 flex justify-between items-center w-[175px]">
+                                                    class="border border-gray-300 rounded-lg p-4 flex justify-between items-center w-full">
                                                     <span class="text-[10px]">{{ $positionName }}</span>
                                                     {{--                                                        <button type="button"--}}
                                                     {{--                                                                wire:click="removePosition({{ $positionId }})"--}}
@@ -144,13 +142,12 @@
 
                                 <!-- Local Council Positions -->
                                 @if(!empty($localCouncilPositions) && $election_type != 2)
-                                    <p class="text-[10px] font-normal mb-2 mt-2">Local Council Positions</p>
+                                    <p class="text-[11px] font-normal text-center mb-2 mt-4">Local Council Positions</p>
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         @foreach($localCouncilPositions as $positionId => $positionName)
                                             @if(in_array($positionId, $selectedPositions))
                                                 <!-- Only show selected positions -->
-                                                <div
-                                                    class="border border-gray-300 rounded-lg p-4 flex justify-between items-center w-[173px]">
+                                                <div class="border border-gray-300 rounded-lg p-4 flex justify-between items-center w-full">
                                                     <span class="text-[10px]">{{ $positionName }}</span>
 {{--                                                    <button type="button"--}}
 {{--                                                            wire:click="removePosition({{ $positionId }})"--}}
@@ -172,12 +169,12 @@
                     </div>
                     <div class="mt-6 pt-3 flex justify-end space-x-2">
                         <button type="button"
-                                class="bg-gray-300 text-gray-700 text-[12px] h-7 px-4 py-1 rounded shadow-md hover:bg-gray-400 justify-center text-center"
+                                class="bg-white text-black text-[12px] border border-gray-300 h-7 px-4 py-1 rounded shadow-md hover:bg-gray-200 justify-center text-center hover:drop-shadow hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"
                                 @click="open = false">
                             Cancel
                         </button>
                         <button type="submit"
-                                class="bg-black text-white px-6 py-1 h-7 rounded shadow-md hover:bg-gray-700 text-[12px] justify-center text-center">
+                                class="bg-black text-white px-6 py-1 h-7 rounded shadow-md hover:bg-gray-700 text-[12px] justify-center text-center hover:drop-shadow hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110">
                             Save Election
                         </button>
                     </div>

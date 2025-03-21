@@ -30,7 +30,7 @@
             x-transition:leave="transition ease-in duration-200"
             x-transition:leave-start="opacity-100 transform scale-100"
             x-transition:leave-end="opacity-0 transform scale-90"
-            class="bg-white p-6 rounded shadow-md w-2/5 max-h-[700px]"
+            class="bg-white p-6 rounded shadow-md w-full max-w-lg mx-4 sm:mx-6 md:mx-8 lg:mx-auto max-h-[700px]"
         >
 
             <div class="flex justify-between items-center mb-4 border-b border-gray-300 pb-2">
@@ -48,7 +48,7 @@
 
             <form wire:submit.prevent="editPartyList">
                 <div>
-                    <div class="flex space-x-4">
+                    <div class="flex flex-col space-y-4">
                         <div class="w-full">
                             <div class="mb-3 relative w-full">
                                 <p class="text-[12px] font-semibold mb-2 text-black text-left">Party List Information</p>
@@ -56,25 +56,23 @@
                                     <label for="name"
                                            class="text-[10px] font-natural px-2 block text-black text-left ">Party list name</label>
                                     <input type="text" name="name" wire:model="name"
-                                           class="border border-gray-300 text-xs rounded-lg text-black px-4 py-2 w-full">
+                                           class="border border-gray-300 text-xs rounded-lg text-black px-4 py-2 w-full focus:ring-black focus:border-black">
                                     @error('name')
                                     <span class="text-red-500 text-[10px] italic">{{ $message }}</span>
                                     @enderror
                                 </div>
-
                             </div>
-
                         </div>
-
                     </div>
+
                     <div class="mt-6 pt-3 flex justify-end space-x-2">
                         <button type="button"
-                                class="bg-gray-300 text-gray-700 text-[12px] h-7 px-4 py-1 rounded shadow-md hover:bg-gray-400 justify-center text-center"
+                                class="bg-white text-black text-[12px] border border-gray-300 h-7 px-4 py-1 rounded shadow-md hover:bg-gray-200 justify-center text-center hover:drop-shadow hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"
                                 @click="open = false">
                             Cancel
                         </button>
                         <button type="submit"
-                                class="bg-black text-white px-6 py-1 h-7 rounded shadow-md hover:bg-gray-700 text-[12px] justify-center text-center">
+                                class="bg-black text-white px-6 py-1 h-7 rounded shadow-md hover:bg-gray-700 text-[12px] justify-center text-center hover:drop-shadow hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110">
                             Save Party List
                         </button>
                     </div>
