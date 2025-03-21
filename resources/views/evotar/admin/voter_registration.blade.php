@@ -37,21 +37,23 @@
       <div class="w-full">
             <div class="mb-5 shadow-line"></div>
             <!--header logo and form title-->
-            <h2 class="text-[30px] text-primary text-black font-semibold text-center ">
-                ACCOUNT REGISTRATION<h3
-                    class="text-primary font-light text-black mb-3 text-[12px] text-center capitalize ">
-                    register account to assign role and permission and to start using the E-Votar System
-                </h3></h2>
+          <h2 class="text-[24px] sm:text-[28px] md:text-[30px] text-black font-semibold text-center">
+              ACCOUNT REGISTRATION
+          <h3 class="text-[10px] sm:text-[12px] md:text-[14px] text-black font-light mb-3 text-center capitalize">
+              register account to assign role and permission and to start using the E-Votar System
+          </h3>
+            </h2>
 
             <!--form container-->
-            <div class="px-2 h-screen overflow-x-hidden ml-0 w-full flex justify-center ">
-                <div>
-                    <form action="{{route('admin.register.voter')}}" method="POST" class="">
-                        @csrf
-                        <div class="w-[1200px] rounded border-2 border-solid border-gray-300 shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] p-4 ">
+          <div class="px-2 h-screen overflow-x-hidden ml-0 w-full flex justify-center">
+              <div>
+                  <form action="{{route('admin.register.voter')}}" method="POST" class="">
+                      @csrf
+                      <div class="w-full sm:w-[600px] md:w-[800px] lg:w-[1000px] xl:w-[1200px] max-w-[1200px] rounded border-2 border-solid border-gray-300 shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] p-4">
 
-                            <em class="text-[12px] text-black font-semibold">
-                                <svg width="50" height="40" viewBox="0 0 53 42" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                          <em class="text-[12px] text-black font-semibold">
+
+                          <svg width="50" height="40" viewBox="0 0 53 42" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                     <rect width="53" height="42" fill="url(#pattern0_1840_9316)"/>
                                     <defs>
                                         <pattern id="pattern0_1840_9316" patternContentUnits="objectBoundingBox" width="1" height="1">
@@ -332,16 +334,16 @@
                             </div>
                         </div>
 
-                        <div class="w-full flex justify-between mt-4 space-x-4">
-                            <!-- Back/Cancel Button -->
-                            <a href="{{ route('admin.voters') }}"
-                               class="uppercase font-bold bg-gray-300 w-1/5 text-[14px] text-black rounded p-2 hover:bg-gray-200 transition duration-200 text-center">
-                                Cancel
-                            </a>
+                      <div class="w-full flex flex-col sm:flex-row justify-between mt-4 space-y-2 sm:space-y-0 sm:space-x-4">
+                          <!-- Back/Cancel Button -->
+                          <a href="{{ route('admin.voters') }}"
+                             class="uppercase font-bold bg-gray-300 w-full sm:w-1/4 md:w-1/5 text-[14px] text-black rounded p-2 hover:bg-gray-200 transition duration-200 text-center">
+                              Cancel
+                          </a>
 
-                            <!-- Other Buttons -->
-                            <div class="flex space-x-4 w-1/5">
-                                <button type="submit"
+                          <!-- Other Buttons -->
+                          <div class="flex space-x-4 w-full sm:w-1/4 md:w-1/5">
+                          <button type="submit"
                                         class="uppercase font-bold bg-gray-900 w-full text-[14px] text-white rounded p-2 hover:bg-gray-800 transition duration-200">
                                         <p>next step</p>
                                 </button>
