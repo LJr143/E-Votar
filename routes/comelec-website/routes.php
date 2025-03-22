@@ -18,3 +18,6 @@ Route::get('faqs', [WebsiteController::class, 'FAQs'])->name('comelec-website.fa
 Route::get('selected-announcement', [WebsiteController::class, 'SelectedAnnouncement'])->name('comelec-website.selected-announcement');
 Route::get('selected-election', [WebsiteController::class, 'SelectedElection'])->name('comelec-website.selected-election');
 Route::get('selected-partylist', [WebsiteController::class, 'SelectedPartylist'])->name('comelec-website.selected-partylist');
+
+
+Route::get('add-announcement', [WebsiteController::class, 'AddAnnouncement'])->name('comelec-website.add-announcement');

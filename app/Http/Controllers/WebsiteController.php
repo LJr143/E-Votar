@@ -33,6 +33,11 @@ class WebsiteController extends Controller
         return view('evotar.comelec-website.user-feedback');
     }
 
+    public function WebsiteLogin()
+    {
+        return view('evotar.comelec-website.website-login');
+    }
+
     public function FAQs()
     {
         return view('evotar.comelec-website.faqs');
@@ -52,6 +57,12 @@ class WebsiteController extends Controller
     public function SelectedPartylist()
     {
         return view('evotar.comelec-website.selected-partylist');
+    }
+
+
+    public function AddAnnouncement()
+    {
+        return view('evotar.comelec-website.add-announcement');
     }
 
 
