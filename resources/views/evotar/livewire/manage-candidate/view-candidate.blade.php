@@ -28,12 +28,14 @@
                 <select name="selectedElection" id="candidate_election"
                         class="border-gray-300 text-xs rounded-lg px-4 py-2 w-full "
                         wire:model.live="selectedElection">
-                    <option value="" selected disabled>Select an election</option>
-                    @foreach($elections as $election)
-                        <option value="{{ $election->id }}" {{ $election->id == $selectedElection ? 'selected' : '' }}>
-                            {{ $election->name }} - {{ $election->campus->name }} - {{$election->election_type->name }}
-                        </option>
-                    @endforeach
+                    <option value="" selected disabled >Select an election</option>
+                    @if($selectedElection)
+                        @foreach($elections as $election)
+                            <option value="{{ $election->id }}" {{ $election->id == $selectedElection ? 'selected' : '' }}>
+                                {{ $election->name }} - {{ $election->campus->name }} - {{$election->election_type->name }}
+                            </option>
+                        @endforeach
+                    @endif
                 </select>
                 @error('selectedElection')
                 <span class="text-red-500 text-[10px] italic">{{ $message }}</span>
