@@ -56,12 +56,12 @@
                                 <div class="relative">
                                     <img alt="Portrait of Juan Dela Cruz"
                                          class="w-20 h-20 ml-7 relative z-10"
-                                         src="{{ asset('storage/evotarAssets/img_1.png') }}"
+                                         src="{{ asset('storage/assets/profile/sample_profile.png') }}"
                                          width="100" height="100"/>
 
                                     <img alt="University Seal"
-                                         class="w-10 h-10 absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 z-0"
-                                         src="{{ asset('storage/evotarAssets/seal.png') }}"
+                                         class="w-10 h-10 absolute rounded-full top-0 right-0 transform translate-x-1/2 -translate-y-1/2 z-0"
+                                         src="{{ asset('storage/assets/icon/usep_logo_svg.png') }}"
                                          width="60" height="60"/>
                                 </div>
 
@@ -155,7 +155,7 @@
                     </svg>
 
                     <div class="bg-white p-6 shadow-lg text-center relative w-[300px] h-[350px] mb-10 ml-10">
-                        <p class="text-gray-700 text-[15px] font-semibold mb-2">Summary of Vote</p>
+                        <p class="text-gray-700 text-[14px] font-semibold mb-2">Summary of Vote</p>
 
                         <div class="mb-4 mt-8 flex">
                             <p class="font-regular text-[11px] mr-2">President:</p>
