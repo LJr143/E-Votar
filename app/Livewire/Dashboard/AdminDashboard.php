@@ -122,12 +122,33 @@ class AdminDashboard extends Component
 //            ->first();
 
         $selectedElectionId = session('selectedElection');
-        if (!$selectedElectionId) {
-            // Handle the case where the session value is missing
-            throw new Exception('No election selected.');
+
+// Check if the elections table is empty
+        if (!Election::exists()) {
+            session()->forget('selectedElection'); // Clear any existing session value
+            $this->latestElection = null;
+            $this->selectedElection = null;
+            return; // Stop execution to prevent errors
         }
-        $this->latestElection = Election::with('election_type')->findOrFail(session('selectedElection'));
-        $this->selectedElection = $this->latestElection->id;
+
+// If session value is missing, set to the latest election
+        if (!$selectedElectionId) {
+            $latestElection = Election::latest('created_at')->first();
+
+            if (!$latestElection) {
+                $this->latestElection = null;
+                $this->selectedElection = null;
+                return; // Stop execution to prevent errors
+            }
+
+            $selectedElectionId = $latestElection->id;
+            session(['selectedElection' => $selectedElectionId]);
+        }
+
+// Now safely retrieve the selected election
+        $this->latestElection = Election::with('election_type')->find($selectedElectionId);
+        $this->selectedElection = $this->latestElection ? $this->latestElection->id : null;
+
 
 //        $this->selectedElection = $this->latestElection ? $this->latestElection->id : null;
 
