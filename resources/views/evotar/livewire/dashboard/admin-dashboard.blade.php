@@ -153,6 +153,7 @@
         </div>
 
         <div>
+            @if($selectedElection)
             <div class="w-full bg-white rounded-lg shadow-md">
                 <div class="w-full flex flex-col p-6 justify-center items-center">
                    <div>
@@ -222,6 +223,7 @@
 
 
             </div>
+            @endif
 
         </div>
 
