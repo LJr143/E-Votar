@@ -185,73 +185,73 @@
 
         <div>
             <div class="w-full bg-white rounded-lg shadow-md">
-                <div class="w-full flex flex-col p-6 justify-center items-center">
-                   <div>
-                       <p class="text-[14px] font-bold">Election Information</p>
-                   </div>
-                    <div class="w-1/2 flex justify-between">
+                @if($selectedElection)
+                    <div class="w-full flex flex-col p-6 justify-center items-center">
                         <div>
-                            <p class="text-[12px] font-bold">
-                                Start Date :  <span class="font-normal">{{ (new DateTime($latestElection->date_started))->format('F j, Y, \a\t g:ia') }}</span>
-                            </p>
+                            <p class="text-[14px] font-bold">Election Information</p>
                         </div>
-                        <div>
-                            <p class="text-[12px] font-bold">
-                                End Date :  <span class="font-normal">{{ (new DateTime($latestElection->date_ended))->format('F j, Y, \a\t g:ia') }}</span>
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-3 gap-4 mt-4 p-4 w-full">
-                        <div>
-                            <p class="font-bold text-[14px] text-center">Participating Councils</p>
-
-                            <div class="mt-2">
-                                <ul class="list-disc pl-5">
-                                    @foreach($councils as $council)
-                                        <li>
-                                            <p class="font-bold text-[12px] text-left p-2">{{ $council->name }}</p>
-                                        </li>
-                                    @endforeach
-                                </ul>
+                        <div class="w-1/2 flex justify-between">
+                            <div>
+                                <p class="text-[12px] font-bold">
+                                    Start Date :  <span class="font-normal">{{ (new DateTime($latestElection->date_started))->format('F j, Y, \a\t g:ia') }}</span>
+                                </p>
+                            </div>
+                            <div>
+                                <p class="text-[12px] font-bold">
+                                    End Date :  <span class="font-normal">{{ (new DateTime($latestElection->date_ended))->format('F j, Y, \a\t g:ia') }}</span>
+                                </p>
                             </div>
                         </div>
-                        <div>
-                            <p class="font-bold text-[14px] text-center">Available Positions</p>
-                            <div class="mt-2">
-                                <ul class="list-disc pl-5">
-                                @foreach($positions as $position)
-                                   <li>
-                                       <p class="font-bold text-[12px] text-start p-2 ">
-                                           {{ $position->name }}
-                                           @if($position->electionType)
-                                               ({{ $position->electionType->name }})
-                                           @endif
-                                       </p>
-                                   </li>
-                                @endforeach
+
+                        <div class="grid grid-cols-3 gap-4 mt-4 p-4 w-full">
+                            <div>
+                                <p class="font-bold text-[14px] text-center">Participating Councils</p>
+
+                                <div class="mt-2">
+                                    <ul class="list-disc pl-5">
+                                        @foreach($councils as $council)
+                                            <li>
+                                                <p class="font-bold text-[12px] text-left p-2">{{ $council->name }}</p>
+                                            </li>
+                                        @endforeach
                                     </ul>
+                                </div>
                             </div>
-                        </div>
-                        <div>
-                            <p class="font-bold text-[14px] text-center">Candidates</p>
-                            <div class="mt-2">
-                                <ul class="list-disc pl-5">
+                            <div>
+                                <p class="font-bold text-[14px] text-center">Available Positions</p>
+                                <div class="mt-2">
+                                    <ul class="list-disc pl-5">
+                                        @foreach($positions as $position)
+                                            <li>
+                                                <p class="font-bold text-[12px] text-start p-2 ">
+                                                    {{ $position->name }}
+                                                    @if($position->electionType)
+                                                        ({{ $position->electionType->name }})
+                                                    @endif
+                                                </p>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            </div>
+                            <div>
+                                <p class="font-bold text-[14px] text-center">Candidates</p>
+                                <div class="mt-2">
+                                    <ul class="list-disc pl-5">
 
-                                @foreach($candidates as $candidate)
-                                        <li>
-                                    <p class="font-bold text-[12px] text-left p-2 ">
-                                        {{ $candidate->users->first_name . ' ' . $candidate->users->last_name . '  - Running for ' . $candidate->election_positions->position->name}}
-                                    </p>
-                                    </li>
-                                @endforeach
-                                </ul>
+                                        @foreach($candidates as $candidate)
+                                            <li>
+                                                <p class="font-bold text-[12px] text-left p-2 ">
+                                                    {{ $candidate->users->first_name . ' ' . $candidate->users->last_name . '  - Running for ' . $candidate->election_positions->position->name}}
+                                                </p>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-
-
+                @endif
             </div>
 
         </div>
