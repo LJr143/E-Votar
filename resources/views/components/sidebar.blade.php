@@ -98,6 +98,19 @@
                             </li>
 
                             <li>
+                                <a href="{{ auth()->user()->hasAnyRole($rolesExceptVoter) ? route('admin.council') : '#' }}"
+                                   class="flex items-center block px-3 py-2 text-[11px] transition duration-200 rounded-md
+                                    {{ request()->routeIs('admin.council') ? 'bg-black text-white' : 'text-[#757575] hover:bg-black hover:text-white' }}">
+                                    <!-- SVG Icon -->
+                                    <svg class="icon mr-1" width="14" height="18" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 48 48" fill="currentColor">
+                                        <path d="M 12.5 5 C 10.032499 5 8 7.0324991 8 9.5 L 8 40 L 6.5 40 A 1.50015 1.50015 0 1 0 6.5 43 L 41.5 43 A 1.50015 1.50015 0 1 0 41.5 40 L 40 40 L 40 9.5 C 40 7.0324991 37.967501 5 35.5 5 L 12.5 5 z M 12.5 8 L 35.5 8 C 36.346499 8 37 8.6535009 37 9.5 L 37 40 L 11 40 L 11 9.5 C 11 8.6535009 11.653501 8 12.5 8 z M 32.486328 13.978516 A 1.50015 1.50015 0 0 0 31.439453 14.439453 L 30 15.878906 L 28.560547 14.439453 A 1.50015 1.50015 0 0 0 27.484375 13.984375 A 1.50015 1.50015 0 0 0 26.439453 16.560547 L 27.878906 18 L 26.439453 19.439453 A 1.50015 1.50015 0 1 0 28.560547 21.560547 L 30 20.121094 L 31.439453 21.560547 A 1.50015 1.50015 0 1 0 33.560547 19.439453 L 32.121094 18 L 33.560547 16.560547 A 1.50015 1.50015 0 0 0 32.486328 13.978516 z M 15.5 16.5 A 1.50015 1.50015 0 1 0 15.5 19.5 L 22.5 19.5 A 1.50015 1.50015 0 1 0 22.5 16.5 L 15.5 16.5 z M 27.5 27 A 1.50015 1.50015 0 0 0 26 28.5 L 26 33.5 A 1.50015 1.50015 0 0 0 27.5 35 L 32.5 35 A 1.50015 1.50015 0 0 0 34 33.5 L 34 28.5 A 1.50015 1.50015 0 0 0 32.5 27 L 27.5 27 z M 15.5 29.5 A 1.50015 1.50015 0 1 0 15.5 32.5 L 22.5 32.5 A 1.50015 1.50015 0 1 0 22.5 29.5 L 15.5 29.5 z M 29 30 L 31 30 L 31 32 L 29 32 L 29 30 z"></path>
+                                    </svg>
+                                    <!-- Text -->
+                                    Council
+                                </a>
+                            </li>
+
+                            <li>
                                 <a href="{{ auth()->user()->hasAnyRole($rolesExceptVoter) ? route('admin.election.party.list') : '#' }}"
                                    class="flex items-center block px-3 py-2 text-[11px] transition duration-200 rounded-md
                                     {{ request()->routeIs('admin.election.party.list') ? 'bg-black text-white' : 'text-[#757575] hover:bg-black hover:text-white' }}">
@@ -109,6 +122,7 @@
                                     Party List
                                 </a>
                             </li>
+
                         </ul>
                     </li>
                 @endcan

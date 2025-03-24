@@ -22,7 +22,7 @@
                     </div>
                 </div>
             </div>
-            <livewire:manage-election.view-council/>
+            <livewire:manage-council.view-council/>
         </div>
     </x-slot>
 </x-app-layout>

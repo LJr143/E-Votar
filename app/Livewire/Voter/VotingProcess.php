@@ -9,6 +9,7 @@ use App\Models\Election;
 use App\Models\Vote;
 use App\Models\VoterEncodeVote;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class VotingProcess extends Component
@@ -207,6 +208,7 @@ class VotingProcess extends Component
     {
         // Filter positions based on the current stage
         if ($this->currentStage === 'student') {
+            // Student Council Election: No separation by major
             $positionsWithCandidates = $this->studentCouncilPositions->map(function ($position) {
                 $position->candidates = $position->electionPositions
                     ->flatMap(function ($electionPosition) {
@@ -220,19 +222,39 @@ class VotingProcess extends Component
                 return $position;
             });
         } else {
-            // Local Council Election
+            // Local Council Election: Apply separation by major only for positions that require it
             $positionsWithCandidates = $this->localCouncilPositions->map(function ($position) {
                 $position->candidates = $position->electionPositions
-                    ->flatMap(function ($electionPosition) {
-                        return $electionPosition->candidates
+                    ->flatMap(function ($electionPosition) use ($position) {
+                        // Fetch council-specific settings for this position
+                        $councilPositionSettings = DB::table('council_position_settings')
+                            ->where('position_id', $position->id)
+                            ->where('council_id', auth()->user()->program->council_id)
+                            ->first();
+
+                        \Log::info('Position Id:', ['position id' => $position->id]);
+
+                        // Determine if candidates should be separated by major for this position
+                        $separateByMajor = $councilPositionSettings && $councilPositionSettings->separate_by_major;
+
+                        // Fetch candidates for the current election and filter by the voter's program
+                        $candidates = $electionPosition->candidates
                             ->where('election_id', $this->election->id)
                             ->filter(function ($candidate) {
                                 return $candidate->users->program_id === auth()->user()->program_id;
-                            })
-                            ->map(function ($candidate) {
-                                $candidate->load('users.program', 'users.programMajor', 'partyLists');
-                                return $candidate;
                             });
+
+                        // If separation by major is required for this position, filter candidates by major
+                        if ($separateByMajor) {
+                            $candidates = $candidates->filter(function ($candidate) {
+                                return $candidate->users->programMajor->id === auth()->user()->programMajor->id;
+                            });
+                        }
+                        \Log::info('Filtered Candidates:', ['candidates' => $candidates]);
+                        return $candidates->map(function ($candidate) {
+                            $candidate->load('users.program', 'users.programMajor', 'partyLists');
+                            return $candidate;
+                        });
                     });
                 return $position;
             });

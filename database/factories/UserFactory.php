@@ -40,8 +40,8 @@ class UserFactory extends Factory
             'student_id' => $this->faker->unique()->numerify('2024####'),
             'campus_id' => 2, // Change this based on existing campuses
             'college_id' => 2, // Change this based on existing colleges
-            'program_id' => 1, // Change this based on existing programs
-            'program_major_id' => 1,
+            'program_id' => 5, // Change this based on existing programs
+            'program_major_id' => $this->faker->randomElement([1, 2, 3]),
             'username' => $this->faker->unique()->userName,
             'email_verified_at' => now(),
             'password' => Hash::make('password123'), // Default password

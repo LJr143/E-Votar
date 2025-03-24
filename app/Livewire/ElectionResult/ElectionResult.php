@@ -7,6 +7,7 @@ use App\Models\Council;
 use App\Models\Election;
 use App\Models\ElectionPosition;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class ElectionResult extends Component
@@ -198,20 +199,39 @@ class ElectionResult extends Component
             ->get();
 
         foreach ($positions as $position) {
-            // Fetch the top N candidates for this position
-            $candidates = Candidate::where('election_position_id', $position->id)
-                ->with('users')
-                ->withCount('votes')
-                ->orderByDesc('votes_count')
-                ->take($position->position->num_winners) // Fetch top N candidates
+            // Fetch council-specific settings for this position
+            $councilPositionSettings = DB::table('council_position_settings')
+                ->where('position_id', $position->position->id)
                 ->get();
 
-            // Add each winner slot, even if there are no candidates
-            for ($i = 0; $i < $position->position->num_winners; $i++) {
-                $winners[] = [
-                    'position' => $position->position->name,
-                    'candidate' => $candidates->get($i) ?? null, // Use null if no candidate exists
-                ];
+            // Group candidates by council and major (if required)
+            $candidatesByCouncil = Candidate::where('election_position_id', $position->id)
+                ->with('users.program.council')
+                ->withCount('votes')
+                ->get()
+                ->groupBy(function ($candidate) use ($councilPositionSettings) {
+                    $councilId = $candidate->users->program->council->id;
+                    $separateByMajor = $councilPositionSettings->where('council_id', $councilId)->first()->separate_by_major ?? false;
+
+                    if ($separateByMajor) {
+                        return $councilId . '-' . $candidate->users->major; // Group by council and major
+                    } else {
+                        return $councilId; // Group by council only
+                    }
+                });
+
+            foreach ($candidatesByCouncil as $groupKey => $candidates) {
+                // Sort candidates by vote count and take the top N
+                $sortedCandidates = $candidates->sortByDesc('votes_count')->take($position->position->num_winners);
+
+                foreach ($sortedCandidates as $candidate) {
+                    $winners[] = [
+                        'position' => $position->position->name,
+                        'candidate' => $candidate,
+                        'council' => $candidate->users->program->council->name,
+                        'major' => $candidate->users->major ?? 'N/A',
+                    ];
+                }
             }
         }
 
@@ -237,23 +257,52 @@ class ElectionResult extends Component
             $winners = [];
 
             foreach ($positions as $position) {
+                // Fetch council-specific settings for this position
+                $councilPositionSettings = DB::table('council_position_settings')
+                    ->where('position_id', $position->position->id)
+                    ->where('council_id', $program->id)
+                    ->first();
+
+                // Determine if winners should be separated by major
+                $separateByMajor = $councilPositionSettings ? $councilPositionSettings->separate_by_major : false;
+
                 // Fetch the top N candidates for this position within the program
-                $candidates = Candidate::where('election_position_id', $position->id)
+                $query = Candidate::where('election_position_id', $position->id)
                     ->whereHas('users.program.council', function ($q) use ($program) {
                         $q->where('id', $program->id);
                     })
                     ->with('users')
                     ->withCount('votes')
-                    ->orderByDesc('votes_count')
-                    ->take($position->position->num_winners) // Fetch top N candidates
-                    ->get();
+                    ->orderByDesc('votes_count');
 
-                // Add each winner slot, even if there are no candidates
-                for ($i = 0; $i < $position->position->num_winners; $i++) {
-                    $winners[] = [
-                        'position' => $position->position->name,
-                        'candidate' => $candidates->get($i) ?? null, // Use null if no candidate exists
-                    ];
+                if ($separateByMajor) {
+                    // Group candidates by major and select winners for each major
+                    $candidatesByMajor = $query->get()->groupBy(function ($candidate) {
+                        return $candidate->users->programMajor->name ?? 'No Major'; // Ensure programMajor exists
+                    });
+
+                    foreach ($candidatesByMajor as $major => $candidates) {
+                        $sortedCandidates = $candidates->sortByDesc('votes_count')->take($position->position->num_winners);
+
+                        foreach ($sortedCandidates as $candidate) {
+                            $winners[] = [
+                                'position' => $position->position->name,
+                                'candidate' => $candidate,
+                                'major' => $major,
+                            ];
+                        }
+                    }
+                } else {
+                    // Select winners globally for the council (no separation by major)
+                    $candidates = $query->take($position->position->num_winners)->get();
+
+                    foreach ($candidates as $candidate) {
+                        $winners[] = [
+                            'position' => $position->position->name,
+                            'candidate' => $candidate,
+                            'major' => 'N/A',
+                        ];
+                    }
                 }
             }
 
