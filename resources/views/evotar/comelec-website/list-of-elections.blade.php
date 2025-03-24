@@ -19,45 +19,72 @@
                             <h2 class="text-[12px] font-bold text-gray-800">Tagum Student Council and Local Council Election 2025</h2>
                             <p class="text-gray-600 text-[11px]">🏫 Campus: Main Campus</p>
                             <p class="text-gray-600 text-[11px]">⏰ Election period: March 1, 2025 - March 1, 2026</p>
-                            <p class="text-gray-600 text-[11px]">👥 Candidates: 10</p>
+                            <p class="text-gray-600 text-[11px]">
+                                👥 Status:
+                                <span class="bg-green-600 text-white rounded inline-flex items-center justify-center px-2">ongoing</span>
+                            </p>
                         </div>
-                        <button class="bg-black text-white px-4 py-2 rounded-lg text-[11px] mt-4">View Candidates</button>
+                        <a href="{{ route('comelec-website.selected-election') }}" class="bg-black text-white text-center px-4 py-2 rounded-lg text-[11px] mt-4">See details</a>
                     </div>
                     <div class="bg-white p-6 rounded-lg shadow-md flex flex-col justify-between transition-transform transform hover:scale-105 hover:shadow-lg cursor-pointer">
                         <div>
                             <h2 class="text-[12px] font-bold text-gray-800">Tagum Student Council and Local Council Election 2025</h2>
                             <p class="text-gray-600 text-[11px]">🏫 Campus: Main Campus</p>
                             <p class="text-gray-600 text-[11px]">⏰ Election period: March 1, 2025 - March 1, 2026</p>
-                            <p class="text-gray-600 text-[11px]">👥 Candidates: 8</p>
+                            <p class="text-gray-600 text-[11px]">
+                                👥 Status:
+                                <span class="bg-yellow-600 text-white rounded inline-flex items-center justify-center px-2">pending</span>
+                            </p>
                         </div>
-                        <button class="bg-black text-white px-4 py-2 rounded-lg text-[11px] mt-4">View Candidates</button>
+                        <a href="{{ route('comelec-website.selected-election') }}" class="bg-black text-white text-center px-4 py-2 rounded-lg text-[11px] mt-4">See details</a>
                     </div>
                     <div class="bg-white p-6 rounded-lg shadow-md flex flex-col justify-between transition-transform transform hover:scale-105 hover:shadow-lg cursor-pointer">
                         <div>
                             <h2 class="text-[12px] font-bold text-gray-800">Tagum Student Council and Local Council Election 2025</h2>
                             <p class="text-gray-600 text-[11px]">🏫 Campus: Main Campus</p>
                             <p class="text-gray-600 text-[11px]">⏰ Election period: March 1, 2025 - March 1, 2026</p>
-                            <p class="text-gray-600 text-[11px]">👥 Candidates: 12</p>
+                            <p class="text-gray-600 text-[11px]">
+                                👥 Status:
+                                <span class="bg-gray-600 text-white rounded inline-flex items-center justify-center px-2">completed</span>
+                            </p>
                         </div>
-                        <button class="bg-black text-white px-4 py-2 rounded-lg text-[11px] mt-4">View Candidates</button>
+                        <a href="{{ route('comelec-website.selected-election') }}" class="bg-black text-white text-center px-4 py-2 rounded-lg text-[11px] mt-4">See details</a>
                     </div>
                     <div class="bg-white p-6 rounded-lg shadow-md flex flex-col justify-between transition-transform transform hover:scale-105 hover:shadow-lg cursor-pointer">
                         <div>
                             <h2 class="text-[12px] font-bold text-gray-800">Tagum Student Council and Local Council Election 2025</h2>
                             <p class="text-gray-600 text-[11px]">🏫 Campus: Main Campus</p>
                             <p class="text-gray-600 text-[11px]">⏰ Election period: March 1, 2025 - March 1, 2026</p>
-                            <p class="text-gray-600 text-[11px]">👥 Candidates: 15</p>
+                            <p class="text-gray-600 text-[11px]">
+                                👥 Status:
+                                <span class="bg-gray-600 text-white rounded inline-flex items-center justify-center px-2">completed</span>
+                            </p>
                         </div>
-                        <button class="bg-black text-white px-4 py-2 rounded-lg text-[11px] mt-4">View Candidates</button>
+                        <a href="{{ route('comelec-website.selected-election') }}" class="bg-black text-white text-center px-4 py-2 rounded-lg text-[11px] mt-4">See details</a>
                     </div>
                     <div class="bg-white p-6 rounded-lg shadow-md flex flex-col justify-between transition-transform transform hover:scale-105 hover:shadow-lg cursor-pointer">
                         <div>
                             <h2 class="text-[12px] font-bold text-gray-800">Tagum Student Council and Local Council Election 2025</h2>
                             <p class="text-gray-600 text-[11px]">🏫 Campus: Main Campus</p>
                             <p class="text-gray-600 text-[11px]">⏰ Election period: March 1, 2025 - March 1, 2026</p>
-                            <p class="text-gray-600 text-[11px]">👥 Candidates: 9</p>
+                            <p class="text-gray-600 text-[11px]">
+                                👥 Status:
+                                <span class="bg-gray-600 text-white rounded inline-flex items-center justify-center px-2">completed</span>
+                            </p>
                         </div>
-                        <button class="bg-black text-white px-4 py-2 rounded-lg text-[11px] mt-4">View Candidates</button>
+                        <a href="{{ route('comelec-website.selected-election') }}" class="bg-black text-white text-center px-4 py-2 rounded-lg text-[11px] mt-4">See details</a>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md flex flex-col justify-between transition-transform transform hover:scale-105 hover:shadow-lg cursor-pointer">
+                        <div>
+                            <h2 class="text-[12px] font-bold text-gray-800">Tagum Student Council and Local Council Election 2025</h2>
+                            <p class="text-gray-600 text-[11px]">🏫 Campus: Main Campus</p>
+                            <p class="text-gray-600 text-[11px]">⏰ Election period: March 1, 2025 - March 1, 2026</p>
+                            <p class="text-gray-600 text-[11px]">
+                                👥 Status:
+                                <span class="bg-gray-600 text-white rounded inline-flex items-center justify-center px-2">completed</span>
+                            </p>
+                        </div>
+                        <a href="{{ route('comelec-website.selected-election') }}" class="bg-black text-white text-center px-4 py-2 rounded-lg text-[11px] mt-4">See details</a>
                     </div>
                 </div>
 
