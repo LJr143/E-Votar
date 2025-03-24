@@ -47,7 +47,7 @@ class ElectionsTable extends Component
     public function render(): \Illuminate\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\View\View
     {
         // Start a query on the Election model
-        $query = Election::query()->with('election_type');
+        $query = Election::query()->with('election_type')->orderBy('created_at', 'desc');
 
         // Apply search filter
         if ($this->search) {

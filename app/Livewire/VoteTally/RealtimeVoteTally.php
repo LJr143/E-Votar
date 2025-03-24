@@ -100,8 +100,11 @@ class RealtimeVoteTally extends Component
 
     public function fetchCandidates(): void
     {
-        $query = Candidate::with(['users','users.program.council', 'elections', 'election_positions.position.electionType'])
-            ->withCount('votes'); // Add this to fetch vote count
+        $query = Candidate::with(['users', 'users.program.council', 'elections', 'election_positions.position.electionType'])
+            ->withCount('votes')
+            ->join('election_positions', 'candidates.election_position_id', '=', 'election_positions.id')
+            ->orderBy('election_positions.position_id', 'ASC')
+            ->select('candidates.*'); // Ensure only candidate columns are selected
 
         if ($this->search) {
             $query->whereHas('users', function ($q) {

@@ -17,7 +17,7 @@ use Livewire\Component;
 
     public function mount($electionId): void
     {
-        $this->election = Election::findOrFail($electionId);
+        $this->election = Election::findOrFail($electionId)->orderBy('created_at', 'desc')->first();
 
         // Populate fields
         $this->election_name = $this->election->name;

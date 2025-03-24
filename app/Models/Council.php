@@ -15,4 +15,9 @@ class Council extends Model
     {
         return $this->belongsTo(Program::class, 'program_id');
     }
+
+    public function councilPositionSetting(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(CouncilPositionSetting::class, 'council_id');
+    }
 }
