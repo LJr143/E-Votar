@@ -59,9 +59,9 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 sm:gap-4">
             <div class="flex-row space-y-2 mb-6">
                 <div>
-                    @if ($selectedElection)
-                        <livewire:timer.admin-dashboard-timer :selectedElection="$selectedElection"
-                                                              wire:key="timer-election-{{ $selectedElection->id }}"/>
+                    @if($selectedElection)
+                    <livewire:timer.admin-dashboard-timer :selectedElection="$selectedElection"
+                                                          wire:key="timer-election-{{ $selectedElection}}"/>
                     @else
                         <div class="bg-black text-white p-4 rounded-lg shadow-md text-center min-h-[160px] ">
                             <div class="flex justify-between items-center">
@@ -70,6 +70,10 @@
                                     <span class="text-sm font-bold text-white">No Election Available</span>
                                 </div>
 
+                                <div class="text-white">
+                                    <i class="fas fa-pause-circle text-xl"></i>
+                                    <i class="fas fa-stop-circle text-xl"></i>
+                                </div>
                             </div>
                             <div class="tick" data-did-init="handleTickInit" data-credits="false">
                                 <div
@@ -180,7 +184,6 @@
         </div>
 
         <div>
-            @if($selectedElection)
             <div class="w-full bg-white rounded-lg shadow-md">
                 <div class="w-full flex flex-col p-6 justify-center items-center">
                    <div>
@@ -250,7 +253,6 @@
 
 
             </div>
-            @endif
 
         </div>
 

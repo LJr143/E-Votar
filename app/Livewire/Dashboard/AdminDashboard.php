@@ -58,14 +58,15 @@ class AdminDashboard extends Component
 
     public function fetchCandidates(): void
     {
-        $query = Candidate::with(['users.program.council', 'elections', 'election_positions.position.electionType'])->where('election_id', $this->selectedElection);
+        if ($this->selectedElection){
+            $query = Candidate::with(['users.program.council', 'elections', 'election_positions.position.electionType'])->where('election_id', $this->selectedElection);
 
-        if ($this->search) {
-            $query->whereHas('users', function ($q) {
-                $q->where('first_name', 'like', '%' . $this->search . '%')
-                    ->orWhere('last_name', 'like', '%' . $this->search . '%');
-            });
-        }
+            if ($this->search) {
+                $query->whereHas('users', function ($q) {
+                    $q->where('first_name', 'like', '%' . $this->search . '%')
+                        ->orWhere('last_name', 'like', '%' . $this->search . '%');
+                });
+            }
 
 //        if ($this->selectedElection) {
 //            $query->whereHas('elections', function ($q) {
@@ -79,37 +80,39 @@ class AdminDashboard extends Component
 //            });
 //        }
 
-        $this->candidates = $query->get();
+            $this->candidates = $query->get();
 
-        $councilsWithCandidates = collect();
-        foreach ($this->candidates as $candidate) {
-            if ($candidate->users && $candidate->users->program && $candidate->users->program->council) {
-                $councilsWithCandidates->push($candidate->users->program->council);
+            $councilsWithCandidates = collect();
+            foreach ($this->candidates as $candidate) {
+                if ($candidate->users && $candidate->users->program && $candidate->users->program->council) {
+                    $councilsWithCandidates->push($candidate->users->program->council);
+                }
             }
+
+            // Remove duplicate councils
+            $councilsWithCandidates = $councilsWithCandidates->unique('id');
+
+            // Check if there are any student council candidates
+            $hasStudentCouncilCandidates = $this->candidates->contains(function ($candidate) {
+                return $candidate->election_positions->position->electionType->name === 'Student Council Election';
+            });
+
+            // If there are student council candidates, include the student council
+            if ($hasStudentCouncilCandidates) {
+                $studentCouncil = (object)[
+                    'id' => null, // Use null or a unique identifier for the student council
+                    'name' => 'Tagum Student Council',
+                    'election_type' => (object)['name' => 'Student Council Election'],
+                ];
+
+                // Add the student council to the list of councils
+                $councilsWithCandidates->prepend($studentCouncil);
+            }
+
+            // Store the councils in a property for use in the view
+            $this->councils = $councilsWithCandidates;
         }
 
-        // Remove duplicate councils
-        $councilsWithCandidates = $councilsWithCandidates->unique('id');
-
-        // Check if there are any student council candidates
-        $hasStudentCouncilCandidates = $this->candidates->contains(function ($candidate) {
-            return $candidate->election_positions->position->electionType->name === 'Student Council Election';
-        });
-
-        // If there are student council candidates, include the student council
-        if ($hasStudentCouncilCandidates) {
-            $studentCouncil = (object)[
-                'id' => null, // Use null or a unique identifier for the student council
-                'name' => 'Tagum Student Council',
-                'election_type' => (object)['name' => 'Student Council Election'],
-            ];
-
-            // Add the student council to the list of councils
-            $councilsWithCandidates->prepend($studentCouncil);
-        }
-
-        // Store the councils in a property for use in the view
-        $this->councils = $councilsWithCandidates;
     }
 
     /**
