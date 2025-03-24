@@ -8,7 +8,7 @@ class AdminDashboardTimer extends Component
 {
     public $selectedElection;
 
-    public function mount($selectedElection = null)
+    public function mount($selectedElection = null): void
     {
         $this->selectedElection = $selectedElection;
     }

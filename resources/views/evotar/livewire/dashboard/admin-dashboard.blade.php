@@ -59,8 +59,12 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 sm:gap-4">
             <div class="flex-row space-y-2 mb-6">
                 <div>
-                    <livewire:timer.admin-dashboard-timer :selectedElection="$selectedElection"
-                                                          wire:key="timer-election-{{ $selectedElection }}"/>
+                    @if ($selectedElection)
+                        <livewire:timer.admin-dashboard-timer :selectedElection="$selectedElection"
+                                                              wire:key="timer-election-{{ $selectedElection->id }}"/>
+                    @else
+                        <p class="text-gray-500">No active election.</p>
+                    @endif
                 </div>
                 <div
                     class="bg-white min-h-[160px] p-4 rounded-lg shadow-md w-full max-w-3xl transition-transform transform hover:scale-100">
