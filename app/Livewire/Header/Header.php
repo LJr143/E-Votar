@@ -17,6 +17,14 @@ use Livewire\Component;
         // Fetch all elections
         $this->elections = Election::with(['campus', 'election_type'])->get();
 
+        // Check if there are any elections
+        if ($this->elections->isEmpty()) {
+            $this->selectedElection = null; // No election available
+            session()->forget('selectedElection'); // Remove any old session value
+            \Log::info('No elections found.');
+            return;
+        }
+
         // Initialize selectedElection from session
         if (session()->has('selectedElection')) {
             $this->selectedElection = session('selectedElection');
