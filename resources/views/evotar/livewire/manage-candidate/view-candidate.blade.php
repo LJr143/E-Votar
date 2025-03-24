@@ -105,83 +105,22 @@
 
                 <div class="w-full h-full">
                     <div class="container mx-auto px-4 py-4">
-                        <!-- Student Council Section -->
-                        @if($hasStudentCouncilPositions && !empty($candidates))
-                            <h2 class="text-[16px] font-bold uppercase text-center mb-4">{{ $selectedElectionCampus->name ?? 'No campus available' }}
-                                Student Council Candidates</h2>
-                            <div id="studentCouncil"
-                                 class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 px-4 py-4"
-                                 wire:key="student-council-list" >
-                                @foreach($candidates->where('election_positions.position.electionType.name', 'Student Council Election') as $candidate)
-                                    <div wire:key="candidate-{{ $candidate->id }}">
-                                        <div class="bg-white p-6 shadow-md min-h-[320px]">
-                                            <div class="flex justify-center items-center">
-                                                <p class="text-[12px]">Running for:
-                                                    <span class="text-red-900 uppercase tracking-tighter font-semibold">
-                                {{ $candidate->election_positions->position->name }}
-                            </span>
-                                                </p>
-                                            </div>
-                                            <div>
-                                                <div class="flex justify-end mt-2 mr-[15px]">
-                                                    <img class="w-[85px]"
-                                                         src="{{ asset('storage/assets/icon/usep_logo_svg.png') }}"
-                                                         alt="">
-                                                </div>
-                                                <div class="mt-[-38px] flex justify-center">
-                                                    <div class="border-2 border-black">
-                                                        <img class="w-[110px]"
-                                                             src="{{ asset('storage/assets/profile/cat_meme.jpg') }}"
-                                                             alt="">
-                                                    </div>
-                                                </div>
-
-                                                <div class="mt-2 text-center">
-                                                    <div class="flex justify-center">
-                                                        <p class="text-black uppercase font-black text-[11px]">{{ $candidate->users->first_name }} {{ $candidate->users->middle_initial }}
-                                                            . {{ $candidate->users->last_name }}</p>
-                                                    </div>
-                                                    <p class="text-black capitalize font-semibold text-[10px]">{{ $candidate->users->year_level }}
-                                                        year</p>
-                                                    <p class="text-black capitalize font-semibold text-[12px] leading-none">
-                                                        @php
-                                                            $programName = $candidate->users->program->name;
-                                                            $programName = str_starts_with($programName, 'Bachelor of Science') ? 'BS ' . substr($programName, strlen('Bachelor of Science')) : $programName;
-                                                        @endphp
-                                                        <span class="program-name !text-[12px]"
-                                                              title="{{ $programName }}">
-                                                {{ $programName }}
-                                            </span>
-                                                    </p>
-                                                    <p class="text-black capitalize font-semibold text-[11px] leading-none">{{ optional($candidate->users->programMajor)->name ?? '' }}</p>
-                                                    <p class="text-black mt-2 capitalize italic font-semibold text-[11px]">{{ $candidate->partyLists->name }}</p>
-
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        @endif
-                        <!-- Local Councils Section -->
-                        @if($hasLocalCouncilPositions)
-                            <h2 class="text-[16px] font-bold uppercase text-center mt-8 mb-4">Local Councils
-                                Candidates</h2>
-                            @foreach($candidates->where('election_positions.position.electionType.name', 'Local Council Election')->groupBy('users.program.council.name') as $programName => $localCandidates)
-                                <h3 class="text-[12px] px-4 font-bold uppercase text-gray-700 mt-6">{{ $programName }}
-                                    Organization</h3>
-                                <div
-                                    class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 px-4 py-4">
-                                    @foreach($localCandidates as $candidate)
+                        @if($selectedElection)
+                            <!-- Student Council Section -->
+                            @if($hasStudentCouncilPositions && !empty($candidates))
+                                <h2 class="text-[16px] font-bold uppercase text-center mb-4">{{ $selectedElectionCampus->name ?? 'No campus available' }}
+                                    Student Council Candidates</h2>
+                                <div id="studentCouncil"
+                                     class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 px-4 py-4"
+                                     wire:key="student-council-list" >
+                                    @foreach($candidates->where('election_positions.position.electionType.name', 'Student Council Election') as $candidate)
                                         <div wire:key="candidate-{{ $candidate->id }}">
                                             <div class="bg-white p-6 shadow-md min-h-[320px]">
                                                 <div class="flex justify-center items-center">
-                                                    <p class="text-[12px] text-center">Running for:
-                                                        <span
-                                                            class="text-red-900 uppercase tracking-tighter font-semibold">
-                                                                    {{ $candidate->election_positions->position->name }}
-                                                        </span>
+                                                    <p class="text-[12px]">Running for:
+                                                        <span class="text-red-900 uppercase tracking-tighter font-semibold">
+                                {{ $candidate->election_positions->position->name }}
+                            </span>
                                                     </p>
                                                 </div>
                                                 <div>
@@ -218,13 +157,79 @@
                                                         <p class="text-black capitalize font-semibold text-[11px] leading-none">{{ optional($candidate->users->programMajor)->name ?? '' }}</p>
                                                         <p class="text-black mt-2 capitalize italic font-semibold text-[11px]">{{ $candidate->partyLists->name }}</p>
 
+
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     @endforeach
                                 </div>
-                            @endforeach
+                            @endif
+                            <!-- Local Councils Section -->
+                            @if($hasLocalCouncilPositions)
+                                <h2 class="text-[16px] font-bold uppercase text-center mt-8 mb-4">Local Councils
+                                    Candidates</h2>
+                                @foreach($candidates->where('election_positions.position.electionType.name', 'Local Council Election')->groupBy('users.program.council.name') as $programName => $localCandidates)
+                                    <h3 class="text-[12px] px-4 font-bold uppercase text-gray-700 mt-6">{{ $programName }}
+                                        Organization</h3>
+                                    <div
+                                        class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 px-4 py-4">
+                                        @foreach($localCandidates as $candidate)
+                                            <div wire:key="candidate-{{ $candidate->id }}">
+                                                <div class="bg-white p-6 shadow-md min-h-[320px]">
+                                                    <div class="flex justify-center items-center">
+                                                        <p class="text-[12px] text-center">Running for:
+                                                            <span
+                                                                class="text-red-900 uppercase tracking-tighter font-semibold">
+                                                                    {{ $candidate->election_positions->position->name }}
+                                                        </span>
+                                                        </p>
+                                                    </div>
+                                                    <div>
+                                                        <div class="flex justify-end mt-2 mr-[15px]">
+                                                            <img class="w-[85px]"
+                                                                 src="{{ asset('storage/assets/icon/usep_logo_svg.png') }}"
+                                                                 alt="">
+                                                        </div>
+                                                        <div class="mt-[-38px] flex justify-center">
+                                                            <div class="border-2 border-black">
+                                                                <img class="w-[110px]"
+                                                                     src="{{ asset('storage/assets/profile/cat_meme.jpg') }}"
+                                                                     alt="">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="mt-2 text-center">
+                                                            <div class="flex justify-center">
+                                                                <p class="text-black uppercase font-black text-[11px]">{{ $candidate->users->first_name }} {{ $candidate->users->middle_initial }}
+                                                                    . {{ $candidate->users->last_name }}</p>
+                                                            </div>
+                                                            <p class="text-black capitalize font-semibold text-[10px]">{{ $candidate->users->year_level }}
+                                                                year</p>
+                                                            <p class="text-black capitalize font-semibold text-[12px] leading-none">
+                                                                @php
+                                                                    $programName = $candidate->users->program->name;
+                                                                    $programName = str_starts_with($programName, 'Bachelor of Science') ? 'BS ' . substr($programName, strlen('Bachelor of Science')) : $programName;
+                                                                @endphp
+                                                                <span class="program-name !text-[12px]"
+                                                                      title="{{ $programName }}">
+                                                {{ $programName }}
+                                            </span>
+                                                            </p>
+                                                            <p class="text-black capitalize font-semibold text-[11px] leading-none">{{ optional($candidate->users->programMajor)->name ?? '' }}</p>
+                                                            <p class="text-black mt-2 capitalize italic font-semibold text-[11px]">{{ $candidate->partyLists->name }}</p>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @endforeach
+                            @endif
+
+                        @else
+                            <p>No Election Available</p>
                         @endif
                     </div>
 
