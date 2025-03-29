@@ -13,7 +13,9 @@ Route::get('user-feedback', [WebsiteController::class, 'UserFeedback'])->name('c
 Route::get('website-login', [WebsiteController::class, 'WebsiteLogin'])->name('comelec-website.website-login');
 
 Route::get('faqs', [WebsiteController::class, 'FAQs'])->name('comelec-website.faqs');
-
+Route::get('about-us', [WebsiteController::class, 'AboutUs'])->name('comelec-website.about-us');
+Route::get('data-privacy', [WebsiteController::class, 'DataPrivacy'])->name('comelec-website.data-privacy');
+Route::get('policies', [WebsiteController::class, 'Policies'])->name('comelec-website.policies');
 
 Route::get('selected-announcement', [WebsiteController::class, 'SelectedAnnouncement'])->name('comelec-website.selected-announcement');
 Route::get('selected-election', [WebsiteController::class, 'SelectedElection'])->name('comelec-website.selected-election');

@@ -53,9 +53,8 @@
                    class="text-xs {{ request()->routeIs('comelec-website.home') ? ' font-semibold' : 'text-black hover:text-gray-500' }}">
                     Home
             </a>
-
-            <a href="#"
-               class="text-xs {{ request()->routeIs('') ? ' font-semibold' : 'text-black hover:text-gray-500' }}">
+            <a href="{{ route('comelec-website.about-us') }}"
+               class="text-xs {{ request()->routeIs('comelec-website.about-us') ? 'font-semibold' : 'text-black hover:text-gray-500' }}">
                 About
             </a>
             <a href="{{ route('comelec-website.list-of-elections') }}"
@@ -66,14 +65,15 @@
                class="text-xs {{ request()->routeIs('comelec-website.tutorial') ? ' font-semibold' : 'text-black hover:text-gray-500' }}">
                 Tutorial
             </a>
-            <a href=""
-               class="text-xs {{ request()->routeIs('') ? ' font-semibold' : 'text-black hover:text-gray-500' }}">
+            <a href="{{ route('comelec-website.policies') }}"
+               class="text-xs {{ request()->routeIs('comelec-website.policies') ? 'font-semibold' : 'text-black hover:text-gray-500' }}">
                 Policies
             </a>
-            <a href=""
-               class="text-xs {{ request()->routeIs('') ? ' font-semibold' : 'text-black hover:text-gray-500' }}">
+            <a href="{{ route('comelec-website.data-privacy') }}"
+               class="text-xs {{ request()->routeIs('comelec-website.data-privacy') ? 'font-semibold' : 'text-black hover:text-gray-500' }}">
                 Data Privacy
             </a>
+
 
             <!-- search bar for big screens -->
             <div x-data="{ expanded: false, search: '' }" class="relative">

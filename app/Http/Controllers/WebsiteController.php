@@ -64,6 +64,17 @@ class WebsiteController extends Controller
     {
         return view('evotar.comelec-website.add-announcement');
     }
-
+    public function AboutUs()
+    {
+        return view('evotar.comelec-website.about-us');
+    }
+    public function DataPrivacy()
+    {
+        return view('evotar.comelec-website.data-privacy');
+    }
+    public function Policies()
+    {
+    return view('evotar.comelec-website.policies');
+    }
 
 }

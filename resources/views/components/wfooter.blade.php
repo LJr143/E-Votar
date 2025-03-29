@@ -43,7 +43,7 @@
                             </a>
                         </li>
                         <li class="mb-1">
-                            <a class="hover:underline text-[12px]" href="#">
+                            <a class="hover:underline text-[12px]" href="{{ route('comelec-website.about-us') }}">
                                 About
                             </a>
                         </li>
@@ -80,12 +80,12 @@
                             </a>
                         </li>
                         <li class="mb-1">
-                            <a class="hover:underline text-[12px]" href="#">
+                            <a class="hover:underline text-[12px]" href="{{ route('comelec-website.policies') }}">
                                 Policies
                             </a>
                         </li>
                         <li class="mb-1">
-                            <a class="hover:underline text-[12px]" href="#">
+                            <a class="hover:underline text-[12px]" href="{{ route('comelec-website.data-privacy') }}">
                                 Data Privacy
                             </a>
                         </li>
