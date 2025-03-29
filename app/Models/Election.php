@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 class Election extends Model
 {
     protected $table = 'elections';
-    protected $fillable = ['name', 'type', 'campus_id', 'date_started', 'date_ended', 'status'];
+    protected $fillable = ['name', 'type', 'campus_id', 'date_started', 'date_ended', 'status', 'image_path'];
 
     protected static function boot(): void
     {

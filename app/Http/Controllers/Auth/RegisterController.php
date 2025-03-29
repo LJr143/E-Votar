@@ -235,4 +235,6 @@ class RegisterController extends Controller
         return response()->json(['message' => 'Face captured successfully!', 'path' => $path]);
     }
 
+
+
 }

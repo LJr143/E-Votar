@@ -91,11 +91,15 @@ class LoginController extends Controller
     }
     public function updateFaceVerified(Request $request)
     {
-        // Store the face verification status in the session
-        session(['face_verified' => $request->face_verified]);
+        $request->validate(['face_verified' => 'required|boolean']);
 
-        // Return a success response
-        return response()->json(['message' => 'Face verification updated successfully']);
+        // Store in session
+        session([
+            'face_verified' => true,
+            'face_verified_at' => now()
+        ]);
+
+        return response()->json(['success' => true]);
     }
 
 

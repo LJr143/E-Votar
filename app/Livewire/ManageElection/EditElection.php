@@ -11,9 +11,12 @@ use App\Models\Position;
 use App\Models\Program;
 use App\Models\User;
 use Livewire\Component;
+use Livewire\WithFileUploads;
+use Storage;
 
 class EditElection extends Component
 {
+    use WithFileUploads;
     public $election;
     public $election_name;
     public $election_type;
@@ -37,6 +40,11 @@ class EditElection extends Component
     public $excludedVoterIds = [];
     public $electionId;
 
+    public $electionImageEdit;
+    public $temporaryImageEditUrl;
+    public $currentImagePath;
+
+
     public function mount($electionId): void
     {
         // Load the election data
@@ -51,6 +59,9 @@ class EditElection extends Component
         $this->election_end = $this->election->date_ended;
         $this->status = $this->election->status;
 
+        $this->currentImagePath = $this->election->image_path;
+        $this->temporaryImageEditUrl = $this->getCurrentImageUrl();
+
         // Load associated positions through the ElectionPosition table
         $this->selectedPositions = ElectionPosition::where('election_id', $electionId)
             ->pluck('position_id')
@@ -63,7 +74,6 @@ class EditElection extends Component
 
         $this->updatedElectionType($this->election_type);
     }
-
 
     public function updatedElectionCampus($value): void
     {
@@ -141,8 +151,6 @@ class EditElection extends Component
         $this->selectedPositions = array_keys($this->positions);
     }
 
-
-
     public function fetchVoters(): void
     {
         $this->voters = User::query()
@@ -166,7 +174,19 @@ class EditElection extends Component
             'election_start' => 'required|date',
             'election_end' => 'required|date|after:election_start',
             'selectedPositions' => 'required|array',
+            'electionImageEdit' => 'nullable|image|max:2048',
         ]);
+
+        if ($this->electionImageEdit) {
+            if ($this->currentImagePath) {
+                Storage::disk('public')->delete($this->currentImagePath);
+            }
+            $path = $this->electionImageEdit->store('election_images', 'public');
+            $this->election->update(['image_path' => $path]);
+            $this->currentImagePath = $path;
+        }
+
+
 
         // Update the election
         $this->election->update([
@@ -175,8 +195,12 @@ class EditElection extends Component
             'campus_id' => $this->election_campus,
             'date_started' => $this->election_start,
             'date_ended' => $this->election_end,
-            'status' => $this->status
+            'status' => $this->status,
+            'image_path' => $path,
         ]);
+
+        $this->currentImagePath = $path;
+
 
         // Update positions
         ElectionPosition::where('election_id', $this->election->id)->delete();
@@ -190,11 +214,31 @@ class EditElection extends Component
         $this->dispatch('election-updated');
     }
 
-
     public function removePosition($positionId): void
     {
         $this->selectedPositions = array_diff($this->selectedPositions, [$positionId]);
     }
+
+    protected function getCurrentImageUrl(): string
+    {
+        return $this->currentImagePath
+            ? asset('storage/' . $this->currentImagePath)
+            : asset('images/placeholder.png');
+    }
+
+
+
+    public function updatedElectionImageEdit(): void
+    {
+        if ($this->electionImageEdit) {
+            $this->temporaryImageEditUrl = $this->electionImageEdit->temporaryUrl();
+            $this->dispatch('imageUpdated', ['imageUrl' => $this->temporaryImageEditUrl]);
+        }
+    }
+
+
+
+
 
     public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory|\Illuminate\Foundation\Application|\Illuminate\View\View
     {

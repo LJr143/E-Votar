@@ -5,65 +5,68 @@ namespace App\Livewire\Superadmin;
 use App\Models\Election;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Illuminate\Database\Eloquent\Builder;
 
 class ElectionsTable extends Component
 {
     use WithPagination;
 
-    // Listens for events to refresh the component
-    protected $listeners = ['election-created' => '$refresh', 'election-deleted' => '$refresh'];
+    protected $listeners = [
+        'election-created' => '$refresh',
+        'election-deleted' => '$refresh'
+    ];
 
-    // Component properties
-    public $filter = 'all_elections'; // Filter for election status
-    public $search = ''; // Search term
+    public $filter = 'all_elections';
+    public $search = '';
 
-    /**
-     * Reset pagination when search is updated.
-     */
+    // Add debounce for search input (milliseconds)
+    protected $queryString = [
+        'search' => ['except' => '', 'as' => 'q'],
+        'filter' => ['except' => 'all_elections']
+    ];
+
+
     public function updatingSearch(): void
     {
         $this->resetPage();
     }
 
-    /**
-     * Reset pagination when filter is updated.
-     */
     public function updatingFilter(): void
     {
         $this->resetPage();
     }
 
-    /**
-     * Refresh the component when an election is created.
-     */
-    public function refreshComponent(): void
-    {
-        $this->resetPage();
-    }
 
-    /**
-     * Render the Livewire component view.
-     */
-    public function render(): \Illuminate\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\View\View
+    public function render()
     {
-        // Start a query on the Election model
-        $query = Election::query()->with('election_type')->orderBy('created_at', 'desc');
+        $query = Election::query()
+            ->with('election_type')
+            ->orderBy('created_at', 'desc');
 
-        // Apply search filter
+        // Enhanced search functionality
         if ($this->search) {
-            $query->where('name', 'like', '%' . $this->search . '%');
+            $query->where(function (Builder $query) {
+                $query->where('name', 'like', '%' . $this->search . '%')
+                    ->orWhereHas('election_type', function (Builder $query) {
+                        $query->where('name', 'like', '%' . $this->search . '%');
+                    })
+                    ->orWhere('date_started', 'like', '%' . $this->search . '%')
+                    ->orWhere('date_ended', 'like', '%' . $this->search . '%');
+            });
         }
 
-        // Apply status filter
+        // Status filter
         if ($this->filter === 'ongoing_elections') {
             $query->where('status', 'ongoing');
         } elseif ($this->filter === 'completed_elections') {
             $query->where('status', 'completed');
         }
 
-        // Return the view with paginated results
+        $elections = $query->paginate(10);
+
         return view('evotar.livewire.superadmin.elections-table', [
-            'elections' => $query->paginate(10),
+            'elections' => $elections,
+            'hasResults' => $elections->total() > 0,
         ]);
     }
 }

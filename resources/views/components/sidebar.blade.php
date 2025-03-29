@@ -35,7 +35,7 @@
                 </li>
 
                 @can('view election')
-                    <li x-data="{ open: {{ request()->routeIs('admin.elections*') || request()->routeIs('admin.candidates*') || request()->routeIs('admin.positions*') || request()->routeIs('admin.election.party.list*') ? 'true' : 'false' }} }" class="relative group mb-2">
+                    <li x-data="{ open: {{ request()->routeIs('admin.elections*') || request()->routeIs('admin.candidates*') || request()->routeIs('admin.council*') ||  request()->routeIs('admin.positions*') || request()->routeIs('admin.election.party.list*') ? 'true' : 'false' }} }" class="relative group mb-2">
                         <!-- Parent Button -->
                         <button @click="open = !open"
                                 class="flex justify-between items-center px-4 py-2 w-full rounded-md transition duration-200

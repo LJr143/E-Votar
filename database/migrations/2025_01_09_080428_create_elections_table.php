@@ -20,6 +20,7 @@ return new class extends Migration
             $table->timestamp('date_started')->nullable(); // Use timestamp() for custom timestamps
             $table->timestamp('date_ended')->nullable();   // Use timestamp() for custom timestamps
             $table->string('status');
+            $table->string('image_path')->nullable();
             $table->timestamps();
         });
     }

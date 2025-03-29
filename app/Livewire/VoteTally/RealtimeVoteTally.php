@@ -104,7 +104,7 @@ class RealtimeVoteTally extends Component
             ->withCount('votes')
             ->join('election_positions', 'candidates.election_position_id', '=', 'election_positions.id')
             ->orderBy('election_positions.position_id', 'ASC')
-            ->select('candidates.*'); // Ensure only candidate columns are selected
+            ->select('candidates.*');
 
         if ($this->search) {
             $query->whereHas('users', function ($q) {

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FaceAuthController;
 use App\Http\Controllers\ViewController;
 use Illuminate\Support\Facades\Route;
 
@@ -11,5 +12,7 @@ Route::post('/registration/voter', [RegisterController::class, 'registerVoter'])
 
 Route::get('/api/register-face/{id}', [RegisterController::class, 'viewFacialRegistration'])->name('voter.facial.registration.get');
 Route::post('/api/register-face/{id}', [RegisterController::class, 'registerFace'])->name('voter.facial.registration.post');
-Route::post('/face/upload', [RegisterController::class, 'uploadFace'])->name('face.upload');
+//Route::post('/face/upload', [RegisterController::class, 'uploadFace'])->name('face.upload');
+
+
 

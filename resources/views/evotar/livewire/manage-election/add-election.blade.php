@@ -1,5 +1,5 @@
 
-<div x-data="{ open: false }" x-cloak @election-created.window="open = false">
+<div x-data="{ open: false }" x-cloak @election-created.window="open = false" @open-modal.window="open = true">
     <!-- Trigger Button -->
     <button @click="open = true" class="w-[120px] h-8 rounded bg-gradient-to-b from-gray-800 to-black text-white text-[12px] flex items-center justify-center gap-2 hover:drop-shadow hover:bg-gray-700 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110">
         <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#FFFFFF">
@@ -27,8 +27,8 @@
             x-transition:leave="transition ease-in duration-200"
             x-transition:leave-start="opacity-100 transform scale-100"
             x-transition:leave-end="opacity-0 transform scale-90"
-            class="bg-white p-6 rounded shadow-md w-full mx-4 sm:mx-6 md:mx-8 lg:mx-10 xl:mx-12 overflow-y-auto max-h-[80vh]"
-            :class="{ 'sm:w-[60%]': $wire.currentStep === 1, 'sm:w-[40%]': $wire.currentStep === 2 }"
+            class="bg-white p-6 rounded shadow-md w-full mx-4 sm:mx-6 md:mx-8 lg:mx-10 xl:mx-12 overflow-y-auto max-h-[90vh]"
+            :class="{ 'sm:w-[60%]': $wire.currentStep === 1 || $wire.currentStep === 2 }"
         >
 
 
@@ -41,15 +41,16 @@
                 </div>
 
                 <!-- Close Button (X) -->
-                <button @click="open = false" class="text-gray-500 hover:text-gray-700">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
+            <button @click="open = false; $wire.call('resetForm')" class="text-gray-500 hover:text-gray-700">
+                <i class="fas fa-times"></i>
+            </button>
+
+        </div>
 
 
             <!-- Election Details-->
             @if ($currentStep === 1)
-                <form wire:submit.prevent="proceedToVoters">
+                <form wire:submit.prevent="proceedToVoters"  enctype="multipart/form-data">
                     <div>
                         <div class="flex flex-col md:flex-row md:space-x-4">
                             <div class="flex-col w-full md:w-1/2">
@@ -94,6 +95,59 @@
                                     <span class="text-red-500 text-[10px] italic">{{ $message }}</span>
                                     @enderror
                                 </div>
+
+                                <div x-data="{
+                                                isDragging: false,
+                                                previewUrl: @entangle('temporaryImageUrl')
+                                            }"
+                                     class="mt-4 w-full mb-1"
+                                     wire:ignore>
+
+                                    <label class="block text-xs font-semibold mb-1">Election Image</label>
+
+                                    <!-- Drag and Drop Area -->
+                                    <div class="relative border-2 border-dashed border-gray-300 rounded-lg p-6 flex flex-col items-center justify-center"
+                                         x-bind:class="{ 'border-green-500 bg-green-50': isDragging }"
+                                         @dragover.prevent="isDragging = true"
+                                         @dragleave.prevent="isDragging = false"
+                                         @drop.prevent="isDragging = false;
+                                            $refs.fileInput.files = event.dataTransfer.files;
+                                            $refs.fileInput.dispatchEvent(new Event('change'))"
+                                         @click="$refs.fileInput.click()">
+
+                                        <!-- File Preview -->
+                                        <template x-if="previewUrl">
+                                            <img :src="previewUrl" alt="Preview"
+                                                 class="w-full max-w-xs h-40 object-contain rounded-lg shadow-md">
+                                        </template>
+
+                                        <!-- Upload Icon & Message -->
+                                        <div x-show="!previewUrl" class="text-center flex justify-center items-center">
+                                            <svg class="w-12 h-12 text-gray-400 mb-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16v4m10-4v4M5 12h14M12 3v13m-3-3l3-3 3 3" />
+                                            </svg>
+                                            <p class="text-sm text-gray-500">Drag & Drop or Click to Upload</p>
+                                        </div>
+
+                                        <!-- Hidden File Input -->
+                                        <input type="file" class="hidden" id="electionImage" wire:model.live="electionImage" x-ref="fileInput">
+
+                                        <!-- Progress Bar -->
+                                        <div wire:loading wire:target="electionImage" class="w-full mt-2">
+                                            <div class="h-2 bg-gray-300 rounded-full">
+                                                <div class="h-2 bg-red-500 rounded-full animate-pulse" style="width: 100%;"></div>
+                                            </div>
+                                            <p class="text-xs text-gray-500 mt-1">Uploading...</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                @error('electionImage')
+                                <span class="text-red-500 text-[10px] mb-3 italic">{{ $message }}</span>
+                                @enderror
+
+
+
+
                                 <p class="text-[12px] font-medium">Election Period</p>
                                 <div class="flex flex-col md:flex-row md:space-x-4 mb-4 border border-gray-300 rounded-md p-4">
                                     <div class="flex-1 mb-3 md:mb-0 min-w-0">
@@ -116,12 +170,12 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="flex-col h-[355px] w-full md:w-1/2  overflow-auto">
+                            <div class="flex-col h-[530px] w-full md:w-1/2  overflow-auto">
                                 <div class="mb-4">
                                     <p class="text-xs font-semibold block mb-1">Available Positions</p>
 
                                     <!-- Student Council Positions -->
-                                    @if(!empty($studentCouncilPositions))
+                                    @if(!empty($studentCouncilPositions) && $election_type != 3)
                                         <p class="text-[11px] font-normal text-center mt-4 sm:mt-2 mb-2">Student Council Positions</p>
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             @foreach($studentCouncilPositions as $positionId => $positionName)
@@ -172,9 +226,9 @@
                             </div>
 
                         </div>
-                        <div class="mt-6 pt-3 flex justify-end space-x-2">
+                        <div class="mt-[-28px] pt-1 flex justify-end space-x-2 ">
                             <button type="button"
-                                    @click="open = false"
+                                    @click="open = false; $wire.call('resetForm')"
                                     class="bg-white text-black text-[12px] border border-gray-300 h-7 px-4 py-1 rounded shadow-md hover:bg-gray-200 justify-center text-center hover:drop-shadow hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110">
                                 Cancel
                             </button>

@@ -11,9 +11,11 @@ use App\Models\Position;
 use App\Models\Program;
 use App\Models\User;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class AddElection extends Component
 {
+    use WithFileUploads;
     public $election_name;
     public $election_type;
     public $election_campus;
@@ -33,6 +35,24 @@ class AddElection extends Component
     public $search = '';
     public $status = '';
 
+    public $electionImage;
+    public $temporaryImageUrl;
+
+
+    protected $messages = [
+        'selectedPositions.required' => 'Please select at least one position.',
+        'electionImage.max' => 'The election image must not exceed 2MB.',
+    ];
+    protected $rules = [
+        'election_name' => 'required|string|max:255',
+        'election_type' => 'required',
+        'election_campus' => 'required',
+        'election_start' => 'required|date',
+        'election_end' => 'required|date|after:election_start',
+        'selectedPositions' => 'required|array|min:1',
+        'electionImage' => 'required|image|max:2048',
+    ];
+
     public function mount(): void
     {
         $this->fetchVoters();
@@ -49,6 +69,17 @@ class AddElection extends Component
         $this->programsByCollege = [];
         foreach ($this->selectedColleges as $collegeId) {
             $this->programsByCollege[$collegeId] = Program::where('college_id', $collegeId)->get();
+        }
+    }
+
+    public function updatedElectionImage(): void
+    {
+        $this->validateOnly('electionImage');
+        try {
+            $this->temporaryImageUrl = $this->electionImage->temporaryUrl();
+        } catch (\Exception $e) {
+            $this->addError('electionImage', 'Failed to process image. Please try another file.');
+            $this->reset('electionImage', 'temporaryImageUrl');
         }
     }
 
@@ -122,14 +153,7 @@ class AddElection extends Component
 
     public function proceedToVoters(): void
     {
-        $this->validate([
-            'election_name' => 'required|string|max:255',
-            'election_type' => 'required',
-            'election_campus' => 'required',
-            'election_start' => 'required|date',
-            'election_end' => 'required|date|after:election_start',
-            'selectedPositions' => 'required|array',
-        ]);
+        $this->validate();
 
         $this->currentStep = 2;
     }
@@ -142,6 +166,14 @@ class AddElection extends Component
             $this->status = 'unverified';
         }
 
+        $this->validate();
+
+        // Store the image if provided
+        $imagePath = $this->electionImage
+            ? $this->electionImage->store('elections/images', 'public')
+            : null;
+
+
         // Create the election
         $election = Election::create([
             'name' => $this->election_name,
@@ -149,7 +181,9 @@ class AddElection extends Component
             'campus_id' => $this->election_campus,
             'date_started' => $this->election_start,
             'date_ended' => $this->election_end,
-            'status' => $this->status
+            'status' => $this->status,
+            'image_path' => $imagePath
+
         ]);
 
         $this->excludeAllUsersFromSelectedPrograms($election->id);
@@ -166,8 +200,6 @@ class AddElection extends Component
         }
 
         $this->dispatch('election-created');
-
-        // Reset the form
         $this->reset();
     }
 
@@ -175,6 +207,12 @@ class AddElection extends Component
     {
         $this->currentStep = 1;
     }
+
+    public function resetForm(): void
+    {
+        $this->reset();
+    }
+
 
     public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory|\Illuminate\Foundation\Application|\Illuminate\View\View
     {

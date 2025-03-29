@@ -1,4 +1,4 @@
-<div x-data="{ open: false }" x-cloak @election-updated.window="open = false">
+<div x-data="{ open: false }" x-cloak @election-updated.window="open = false" @open-modal.window="open = true">
     <!-- Trigger Button -->
     <button @click="open = true"
             class="bg-white border border-gray-100 rounded p-1 w-[30px] flex-row  items-center justify-items-center">
@@ -30,6 +30,7 @@
             x-transition:leave-start="opacity-100 transform scale-100"
             x-transition:leave-end="opacity-0 transform scale-90"
             class="bg-white p-6 rounded shadow-md w-full sm:w-3/5 mx-4 sm:mx-6 md:mx-8 lg:mx-10 xl:mx-12 overflow-y-auto max-h-[90vh]"
+
         >
 
             <div class="flex justify-between items-center mb-4 border-b border-gray-300 pb-2">
@@ -40,9 +41,12 @@
                 </div>
 
                 <!-- Close Button (X) -->
-                <button @click="open = false" class="text-gray-500 hover:text-gray-700">
+                <button @click="open = false; $dispatch('close-modal', { electionId: {{ $election->id }} })"
+                        class="text-gray-500 hover:text-gray-700">
                     <i class="fas fa-times"></i>
                 </button>
+
+
             </div>
 
             <!-- Election Details-->
@@ -89,6 +93,77 @@
                                 <span class="text-red-500 text-[10px] italic">{{ $message }}</span>
                                 @enderror
                             </div>
+
+                            <!-- Change the file input section -->
+                            <div x-data="{
+                                        isDragging: false,
+                                        previewUrl: @entangle('temporaryImageEditUrl'),
+
+                                        init() {
+                                            window.addEventListener('imageUpdated', event => {
+                                                this.previewUrl = event.detail.imageUrl;
+                                            });
+                                        },
+
+                                        previewFile(event) {
+                                            let file = event.target.files[0];
+                                            if (file) {
+                                                let reader = new FileReader();
+                                                reader.onload = (e) => {
+                                                    this.previewUrl = e.target.result;
+                                                };
+                                                reader.readAsDataURL(file);
+                                            }
+                                        }
+                                    }"
+                                 class="mt-4 w-full mb-3"
+                                 wire:ignore>
+
+                                <label class="block text-xs font-semibold mb-1">Election Image</label>
+
+                                <div class="relative border-2 border-dashed border-gray-300 rounded-lg p-6 flex flex-col items-center justify-center"
+                                     x-bind:class="{ 'border-green-500 bg-green-50': isDragging }"
+                                     @dragover.prevent="isDragging = true"
+                                     @dragleave.prevent="isDragging = false"
+                                     @drop.prevent="isDragging = false;
+                                    $refs.fileInput.files = event.dataTransfer.files;
+                                    $refs.fileInput.dispatchEvent(new Event('change'))"
+                                     @click="$refs.fileInput.click()">
+
+                                    <!-- File Preview -->
+                                    <template x-if="previewUrl">
+                                        <img :src="previewUrl" alt="Preview"
+                                             class="w-full max-w-xs h-40 object-contain rounded-lg shadow-md">
+                                    </template>
+
+                                    <!-- Upload Icon & Message -->
+                                    <div x-show="!previewUrl" class="text-center flex justify-center items-center">
+                                        <svg class="w-12 h-12 text-gray-400 mb-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16v4m10-4v4M5 12h14M12 3v13m-3-3l3-3 3 3" />
+                                        </svg>
+                                        <p class="text-sm text-gray-500">Drag & Drop or Click to Upload</p>
+                                    </div>
+
+                                    <!-- Hidden File Input -->
+                                    <input type="file" class="hidden" id="electionImageEdit" wire:model="electionImageEdit" x-ref="fileInput"
+                                           @change="previewFile">
+
+                                    <!-- Progress Bar -->
+                                    <div wire:loading wire:target="electionImageEdit" class="w-full mt-2">
+                                        <div class="h-2 bg-gray-300 rounded-full">
+                                            <div class="h-2 bg-red-500 rounded-full animate-pulse" style="width: 100%;"></div>
+                                        </div>
+                                        <p class="text-xs text-gray-500 mt-1">Uploading...</p>
+                                    </div>
+                                </div>
+
+                                @error('electionImageEdit')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+
+
                             <p class="text-[12px] font-medium">Election Period</p>
                             <div class="flex flex-col md:flex-row md:space-x-4 mb-4 border border-gray-300 rounded-md p-4">
                                 <div class="flex-1 mb-3 md:mb-0 min-w-0">
@@ -100,7 +175,7 @@
                                     <span class="text-red-500 text-[10px] italic">{{ $message }}</span>
                                     @enderror
                                 </div>
-                                <div class="flex-1 min-w-0">
+                                <div class="flex-1 min-w-0" wire:ignore>
                                     <label for="election_end" class="text-[10px] block mb-1">To</label>
                                     <input id="election_end" type="datetime-local"
                                            class="border border-gray-300 text-xs rounded-md px-4 py-2 w-full focus:ring-black focus:border-black"
@@ -111,8 +186,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="flex-col h-[355px] w-full md:w-1/2  overflow-auto">
-                            <div class="mb-4">
+                        <div class="flex-col h-[530px] w-full md:w-1/2  overflow-auto">
+                            <div class="mb-2">
                                 <p class="text-xs font-semibold block mb-1">Election Positions</p>
 
                                 <!-- Student Council Positions -->
@@ -149,15 +224,15 @@
                                                 <!-- Only show selected positions -->
                                                 <div class="border border-gray-300 rounded-lg p-4 flex justify-between items-center w-full">
                                                     <span class="text-[10px]">{{ $positionName }}</span>
-{{--                                                    <button type="button"--}}
-{{--                                                            wire:click="removePosition({{ $positionId }})"--}}
-{{--                                                            class="text-white px-2 py-1 rounded bg-red-500">--}}
-{{--                                                        <svg width="10" height="10" viewBox="0 0 10 10" fill="none"--}}
-{{--                                                             xmlns="http://www.w3.org/2000/svg">--}}
-{{--                                                            <path d="M9 1L1 9M9 9L1 0.999998" stroke="white"--}}
-{{--                                                                  stroke-width="2" stroke-linecap="round"/>--}}
-{{--                                                        </svg>--}}
-{{--                                                    </button>--}}
+                                                    {{--                                                    <button type="button"--}}
+                                                    {{--                                                            wire:click="removePosition({{ $positionId }})"--}}
+                                                    {{--                                                            class="text-white px-2 py-1 rounded bg-red-500">--}}
+                                                    {{--                                                        <svg width="10" height="10" viewBox="0 0 10 10" fill="none"--}}
+                                                    {{--                                                             xmlns="http://www.w3.org/2000/svg">--}}
+                                                    {{--                                                            <path d="M9 1L1 9M9 9L1 0.999998" stroke="white"--}}
+                                                    {{--                                                                  stroke-width="2" stroke-linecap="round"/>--}}
+                                                    {{--                                                        </svg>--}}
+                                                    {{--                                                    </button>--}}
                                                 </div>
                                             @endif
                                         @endforeach
@@ -167,7 +242,7 @@
                         </div>
 
                     </div>
-                    <div class="mt-6 pt-3 flex justify-end space-x-2">
+                    <div class="mt-[-28px] pt-1 flex justify-end space-x-2">
                         <button type="button"
                                 class="bg-white text-black text-[12px] border border-gray-300 h-7 px-4 py-1 rounded shadow-md hover:bg-gray-200 justify-center text-center hover:drop-shadow hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"
                                 @click="open = false">
@@ -182,4 +257,5 @@
             </form>
         </div>
     </div>
+
 </div>

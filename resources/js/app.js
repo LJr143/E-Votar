@@ -7,15 +7,33 @@ import '@pqina/flip/dist/flip.js';
 import Tick from '@pqina/flip';
 import Chart from 'chart.js/auto';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import * as FilePond from 'filepond';
+import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
+import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
+import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size';
+import FilePondPluginImageEdit from 'filepond-plugin-image-edit';
+
+// Import styles
+import 'filepond/dist/filepond.min.css';
+import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
+
+
+FilePond.registerPlugin(
+    FilePondPluginImagePreview,
+    FilePondPluginImageExifOrientation,
+    FilePondPluginFileValidateSize,
+    FilePondPluginImageEdit
+);
+
 Chart.register(ChartDataLabels);
+
+
+
 window.Chart = Chart;
-
-
-
+window.FilePond = FilePond;
 window.Tick = Tick;
 AOS.init();
 
-// Reusable function to initialize a chart
 function initChart(canvasId, eventName) {
     const ctx = document.getElementById(canvasId).getContext('2d');
 
@@ -102,6 +120,7 @@ function initChart(canvasId, eventName) {
 
     return chart;
 }
+
 
 
 // Export the function for reuse

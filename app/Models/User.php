@@ -23,6 +23,8 @@ class User extends Authenticatable
     use TwoFactorAuthenticatable;
     use HasRoles;
 
+    public mixed $faceData;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -88,6 +90,12 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Campus::class);
     }
+
+    public function faceData(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(FaceData::class, 'user_id');
+    }
+
     public function college(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(college::class, 'college_id');

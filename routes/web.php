@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CampusController;
+use App\Http\Controllers\FaceAuthController;
+use App\Http\Controllers\FaceRegistrationController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\VoterElectionController;
 use Illuminate\Support\Carbon;
@@ -84,7 +87,10 @@ Route::get('/api/election-end-time/{electionId}', function ($electionId) {
 
 })->name('election.end.time');
 
+Route::post('/face/registration', [FaceRegistrationController::class, 'register'])
+    ->name('api.face.registration');
 
 
-
+Route::get('/api/face/descriptors', [FaceAuthController::class, 'getDescriptors'])->name('api.face.get-descriptors');
+Route::post('/api/face/verification', [FaceAuthController::class, 'verify'])->name('api.face.verification');
 
