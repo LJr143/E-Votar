@@ -44,8 +44,8 @@
             </h2>
 
             <!--form container-->
-            <div class="px-2 h-screen overflow-x-hidden ml-0 w-full flex justify-center">
-                <div>
+            <div class="px-2 min-h-screen overflow-hidden ml-0 w-full flex justify-center">
+            <div>
                     <form action="{{route('admin.unregistered.admin')}}" method="POST" class="">
                         @csrf
                         <div class="w-full sm:w-[600px] md:w-[800px] lg:w-[1000px] xl:w-[1200px] max-w-[1200px] rounded border-2 border-solid border-gray-300 shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] p-4">
@@ -198,7 +198,7 @@
                                         Campus
                                     </x-label>
                                     <select name="campus" id="campus"
-                                            class="px-2 py-0 h-[28px] text-[12px] w-full min-w-[200px] max-w-[200px] rounded border border-gray-300 focus:border-blue-500 focus:outline-none @error('campus') border-red-500 @enderror">
+                                            class="px-2 py-0 h-[28px] text-[12px] w-full min-w-[150px] rounded border border-gray-300 focus:border-blue-500 focus:outline-none @error('campus') border-red-500 @enderror">
                                         <option value="" disabled selected>Select your campus</option>
 
                                     </select>
@@ -212,7 +212,7 @@
                                         College
                                     </x-label>
                                     <select name="college" id="college"
-                                            class="px-2 py-0 h-[28px] text-[12px] w-full min-w-[240px] max-w-[200px] rounded border border-gray-300 focus:border-blue-500 focus:outline-none @error('college') border-red-500 @enderror">
+                                            class="px-2 py-0 h-[28px] text-[12px] w-full min-w-[150px] rounded border border-gray-300 focus:border-blue-500 focus:outline-none @error('college') border-red-500 @enderror">
                                         <option value="" disabled selected>Select your college</option>
 
                                     </select>
@@ -226,7 +226,7 @@
                                         Program
                                     </x-label>
                                     <select name="program" id="program"
-                                            class="px-2 py-0 h-[28px] text-[12px] w-full min-w-[212px] max-w-[212px] rounded border border-gray-300 focus:border-blue-500 focus:outline-none @error('program') border-red-500 @enderror">
+                                            class="px-2 py-0 h-[28px] text-[12px] w-full min-w-[150px] rounded border border-gray-300 focus:border-blue-500 focus:outline-none @error('program') border-red-500 @enderror">
                                         <option value="" disabled selected>Select program</option>
 
                                     </select>
@@ -240,7 +240,7 @@
                                         Major
                                     </x-label>
                                     <select name="program_major" id="program_major"
-                                            class="px-2 py-0 h-[28px] text-[12px] w-full min-w-[212px] max-w-[212px] rounded border border-gray-300 focus:border-blue-500 focus:outline-none @error('program_major') border-red-500 @enderror">
+                                            class="px-2 py-0 h-[28px] text-[12px] w-full min-w-[150px] rounded border border-gray-300 focus:border-blue-500 focus:outline-none @error('program_major') border-red-500 @enderror">
                                         <option value="" disabled selected>Select program major</option>
 
                                     </select>
