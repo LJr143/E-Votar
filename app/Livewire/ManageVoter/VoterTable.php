@@ -40,10 +40,11 @@ class VoterTable extends Component
             });
 
         if ($this->perPage === 'all') {
-            return $user->get();
+            return User::all();
+        }else{
+            return $user->paginate($this->perPage);
         }
 
-        return $user->paginate($this->perPage);
     }
 
     public function updatingPerPage(): void

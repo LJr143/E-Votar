@@ -1,6 +1,7 @@
 <div>
-    @if (!empty($paginator))
-        <nav role="navigation" aria-label="Pagination Navigation" class="flex items-center justify-between">
+    @if (!empty($paginator) && ($paginator->total() > 5))
+
+    <nav role="navigation" aria-label="Pagination Navigation" class="flex items-center justify-between">
             <div class="flex justify-between flex-1 sm:hidden">
                 @if ($paginator->onFirstPage())
                     <span class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 cursor-default leading-5 rounded-md">
@@ -31,38 +32,42 @@
                     <div class="mr-4">
                         <label for="perPage" class="sr-only">Items per page</label>
                         <select id="perPage" wire:model.live="perPage"
-                                class="border border-gray-300 rounded-md shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 text-sm py-1 px-4">
+                                class="border border-gray-300 rounded-md shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 text-sm py-1 px-5">
                             @php
                                 $total = $paginator->total();
-                                $options = [5, 10, 25, 50];
 
-                                // Generate dynamic options based on total records
-                                $current = 50;
-                                while($current * 2 <= $total) {
-                                    $current *= 2;
-                                    if($current <= 1000) { // Safety limit for very large datasets
-                                        $options[] = $current;
+                                // Handle edge case for 1 record
+                                if ($total === 1) {
+                                    $options = [1];
+                                } else {
+                                    // Calculate smart options for normal cases
+                                    $options = [];
+
+                                    // Always include these reasonable defaults if applicable
+                                    if ($total >= 5) $options[] = 5;
+                                    if ($total >= 10) $options[] = 10;
+                                    if ($total >= 25) $options[] = 25;
+
+                                    // Add the total itself if it's meaningfully different
+                                    if ($total > 25 && !in_array($total, $options)) {
+                                        $options[] = $total;
                                     }
-                                }
 
-                                // Always include the total if it's different from existing options
-                                if($total > 50 && !in_array($total, $options)) {
-                                    $options[] = $total;
-                                }
+                                    // Ensure we have at least one option
+                                    if (empty($options)) {
+                                        $options[] = $total; // For cases like 2, 3, or 4 items
+                                    }
 
-                                // Filter options to only include values <= total
-                                $filteredOptions = array_filter($options, fn($opt) => $opt <= $total);
-                                $finalOptions = array_unique(array_merge(
-                                    [5, 10, 25],
-                                    $filteredOptions
-                                ));
-                                sort($finalOptions);
+                                    // Sort and limit to 5 options
+                                    sort($options);
+                                    $options = array_slice($options, -5);
+                                }
                             @endphp
 
-                            @foreach($finalOptions as $option)
+                            @foreach($options as $option)
                                 <option value="{{ $option }}">{{ $option }} per page</option>
                             @endforeach
-                            <option value="all">Show All ({{ $total }})</option>
+
                         </select>
                     </div>
 

@@ -27,6 +27,8 @@ class ElectionsTable extends Component
         'filter' => ['except' => 'all_elections']
     ];
 
+    public $perPage = 10;
+
 
     public function updatingSearch(): void
     {
@@ -63,6 +65,10 @@ class ElectionsTable extends Component
             });
         }
 
+        if ($this->perPage === 'all') {
+            return $query->get();
+        }
+
         // Status filter
         if ($this->filter === 'ongoing_elections') {
             $query->where('status', 'ongoing');
@@ -70,7 +76,7 @@ class ElectionsTable extends Component
             $query->where('status', 'completed');
         }
 
-        $elections = $query->paginate(10);
+        $elections = $query->paginate($this->perPage);
 
         return view('evotar.livewire.superadmin.elections-table', [
             'elections' => $elections,
