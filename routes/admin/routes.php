@@ -32,12 +32,19 @@ Route::middleware(['splash.screen', 'set.selected.election'])->prefix('admin')->
     Route::get('election/party-list', [ViewController::class, 'partyList'])->name('admin.election.party.list')->middleware('admin.auth:view party list');
     Route::get('system/logs', [ViewController::class, 'systemLogs'])->name('admin.system.logs')->middleware('admin.auth:view system logs');
     Route::get('feedback', [ViewController::class, 'feedback'])->name('admin.feedback')->middleware('admin.auth:view feedback');
+    Route::get('announcement', [ViewController::class, 'announcement'])->name('admin.announcement')->middleware('admin.auth:view announcement');
 
     Route::get('account-settings', [ViewController::class, 'AccountSettings'])->name('admin.account-settings')->middleware('admin.auth:view account-settings');
+
 
     // Technical Officer Based Routes
     Route::get('dashboard/technical-officer', [ViewController::class, 'technicalOfficerDashboard'])->name('technical-officer.dashboard');
     Route::get('active-users', [ViewController::class, 'activeUsers'])->name('technical-officer.active.user');
     Route::get('ip-records', [ViewController::class, 'ipRecords'])->name('technical-officer.ip.records');
+
+
+
+
+
 });
 Route::get('vote/tally', [ViewController::class, 'voteTally'])->name('admin.vote.tally')->middleware('admin.auth:view vote tally');
