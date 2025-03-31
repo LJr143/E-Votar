@@ -37,16 +37,6 @@
                                     <span class="text-[12px]">Print</span>
                                 </button>
 
-{{--                                <button--}}
-{{--                                    class="bg-white border border-gray-300 rounded h-8 px-3 py-2 flex items-center space-x-1 hover:drop-shadow hover:bg-gray-200 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110">--}}
-{{--                                    <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"--}}
-{{--                                         width="20px" fill="#000000">--}}
-{{--                                        <path--}}
-{{--                                            d="M444-336v-342L339-573l-51-51 192-192 192 192-51 51-105-105v342h-72ZM263.72-192Q234-192 213-213.15T192-264v-72h72v72h432v-72h72v72q0 29.7-21.16 50.85Q725.68-192 695.96-192H263.72Z"/>--}}
-{{--                                    </svg>--}}
-{{--                                    <span class="text-[12px]">Import</span>--}}
-{{--                                </button>--}}
-
                                 <button
                                     class="bg-white border border-gray-300 rounded h-8 px-3 py-2 flex items-center space-x-1 hover:drop-shadow hover:bg-gray-200 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"
                                     onclick="exportToCSV()">
@@ -246,57 +236,6 @@
             // Open in new tab for preview
             window.open(doc.output("bloburl"), "_blank"); // Opens PDF in new tab
         }
-
-        function exportToCSV() {
-            // Get all checked checkboxes
-            const checkedCheckboxes = document.querySelectorAll('.row-checkbox:checked');
-
-            // If no rows are selected, show alert and return
-            if (checkedCheckboxes.length === 0) {
-                alert('Please select at least one election to export as CSV.');
-                return;
-            }
-
-            let csvContent = "";
-
-            // Extract headers
-            const originalTable = document.getElementById('electionsTable');
-            const headerCells = originalTable.querySelectorAll('thead th');
-            const headers = [];
-
-            headerCells.forEach((th, index) => {
-                if (index !== 0 && index !== headerCells.length - 1) { // Skip checkbox & action column
-                    headers.push(th.innerText);
-                }
-            });
-
-            csvContent += headers.join(",") + "\n"; // Add headers to CSV
-
-            // Extract selected rows
-            checkedCheckboxes.forEach(checkbox => {
-                const row = checkbox.closest('tr');
-                const rowData = [];
-
-                row.querySelectorAll('td').forEach((td, index) => {
-                    if (index !== 0 && index !== row.children.length - 1) {
-                        let text = td.innerText.replace(/,/g, " "); // Remove commas to avoid CSV issues
-                        rowData.push(`"${text}"`); // Wrap values in quotes
-                    }
-                });
-
-                csvContent += rowData.join(",") + "\n"; // Add row to CSV
-            });
-
-            // Create a CSV file and trigger download
-            const blob = new Blob([csvContent], { type: "text/csv" });
-            const a = document.createElement("a");
-            a.href = URL.createObjectURL(blob);
-            a.download = "elections_export.csv";
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        }
-
 
     </script>
 
