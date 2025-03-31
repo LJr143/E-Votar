@@ -1,12 +1,16 @@
 <?php
 namespace App\Livewire\ManageCandidate;
 
+use App\Exports\CandidateExport;
+use App\Exports\ElectionsExport;
 use App\Models\Candidate;
 use App\Models\Council;
 use App\Models\Election;
 use App\Models\ElectionPosition;
 use App\Models\User;
 use Livewire\Component;
+use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Calculation\Logical\Boolean;
 
 class ViewCandidate extends Component
 {
@@ -25,6 +29,8 @@ class ViewCandidate extends Component
 
     public $totalVoters;
     public $totalVoterVoted;
+    public $hasLocalCouncilCandidate = false;
+    public $hasStudentCouncilCandidate = false;
     public $councils;
 
 
@@ -87,6 +93,12 @@ class ViewCandidate extends Component
 
     }
 
+    public function exportCandidate()
+    {
+        return Excel::download(new CandidateExport($this->search, $this->filter, $this->selectedElection), 'LIST_OF_CANDIDATES.xlsx');
+
+    }
+
 
     public function fetchVoterTally(): void
     {
@@ -126,15 +138,16 @@ class ViewCandidate extends Component
             ->count();
     }
 
-
     public function fetchCandidates(): void
     {
         if (!$this->selectedElection) {
             $this->candidates = [];
+            $this->hasStudentCouncilCandidate = false;
+            $this->hasLocalCouncilCandidate = false;
             return;
         }
 
-        $query = Candidate::with(['users', 'users.program.council', 'elections', 'election_positions.position.electionType'])
+        $query = Candidate::with(['users', 'users.program.council', 'elections', 'election_positions.position', 'election_positions.position.electionType'])
             ->withCount('votes')
             ->join('election_positions', 'candidates.election_position_id', '=', 'election_positions.id')
             ->orderBy('election_positions.position_id', 'asc')
@@ -160,9 +173,19 @@ class ViewCandidate extends Component
         }
 
         $this->candidates = $query->get();
+
+        $this->hasStudentCouncilCandidate = Candidate::whereHas('election_positions.position.electionType', function ($q) {
+            $q->where('name', 'Student Council Election');
+        })->whereHas('elections', function ($q) {
+            $q->where('id', $this->selectedElection);
+        })->exists();
+
+        $this->hasLocalCouncilCandidate = Candidate::whereHas('election_positions.position.electionType', function ($q) {
+            $q->where('name', 'Local Council Election');
+        })->whereHas('elections', function ($q) {
+            $q->where('id', $this->selectedElection);
+        })->exists();
     }
-
-
 
     public function fetchElection($filter): void
     {

@@ -2,10 +2,12 @@
 
 namespace App\Livewire\Superadmin;
 
+use App\Exports\ElectionsExport;
 use App\Models\Election;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Database\Eloquent\Builder;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ElectionsTable extends Component
 {
@@ -34,6 +36,12 @@ class ElectionsTable extends Component
     public function updatingFilter(): void
     {
         $this->resetPage();
+    }
+
+    public function exportElection()
+    {
+        return Excel::download(new ElectionsExport, 'LIST_OF_ELECTIONS.xlsx');
+
     }
 
 

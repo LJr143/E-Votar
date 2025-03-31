@@ -39,13 +39,21 @@
 
                                 <button
                                     class="bg-white border border-gray-300 rounded h-8 px-3 py-2 flex items-center space-x-1 hover:drop-shadow hover:bg-gray-200 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"
-                                    onclick="exportToCSV()">
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"
+                                    wire:click="exportElection"
+                                    wire:loading.attr="disabled">
+                                    <svg wire:loading.remove wire:target="exportElection" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"
                                          width="20px" fill="#000000">
                                         <path
                                             d="M480-336 288-528l51-51 105 105v-342h72v342l105-105 51 51-192 192ZM263.72-192Q234-192 213-213.15T192-264v-72h72v72h432v-72h72v72q0 29.7-21.16 50.85Q725.68-192 695.96-192H263.72Z"/>
                                     </svg>
-                                    <span class="text-[12px]">Export</span>
+                                    <span wire:loading.remove wire:target="exportElection" class="text-[12px]">Export</span>
+                                    <svg wire:loading wire:target="exportElection" class="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                                stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor"
+                                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                    <span wire:loading wire:target="exportElection">Exporting...</span>
                                 </button>
                             </div>
                         </div>

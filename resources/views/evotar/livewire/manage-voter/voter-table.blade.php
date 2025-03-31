@@ -119,7 +119,7 @@
                             @endforeach
                             </tbody>
                         </table>
-                        <div class="mt-4">
+                        <div class="mt-4" wire:key="voter-pagination">
                             {{ $voters->links('evotar.components.pagination.tailwind-pagination') }}
                         </div>
                     </div>

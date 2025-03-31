@@ -15,6 +15,7 @@ class PositionTable extends Component
     // Component properties
     public $filter = 'all_position';
     public $search = '';
+    public $perPage = 5;
 
     /**
      * Reset pagination when search is updated.
@@ -82,7 +83,7 @@ class PositionTable extends Component
 
 
         return view('evotar.livewire.manage-position.position-table', [
-            'positions' => $query->paginate(5),
+            'positions' => $query->paginate($this->perPage),
         ]);
     }
 }

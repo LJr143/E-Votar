@@ -12,6 +12,7 @@ class VoterTable extends Component
 
 //    public string $filter = 'all_users';
     public string $search = '';
+    public $perPage = 10;
 
     public function updatingSearch(): void
     {
@@ -31,13 +32,23 @@ class VoterTable extends Component
 
     public function fetchUsers(): array|\LaravelIdea\Helper\App\Models\_IH_User_C|\Illuminate\Pagination\LengthAwarePaginator
     {
-        return User::whereHas('roles', function ($q) {
+        $user = User::whereHas('roles', function ($q) {
             $q->where('name', 'voter');
         })
             ->when($this->search, function ($query) {
                 $query->where('first_name', 'like', '%' . $this->search . '%');
-            })
-            ->paginate(10);
+            });
+
+        if ($this->perPage === 'all') {
+            return $user->get();
+        }
+
+        return $user->paginate($this->perPage);
+    }
+
+    public function updatingPerPage(): void
+    {
+        $this->resetPage();
     }
 
     public function render(): \Illuminate\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\View\View
