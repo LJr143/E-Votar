@@ -38,15 +38,15 @@
             <div class="mb-5 shadow-line"></div>
             <!--header logo and form title-->
           <h2 class="text-[24px] sm:text-[28px] md:text-[30px] text-black font-semibold text-center">
-              ACCOUNT REGISTRATION
+             VOTER REGISTRATION
           <h3 class="text-[10px] sm:text-[12px] md:text-[14px] text-black font-light mb-3 text-center capitalize">
               register account to assign role and permission and to start using the E-Votar System
           </h3>
             </h2>
 
             <!--form container-->
-          <div class="px-2 h-screen overflow-x-hidden ml-0 w-full flex justify-center">
-              <div>
+          <div class="px-2 min-h-screen overflow-hidden ml-0 w-full flex justify-center">
+          <div>
                   <form action="{{route('admin.register.voter')}}" method="POST" class="">
                       @csrf
                       <div class="w-full sm:w-[600px] md:w-[800px] lg:w-[1000px] xl:w-[1200px] max-w-[1200px] rounded border-2 border-solid border-gray-300 shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] p-4">
@@ -78,7 +78,7 @@
                                         <div class="text-red-500 text-[10px] italic mt-1">{{ $message }}</div>
                                         @enderror
                                     </div>
-                                    <div class="flex flex-col ">
+                                    <div class="flex flex-col w-full sm:w-auto">
                                         <x-label class="!text-black italic text-[10px]">
                                             Middle Initial
                                         </x-label>
@@ -118,7 +118,7 @@
 
                                     <div class="flex flex-wrap gap-4 mt-4">
                                         <!-- Gender -->
-                                        <div class="flex flex-col w-[150px]">
+                                        <div class="flex flex-col w-full sm:w-[150px]">
                                         <x-label class="!text-black italic text-[10px]">
                                             Gender
                                         </x-label>
@@ -135,7 +135,7 @@
                                         @enderror
                                     </div>
                                         <!-- Birth Date -->
-                                <div class="flex flex-col w-[180px]">
+                                        <div class="flex flex-col w-full sm:w-[180px]">
                                         <x-label class="!text-black italic text-[10px]">
                                             Birth Date
                                         </x-label>
@@ -160,8 +160,7 @@
                                         <div class="text-red-500 text-[10px] italic mt-1">{{ $message }}</div>
                                         @enderror
                                     </div>
-
-                                    <div class="flex flex-col w-[180px]">
+                                        <div class="flex flex-col w-full sm:w-[180px]">
                                         <x-label class="!text-black italic text-[10px]">
                                             Mobile Number
                                         </x-label>
@@ -191,12 +190,12 @@
                                     <div class="border mt-2 mb-4 p-4 rounded">
                                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                             <!-- Campus -->
-                                        <div class="flex flex-col">
+                                            <div class="flex flex-col">
                                             <x-label class="!text-black italic text-[10px]">
                                                 Campus
                                             </x-label>
                                             <select name="campus" id="campus"
-                                                    class="px-2 py-0 h-[28px] text-[12px] w-full min-w-[200px] max-w-[200px] rounded border border-gray-300 focus:border-blue-500 focus:outline-none @error('campus') border-red-500 @enderror">
+                                                    class="px-2 py-0 h-[28px] text-[12px] w-full min-w-[150px] rounded border border-gray-300 focus:border-blue-500 focus:outline-none @error('campus') border-red-500 @enderror">
                                                 <option value="" disabled selected>Select your campus</option>
 
                                             </select>
@@ -211,7 +210,7 @@
                                                     College
                                                 </x-label>
                                                 <select name="college" id="college"
-                                                        class="px-2 py-0 h-[28px] text-[12px] w-full min-w-[240px] max-w-[200px] rounded border border-gray-300 focus:border-blue-500 focus:outline-none @error('college') border-red-500 @enderror">
+                                                        class="px-2 py-0 h-[28px] text-[12px] w-full min-w-[150px] rounded border border-gray-300 focus:border-blue-500 focus:outline-none @error('college') border-red-500 @enderror">
                                                     <option value="" disabled selected>Select your college</option>
 
                                                 </select>
@@ -225,7 +224,7 @@
                                                     Program
                                                 </x-label>
                                                 <select name="program" id="program"
-                                                        class="px-2 py-0 h-[28px] text-[12px] w-full min-w-[212px] max-w-[212px] rounded border border-gray-300 focus:border-blue-500 focus:outline-none @error('program') border-red-500 @enderror">
+                                                        class="px-2 py-0 h-[28px] text-[12px] w-full min-w-[150px] rounded border border-gray-300 focus:border-blue-500 focus:outline-none @error('program') border-red-500 @enderror">
                                                     <option value="" disabled selected>Select program</option>
 
                                                 </select>
@@ -238,7 +237,7 @@
                                                     Major
                                                 </x-label>
                                                 <select name="program_major" id="program_major"
-                                                        class="px-2 py-0 h-[28px] text-[12px] w-full min-w-[212px] max-w-[212px] rounded border border-gray-300 focus:border-blue-500 focus:outline-none @error('program_major') border-red-500 @enderror">
+                                                        class="px-2 py-0 h-[28px] text-[12px] w-full min-w-[150px] rounded border border-gray-300 focus:border-blue-500 focus:outline-none @error('program_major') border-red-500 @enderror">
                                                     <option value="" disabled selected>Select program major</option>
 
                                                 </select>
