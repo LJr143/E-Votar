@@ -1,4 +1,4 @@
-<div>
+<div x-data="{ enableEditDelete: false }">
     <div class="hidden sm:block mb-4">
         <div class="border-b border-gray-200">
             <nav class="-mb-px flex space-x-8" aria-label="Tabs">
@@ -72,10 +72,12 @@
                                 </button>
                             </div>
 
-                            <label class="flex items-center space-x-2 cursor-pointer">
-                                <input type="checkbox" class=" rounded">
-                                <span class="text-black">Enable Edit/Delete</span>
-                            </label>
+                            <div class="flex justify-end px-4 py-2">
+                                <label class="flex items-center space-x-2 cursor-pointer">
+                                    <input type="checkbox" x-model="enableEditDelete" class="rounded form-checkbox h-4 w-4 text-black">
+                                    <span class="text-black">Enable Edit/Delete</span>
+                                </label>
+                            </div>
 
                         </div>
 
@@ -114,7 +116,29 @@
                                      wire:key="student-council-list">
                                     @foreach($candidates->where('election_positions.position.electionType.name', 'Student Council Election') as $candidate)
                                         <div wire:key="candidate-{{ $candidate->id }}" class="flip-card-container">
+
+                                                <div x-show="enableEditDelete" class="absolute top-350 right-[-10px] flex space-x-1 z-10">
+                                                    <!-- Edit Button -->
+                                                    <button class="bg-green-500 text-white p-1 rounded-full hover:bg-green-700 transition">
+                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"
+                                                             viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                  d="M16.862 3.487a2.25 2.25 0 113.182 3.182L7.96 18.75l-4.21 1.028a.75.75 0 01-.91-.91l1.028-4.21L16.862 3.487z">
+                                                            </path>
+                                                        </svg>
+                                                    </button>
+
+                                                    <!-- Delete Button -->
+                                                    <button class="bg-red-500 text-white p-1 rounded-full hover:bg-red-700 transition">
+                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"
+                                                             viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                  d="M6 18L18 6M6 6l12 12"></path>
+                                                        </svg>
+                                                    </button>
+                                                </div>
                                             <div class="flip-card" onclick="this.classList.toggle('flipped')">
+
                                                 <!-- Front of the card -->
                                                 <div class="flip-card-front bg-white p-6 shadow-md min-h-[320px]">
                                                     <div class="flex justify-center items-center">
@@ -186,6 +210,26 @@
                                         class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 px-4 py-4">
                                         @foreach($localCandidates as $candidate)
                                             <div wire:key="candidate-{{ $candidate->id }}" class="flip-card-container">
+                                                <div x-show="enableEditDelete" class="absolute top-350 right-[-10px] flex space-x-1 z-10">
+                                                    <!-- Edit Button -->
+                                                    <button class="bg-green-500 text-white p-1 rounded-full hover:bg-green-700 transition">
+                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"
+                                                             viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                  d="M16.862 3.487a2.25 2.25 0 113.182 3.182L7.96 18.75l-4.21 1.028a.75.75 0 01-.91-.91l1.028-4.21L16.862 3.487z">
+                                                            </path>
+                                                        </svg>
+                                                    </button>
+
+                                                    <!-- Delete Button -->
+                                                    <button class="bg-red-500 text-white p-1 rounded-full hover:bg-red-700 transition">
+                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"
+                                                             viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                  d="M6 18L18 6M6 6l12 12"></path>
+                                                        </svg>
+                                                    </button>
+                                                </div>
                                                 <div class="flip-card" onclick="this.classList.toggle('flipped')">
                                                     <!-- Front of the card -->
                                                     <div class="flip-card-front bg-white p-6 shadow-md min-h-[320px]">
