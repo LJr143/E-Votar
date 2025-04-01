@@ -1,4 +1,35 @@
 <div x-data="{ enableEditDelete: false }">
+
+    <style>
+        .flip-card-container {
+            perspective: 1000px;
+            min-height: 320px;
+        }
+
+        .flip-card {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+
+        .flip-card-back {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card.flipped {
+            transform: rotateY(180deg);
+        }
+    </style>
     <div class="hidden sm:block mb-4">
         <div class="border-b border-gray-200">
             <nav class="-mb-px flex space-x-8" aria-label="Tabs">
@@ -109,128 +140,16 @@
                         @if($selectedElection)
                             <!-- Student Council Section -->
                             @if($hasStudentCouncilPositions && $hasStudentCouncilCandidate)
-                                <h2 class="text-[16px] font-bold uppercase text-center mb-4">{{ $selectedElectionCampus->name ?? 'No campus available' }}
+                                <h2 class="text-[16px] font-bold uppercase text-center mb-6">{{ $selectedElectionCampus->name ?? 'No campus available' }}
                                     Student Council Candidates</h2>
                                 <div id="studentCouncil"
                                      class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 px-4 py-4"
                                      wire:key="student-council-list">
                                     @foreach($candidates->where('election_positions.position.electionType.name', 'Student Council Election') as $candidate)
-                                        <div wire:key="candidate-{{ $candidate->id }}" class="flip-card-container">
-
-                                                <div x-show="enableEditDelete" class="absolute top-350 right-[-10px] flex space-x-1 z-10">
-                                                    <!-- Edit Button -->
-                                                    <button class="bg-green-500 text-white p-1 rounded-full hover:bg-green-700 transition">
-                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"
-                                                             viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                  d="M16.862 3.487a2.25 2.25 0 113.182 3.182L7.96 18.75l-4.21 1.028a.75.75 0 01-.91-.91l1.028-4.21L16.862 3.487z">
-                                                            </path>
-                                                        </svg>
-                                                    </button>
-
-                                                    <!-- Delete Button -->
-                                                    <button class="bg-red-500 text-white p-1 rounded-full hover:bg-red-700 transition">
-                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"
-                                                             viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                  d="M6 18L18 6M6 6l12 12"></path>
-                                                        </svg>
-                                                    </button>
-                                                </div>
-                                            <div class="flip-card" onclick="this.classList.toggle('flipped')">
-
-                                                <!-- Front of the card -->
-                                                <div class="flip-card-front bg-white p-6 shadow-md min-h-[320px]">
-                                                    <div class="flex justify-center items-center">
-                                                        <p class="text-[12px]">Running for:
-                                                            <span
-                                                                class="text-red-900 uppercase tracking-tighter font-semibold">
-                                {{ $candidate->election_positions->position->name }}
-                            </span>
-                                                        </p>
-                                                    </div>
-                                                    <div>
-                                                        <div class="flex justify-end mt-2 mr-[15px]">
-                                                            <img class="w-[85px]"
-                                                                 src="{{ asset('storage/assets/icon/usep_logo_svg.png') }}"
-                                                                 alt="">
-                                                        </div>
-                                                        <div class="mt-[-38px] flex justify-center">
-                                                            <div class="border-2 border-black">
-                                                                <img class="w-[110px]"
-                                                                     src="{{ asset('storage/assets/profile/cat_meme.jpg') }}"
-                                                                     alt="">
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="mt-2 text-center">
-                                                            <div class="flex justify-center">
-                                                                <p class="text-black uppercase font-black text-[11px]">{{ $candidate->users->first_name }} {{ $candidate->users->middle_initial }}
-                                                                    . {{ $candidate->users->last_name }}</p>
-                                                            </div>
-                                                            <p class="text-black capitalize font-semibold text-[10px]">{{ $candidate->users->year_level }}
-                                                                year</p>
-                                                            <p class="text-black capitalize font-semibold text-[12px] leading-none">
-                                                                @php
-                                                                    $programName = $candidate->users->program->name;
-                                                                    $programName = str_starts_with($programName, 'Bachelor of Science') ? 'BS ' . substr($programName, strlen('Bachelor of Science')) : $programName;
-                                                                @endphp
-                                                                <span class="program-name !text-[12px]"
-                                                                      title="{{ $programName }}">
-                                    {{ $programName }}
-                                </span>
-                                                            </p>
-                                                            <p class="text-black capitalize font-semibold text-[11px] leading-none">{{ optional($candidate->users->programMajor)->name ?? '' }}</p>
-                                                            <p class="text-black mt-2 capitalize italic font-semibold text-[11px]">{{ $candidate->partyLists->name }}</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <!-- Back of the card with motto -->
-                                                <div
-                                                    class="flip-card-back bg-white p-6 shadow-md min-h-[320px] flex items-center justify-center">
-                                                    <div class="text-center p-4">
-                                                        <h3 class="font-bold text-lg mb-2">ADVOCACY</h3>
-                                                        <p class="italic text-sm">{{ $candidate->description ?? 'No motto provided' }}</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                </div>
-                            @endif
-                            <!-- Local Councils Section -->
-                            @if($hasLocalCouncilPositions && $hasLocalCouncilCandidate )
-                                <h2 class="text-[16px] font-bold uppercase text-center mt-8 mb-4">Local Councils
-                                    Candidates</h2>
-                                @foreach($candidates->where('election_positions.position.electionType.name', 'Local Council Election')->groupBy('users.program.council.name') as $programName => $localCandidates)
-                                    <h3 class="text-[12px] px-4 font-bold uppercase text-gray-700 mt-6">{{ $programName }}
-                                        Organization</h3>
-                                    <div
-                                        class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 px-4 py-4">
-                                        @foreach($localCandidates as $candidate)
-                                            <div wire:key="candidate-{{ $candidate->id }}" class="flip-card-container">
-                                                <div x-show="enableEditDelete" class="absolute top-350 right-[-10px] flex space-x-1 z-10">
-                                                    <!-- Edit Button -->
-                                                    <button class="bg-green-500 text-white p-1 rounded-full hover:bg-green-700 transition">
-                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"
-                                                             viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                  d="M16.862 3.487a2.25 2.25 0 113.182 3.182L7.96 18.75l-4.21 1.028a.75.75 0 01-.91-.91l1.028-4.21L16.862 3.487z">
-                                                            </path>
-                                                        </svg>
-                                                    </button>
-
-                                                    <!-- Delete Button -->
-                                                    <button class="bg-red-500 text-white p-1 rounded-full hover:bg-red-700 transition">
-                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"
-                                                             viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                  d="M6 18L18 6M6 6l12 12"></path>
-                                                        </svg>
-                                                    </button>
-                                                </div>
+                                        <div wire:key="candidate-{{ $candidate->id }}" class=" relative">
+                                            <div class="flip-card-container mt-[-45px]" wire:key="cards-{{ $candidate->id}}">
                                                 <div class="flip-card" onclick="this.classList.toggle('flipped')">
+
                                                     <!-- Front of the card -->
                                                     <div class="flip-card-front bg-white p-6 shadow-md min-h-[320px]">
                                                         <div class="flex justify-center items-center">
@@ -284,7 +203,118 @@
                                                         <div class="text-center p-4">
                                                             <h3 class="font-bold text-lg mb-2">ADVOCACY</h3>
                                                             <p class="italic text-sm">{{ $candidate->description ?? 'No motto provided' }}</p>
+                                                            <p class="italic text-xs">-{{ $candidate->users->first_name . ' ' . substr($candidate->users->last_name, 0, 1) . '.'}}</p>
+                                                            <p class="italic text-[10px]">
+                                                                {{ Str::endsWith($candidate->election_positions->position->name, 'ent') ? Str::replaceLast('ent', 'ential', $candidate->election_positions->position->name) : $candidate->election_positions->position->name }} Aspirant.
+                                                            </p>
                                                         </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div x-show="enableEditDelete" class="relative mt-[-40px] w-full" wire:key="edit-buttons-{{$candidate->id}}">
+                                                <div class="flex justify-between px-4">
+                                                    <!-- Edit Button -->
+                                                    <livewire:manage-candidate.edit-candidate :candidateId="$candidate->id" wire:key="edit-{{$candidate->id}}" class="w-full"/>
+
+                                                    <!-- Delete Button -->
+                                                    <livewire:manage-candidate.delete-candidate :candidateId="$candidate->id" wire:key="delete-{{$candidate->id}}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @endif
+                            <!-- Local Councils Section -->
+                            @if($hasLocalCouncilPositions && $hasLocalCouncilCandidate )
+                                <h2 class="text-[16px] font-bold uppercase text-center mt-8 mb-4">Local Councils
+                                    Candidates</h2>
+                                @foreach($candidates->where('election_positions.position.electionType.name', 'Local Council Election')->groupBy('users.program.council.name') as $programName => $localCandidates)
+                                    <h3 class="text-[12px] px-4 font-bold uppercase text-gray-700 mt-6 mb-8">{{ $programName }}
+                                        Organization</h3>
+                                    <div
+                                        class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 px-4 py-4 mt-4">
+                                        @foreach($localCandidates as $candidate)
+                                            <div wire:key="candidate-{{ $candidate->id }}" class="relative">
+                                                <div class="flip-card-container mt-[-45px]">
+                                                    <div class="flip-card" onclick="this.classList.toggle('flipped')">
+                                                        <!-- Front of the card -->
+                                                        <div class="flip-card-front bg-white p-6 shadow-md min-h-[320px]">
+                                                            <div class="flex justify-center items-center">
+                                                                <p class="text-[12px]">Running for:
+                                                                    <span
+                                                                        class="text-red-900 uppercase tracking-tighter font-semibold">
+                                {{ $candidate->election_positions->position->name }}
+                            </span>
+                                                                </p>
+                                                            </div>
+                                                            <div>
+                                                                <div class="flex justify-end mt-2 mr-[15px]">
+                                                                    <img class="w-[85px]"
+                                                                         src="{{ asset('storage/assets/icon/usep_logo_svg.png') }}"
+                                                                         alt="">
+                                                                </div>
+                                                                <div class="mt-[-38px] flex justify-center">
+                                                                    <div class="border-2 border-black">
+                                                                        <img class="w-[110px]"
+                                                                             src="{{ asset('storage/assets/profile/cat_meme.jpg') }}"
+                                                                             alt="">
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="mt-2 text-center">
+                                                                    <div class="flex justify-center">
+                                                                        <p class="text-black uppercase font-black text-[11px]">{{ $candidate->users->first_name }} {{ $candidate->users->middle_initial }}
+                                                                            . {{ $candidate->users->last_name }}</p>
+                                                                    </div>
+                                                                    <p class="text-black capitalize font-semibold text-[10px]">{{ $candidate->users->year_level }}
+                                                                        year</p>
+                                                                    <p class="text-black capitalize font-semibold text-[12px] leading-none">
+                                                                        @php
+                                                                            $programName = $candidate->users->program->name;
+                                                                            $programName = str_starts_with($programName, 'Bachelor of Science') ? 'BS ' . substr($programName, strlen('Bachelor of Science')) : $programName;
+                                                                        @endphp
+                                                                        <span class="program-name !text-[12px]"
+                                                                              title="{{ $programName }}">
+                                    {{ $programName }}
+                                </span>
+                                                                    </p>
+                                                                    <p class="text-black capitalize font-semibold text-[11px] leading-none">{{ optional($candidate->users->programMajor)->name ?? '' }}</p>
+                                                                    <p class="text-black mt-2 capitalize italic font-semibold text-[11px]">{{ $candidate->partyLists->name }}</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Back of the card with motto -->
+                                                        <div
+                                                            class="flip-card-back bg-white p-6 shadow-md min-h-[320px] flex items-center justify-center">
+                                                            <div class="text-center p-4">
+                                                                <h3 class="font-bold text-lg mb-2">ADVOCACY</h3>
+                                                                <p class="italic text-sm">
+                                                                    {{ trim($candidate->description ?? '') !== '' ? $candidate->description : 'No motto provided' }}
+                                                                </p>
+                                                                <p class="italic text-xs">-{{ $candidate->users->first_name . ' ' . substr($candidate->users->last_name, 0, 1) . '.'}}</p>
+                                                                <p class="italic text-[10px]">
+                                                                    {{
+                                                                        Str::endsWith($candidate->election_positions->position->name, 'ent')
+                                                                            ? Str::replaceLast('ent', 'ential', $candidate->election_positions->position->name)
+                                                                            : ($candidate->election_positions->position->name === 'Legislator'
+                                                                                ? 'Legislative'
+                                                                                : $candidate->election_positions->position->name)
+                                                                    }} Aspirant.
+                                                                </p>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div x-show="enableEditDelete" class="relative mt-[-40px] w-full" wire:key="edit-buttons-{{$candidate->id}}">
+                                                    <div class="flex justify-between px-4">
+                                                        <!-- Edit Button -->
+                                                        <livewire:manage-candidate.edit-candidate :candidateId="$candidate->id" wire:key="edit-{{$candidate->id}}" class="w-full"/>
+
+                                                        <!-- Delete Button -->
+                                                        <livewire:manage-candidate.delete-candidate :candidateId="$candidate->id" wire:key="delete-{{$candidate->id}}"/>
                                                     </div>
                                                 </div>
                                             </div>

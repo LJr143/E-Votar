@@ -76,6 +76,16 @@
                                     @enderror
                                 </div>
 
+                                <div class="flex-1 mb-3">
+                                    <label for="num_winners"
+                                           class="text-[10px] font-natural px-2 block text-black text-left "> No. of Winners</label>
+                                    <input type="text" name="num_winners" wire:model="num_winners"
+                                           class="border border-gray-300 text-xs rounded-lg text-black px-4 py-2 w-full">
+                                    @error('num_winners')
+                                    <span class="text-red-500 text-[10px] italic">{{ $message }}</span>
+                                    @enderror
+                                </div>
+
                             </div>
 
                         </div>

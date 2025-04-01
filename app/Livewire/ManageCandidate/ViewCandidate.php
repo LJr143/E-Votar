@@ -14,7 +14,7 @@ use PhpOffice\PhpSpreadsheet\Calculation\Logical\Boolean;
 
 class ViewCandidate extends Component
 {
-    protected $listeners = ['candidate-created' => '$refresh'];
+    protected $listeners = ['candidate-created' => '$refresh', 'candidate-edited' => '$refresh', 'candidate-deleted' => '$refresh'];
     public $candidates = [];
     public $filter;
     public $search = '';

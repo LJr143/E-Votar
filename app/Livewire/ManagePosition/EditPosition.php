@@ -8,13 +8,14 @@ use Livewire\Component;
 
 class EditPosition extends Component
 {
-    public $name, $election_type_id, $election_types, $position;
+    public $name, $election_type_id, $election_types, $position, $num_winners;
 
     public function mount($positionId): void
     {
         $this->position = Position::find($positionId);
         $this->name = $this->position->name;
         $this->election_type_id = $this->position->election_type_id;
+        $this->num_winners = $this->position->num_winners;
 
     }
 
@@ -24,6 +25,7 @@ class EditPosition extends Component
         $this->validate([
             'name' => 'required|string|max:255',
             'election_type_id' => 'required|exists:election_types,id',
+            'num_winners' => 'required|integer'
         ]);
 
         // Find the Position model instance you want to update
@@ -33,6 +35,7 @@ class EditPosition extends Component
         $position->update([
             'name' => $this->name,
             'election_type_id' => $this->election_type_id,
+            'num_winners' => $this->num_winners
         ]);
 
         // Dispatch an event or notification

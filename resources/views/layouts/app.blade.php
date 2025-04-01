@@ -85,6 +85,10 @@
         <div
             x-on:candidate-created.window="pushNotification('success', 'Candidate Created', 'Candidate has been created successfully.');"></div>
         <div
+            x-on:candidate-edited.window="pushNotification('success', 'Candidate Edited', 'Candidate has been updated successfully.');"></div>
+        <div
+            x-on:candidate-deleted.window="pushNotification('success', 'Candidate Deleted', 'Candidate has been deleted successfully.');"></div>
+        <div
             x-on:user-deleted.window="pushNotification('success', 'System User Deleted', 'User has been delete successfully.');"></div>
         <div
             x-on:user-created.window="pushNotification('success', 'System User Added', 'User has been added successfully.');"></div>

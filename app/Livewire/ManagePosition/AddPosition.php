@@ -8,27 +8,29 @@ use Livewire\Component;
 
 class AddPosition extends Component
 {
-    public $name, $election_type_id, $election_types;
+    public $name, $election_type_id, $election_types, $num_winners;
 
     public function addPosition(): void
     {
         // Validate input fields
         $this->validate([
             'name' => 'required|string|max:255',
-            'election_type_id' => 'required|exists:election_types,id', // Ensures election_type_id exists in the election_types table
+            'election_type_id' => 'required|exists:election_types,id',
+            'num_winners' => 'required|integer'
         ]);
 
         // Create a new Position
         Position::create([
             'name' => $this->name,
             'election_type_id' => $this->election_type_id,
+            'num_winners' => $this->num_winners
         ]);
 
         // Dispatch an event or notification
         $this->dispatch('position-created');
 
         // Optionally reset fields after creation
-        $this->reset(['name', 'election_type_id']);
+        $this->reset(['name', 'election_type_id', 'num_winners']);
     }
 
     public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Foundation\Application|\Illuminate\Contracts\View\View|\Illuminate\View\View
