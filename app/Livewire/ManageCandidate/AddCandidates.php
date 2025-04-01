@@ -79,12 +79,25 @@ class AddCandidates extends Component
     public function submit(): void
     {
         $this->validate([
-            'selectedUser' => 'required|exists:users,id',
-            'selectedElection' => 'required|exists:elections,id',
-            'candidate_position' => 'required',
-            'candidate_party_list' => 'required|exists:party_lists,id',
+            'selectedUser' => [
+                'required',
+                'exists:users,id',
+                function ($attribute, $value, $fail) {
+                    // Check if user is already a candidate in this election
+                    $existing = Candidate::where('user_id', $value)
+                        ->where('election_id', $this->selectedElection)
+                        ->exists();
 
+                    if ($existing) {
+                        $fail('This user is already running for a position in this election.');
+                    }
+                }
+            ],
+            'selectedElection' => 'required|exists:elections,id',
+            'candidate_position' => 'required|exists:election_positions,id',
+            'candidate_party_list' => 'required|exists:party_lists,id',
         ]);
+
         Candidate::create([
             'user_id' => $this->selectedUser,
             'election_id' => $this->selectedElection,
@@ -94,7 +107,18 @@ class AddCandidates extends Component
         ]);
 
         $this->dispatch('candidate-created');
+        $this->resetForm();
+    }
 
+    protected function resetForm(): void
+    {
+        $this->search = '';
+        $this->selectedUser = null;
+        $this->selectedElection = null;
+        $this->candidate_position = null;
+        $this->candidate_party_list = null;
+        $this->candidate_description = '';
+        $this->positions = [];
     }
 
     public function render(): \Illuminate\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\View\View
