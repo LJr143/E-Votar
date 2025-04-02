@@ -5,43 +5,93 @@
                 <div
                     class="text-[12px] bg-white mt-0 p-5 rounded-md md:max-w-[800px] min-[90%]:max-w-[100%] lg:max-w-[900px] xl:w-[100%] xl:min-w-[100%] 2xl:max-w-[1190px]">
                     <div class="flex w-full">
-                        <div class="w-1/2">
+                        <div class="flex items-center justify-between flex-wrap md:flex-nowrap gap-2">
                             <button
-                                class="bg-white border border-gray-100 rounded p-1 w-[30px] flex-row  items-center justify-items-center"
-                                onclick="printPartyList()">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-                                     xmlns="http://www.w3.org/2000/svg">
-                                    <mask id="mask0_782_22521" style="mask-type:alpha"
-                                          maskUnits="userSpaceOnUse"
-                                          x="0" y="0" width="24" height="24">
-                                        <rect width="24" height="24" fill="#D9D9D9"/>
-                                    </mask>
-                                    <g mask="url(#mask0_782_22521)">
-                                        <path
-                                            d="M8.30826 20.4998C7.81115 20.4998 7.38559 20.3228 7.03159 19.9688C6.67757 19.6148 6.50056 19.1893 6.50056 18.6921V16.4998H4.59674C4.09962 16.4998 3.67406 16.3228 3.32006 15.9688C2.96606 15.6148 2.78906 15.1893 2.78906 14.6921V10.8075C2.78906 10.0992 3.03105 9.50548 3.51501 9.02632C3.99898 8.54717 4.59031 8.30759 5.28901 8.30759H18.7121C19.4204 8.30759 20.0141 8.54717 20.4933 9.02632C20.9724 9.50548 21.212 10.0992 21.212 10.8075V14.6921C21.212 15.1893 21.035 15.6148 20.681 15.9688C20.327 16.3228 19.9015 16.4998 19.4043 16.4998H17.5005V18.6921C17.5005 19.1893 17.3235 19.6148 16.9695 19.9688C16.6155 20.3228 16.1899 20.4998 15.6928 20.4998H8.30826ZM4.59674 14.9999H6.50056C6.5134 14.514 6.69493 14.0976 7.04516 13.7508C7.3954 13.404 7.81643 13.2306 8.30826 13.2306H15.6928C16.1846 13.2306 16.6057 13.404 16.9559 13.7508C17.3061 14.0976 17.4877 14.514 17.5005 14.9999H19.4043C19.4941 14.9999 19.5678 14.971 19.6255 14.9133C19.6832 14.8556 19.7121 14.7819 19.7121 14.6921V10.8075C19.7121 10.5242 19.6162 10.2867 19.4246 10.095C19.2329 9.90338 18.9954 9.80754 18.7121 9.80754H5.28901C5.00568 9.80754 4.76818 9.90338 4.57651 10.095C4.38485 10.2867 4.28901 10.5242 4.28901 10.8075V14.6921C4.28901 14.7819 4.31786 14.8556 4.37556 14.9133C4.43326 14.971 4.50699 14.9999 4.59674 14.9999ZM16.0005 8.30759V5.61529C16.0005 5.52554 15.9717 5.45182 15.914 5.39412C15.8563 5.33643 15.7826 5.30759 15.6928 5.30759H8.30826C8.21851 5.30759 8.14479 5.33643 8.08709 5.39412C8.02939 5.45182 8.00054 5.52554 8.00054 5.61529V8.30759H6.50056V5.61529C6.50056 5.11819 6.67757 4.69263 7.03159 4.33862C7.38559 3.98462 7.81115 3.80762 8.30826 3.80762H15.6928C16.1899 3.80762 16.6155 3.98462 16.9695 4.33862C17.3235 4.69263 17.5005 5.11819 17.5005 5.61529V8.30759H16.0005ZM17.8082 12.3075C18.0915 12.3075 18.329 12.2117 18.5207 12.02C18.7124 11.8284 18.8082 11.5909 18.8082 11.3075C18.8082 11.0242 18.7124 10.7867 18.5207 10.595C18.329 10.4034 18.0915 10.3075 17.8082 10.3075C17.5249 10.3075 17.2874 10.4034 17.0957 10.595C16.904 10.7867 16.8082 11.0242 16.8082 11.3075C16.8082 11.5909 16.904 11.8284 17.0957 12.02C17.2874 12.2117 17.5249 12.3075 17.8082 12.3075ZM16.0005 18.6921V15.0383C16.0005 14.9486 15.9717 14.8749 15.914 14.8172C15.8563 14.7595 15.7826 14.7306 15.6928 14.7306H8.30826C8.21851 14.7306 8.14479 14.7595 8.08709 14.8172C8.02939 14.8749 8.00054 14.9486 8.00054 15.0383V18.6921C8.00054 18.7819 8.02939 18.8556 8.08709 18.9133C8.14479 18.971 8.21851 18.9999 8.30826 18.9999H15.6928C15.7826 18.9999 15.8563 18.971 15.914 18.9133C15.9717 18.8556 16.0005 18.7819 16.0005 18.6921Z"
-                                            fill="#35353A"/>
-                                    </g>
+                                class="bg-white border border-gray-300 rounded h-8 px-3 py-2 flex items-center space-x-1 hover:drop-shadow hover:bg-gray-200 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"
+                                wire:click="exportPartyLists"
+                                wire:loading.attr="disabled">
+                                <svg wire:loading.remove wire:target="exportPartyLists" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"
+                                     width="20px" fill="#000000">
+                                    <path
+                                        d="M480-336 288-528l51-51 105 105v-342h72v342l105-105 51 51-192 192ZM263.72-192Q234-192 213-213.15T192-264v-72h72v72h432v-72h72v72q0 29.7-21.16 50.85Q725.68-192 695.96-192H263.72Z"/>
                                 </svg>
+                                <span wire:loading.remove wire:target="exportPartyLists" class="text-[12px]">Export List of Party List</span>
+                                <svg wire:loading wire:target="exportPartyLists" class="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                            stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor"
+                                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                <span wire:loading wire:target="exportPartyLists">Exporting...</span>
                             </button>
                             <button
-                                class="bg-white border border-gray-100 rounded p-1 w-[30px] flex-row  items-center justify-items-center">
-                                <svg width="12" height="18" viewBox="0 0 22 20" fill="none"
-                                     xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M21 1H1L9 10.46V17L13 19V10.46L21 1Z" stroke="#534D59"
-                                          stroke-width="2"
-                                          stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-
-                            </button>
-                            <button
-                                class="bg-white border border-gray-100 rounded p-1 w-[30px] flex-row  items-center justify-items-center">
-                                <svg width="12" height="18" viewBox="0 0 16 19" fill="none"
+                                class="bg-white border border-gray-300 rounded h-8 px-3 py-2 flex items-center space-x-1 hover:drop-shadow hover:bg-gray-200 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"
+                                wire:click="$toggle('importing')"
+                                wire:loading.attr="disabled">
+                                <svg wire:loading.remove wire:target="import" width="12" height="18" viewBox="0 0 16 19" fill="none"
                                      xmlns="http://www.w3.org/2000/svg">
                                     <path
                                         d="M9.42969 1.60984V4.87942C9.42969 5.32273 9.42969 5.54439 9.5185 5.71372C9.59662 5.86266 9.72128 5.98375 9.8746 6.05964C10.0489 6.14592 10.2771 6.14592 10.7334 6.14592H14.0992M5.35547 11.6868L7.8 14.0615M7.8 14.0615L10.2445 11.6868M7.8 14.0615L7.8 9.31211M9.42969 1.39648H5.1925C3.82343 1.39648 3.1389 1.39648 2.61599 1.65531C2.15602 1.88298 1.78205 2.24626 1.54769 2.69309C1.28125 3.20106 1.28125 3.86604 1.28125 5.19599V13.4282C1.28125 14.7582 1.28125 15.4232 1.54769 15.9311C1.78205 16.378 2.15602 16.7412 2.61599 16.9689C3.1389 17.2277 3.82343 17.2277 5.1925 17.2277H10.4075C11.7766 17.2277 12.4611 17.2277 12.984 16.9689C13.444 16.7412 13.8179 16.378 14.0523 15.9311C14.3187 15.4232 14.3187 14.7582 14.3187 13.4282V6.14586L9.42969 1.39648Z"
-                                        stroke="#534D59" stroke-width="1.8625" stroke-linecap="round"
+                                        stroke="#000000" stroke-width="1.8625" stroke-linecap="round"
                                         stroke-linejoin="round"/>
                                 </svg>
+                                <span wire:loading.remove wire:target="import" class="text-[12px]">Import Party Lists</span>
+                                <svg wire:loading wire:target="import" class="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                            stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor"
+                                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                <span wire:loading wire:target="import">Importing...</span>
+                            </button>
+                            <!-- Import Modal -->
+                            @if($importing)
+                                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                                    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+                                        <h3 class="text-lg font-medium mb-4">Import Party Lists</h3>
+
+                                        @if($importError)
+                                            <div class="mb-4 p-3 bg-red-100 text-red-700 rounded text-sm">
+                                                {{ $importError }}
+                                            </div>
+                                        @endif
+
+                                        <input type="file" wire:model="importFile" class="mb-4 w-full">
+
+                                        <div class="flex justify-end space-x-3">
+                                            <button wire:click="$set('importing', false)"
+                                                    class="px-4 py-2 text-gray-600 hover:text-gray-800">
+                                                Cancel
+                                            </button>
+                                            <button wire:click="import"
+                                                    wire:loading.attr="disabled"
+                                                    class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                                                <span wire:loading.remove wire:target="import">Import</span>
+                                                <span wire:loading wire:target="import">Importing...</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+                            <button
+                                class="bg-green-600 border text-white border-gray-300 rounded h-8 px-3 py-2 flex items-center space-x-1 hover:drop-shadow hover:bg-gray-200 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"
+                                wire:click="downloadExcelFormat"
+                                wire:loading.attr="disabled">
+                                <svg wire:loading.remove wire:target="downloadExcelFormat" width="12" height="18" viewBox="0 0 16 19" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M9.42969 1.60984V4.87942C9.42969 5.32273 9.42969 5.54439 9.5185 5.71372C9.59662 5.86266 9.72128 5.98375 9.8746 6.05964C10.0489 6.14592 10.2771 6.14592 10.7334 6.14592H14.0992M5.35547 11.6868L7.8 14.0615M7.8 14.0615L10.2445 11.6868M7.8 14.0615L7.8 9.31211M9.42969 1.39648H5.1925C3.82343 1.39648 3.1389 1.39648 2.61599 1.65531C2.15602 1.88298 1.78205 2.24626 1.54769 2.69309C1.28125 3.20106 1.28125 3.86604 1.28125 5.19599V13.4282C1.28125 14.7582 1.28125 15.4232 1.54769 15.9311C1.78205 16.378 2.15602 16.7412 2.61599 16.9689C3.1389 17.2277 3.82343 17.2277 5.1925 17.2277H10.4075C11.7766 17.2277 12.4611 17.2277 12.984 16.9689C13.444 16.7412 13.8179 16.378 14.0523 15.9311C14.3187 15.4232 14.3187 14.7582 14.3187 13.4282V6.14586L9.42969 1.39648Z"
+                                        stroke="white" stroke-width="1.8625" stroke-linecap="round"
+                                        stroke-linejoin="round"/>
+                                </svg>
+                                <span wire:loading.remove wire:target="downloadExcelFormat" class="text-[12px]">Download excel format</span>
+                                <svg wire:loading wire:target="downloadExcelFormat" class="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                            stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor"
+                                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                <span wire:loading wire:target="downloadExcelFormat">Downloading...</span>
                             </button>
                         </div>
                         <div class="w-1/2 flex justify-end">
@@ -50,9 +100,9 @@
                             @endcan
                             <div class="relative w-[250px] mb-4">
                                 <!-- Search Input -->
-                                <input type="text" wire:model.live="search"
-                                       class="rounded h-[28px] text-[10px] border border-gray-400 pl-10 pr-4 focus:border-black focus:ring focus:ring-black-[1px] w-full"
-                                       placeholder="Search..." aria-label="Search">
+                                <x-input type="text" wire:model.live="search"
+                                         class="rounded h-[30px] text-[12px] border border-gray-400 pl-10 pr-4 focus:border-black  w-full"
+                                         placeholder="Search party lists..." aria-label="Search"></x-input>
                                 <span class="absolute left-3 top-1/2 transform -translate-y-1/2">
                                 <svg width="12" height="12" viewBox="0 0 14 14" fill="none"
                                      xmlns="http://www.w3.org/2000/svg">
@@ -66,15 +116,31 @@
                     </div>
 
 
-                    <div class=" mt-4 overflow-x-auto min-h-[350px]">
+                    <div class="mt-6 min-h-[400px] overflow-x-auto" x-data="{
+                                selectAll: false,
+                                checkboxes: [],
+                                init() {
+                                    this.checkboxes = Array.from(document.querySelectorAll('.row-checkbox'));
+                                    // Update selectAll when individual checkboxes change
+                                    this.checkboxes.forEach(checkbox => {
+                                        checkbox.addEventListener('change', () => {
+                                            this.selectAll = this.checkboxes.every(c => c.checked);
+                                        });
+                                    });
+                                },
+                                toggleSelectAll() {
+                                    this.checkboxes.forEach(checkbox => {
+                                        checkbox.checked = this.selectAll;
+                                    });
+                                }
+                            }" wire:key="party-list-table">
                         <table class="min-w-full" id="partyListTable">
                             <thead class="text-left text-[10px]">
                             <tr class="w-full bg-gray-100 text-black uppercase text-[11px] leading-normal">
-                                <th class="py-3 px-6 rounded-tl-lg  border-b border-gray-300 exclude-print">
-                                    <input class="form-checkbox text-left rounded h-4 w-4 text-black"
+                                <th class="py-3 px-6 text-left rounded-tl-lg border-b border-gray-300 exclude-print">
+                                    <input type="checkbox" class="form-checkbox h-4 w-4 text-black"
                                            x-model="selectAll"
-                                           @click="checkboxes.forEach(checkbox => checkbox.checked = $event.target.checked)"
-                                           type="checkbox">
+                                           @change="toggleSelectAll()">
                                 </th>
                                 <th class="py-3 px-6 border-b border-gray-300">Id</th>
                                 <th class="py-3 px-6 border-b border-gray-300">Party List Name</th>
@@ -85,15 +151,15 @@
 
                             <tbody class="text-black text-[12px] font-light">
                             @foreach($party_lists as $party_list)
-                                <tr class="border-b border-gray-100 rows">
+                                <tr class="border-b border-gray-100 rows" wire:key="table-row-{{ $party_list->id }}">
                                     <td class="py-3 px-6 text-left exclude-print">
-                                        <input type="checkbox"
-                                               class="form-checkbox rounded h-4 w-4 text-black row-checkbox">
+                                        <input type="checkbox" class="form-checkbox h-4 w-4 text-black row-checkbox"
+                                               x-ref="rowCheckbox">
                                     </td>
                                     <td class="py-3 px-6 text-left">{{ $party_list->id }}</td>
                                     <td class="py-3 px-6 text-left font-bold">{{ $party_list->name }}</td>
-                                    <td class="py-3 px-6 text-left font-bold exclude-print">
-                                        <div class="flex -space-x-2">
+                                    <td class="py-3 px-6 text-left font-bold exclude-print" >
+                                        <div class="flex -space-x-2" wire:key="members-{{$party_list->id}}">
                                             @php
                                                 $maxDisplay = 4; // Maximum number of profile photos to display
                                                 $candidateCount = $party_list->candidates->count(); // Total number of candidates
@@ -104,7 +170,7 @@
                                                 <img
                                                     alt="{{ $candidate->users->name }}"
                                                     class="w-6 h-6 rounded-full border-2 border-white"
-                                                    src="{{ $candidate->users->profile_photo_path ? asset('storage/assets/profile/' . $candidate->users->profile_photo_path) : asset('storage/assets/profile/default.png') }}"
+                                                    src="{{ $candidate->users->profile_photo_path ? asset('storage/assets/profile/' . $candidate->users->profile_photo_path) : asset('storage/assets/profile/vargas.png') }}"
                                                     width="24"
                                                     height="24"
                                                 />
@@ -119,13 +185,13 @@
                                         </div>
                                     </td>
 
-                                    <td class="py-3 px-6 text-left exclude-print" wire:key="actions-{{ $party_list->id }}">
-                                        <div class="flex space-x-2"> <!-- Use flex and space-x for consistent spacing -->
+                                    <td class="py-3 px-6 text-left exclude-print">
+                                        <div class="flex space-x-2" wire:key="actions-{{ $party_list->id }}"> <!-- Use flex and space-x for consistent spacing -->
                                             @can('edit party list')
                                                 <!-- View Party List Members -->
                                                 <livewire:manage-party-list.view-party-list-members
                                                     :partyListId="$party_list->id"
-                                                    :key="'view-members-' . $party_list->id"
+                                                    wire:key="view-members-{{$party_list->id}}"
                                                 />
                                             @endcan
 
@@ -133,7 +199,7 @@
                                                 <!-- Edit Party List -->
                                                 <livewire:manage-party-list.edit-party-list
                                                     :partyListId="$party_list->id"
-                                                    :key="'edit-party-list-' . $party_list->id"
+                                                    wire:key="edit-party-list-{{$party_list->id}}"
                                                 />
                                             @endcan
 
@@ -141,7 +207,7 @@
                                                 <!-- Delete Party List -->
                                                 <livewire:manage-party-list.delete-party-list
                                                     :partyListId="$party_list->id"
-                                                    :key="'delete-party-list-' . $party_list->id"
+                                                    wire:key="delete-party-list-{{$party_list->id}}"
                                                 />
                                             @endcan
                                         </div>
@@ -150,6 +216,9 @@
                             @endforeach
                             </tbody>
                         </table>
+                        <div class="mt-4">
+                            {{ $party_lists->links('evotar.components.pagination.tailwind-pagination') }}
+                        </div>
                     </div>
 
 

@@ -136,6 +136,14 @@
         );"
         ></div>
 
+        <div
+            x-on:party-list-imported.window="pushNotification('success',
+            $event.detail.title || 'Party Lists Import Success',
+            $event.detail.message || 'Party Lists imported successfully.'
+        );"
+        ></div>
+
+
 
 
         <!-- Page Heading -->

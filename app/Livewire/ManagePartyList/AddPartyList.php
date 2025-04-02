@@ -20,6 +20,7 @@ class AddPartyList extends Component
         PartyList::create(['name' => $this->name]);
 
         $this->dispatch('party-list-created');
+        $this->reset();
     }
 
     public function render(): \Illuminate\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\View\View
