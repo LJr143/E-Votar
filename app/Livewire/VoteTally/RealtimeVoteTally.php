@@ -100,35 +100,47 @@ class RealtimeVoteTally extends Component
 
     public function fetchCandidates(): void
     {
-        $query = Candidate::with(['users', 'users.program.council', 'elections', 'election_positions.position.electionType'])
+        $query = Candidate::with([
+            'users', // Changed from 'users' (assuming one candidate belongs to one user)
+            'users.program.council',
+            'elections',
+            'election_positions.position.electionType' // Fixed relationship name
+        ])
             ->withCount('votes')
-            ->join('election_positions', 'candidates.election_position_id', '=', 'election_positions.id')
-            ->orderBy('election_positions.position_id', 'ASC')
-            ->select('candidates.*');
+            ->whereHas('elections', function($q) {
+                $q->where('elections.id', $this->selectedElection);
+            });
 
+        // Apply search filter
         if ($this->search) {
             $query->whereHas('users', function ($q) {
-                $q->where('first_name', 'like', '%' . $this->search . '%')
-                    ->orWhere('last_name', 'like', '%' . $this->search . '%');
+                $q->where('first_name', 'like', '%'.$this->search.'%')
+                    ->orWhere('last_name', 'like', '%'.$this->search.'%');
             });
         }
 
-        if ($this->selectedElection) {
-            $query->whereHas('elections', function ($q) {
-                $q->where('id', $this->selectedElection);
-            });
-        }
-
+        // Apply election type filter
         if ($this->filter) {
             $query->whereHas('elections.election_type', function ($q) {
                 $q->where('name', $this->filter);
             });
         }
 
+        // Get results with proper ordering
+        $this->candidates = $query
+            ->orderBy('election_position_id')
+            ->get();
 
-        $this->candidates = $query->get();
+        // Debug the actual data
+        \Log::debug('Candidates with votes:', $this->candidates->map(function($c) {
+            return [
+                'id' => $c->id,
+                'name' => $c->user->name ?? 'Unknown',
+                'votes_count' => $c->votes_count,
+                'position' => $c->electionPosition->position->name ?? 'N/A'
+            ];
+        })->toArray());
     }
-
 
     public function fetchElection($filter): void
     {
