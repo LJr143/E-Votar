@@ -46,22 +46,22 @@
 
 
 
-            <form action="" wire:submit.prevent="deleteCouncilt">
                 <div>
-                    <p class="text-gray-700 mb-6 ml-5 text-xs text-left">Are you sure you want to remove this council? This process cannot be undone.</p>
+                    <p class="text-xs text-left text-gray-600 mb-4">Are you sure you want to delete this council and all its position settings? This action cannot be undone.</p>
 
                     <div class="flex justify-end mt-4 space-x-2">
                         <button @click="open = false" type="button"
                                 class="px-4 py-2 border border-gray-300 text-gray-800 rounded-md shadow-md hover:bg-gray-400 text-xs">
                             Cancel
                         </button>
-                        <button type="submit"
-                                class="px-4 py-2 bg-red-600 text-white rounded-md shadow-md hover:bg-red-700 text-xs">
-                            Delete
+                        <button wire:click="deleteCouncil"
+                                wire:loading.attr="disabled"
+                                class="px-4 py-2 bg-red-600 text-white text-sm rounded-md hover:bg-red-700">
+                            <span wire:loading.remove>Delete</span>
+                            <span wire:loading>Deleting...</span>
                         </button>
                     </div>
                 </div>
-            </form>
         </div>
     </div>
 </div>
