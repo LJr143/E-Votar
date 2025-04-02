@@ -114,6 +114,27 @@
             x-on:party-list-updated.window="pushNotification('success', 'Party List Updated', 'Party List has been updated successfully.');"></div>
         <div
             x-on:party-list-deleted.window="pushNotification('success', 'Party List Deleted', 'Party List has been deleted successfully.');"></div>
+        <div
+            x-on:council-created.window="pushNotification('success', 'Council Added', 'Council has been added successfully.');"></div>
+        <div
+            x-on:council-edited.window="pushNotification('success', 'Council Updated', 'Council has been updated successfully.');"></div>
+        <div
+            x-on:council-deleted.window="pushNotification('success', 'Council Deleted', 'Council has been deleted successfully.');"></div>
+
+
+        <div
+            x-on:success-position-import.window="pushNotification('success',
+            $event.detail.title || 'Position/s Import Success',
+            $event.detail.message || 'Positions imported successfully.'
+        );"
+        ></div>
+
+        <div
+            x-on:fail-position-import.window="pushNotification('error',
+            $event.detail.title || 'Position/s Import Fail',
+            $event.detail.message || 'Positions Import failed.'
+        );"
+        ></div>
 
 
 

@@ -196,20 +196,26 @@ class EditElection extends Component
             'date_started' => $this->election_start,
             'date_ended' => $this->election_end,
             'status' => $this->status,
-            'image_path' => $path,
+            'image_path' => $this->currentImagePath,
         ]);
-
-        $this->currentImagePath = $path;
 
 
         // Update positions
-        ElectionPosition::where('election_id', $this->election->id)->delete();
         foreach ($this->selectedPositions as $positionId) {
-            ElectionPosition::create([
-                'election_id' => $this->election->id,
-                'position_id' => $positionId,
-            ]);
+            ElectionPosition::updateOrCreate(
+                [
+                    'election_id' => $this->election->id,
+                    'position_id' => $positionId,
+                ],
+                []
+            );
         }
+
+        // Optionally, delete any that are no longer selected
+        ElectionPosition::where('election_id', $this->election->id)
+            ->whereNotIn('position_id', $this->selectedPositions)
+            ->delete();
+
 
         $this->dispatch('election-updated');
     }
@@ -225,8 +231,6 @@ class EditElection extends Component
             ? asset('storage/' . $this->currentImagePath)
             : asset('images/placeholder.png');
     }
-
-
 
     public function updatedElectionImageEdit(): void
     {

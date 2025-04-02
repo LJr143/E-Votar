@@ -18,6 +18,8 @@ window.pushNotification = function (status, title, text) {
         distance: 20,
         type: 'outline',
         position: 'right top',
+        customClass: '',
+        customIcon: '',
     });
 }
 

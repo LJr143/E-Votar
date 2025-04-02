@@ -1,50 +1,28 @@
 <div>
-    <div class="hidden sm:block mb-4">
-        <div class="border-b border-gray-200">
-            <nav class="-mb-px flex space-x-8" aria-label="Tabs">
-                    <button wire:click.debounce.500ms="$set('filter', 'all_position')"
-                            class="whitespace-nowrap border-b-2 pb-1 px-1 text-[10px] font-medium {{ $filter === 'all_position' ? 'border-black text-black' : 'text-gray-500 hover:text-black' }}">
-                        All Positions
-                    </button>
-                    <button wire:click.debounce.500ms="$set('filter', 'student_position')"
-                            class="whitespace-nowrap border-b-2 pb-1 px-1 text-[10px] font-medium {{ $filter === 'student_position' ? 'border-black text-black' : 'text-gray-500 hover:text-black' }}">
-                        Student Council Positions
-                    </button>
-                    <button wire:click.debounce.500ms="$set('filter', 'local_position')"
-                            class="whitespace-nowrap border-b-2 pb-1 px-1 text-[10px] font-medium {{ $filter === 'local_position' ? 'border-black text-black' : 'text-gray-500 hover:text-black' }}">
-                        Local Council Positions
-                    </button>
-                    <button wire:click.debounce.500ms="$set('filter', 'special_position')"
-                            class="whitespace-nowrap border-b-2 pb-1 px-1 text-[10px] font-medium {{ $filter === 'special_position' ? 'border-black text-black' : 'text-gray-500 hover:text-black' }}">
-                        Special Election Position
-                    </button>
-            </nav>
-        </div>
-    </div>
     <div class="flex w-full gap-4 min">
-        <div class="w-full">
+        <div id="all_elections" class="w-full">
             <div class="bg-white shadow-md rounded p-6">
                 <div
-                    class="bg-white mt-0 p-5 rounded-md md:max-w-[800px] min-[90%]:max-w-[100%] lg:max-w-[900px] xl:w-[100%] xl:min-w-[100%] 2xl:max-w-[1190px]">
-                    <div class="flex flex-col md:flex-row w-full items-center justify-between">
+                    class="text-[12px] bg-white mt-0 p-5 rounded-md md:max-w-[800px] min-[90%]:max-w-[100%] lg:max-w-[900px] xl:w-[100%] xl:min-w-[100%] 2xl:max-w-[1190px]">
+                    <div class="flex w-full">
                         <div class="flex items-center justify-between flex-wrap md:flex-nowrap gap-2">
                             <button
                                 class="bg-white border border-gray-300 rounded h-8 px-3 py-2 flex items-center space-x-1 hover:drop-shadow hover:bg-gray-200 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"
-                                wire:click="exportPositions"
+                                wire:click="exportCouncils"
                                 wire:loading.attr="disabled">
-                                <svg wire:loading.remove wire:target="exportPositions" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"
+                                <svg wire:loading.remove wire:target="exportCouncils" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"
                                      width="20px" fill="#000000">
                                     <path
                                         d="M480-336 288-528l51-51 105 105v-342h72v342l105-105 51 51-192 192ZM263.72-192Q234-192 213-213.15T192-264v-72h72v72h432v-72h72v72q0 29.7-21.16 50.85Q725.68-192 695.96-192H263.72Z"/>
                                 </svg>
-                                <span wire:loading.remove wire:target="exportPositions" class="text-[12px]">Export List of Positions</span>
-                                <svg wire:loading wire:target="exportPositions" class="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
+                                <span wire:loading.remove wire:target="exportCouncils" class="text-[12px]">Export List of Councils</span>
+                                <svg wire:loading wire:target="exportCouncils" class="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
                                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
                                             stroke-width="4"></circle>
                                     <path class="opacity-75" fill="currentColor"
                                           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                 </svg>
-                                <span wire:loading wire:target="exportPositions">Exporting...</span>
+                                <span wire:loading wire:target="exportCouncils">Exporting...</span>
                             </button>
                             <button
                                 class="bg-white border border-gray-300 rounded h-8 px-3 py-2 flex items-center space-x-1 hover:drop-shadow hover:bg-gray-200 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"
@@ -57,7 +35,7 @@
                                         stroke="#000000" stroke-width="1.8625" stroke-linecap="round"
                                         stroke-linejoin="round"/>
                                 </svg>
-                                <span wire:loading.remove wire:target="import" class="text-[12px]">Import Positions</span>
+                                <span wire:loading.remove wire:target="import" class="text-[12px]">Import Councils</span>
                                 <svg wire:loading wire:target="import" class="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
                                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
                                             stroke-width="4"></circle>
@@ -70,7 +48,7 @@
                             @if($importing)
                                 <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                                     <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-                                        <h3 class="text-lg font-medium mb-4">Import Positions</h3>
+                                        <h3 class="text-lg font-medium mb-4">Import Councils</h3>
 
                                         @if($importError)
                                             <div class="mb-4 p-3 bg-red-100 text-red-700 rounded text-sm">
@@ -116,75 +94,113 @@
                                 <span wire:loading wire:target="downloadExcelFormat">Downloading...</span>
                             </button>
                         </div>
+
+
                         <div class="w-1/2 flex justify-end">
-                            <livewire:manage-position.add-position/>
-                            <div class="relative w-[250px] mb-4">
-                                <!-- Search Input -->
+                                <livewire:manage-council.add-council wire:key="add-council-btn"/>
+                            <div class="relative w-full md:w-[250px] ml-2">
                                 <x-input type="text" wire:model.live="search"
-                                         class="rounded h-[30px] text-[12px] border border-gray-400 pl-10 pr-4 focus:border-black  w-full"
-                                         placeholder="Search elections..." aria-label="Search"></x-input>
+                                         class="rounded-md text-[12px] border bg-white text-black border-gray-300 h-8 pl-8 pr-4 focus:ring-1 focus:ring-black focus:border-black w-full"
+                                         placeholder="Search council..." aria-label="Search"></x-input>
                                 <span class="absolute left-3 top-1/2 transform -translate-y-1/2">
-                                <svg width="12" height="12" viewBox="0 0 14 14" fill="none"
-                                     xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd" clip-rule="evenodd"
-                                          d="M9.68208 10.7458C8.66576 11.5361 7.38866 12.0067 6.00167 12.0067C2.68704 12.0067 0 9.31891 0 6.00335C0 2.68779 2.68704 0 6.00167 0C9.31631 0 12.0033 2.68779 12.0033 6.00335C12.0033 7.39059 11.533 8.66794 10.743 9.6845L13.7799 12.7186C14.0731 13.0115 14.0734 13.4867 13.7806 13.7799C13.4878 14.0731 13.0128 14.0734 12.7196 13.7805L9.68208 10.7458ZM10.5029 6.00335C10.5029 8.49002 8.48765 10.5059 6.00167 10.5059C3.5157 10.5059 1.50042 8.49002 1.50042 6.00335C1.50042 3.51668 3.5157 1.50084 6.00167 1.50084C8.48765 1.50084 10.5029 3.51668 10.5029 6.00335Z"
-                                          fill="#868FA0"/>
-                                </svg>
-                            </span>
+                                                <svg width="12" height="12" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M9.68208 10.7458C8.66576 11.5361 7.38866 12.0067 6.00167 12.0067C2.68704 12.0067 0 9.31891 0 6.00335C0 2.68779 2.68704 0 6.00167 0C9.31631 0 12.0033 2.68779 12.0033 6.00335C12.0033 7.39059 11.533 8.66794 10.743 9.6845L13.7799 12.7186C14.0731 13.0115 14.0734 13.4867 13.7806 13.7799C13.4878 14.0731 13.0128 14.0734 12.7196 13.7805L9.68208 10.7458ZM10.5029 6.00335C10.5029 8.49002 8.48765 10.5059 6.00167 10.5059C3.5157 10.5059 1.50042 8.49002 1.50042 6.00335C1.50042 3.51668 3.5157 1.50084 6.00167 1.50084C8.48765 1.50084 10.5029 3.51668 10.5029 6.00335Z" fill="#000000"/>
+                                                </svg>
+                                            </span>
                             </div>
                         </div>
                     </div>
-                    <div class="mt-4 min-h-[300px]">
-                        <table class="min-w-full" id="positionsTable">
-                            <thead class="bg-gray-50 text-left ">
-                            <tr>
-                                <th class="px-4 py-3 font-bold">ID</th>
-                                <th class="px-4 py-3 font-bold">Position Name</th>
-                                <th class="px-4 py-3 font-bold text-center exclude-print">Actions</th>
+
+
+                    <div class=" mt-4 overflow-x-auto min-h-[350px]">
+                        <table class="min-w-full" id="partyListTable">
+                            <thead class="text-left text-[10px]">
+                            <tr class="w-full bg-gray-100 text-black uppercase text-[11px] leading-normal">
+                                {{--                                <th class="py-3 px-6 rounded-tl-lg  border-b border-gray-300 exclude-print">--}}
+                                {{--                                    <input class="form-checkbox text-left rounded h-4 w-4 text-black"--}}
+                                {{--                                           x-model="selectAll"--}}
+                                {{--                                           @click="checkboxes.forEach(checkbox => checkbox.checked = $event.target.checked)"--}}
+                                {{--                                           type="checkbox">--}}
+                                {{--                                </th>--}}
+                                <th class="py-3 px-6 border-b border-gray-300">Id</th>
+                                <th class="py-3 px-6 border-b border-gray-300">Council Name</th>
+                                <th class="py-3 px-6 rounded-tr-lg border-b border-gray-300 exclude-print">Actions</th>
                             </tr>
                             </thead>
-                            <tr></tr>
-                            <tbody>
-                            @foreach($positions as $position)
-                                <tr class="font-light">
-                                    <td class="px-4 py-1">{{ str_pad($position->id, 7, '0', STR_PAD_LEFT) }}</td>
-                                    <td class="px-4 py-1">{{ $position->name }}</td>
-                                    <td class="px-4 py-1 text-center flex exclude-print">
-                                        <livewire:manage-position.edit-position :positionId="$position->id" :key="'edit-position-'.$position->id" />
-                                        <livewire:manage-position.delete-position :positionId="$position->id" :key="'delete-position-'.$position->id" />
+
+                            <tbody class="text-black text-[12px] font-light">
+                            @foreach($councils as $council)
+                                <tr class="border-b border-gray-100 rows" wire:key="council-buttons-{{$council->id}}">
+                                    <td class="py-3 px-6 text-left">{{ $council->id }}</td>
+                                    <td class="py-3 px-6 text-left font-bold">{{ $council->name }}</td>
+
+                                    <td class="py-3 px-6 text-left exclude-print" wire:key="actions-{{ $council->id }}">
+                                        <div class="flex space-x-2">
+                                            <!-- Edit Council -->
+                                            <livewire:manage-council.edit-council
+                                                :councilId="$council->id"
+                                                wire:key="edit-council-{{ $council->id }}"
+                                            />
+
+                                            <!-- Delete Council -->
+                                            <livewire:manage-council.delete-council
+                                                :councilId="$council->id"
+                                                wire:key="delete-council-{{ $council->id }}"
+                                            />
+                                        </div>
                                     </td>
                                 </tr>
                             @endforeach
                             </tbody>
                         </table>
-                        <div class="mt-4">
-                            {{ $positions->links('evotar.components.pagination.tailwind-pagination') }}
+                        <div class="mt-4" wire:key="pagination-table">
+                            {{ $councils->links('evotar.components.pagination.tailwind-pagination') }}
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
+
+        <script>
+            function printPartyList() {
+                const excludeElements = document.querySelectorAll('.exclude-print');
+                excludeElements.forEach(el => el.style.display = 'none');
+
+                printJS({
+                    printable: 'partyListTable',
+                    type: 'html',
+                    scanStyles: true,
+                    style: `
+                @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+                body {
+                    font-family: 'Poppins', sans-serif; /* Set Poppins as the overall font */
+                }
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                }
+                th, td {
+                    border: 1px solid #ddd;
+                    padding: 8px;
+                    text-align: left;
+                }
+                thead th {
+                    font-size: 12px;
+                    font-weight: bold;
+                }
+                tbody td {
+                    font-size: 12px;
+                    font-weight: 300;
+                }
+            `
+                });
+
+                excludeElements.forEach(el => el.style.display = '');
+            }
+        </script>
+
     </div>
-
-    <script>
-        function printElections() {
-            const excludeElements = document.querySelectorAll('.exclude-print');
-            excludeElements.forEach(el => el.style.display = 'none');
-
-            printJS({
-                printable: 'positionsTable',
-                type: 'html',
-                scanStyles: true,
-                style: `
-        table { width: 100%; border-collapse: collapse; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        th { background-color: #f4f4f4; font-weight: bold; }
-        `
-            });
-
-            excludeElements.forEach(el => el.style.display = '');
-        }
-    </script>
-
-
 </div>
+
