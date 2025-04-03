@@ -116,6 +116,7 @@
                                 <span wire:loading wire:target="downloadExcelFormat">Downloading...</span>
                             </button>
                         </div>
+
                         <div class="w-1/2 flex justify-end">
                             <livewire:manage-position.add-position/>
                             <div class="relative w-[250px] mb-4">
