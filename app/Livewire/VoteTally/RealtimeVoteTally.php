@@ -2,12 +2,15 @@
 
 namespace App\Livewire\VoteTally;
 
+use App\Exports\ElectionsExport;
+use App\Exports\VoteTallyExport;
 use App\Models\Candidate;
 use App\Models\Council;
 use App\Models\Election;
 use App\Models\ElectionPosition;
 use App\Models\User;
 use Livewire\Component;
+use Maatwebsite\Excel\Facades\Excel;
 
 class RealtimeVoteTally extends Component
 {
@@ -27,6 +30,9 @@ class RealtimeVoteTally extends Component
     public $totalVoters;
     public $totalVoterVoted;
     public $councils;
+
+    public $hasLocalCouncilCandidate = false;
+    public $hasStudentCouncilCandidate = false;
 
 
     public function mount(): void
@@ -131,6 +137,18 @@ class RealtimeVoteTally extends Component
             ->orderBy('election_position_id')
             ->get();
 
+        $this->hasStudentCouncilCandidate = Candidate::whereHas('election_positions.position.electionType', function ($q) {
+            $q->where('name', 'Student Council Election');
+        })->whereHas('elections', function ($q) {
+            $q->where('id', $this->selectedElection);
+        })->exists();
+
+        $this->hasLocalCouncilCandidate = Candidate::whereHas('election_positions.position.electionType', function ($q) {
+            $q->where('name', 'Local Council Election');
+        })->whereHas('elections', function ($q) {
+            $q->where('id', $this->selectedElection);
+        })->exists();
+
         // Debug the actual data
         \Log::debug('Candidates with votes:', $this->candidates->map(function($c) {
             return [
@@ -179,6 +197,12 @@ class RealtimeVoteTally extends Component
             ->get();
     }
 
+    public function exportVoteTally()
+    {
+        return Excel::download(new VoteTallyExport($this->search, $this->filter, $this->selectedElection), 'VOTE_TALLY_' .  strtoupper($this->latestElection->name) . '.xlsx');
+
+    }
+
     public function render()
     {
         $this->fetchCandidates();
@@ -192,6 +216,7 @@ class RealtimeVoteTally extends Component
             'councils' => $this->councils,
             'hasStudentCouncilPositions' => $this->hasStudentCouncilPositions,
             'hasLocalCouncilPositions' => $this->hasLocalCouncilPositions,
+
         ]);
     }
 }
