@@ -1,4 +1,4 @@
-<div class="container mx-auto mt-4">
+<div class="mt-4">
     <div class="mb-4">
         <div class="border-b-2 border-gray-200">
             <nav class="-mb-px flex space-x-8 overflow-x-auto" aria-label="Tabs">
@@ -60,18 +60,18 @@
 
                         <div class="flex items-center gap-2">
                             <!-- Search Bar -->
-                            <div class="relative w-full md:w-[250px]">
-                                <x-input type="text" wire:model.live="search"
-                                         class="rounded-md text-[12px] border bg-white text-black border-gray-300 h-8 pl-8 pr-4 focus:ring-1 focus:ring-black focus:border-black w-full"
-                                         placeholder="Search elections..." aria-label="Search"></x-input>
-                                <span class="absolute left-3 top-1/2 transform -translate-y-1/2">
-                                                <svg width="12" height="12" viewBox="0 0 14 14" fill="none"
-                                                     xmlns="http://www.w3.org/2000/svg">
-                                                    <path fill-rule="evenodd" clip-rule="evenodd"
-                                                          d="M9.68208 10.7458C8.66576 11.5361 7.38866 12.0067 6.00167 12.0067C2.68704 12.0067 0 9.31891 0 6.00335C0 2.68779 2.68704 0 6.00167 0C9.31631 0 12.0033 2.68779 12.0033 6.00335C12.0033 7.39059 11.533 8.66794 10.743 9.6845L13.7799 12.7186C14.0731 13.0115 14.0734 13.4867 13.7806 13.7799C13.4878 14.0731 13.0128 14.0734 12.7196 13.7805L9.68208 10.7458ZM10.5029 6.00335C10.5029 8.49002 8.48765 10.5059 6.00167 10.5059C3.5157 10.5059 1.50042 8.49002 1.50042 6.00335C1.50042 3.51668 3.5157 1.50084 6.00167 1.50084C8.48765 1.50084 10.5029 3.51668 10.5029 6.00335Z"
-                                                          fill="#000000"/>
-                                                </svg>
-                                            </span>
+                            <div class="w-full md:w-[250px]">
+                                <div class="flex items-center border bg-white text-black border-gray-300 rounded-md h-8 px-3">
+                                    <span class="flex items-center">
+                                        <svg width="12" height="12" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M9.68208 10.7458C8.66576 11.5361 7.38866 12.0067 6.00167 12.0067C2.68704 12.0067 0 9.31891 0 6.00335C0 2.68779 2.68704 0 6.00167 0C9.31631 0 12.0033 2.68779 12.0033 6.00335C12.0033 7.39059 11.533 8.66794 10.743 9.6845L13.7799 12.7186C14.0731 13.0115 14.0734 13.4867 13.7806 13.7799C13.4878 14.0731 13.0128 14.0734 12.7196 13.7805L9.68208 10.7458ZM10.5029 6.00335C10.5029 8.49002 8.48765 10.5059 6.00167 10.5059C3.5157 10.5059 1.50042 8.49002 1.50042 6.00335C1.50042 3.51668 3.5157 1.50084 6.00167 1.50084C8.48765 1.50084 10.5029 3.51668 10.5029 6.00335Z" fill="#000000"/>
+                                        </svg>
+                                    </span>
+                                    <x-input type="text" wire:model.live="search"
+                                             class="text-[12px] bg-transparent border-0 focus:ring-0 focus:outline-none w-full h-8 px-2"
+                                             placeholder="Search elections..." aria-label="Search">
+                                    </x-input>
+                                </div>
                             </div>
 
                             <!-- Button -->
@@ -102,17 +102,17 @@
                         <table class="min-w-full" id="electionsTable">
                             <thead>
                             <tr class="w-full bg-gray-100 text-black uppercase text-[11px] leading-normal">
-                                <th class="py-3 px-6 text-left rounded-tl-lg border-b border-gray-300 exclude-print">
+                                <th class="py-3 px-6 text-center rounded-tl-lg border-b border-gray-300 exclude-print">
                                     <input type="checkbox" class="form-checkbox h-4 w-4 text-black"
                                            x-model="selectAll"
                                            @change="toggleSelectAll()">
                                 </th>
-                                <th class="py-3 px-6 text-left border-b border-gray-300">ID</th>
-                                <th class="py-3 px-6 text-left border-b border-gray-300">Election Name</th>
-                                <th class="py-3 px-6 text-left border-b border-gray-300">Type of Election</th>
-                                <th class="py-3 px-6 text-left border-b border-gray-300">Start Date</th>
-                                <th class="py-3 px-6 text-left border-b border-gray-300">End Date</th>
-                                <th class="py-3 px-6 text-left border-b border-gray-300">Current Status</th>
+                                <th class="py-3 px-6 text-center border-b border-gray-300">Election ID</th>
+                                <th class="py-3 px-6 text-center border-b border-gray-300">Election Name</th>
+                                <th class="py-3 px-6 text-center border-b border-gray-300">Type of Election</th>
+                                <th class="py-3 px-6 text-center border-b border-gray-300">Start Date</th>
+                                <th class="py-3 px-6 text-center border-b border-gray-300">End Date</th>
+                                <th class="py-3 px-6 text-center border-b border-gray-300">Current Status</th>
                                 <th class="py-3 px-6 text-center rounded-tr-lg border-b border-gray-300 exclude-print">
                                     Actions
                                 </th>
@@ -121,15 +121,15 @@
                             <tbody class="text-black text-[12px] font-light">
                             @foreach($elections as $election)
                                 <tr class="border-b border-gray-100" wire:key="election-{{$election->id}}">
-                                    <td class="py-3 px-6 text-left exclude-print">
+                                    <td class="py-3 px-6 text-center exclude-print">
                                         <input type="checkbox" class="form-checkbox h-4 w-4 text-black row-checkbox"
                                                x-ref="rowCheckbox">
                                     </td>
-                                    <td class="py-3 px-6 text-left">{{ str_pad($election->id, 7, '0', STR_PAD_LEFT) }}</td>
-                                    <td class="py-3 px-6 text-left font-bold">{{ $election->name }}</td>
-                                    <td class="py-3 px-6 text-left">{{ $election->election_type->name }}</td>
-                                    <td class="py-3 px-6 text-left">{{ $election->date_started }}</td>
-                                    <td class="py-3 px-6 text-left">{{ $election->date_ended }}</td>
+                                    <td class="py-3 px-6 text-center">{{ str_pad($election->id, 7, '0', STR_PAD_LEFT) }}</td>
+                                    <td class="py-3 px-6 text-center font-bold">{{ $election->name }}</td>
+                                    <td class="py-3 px-6 text-center">{{ $election->election_type->name }}</td>
+                                    <td class="py-3 px-6 text-center">{{ $election->date_started }}</td>
+                                    <td class="py-3 px-6 text-center">{{ $election->date_ended }}</td>
                                     <td class="py-3 px-6 text-white text-center">
                                         <p class="bg-green-600 w-[60px] rounded">{{ $election->status }}</p>
                                     </td>
