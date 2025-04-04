@@ -1,86 +1,50 @@
 <?php
 
-namespace App\Livewire\ElectionResult;
+namespace App\Exports;
 
-use App\Exports\CandidateExport;
-use App\Exports\ElectionResultExport;
+use App\Livewire\ElectionResult\ElectionResult;
 use App\Models\Candidate;
 use App\Models\Council;
 use App\Models\Election;
 use App\Models\ElectionPosition;
 use App\Models\User;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\DB;
-use Livewire\Component;
-use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\FromView;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithDrawings;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Events\AfterSheet;
+use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 
-class ElectionResult extends Component
+class ElectionResultExport extends ElectionResult implements FromView, ShouldAutoSize, WithDrawings
 {
-    protected $listeners = ['candidate-created' => '$refresh'];
-    public $candidates = [];
-    public $filter;
-    public $search = '';
-    public $selectedElection;
-    public $selectedFilter;
-    public $elections;
-    public $latestElection;
-    public $hasStudentCouncilPositions;
-    public $hasLocalCouncilPositions;
-    public $selectedElectionName;
-    public $selectedElectionCampus;
-
-    public $totalVoters;
-    public $totalVoterVoted;
-    public $councils;
-
     public $studentCouncilWinners;
     public $localCouncilWinners;
+    public $election;
+    public $search, $filter, $selectedElection, $totalVoters, $totalVoterVoted;
 
-
-    public function mount(): void
+    public function __construct($search, $filter, $selectedElection)
     {
-        $this->selectedElection = session('selectedElection');
-        $this->filter = Election::with('election_type')
-            ->find(($this->selectedElection))
-            ->election_type
-            ->name;
-        $this->fetchElection($this->filter);
-        $this->councils = Council::all();
-        $this->selectedFilter = $this->filter;
-        $this->fetchCandidates();
-        $this->fetchVoterTally();
+        $this->search = $search;
+        $this->filter = $filter;
+        $this->selectedElection = $selectedElection;
+        $this->election = Election::with('election_type')->find($this->selectedElection);
         $this->fetchWinners();
+        $this->fetchVoterTally();
     }
 
-    public function updatedSearch(): void
+    public function fetchWinners(): void
     {
-        $this->fetchElection($this->filter);
-        $this->fetchCandidates();
-        $this->fetchVoterTally();
-        $this->fetchWinners();
+        if ($this->election) {
+            $this->studentCouncilWinners = $this->getWinnersByElectionType('Student Council Election');
+            $this->localCouncilWinners = $this->getWinnersByProgram();
+        } else {
+            $this->studentCouncilWinners = collect();
+            $this->localCouncilWinners = collect();
+        }
     }
-
-    public function updatedFilter(): void
-    {
-        $this->fetchElection($this->filter);
-        $this->fetchCandidates();
-        $this->fetchVoterTally();
-        $this->fetchWinners();
-        $this->dispatch('updateChartData', $this->selectedElection);
-    }
-
-    public function updatedSelectedElection(): void
-    {
-        $election = Election::find($this->selectedElection);
-        $this->selectedElectionName = $election?->name;
-        $this->selectedElectionCampus = $election?->campus;
-
-        $this->fetchElection($this->filter);
-        $this->fetchCandidates();
-        $this->fetchVoterTally();
-        $this->fetchWinners();
-        $this->dispatch('updateChartData', $this->selectedElection);
-    }
-
 
     public function fetchVoterTally(): void
     {
@@ -109,92 +73,12 @@ class ElectionResult extends Component
         }
     }
 
-    public function fetchCandidates(): void
-    {
-        $query = Candidate::with(['users','users.program.council', 'elections', 'election_positions.position.electionType'])
-            ->withCount('votes'); // Add this to fetch vote count
-
-        if ($this->search) {
-            $query->whereHas('users', function ($q) {
-                $q->where('first_name', 'like', '%' . $this->search . '%')
-                    ->orWhere('last_name', 'like', '%' . $this->search . '%');
-            });
-        }
-
-        if ($this->selectedElection) {
-            $query->whereHas('elections', function ($q) {
-                $q->where('id', $this->selectedElection);
-            });
-        }
-
-        if ($this->filter) {
-            $query->whereHas('elections.election_type', function ($q) {
-                $q->where('name', $this->filter);
-            });
-        }
-
-
-        $this->candidates = $query->get();
-    }
-
-
-    public function fetchElection($filter): void
-    {
-        $this->latestElection = Election::with('election_type')
-            ->whereHas('election_type', function ($q) use ($filter) {
-                $q->where('name', $filter);
-            })
-            ->orderBy('created_at', 'desc')
-            ->first();
-
-        $this->selectedElectionName = $this->latestElection ? $this->latestElection->name : null;
-        $this->selectedElectionCampus = $this->latestElection ? $this->latestElection->campus : null;
-
-        $this->hasStudentCouncilPositions = false;
-        $this->hasLocalCouncilPositions = false;
-
-        if ($this->latestElection) {
-            $this->hasStudentCouncilPositions = ElectionPosition::where('election_id', $this->latestElection->id)
-                ->whereHas('position.electionType', function ($q) {
-                    $q->where('name', 'Student Council Election');
-                })
-                ->exists();
-
-            $this->hasLocalCouncilPositions = ElectionPosition::where('election_id', $this->latestElection->id)
-                ->whereHas('position.electionType', function ($q) {
-                    $q->where('name', 'Local Council Election');
-                })
-                ->exists();
-        }
-
-        $this->elections = Election::with('election_type')
-            ->whereHas('election_type', function ($q) use ($filter) {
-                $q->where('name', $filter);
-            })
-            ->get();
-    }
-
-
-    public function fetchWinners(): void
-    {
-        if ($this->latestElection) {
-            // Fetch winning candidates for Student Council
-            $this->studentCouncilWinners = $this->getWinnersByElectionType('Student Council Election');
-
-            // Fetch winning candidates for Local Council, grouped by program
-            $this->localCouncilWinners = $this->getWinnersByProgram();
-        } else {
-            $this->studentCouncilWinners = collect();
-            $this->localCouncilWinners = collect();
-        }
-    }
-
     public function getWinnersByElectionType($electionType): array
     {
+        // Same logic as your Livewire component
         $winners = [];
 
-        // Fetch positions for the election type
-        $positions = ElectionPosition::where('election_id', $this->latestElection->id)
+        $positions = ElectionPosition::where('election_id', $this->election->id)
             ->whereHas('position.electionType', function ($q) use ($electionType) {
                 $q->where('name', $electionType);
             })
@@ -244,14 +128,14 @@ class ElectionResult extends Component
 
     public function getWinnersByProgram(): array
     {
+        // Same logic as your Livewire component
         $winnersByProgram = [];
-
         // Fetch all programs (councils)
         $programs = Council::all();
 
         foreach ($programs as $program) {
             // Fetch positions for Local Council Election
-            $positions = ElectionPosition::where('election_id', $this->latestElection->id)
+            $positions = ElectionPosition::where('election_id', $this->election->id)
                 ->whereHas('position.electionType', function ($q) {
                     $q->where('name', 'Local Council Election');
                 })
@@ -319,26 +203,28 @@ class ElectionResult extends Component
         return $winnersByProgram;
     }
 
-    public function exportElectionResult()
+    public function view(): View
     {
-        return Excel::download(new ElectionResultExport($this->search, $this->filter, $this->selectedElection), 'ELECTION_RESULT_' . strtoupper($this->latestElection->name) .'.xlsx');
-
-    }
-
-    public function render()
-    {
-        return view('evotar.livewire.election-result.election-result', [
-            'candidates' => $this->candidates,
-            'elections' => $this->elections,
-            'selectedElectionName' => $this->selectedElectionName,
-            'selectedElectionCampus' => $this->selectedElectionCampus,
-            'totalVoters' => $this->totalVoters,
-            'totalVoterVoted' => $this->totalVoterVoted,
-            'councils' => $this->councils,
-            'hasStudentCouncilPositions' => $this->hasStudentCouncilPositions,
-            'hasLocalCouncilPositions' => $this->hasLocalCouncilPositions,
+        return view('evotar.reports.exports.electionResultReport', [
             'studentCouncilWinners' => $this->studentCouncilWinners,
             'localCouncilWinners' => $this->localCouncilWinners,
+            'election' => $this->election,
+            'totalVoterVoted' => $this->totalVoterVoted,
         ]);
     }
+
+    public function drawings(): Drawing
+    {
+        $drawing = new Drawing();
+        $drawing->setName('Logo');
+        $drawing->setDescription('University Logo');
+        $drawing->setPath(public_path('storage/assets/image/University of Southeastern Philippines Tagum Unit.png'));
+        $drawing->setHeight(50);
+        $drawing->setWidth(300);
+        $drawing->setOffsetX(280);
+        $drawing->setCoordinates('C1');
+
+        return $drawing;
+    }
+
 }

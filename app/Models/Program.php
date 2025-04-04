@@ -16,7 +16,7 @@ class Program extends Model
 
     public function majors(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(program_major::class);
+        return $this->hasMany(program_major::class, 'program_id');
     }
 
     public function users(): \Illuminate\Database\Eloquent\Relations\HasMany

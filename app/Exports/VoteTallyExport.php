@@ -99,8 +99,6 @@ class VoteTallyExport implements FromView, ShouldAutoSize, WithDrawings, WithEve
     {
         return [
             AfterSheet::class => function (AfterSheet $event) {
-                // Set autofilter on a range that includes your header row.
-                // Assuming headers start at A6 and go up to H6 (adjust if needed)
                 $event->sheet->getDelegate()->setAutoFilter('A4:H4');
             },
         ];

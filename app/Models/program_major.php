@@ -12,6 +12,6 @@ class program_major extends Model
 
     public function program(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(Program::class);
+        return $this->belongsTo(Program::class, 'program_id', 'id');
     }
 }
