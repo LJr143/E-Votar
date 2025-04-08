@@ -36,6 +36,8 @@ class ActiveUserTable extends Component
                 ->from('sessions')
                 ->whereNotNull('user_id')
                 ->where('last_activity', '>=', now()->subMinutes(config('session.lifetime'))->timestamp);
+        })->whereDoesntHave('roles', function ($query) {
+            $query->where('name', 'technical_officer');
         })
             ->when($this->search, function ($query) {
                 $query->where(function ($subQuery) {

@@ -1,4 +1,4 @@
-<div class="w-1/5 bg-white p-6 rounded-lg shadow">
+<div class="bg-white p-6 rounded-lg shadow">
     @if ($userSelected)
         <div class="text-center">
             <p class="text-[11px] font-semibold mb-3">USER INFORMATION</p>
@@ -12,12 +12,7 @@
             <h2 class="text-[14px] font-bold">{{ $userSelected->first_name }} {{ $userSelected->middle_initial }} {{ $userSelected->last_name }}</h2>
             <p class="text-[12px] text-gray-500 mb-2">{{ $userSelected->role }}</p>
             <div class="flex justify-center items-center">
-                <button class="flex items-center text-[12px] bg-black text-white px-4 py-2 rounded-md mb-4 hover:bg-gray-200">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="mr-2" height="20px" viewBox="0 -960 960 960" width="20px" fill="#FFFFFF">
-                        <path d="M768-90 666-192H192v-92q0-25.78 12.5-47.39T239-366q43-26 91-42t99-21L90-768l51-51 678 678-51 51ZM264-264h330l-95-96h-19q-54 0-106 14t-99 42q-4.95 2.94-7.98 8.24Q264-290.47 264-284v20Z"/>
-                    </svg>
-                    Block user
-                </button>
+                <livewire:technical-officer.block-user :user_id="$userSelected->id">
             </div>
         </div>
 

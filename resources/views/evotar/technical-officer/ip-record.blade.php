@@ -5,7 +5,9 @@
     </x-slot>
 
     <x-slot name="header">
-        <x-header></x-header>
+        <div class="px-6 w-full">
+            <x-header></x-header>
+        </div>
     </x-slot>
     <x-slot name="main">
         <div class="mx-auto p-6">

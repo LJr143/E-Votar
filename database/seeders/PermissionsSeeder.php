@@ -43,6 +43,22 @@ class PermissionsSeeder extends Seeder
                 'edit users',
                 'delete users',
             ],
+
+            'University Management' => [
+                'view colleges',
+                'create colleges',
+                'edit colleges',
+                'delete colleges',
+                'view programs',
+                'create programs',
+                'edit programs',
+                'delete programs',
+                'view majors',
+                'create majors',
+                'edit majors',
+                'delete majors',
+            ],
+
             'System Logs' => [
                 'view system logs',
                 'create system logs',
@@ -66,6 +82,7 @@ class PermissionsSeeder extends Seeder
                 'Party List Management',
                 'Voter Management',
                 'User Management',
+                'University Management',
                 'System Logs',
             ],
         ];

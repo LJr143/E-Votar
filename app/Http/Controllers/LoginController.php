@@ -31,11 +31,9 @@ class LoginController extends Controller
      */
     public function login()
     {
-        if (auth()->check()) {
+        if (auth()->check() && !request()->is('admin/login')) {
             return $this->authenticated(request(), auth()->user());
         }
-
-
         return view('evotar.common-admin.login');
     }
 

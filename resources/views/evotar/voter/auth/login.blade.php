@@ -80,6 +80,7 @@
 
     <x-validation-errors class="mb-4"/>
 
+
     <script>
         document.getElementById('togglePassword').addEventListener('click', function () {
             const passwordInput = document.getElementById('password');

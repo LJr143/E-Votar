@@ -1,4 +1,4 @@
-<div>
+<div class="w-full">
     <div class="flex flex-col md:flex-row justify-between items-center mb-2">
         <div class="flex space-x-2">
             <button class="bg-white border border-gray-300 w-8 h-8 rounded-md flex items-center justify-center hover:bg-gray-200 focus:outline-none">

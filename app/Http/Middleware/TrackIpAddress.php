@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Middleware;
 
 use Closure;
@@ -11,7 +12,7 @@ class TrackIpAddress
     public function handle(Request $request, Closure $next)
     {
         $ipAddress = $request->ip();
-        $userId = Auth::id();
+        $userId = Auth::id(); // Will be null if not authenticated
 
         // Find or create the IP record
         $ipRecord = IpRecord::firstOrCreate(
@@ -19,15 +20,24 @@ class TrackIpAddress
             ['status' => 'allowed', 'last_seen_at' => now()]
         );
 
-        // Update the status and last seen time
+        // Check if the IP is blocked
+        if ($ipRecord->status === 'blocked') {
+            if (Auth::check()) {
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+            }
+            return redirect()->route('voter.login')->with('error', 'Your IP is blocked. Please contact support.');
+        }
+
+        // Update the record only if it’s not blocked
         $ipRecord->update([
-            'status' => 'allowed',
+            'status' => 'allowed', // Only if not blocked
             'last_seen_at' => now(),
+            'user_id' => $userId ?: $ipRecord->user_id, // Preserve user_id if already set
         ]);
 
-//        // Broadcast the event
-//        broadcast(new IpAddressTracked($userId, $ipAddress, 'online'));
-
+        // Proceed with the request
         return $next($request);
     }
 }

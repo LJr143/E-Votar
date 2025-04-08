@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Auth;
+
 class RoleRedirectService
 {
     public function redirectBasedOnRole($user): \Illuminate\Http\RedirectResponse
@@ -15,10 +17,12 @@ class RoleRedirectService
         if ($user->hasRole('technical_officer')) {
             return redirect()->route('technical-officer.dashboard');
         }
-        if($user->hasRole('voter')){
+        if ($user->hasRole('voter')) {
             return redirect()->route('voter.election.redirect');
         }
 
-        return redirect()->route('admin.login');
+        // Log out and redirect only if no valid role
+        Auth::logout();
+        return redirect()->route('admin.login')->withErrors(['error' => 'No valid role assigned.']);
     }
 }

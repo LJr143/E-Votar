@@ -202,9 +202,9 @@
                                             {{ $voter->account_status }}
                                         </span>
                                     </td>
-                                    <td class="py-3 px-6 text-center flex justify-center items-center exclude-print">
-                                        <div class="inline-flex">
-                                            @can('edit voter')
+                                    <td class="py-3 px-6 text-center flex justify-center items-center exclude-print" wire:key="voter-action-column-{{ $voter->id }}">
+                                        <div class="inline-flex" wire:key="voter-action-column-{{ $voter->id }}">
+                                        @can('edit voter')
                                                 <livewire:manage-voter.edit-voter :userId="$voter->id"
                                                                                   :key="'edit-election-'.$voter->id"/>
                                             @endcan
