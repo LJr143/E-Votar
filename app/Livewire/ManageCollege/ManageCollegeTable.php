@@ -2,6 +2,7 @@
 
 namespace App\Livewire\ManageCollege;
 
+use App\Exports\CollegeExport;
 use App\Models\Campus;
 use App\Models\Candidate;
 use App\Models\College;
@@ -9,6 +10,7 @@ use App\Models\Election;
 use App\Models\ElectionPosition;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ManageCollegeTable extends Component
 {
@@ -44,6 +46,14 @@ class ManageCollegeTable extends Component
     public function refreshComponent(): void
     {
         $this->resetPage();
+    }
+
+    public function exportColleges()
+    {
+        return Excel::download(
+            new CollegeExport($this->search, $this->filter),
+            'CAMPUS_COLLEGE_LIST.xlsx'
+        );
     }
 
     /**
