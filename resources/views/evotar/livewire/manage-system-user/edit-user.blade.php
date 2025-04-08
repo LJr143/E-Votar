@@ -33,10 +33,31 @@
         >
 
             <div class="flex justify-between items-center mb-4 border-b border-gray-300 pb-2">
-                <div>
-                    <h2 class="text-sm font-bold text-left w-full sm:w-auto">Edit System User</h2>
-                    <p class="text-[10px] text-gray-500 italic">To edit an election please fill out the required
-                        information.</p>
+                <div class="">
+                    <div class="flex flex-row items-center space-x-2">
+                        <h2 class="text-sm font-bold text-left w-full sm:w-auto">Edit System User</h2>
+                        <span class="
+                        @if($user->account_status == 'Active')
+                                bg-green-100 text-green-600
+                            @elseif($user->account_status == 'Deactivated')
+                               bg-red-100 text-red-600
+                            @elseif($user->account_status == 'Pending Verification')
+                                bg-yellow-100 text-yellow-600
+                            @endif text-[10px] text-left font-medium px-2 py-1 rounded">
+                            @if($user->account_status == 'Active')
+                                This Account is Active
+                            @elseif($user->account_status == 'Deactivated')
+                                This Account is Deactivated
+                            @elseif($user->account_status == 'Pending Verification')
+                                This Needs further Verification
+                            @endif
+                        </span>
+                    </div>
+
+                    <div>
+                        <p class="text-[10px] text-gray-500 italic">To edit an election please fill out the required
+                            information.</p>
+                    </div>
                 </div>
 
                 <!-- Close Button (X) -->
@@ -111,19 +132,6 @@
                                     </div>
                                 </div>
 
-                                <div class="mb-3 relative w-full">
-                                    <p class="text-[12px] text-left font-semibold my-2">Account Status</p>
-                                    <div class="flex justify-start">
-                                        <div class="flex-1 text-left mb-3">
-                                            <p class="text-green-500">This Account is Active</p>
-                                        </div>
-
-                                        <button class="p-2 text-red-500 rounded">
-                                            <p>Deactivate Account</p>
-                                        </button>
-                                    </div>
-                                </div>
-
                             </div>
 
                         </div>
@@ -140,6 +148,15 @@
                         </div>
                     </div>
                 </form>
+                <div class=" w-full flex justify-start mt-[-25px]">
+                    @if($user->account_status == 'Active')
+                        <livewire:account-status-management.deactivation :user_id="$user->id"/>
+                    @elseif($user->account_status == 'Deactivated')
+                        <livewire:account-status-management.activation :user_id="$user->id"/>
+                    @elseif($user->account_status == 'Pending Verification')
+                        <livewire:account-status-management.pending-verification :user_id="$user->id"/>
+                    @endif
+                </div>
             @elseif($currentStep === 2)
                 <form wire:submit.prevent="submit">
                     <div>

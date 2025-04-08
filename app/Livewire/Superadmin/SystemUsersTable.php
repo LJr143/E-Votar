@@ -2,9 +2,11 @@
 
 namespace App\Livewire\Superadmin;
 
-use App\Models\Election;
+use App\Exports\SystemUserAdminExport;
 use App\Models\User;
 use Livewire\Component;
+use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Exception;
 
 class SystemUsersTable extends Component
 {
@@ -69,6 +71,13 @@ class SystemUsersTable extends Component
         }
 
         $this->users = $query->get();
+    }
+
+
+    public function exportSystemUsers()
+    {
+        return Excel::download(new SystemUserAdminExport($this->search, $this->filter), 'LIST_OF_SYSTEM_USERS_ADMINS.xlsx');
+
     }
 
     public function render(): \Illuminate\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\View\View

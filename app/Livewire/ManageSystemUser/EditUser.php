@@ -13,6 +13,7 @@ class EditUser extends Component
 {
     public $search = '';
     public $users = [];
+
     public $selectedUser;
     public $currentStep = 1;
     public $selectedRole = null;
@@ -30,14 +31,14 @@ class EditUser extends Component
     public function mount($userId): void
     {
 
-        $user = User::find($userId);
+        $this->user = User::find($userId);
 
-        if ($user) {
-            $this->userId = $user->id;
-            $this->selectedUser = $user->id;
+        if ($this->user) {
+            $this->userId = $this->user->id;
+            $this->selectedUser = $this->user->id;
             $this->selectUser($this->userId);
-            $this->username = $user->username;
-            $this->selectedRole = $user->roles->pluck('id')->first();
+            $this->username = $this->user->username;
+            $this->selectedRole = $this->user->roles->pluck('id')->first();
 
         } else {
             session()->flash('error', 'User not found.');
@@ -187,6 +188,6 @@ class EditUser extends Component
 
     public function render(): \Illuminate\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\View\View
     {
-        return view('evotar.livewire.manage-system-user.edit-user');
+        return view('evotar.livewire.manage-system-user.edit-user', ['user' => $this->user]);
     }
 }
