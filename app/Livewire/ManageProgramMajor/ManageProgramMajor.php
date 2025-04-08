@@ -2,10 +2,13 @@
 
 namespace App\Livewire\ManageProgramMajor;
 
+use App\Exports\ProgramExport;
+use App\Exports\ProgramMajorExport;
 use App\Models\Campus;
 use App\Models\Program;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ManageProgramMajor extends Component
 {use WithPagination;
@@ -39,6 +42,14 @@ class ManageProgramMajor extends Component
     public function refreshComponent(): void
     {
         $this->resetPage();
+    }
+
+    public function exportProgramMajors()
+    {
+        return Excel::download(
+            new ProgramMajorExport($this->search, $this->filter),
+            'PROGRAMS_MAJORS_LIST.xlsx'
+        );
     }
 
     /**
