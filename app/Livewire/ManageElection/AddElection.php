@@ -2,6 +2,7 @@
 
 namespace App\Livewire\ManageElection;
 
+use App\Events\UserLoggedIn;
 use App\Models\Campus;
 use App\Models\College;
 use App\Models\Election;
@@ -12,6 +13,7 @@ use App\Models\Program;
 use App\Models\User;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Log;
 
 class AddElection extends Component
 {

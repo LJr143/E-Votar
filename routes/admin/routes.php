@@ -11,7 +11,7 @@ Route::group(['middleware' => ['superadmin.check', 'redirect.auth']], function (
 });
 
 // Admin Protected Routes
-Route::middleware(['splash.screen', 'set.selected.election',  'track.ip.user', 'facial.verified', 'check.blocked.ip'])->prefix('admin')->group(function () {
+Route::middleware(['splash.screen', 'set.selected.election',  'track.ip.user', 'check.blocked.ip'])->prefix('admin')->group(function () {
     Route::get('register', [ViewController::class, 'view'])->name('admin.register');
     Route::post('register', [ViewController::class, 'register'])->name('admin.register');
 
@@ -38,7 +38,7 @@ Route::middleware(['splash.screen', 'set.selected.election',  'track.ip.user', '
 
 
     // Technical Officer Based Routes
-    Route::get('dashboard', [ViewController::class, 'technicalOfficerDashboard'])->name('technical-officer.dashboard');
+    Route::get('technical/dashboard', [ViewController::class, 'technicalOfficerDashboard'])->name('technical-officer.dashboard');
     Route::get('active-users', [ViewController::class, 'activeUsers'])->name('technical-officer.active.user');
     Route::get('ip-records', [ViewController::class, 'ipRecords'])->name('technical-officer.ip.records');
 

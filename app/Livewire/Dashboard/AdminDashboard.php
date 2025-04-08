@@ -33,6 +33,8 @@ class AdminDashboard extends Component
         $this->fetchElection();
         $this->fetchCandidates();
         $this->fetchVoterTally();
+
+
     }
 
     public function updatedSearch(): void

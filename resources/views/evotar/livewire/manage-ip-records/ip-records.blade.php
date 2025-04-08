@@ -99,12 +99,13 @@
                 <td class="py-3 px-6 text-left">
                     {{ $record->last_seen_at ? $record->last_seen_at->diffForHumans() : 'Never' }}
                 </td>
-                <td class="py-3 px-6 text-left" wire:key="action-btn-{{$record->id}}">
+                <td class="py-3 px-6 text-left flex space-x-2" wire:key="action-btn-{{$record->id}}">
                     @if($record->status == 'allowed')
                         <livewire:technical-officer.block-user :user_id="$record->user->id" wire:key="block-user-{{$record->user->id ?? 'guest'}}"/>
                     @else
                         <livewire:technical-officer.unblock-user :user_id="$record->user->id" wire:key="allow-user-{{$record->user->id ?? 'guest'}}"/>
                     @endif
+                    <livewire:technical-officer.delete-ip-address :user_id="$record->user->id" wire:key="delete-user-record-{{$record->user->id}}"/>
                 </td>
             </tr>
             @endforeach

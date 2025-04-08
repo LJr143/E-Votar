@@ -176,6 +176,7 @@
 {{ $slot }}
 
 @livewireScripts
+@reverb
 @stack('modals')
 {{--@if(session('script'))--}}
 {{--    {!! session('script') !!}--}}

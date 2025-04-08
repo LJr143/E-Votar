@@ -1,7 +1,7 @@
 <div x-data="{ open: false }" x-cloak @system-user-blocked.window="open = false">
     <!-- Trigger Button -->
     <button @click="open = true"
-        class="flex items-center text-[12px] bg-black text-white px-4 py-1 rounded-md mb-4 hover:bg-gray-200">
+        class="flex items-center text-[12px] bg-black text-white px-4 py-2 rounded-md mb-4 hover:bg-gray-200">
         <svg xmlns="http://www.w3.org/2000/svg" class="mr-2" height="20px" viewBox="0 -960 960 960" width="20px" fill="#FFFFFF">
             <path d="M768-90 666-192H192v-92q0-25.78 12.5-47.39T239-366q43-26 91-42t99-21L90-768l51-51 678 678-51 51ZM264-264h330l-95-96h-19q-54 0-106 14t-99 42q-4.95 2.94-7.98 8.24Q264-290.47 264-284v20Z"/>
         </svg>

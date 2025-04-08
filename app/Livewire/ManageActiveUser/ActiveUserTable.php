@@ -13,6 +13,7 @@ class ActiveUserTable extends Component
 
     public $search = '';
     public $selectAll = false;
+    public $perPage = 5;
 
     protected $listeners = ['refreshTable' => '$refresh'];
 
@@ -46,7 +47,7 @@ class ActiveUserTable extends Component
                         ->orWhere('email', 'like', '%' . $this->search . '%');
                 });
             })
-            ->paginate(10);
+            ->paginate($this->perPage);
     }
 
 

@@ -1,13 +1,10 @@
 <?php
-
 namespace App\Livewire\ManageIpRecords;
 
-use App\Exports\ElectionsExport;
-use App\Exports\IpRecordsExport;
 use App\Models\IpRecord;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Maatwebsite\Excel\Facades\Excel;
 
 class IpRecords extends Component
 {
@@ -15,38 +12,33 @@ class IpRecords extends Component
 
     public $search = '';
     public $perPage = 5;
+    public $refreshKey = 0;
 
-    protected $listeners = ['refreshIpRecords' => '$refresh'];
+    protected $listeners = [
+        'ip-record-deleted' => '$refresh',
+        'echo:user-logged-in,UserLoggedIn' => 'refreshTable'
+    ];
 
-    public function updatingSearch(): void
+    public function refreshTable(): void
     {
         $this->resetPage();
-    }
-
-    public function exportIpRecords()
-    {
-        return Excel::download(new IpRecordsExport($this->search), 'LIST_OF_IP_RECORDS.xlsx');
-
+        $this->refreshKey++;
+        Log::debug('Table refresh triggered', ['key' => $this->refreshKey]);
     }
 
     public function render()
     {
         $ipRecords = IpRecord::query()
-            ->whereNotNull('user_id') // 👈 Exclude guest records
-            ->when($this->search, function ($query) {
-                $query->where(function ($subQuery) {
-                    $subQuery->where('ip_address', 'like', '%' . $this->search . '%')
-                        ->orWhereHas('user', function ($userQuery) {
-                            $userQuery->where('first_name', 'like', '%' . $this->search . '%')
-                                ->orWhere('last_name', 'like', '%' . $this->search . '%');
-                        });
-                });
-            })
+            ->whereNotNull('user_id')
+            ->when($this->search, fn($q) => $q->where('ip_address', 'like', "%{$this->search}%")
+                ->orWhereHas('user', fn($q) => $q->where('first_name', 'like', "%{$this->search}%")
+                    ->orWhere('last_name', 'like', "%{$this->search}%")))
             ->with('user')
-            ->orderBy('last_seen_at', 'desc')
+            ->orderByDesc('last_seen_at')
             ->paginate($this->perPage);
 
-
-        return view('evotar.livewire.manage-ip-records.ip-records', compact('ipRecords'));
+        return view('evotar.livewire.manage-ip-records.ip-records', [
+            'ipRecords' => $ipRecords
+        ]);
     }
 }
