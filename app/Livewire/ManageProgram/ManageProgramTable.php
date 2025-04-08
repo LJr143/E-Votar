@@ -2,6 +2,7 @@
 
 namespace App\Livewire\ManageProgram;
 
+use App\Exports\ProgramExport;
 use App\Models\Campus;
 use App\Models\Candidate;
 use App\Models\College;
@@ -9,6 +10,7 @@ use App\Models\Election;
 use App\Models\ElectionPosition;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ManageProgramTable extends Component
 {
@@ -43,6 +45,14 @@ class ManageProgramTable extends Component
     public function refreshComponent(): void
     {
         $this->resetPage();
+    }
+
+    public function exportPrograms()
+    {
+        return Excel::download(
+            new ProgramExport($this->search, $this->filter),
+            'COLLEGE_PROGRAMS_LIST.xlsx'
+        );
     }
 
     /**
