@@ -35,7 +35,22 @@
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-2">
                         <h2 class="text-sm font-bold text-left">Edit Voter</h2>
-                        <span class="bg-green-100 text-green-600 text-[10px] text-left font-medium px-2 py-1 rounded">This Account is Active</span>
+                        <span class="
+                        @if($user->account_status == 'Active')
+                                bg-green-100 text-green-600
+                            @elseif($user->account_status == 'Deactivated')
+                               bg-red-100 text-red-600
+                            @elseif($user->account_status == 'Pending Verification')
+                                bg-yellow-100 text-yellow-600
+                            @endif text-[10px] text-left font-medium px-2 py-1 rounded">
+                            @if($user->account_status == 'Active')
+                                This Account is Active
+                            @elseif($user->account_status == 'Deactivated')
+                                This Account is Deactivated
+                            @elseif($user->account_status == 'Pending Verification')
+                                This Needs further Verification
+                            @endif
+                        </span>
                     </div>
                     <!-- Close Button (X) -->
                     <button @click="open = false" class="text-gray-500 hover:text-gray-700">
@@ -219,11 +234,7 @@
                     </div>
                 </div>
 
-                <div class="mt-3 sm:mt-6 pt-3 flex flex-col md:flex-row justify-between items-center">
-                    <button type="button"
-                            class="border border-red-500 text-red-500 px-6 py-1 h-7 rounded shadow-md hover:bg-red-100 text-[12px] justify-center text-center mb-6 md:mb-0 hover:drop-shadow hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110">
-                        Deactivate Account
-                    </button>
+                <div class="mt-3 sm:mt-6 pt-3 flex flex-col md:flex-row  w-full justify-end items-center">
                     <div class="flex space-x-2 justify-end w-full md:w-auto">
                         <button type="button"
                                 class="bg-white text-black text-[12px] border border-gray-300 h-7 px-4 py-1 rounded shadow-md hover:bg-gray-200 justify-center text-center hover:drop-shadow hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"
@@ -236,9 +247,16 @@
                         </button>
                     </div>
                 </div>
-
-
             </form>
+            <div class=" w-full flex justify-start mt-[-25px]">
+                @if($user->account_status == 'Active')
+                    <livewire:account-status-management.deactivation :user_id="$user->id"/>
+                @elseif($user->account_status == 'Deactivated')
+                    <livewire:account-status-management.activation :user_id="$user->id"/>
+                @elseif($user->account_status == 'Pending Verification')
+                    <livewire:account-status-management.pending-verification :user_id="$user->id"/>
+                @endif
+            </div>
         </div>
     </div>
 </div>

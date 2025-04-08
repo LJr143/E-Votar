@@ -47,7 +47,6 @@ class ElectionResult extends Component
         $this->councils = Council::all();
         $this->selectedFilter = $this->filter;
         $this->fetchCandidates();
-        $this->fetchVoterTally();
         $this->fetchWinners();
     }
 
@@ -55,7 +54,6 @@ class ElectionResult extends Component
     {
         $this->fetchElection($this->filter);
         $this->fetchCandidates();
-        $this->fetchVoterTally();
         $this->fetchWinners();
     }
 
@@ -63,7 +61,6 @@ class ElectionResult extends Component
     {
         $this->fetchElection($this->filter);
         $this->fetchCandidates();
-        $this->fetchVoterTally();
         $this->fetchWinners();
         $this->dispatch('updateChartData', $this->selectedElection);
     }
@@ -76,36 +73,52 @@ class ElectionResult extends Component
 
         $this->fetchElection($this->filter);
         $this->fetchCandidates();
-        $this->fetchVoterTally();
         $this->fetchWinners();
         $this->dispatch('updateChartData', $this->selectedElection);
     }
 
 
-    public function fetchVoterTally(): void
+    public function fetchVoterTally($electionId): void
     {
-        $election = Election::find($this->selectedElection);
-        if ($election) {
+        \Log::debug('fetchVoterTally triggered', [
+            'selectedElection' => $this->selectedElection,
+            'previousVoters' => $this->totalVoters,
+            'previousVoted' => $this->totalVoterVoted
+        ]);
+
+        if (!$this->selectedElection) {
+            $this->totalVoters = 0;
+            $this->totalVoterVoted = 0;
+            return;
+        }
+
+        $election = Election::find($electionId);
+        if (!$election) {
+            $this->totalVoters = 0;
+            $this->totalVoterVoted = 0;
+            return;
+        }
+
+        try {
             $this->totalVoters = User::where('campus_id', $election->campus_id)
-                ->whereHas('roles', function ($query) {
-                    $query->where('name', 'voter');
-                })
-                ->whereDoesntHave('electionExcludedVoters', function ($query) use ($election) {
-                    $query->where('election_id', $election->id);
-                })
+                ->whereHas('roles', fn($q) => $q->where('name', 'voter'))
+                ->whereDoesntHave('electionExcludedVoters', fn($q) => $q->where('election_id', $election->id))
                 ->count();
 
             $this->totalVoterVoted = User::where('campus_id', $election->campus_id)
-                ->whereHas('roles', function ($query) {
-                    $query->where('name', 'voter');
-                })
-                ->whereDoesntHave('electionExcludedVoters', function ($query) use ($election) {
-                    $query->where('election_id', $election->id);
-                })
-                ->whereHas('votes', function ($query) use ($election) {
-                    $query->where('election_id', $election->id);
-                })
+                ->whereHas('roles', fn($q) => $q->where('name', 'voter'))
+                ->whereDoesntHave('electionExcludedVoters', fn($q) => $q->where('election_id', $election->id))
+                ->whereHas('votes', fn($q) => $q->where('election_id', $election->id))
                 ->count();
+
+            \Log::debug('Voter tally updated', [
+                'totalVoters' => $this->totalVoters,
+                'totalVoterVoted' => $this->totalVoterVoted
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Failed to fetch voter tally', ['error' => $e->getMessage()]);
+            $this->totalVoters = 0;
+            $this->totalVoterVoted = 0;
         }
     }
 
@@ -165,6 +178,8 @@ class ElectionResult extends Component
                     $q->where('name', 'Local Council Election');
                 })
                 ->exists();
+
+            $this->fetchVoterTally($this->latestElection->id);
         }
 
         $this->elections = Election::with('election_type')

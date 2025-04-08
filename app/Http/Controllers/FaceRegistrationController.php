@@ -25,6 +25,12 @@ class FaceRegistrationController extends Controller
 
             $user = User::findOrFail($request->user_id);
 
+            $user->update([
+                'account_status' => 'Active',
+            ]);
+
+            $user->save();
+
             // Delete any existing face data
             $user->faceData()->delete();
 
@@ -40,9 +46,10 @@ class FaceRegistrationController extends Controller
                 ]);
             }
 
+
             return response()->json([
                 'success' => true,
-                'message' => 'Face registration completed successfully'
+                'message' => 'Face registration completed successfully',
             ]);
 
         } catch (\Exception $e) {

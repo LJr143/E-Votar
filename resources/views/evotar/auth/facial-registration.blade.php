@@ -117,6 +117,10 @@
                 const progressBar = document.getElementById('progress-bar');
                 const qualityMarker = document.getElementById('quality-marker');
 
+                // Get the return URL from the query parameter
+                const urlParams = new URLSearchParams(window.location.search);
+                const returnUrl = urlParams.get('return_url') || '/admin/voters';
+
                 // Registration state
                 let registrationState = {
                     step: 0, // 0: ready, 1: front, 2: left, 3: right, 4: up, 5: down
@@ -379,6 +383,8 @@
                             progressBar.style.width = "100%";
                             angleInstructions.textContent = "Thank you for completing face registration";
                             captureButton.style.display = "none";
+                            alert('Registration successful!');
+                            window.location.href = returnUrl;
                         } else {
                             throw new Error(data.message || "Registration failed");
                         }

@@ -160,7 +160,14 @@ class RegisterController extends Controller
         $user = $this->createVoter($request->all());
 
         session()->flash('registered', true);
-        return redirect()->route('voter.facial.registration.get', ['id' => $user->id]);
+        // Get the previous URL and pass it as a query parameter
+        $previousUrl = url()->previous();
+
+        return redirect()->route('voter.facial.registration.get', [
+            'id' => $user->id,
+            'return_url' => $previousUrl,
+        ]);
+
     }
 
     /**

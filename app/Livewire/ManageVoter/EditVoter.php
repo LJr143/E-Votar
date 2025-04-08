@@ -16,6 +16,7 @@ class EditVoter extends Component
     public $search = '';
     public $userId;
     public $users;
+    public $user;
     public $first_name, $middle_initial, $last_name, $extension, $gender, $birth_date, $email, $phone_number, $year_level, $student_id, $campus_id,
         $college_id, $program_id, $program_major_id, $username;
 
@@ -25,28 +26,30 @@ class EditVoter extends Component
     public $programs = [];
     public $programMajors = [];
 
+    protected $listeners  = [ 'deactivated-user' => '$refresh', 'activated-user' => '$refresh'];
+
     public function mount($userId): void
     {
         // Fetch the user
-        $user = User::find($userId);
+        $this->user = User::find($userId);
 
-        if ($user) {
-            $this->userId = $user->id;
-            $this->first_name = $user->first_name;
-            $this->middle_initial = $user->middle_initial;
-            $this->last_name = $user->last_name;
-            $this->extension = $user->extension;
-            $this->gender = $user->gender;
-            $this->birth_date = $user->birth_date;
-            $this->email = $user->email;
-            $this->phone_number = $user->phone_number;
-            $this->year_level = $user->year_level;
-            $this->student_id = $user->student_id;
-            $this->campus_id = $user->campus_id;
-            $this->college_id = $user->college_id;
-            $this->program_id = $user->program_id;
-            $this->program_major_id = $user->program_major_id;
-            $this->username = $user->username;
+        if ($this->user) {
+            $this->userId = $this->user->id;
+            $this->first_name = $this->user->first_name;
+            $this->middle_initial = $this->user->middle_initial;
+            $this->last_name = $this->user->last_name;
+            $this->extension = $this->user->extension;
+            $this->gender = $this->user->gender;
+            $this->birth_date = $this->user->birth_date;
+            $this->email = $this->user->email;
+            $this->phone_number = $this->user->phone_number;
+            $this->year_level = $this->user->year_level;
+            $this->student_id = $this->user->student_id;
+            $this->campus_id = $this->user->campus_id;
+            $this->college_id = $this->user->college_id;
+            $this->program_id = $this->user->program_id;
+            $this->program_major_id = $this->user->program_major_id;
+            $this->username = $this->user->username;
 
             // Fetch initial options for dropdowns
             $this->campuses = Campus::all(); // Fetch all campuses
@@ -156,8 +159,9 @@ class EditVoter extends Component
         }
     }
 
+
     public function render(): \Illuminate\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\View\View
     {
-        return view('evotar.livewire.manage-voter.edit-voter');
+        return view('evotar.livewire.manage-voter.edit-voter', ['user' => $this->user]);
     }
 }

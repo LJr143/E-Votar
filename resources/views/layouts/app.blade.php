@@ -1,4 +1,4 @@
-@props(['mainClass' => '', 'bodyClass' => '', 'headerClass' => '','page_title' => ' '])
+    @props(['mainClass' => '', 'bodyClass' => '', 'headerClass' => '','page_title' => ' '])
     <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
@@ -120,6 +120,10 @@
             x-on:council-edited.window="pushNotification('success', 'Council Updated', 'Council has been updated successfully.');"></div>
         <div
             x-on:council-deleted.window="pushNotification('success', 'Council Deleted', 'Council has been deleted successfully.');"></div>
+        <div
+            x-on:deactivated-user.window="pushNotification('success', 'User Deactivated', 'User has been deactivated successfully.');"></div>
+        <div
+            x-on:activated-user.window="pushNotification('success', 'User Activated', 'User has been activated successfully.');"></div>
 
 
         <div

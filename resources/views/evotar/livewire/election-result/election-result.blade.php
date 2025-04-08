@@ -27,7 +27,7 @@
             <select name="selectedElection" id="candidate_election"
                     class="border-gray-300 text-xs rounded-lg px-4 py-2 w-full "
                     wire:model.live="selectedElection">
-                <option value="" selected>Select an election</option>
+                <option value="" disabled>Select an election</option>
                 @foreach($elections as $election)
                     <option value="{{ $election->id }}" {{ $election->id == $selectedElection ? 'selected' : '' }}>
                         {{ $election->name }} - {{ $election->campus->name }} - {{$election->election_type->name }}
@@ -82,18 +82,22 @@
             </div>
 
             <div>
-                <div class="w-full mt-8 md:mt-0 mb-8">
+                <div class="w-full mt-8 md:mt-0 mb-8" wire:key="voter-tally-{{ $selectedElection }}">
                     <div
                         class="bg-gray-100 text-black uppercase text-[11px] leading-normal text-center font-bold py-2 border-b border-gray-300 rounded-t-lg">
-                        {{ $election->name }} summary
+                        {{ $selectedElectionName }} summary
                     </div>
                     <table class="w-full border-collapse border-t border-b border-gray-100 rounded-t-lg">
                         <tbody>
                         <tr class="bg-white border-b border-gray-100 py-3 px-6 text-left">
                             <td class="py-3 px-6 border-t border-b border-gray-100">Voters Turnout</td>
                             <td class="py-3 px-6 border-t border-b border-gray-100">
-                                {{ $totalVoters > 0 ? number_format(($totalVoterVoted / $totalVoters) * 100, 2) . '%' : '0%' }}
-                                {{ '   -   ' . $totalVoterVoted . '/' . $totalVoters  }}
+                                @if($totalVoters > 0)
+                                    {{ number_format(($totalVoterVoted / $totalVoters) * 100, 2) }}%
+                                    {{ ' - ' . $totalVoterVoted . '/' . $totalVoters }}
+                                @else
+                                    0% - 0/0
+                                @endif
                             </td>
 
                         </tr>
@@ -124,7 +128,7 @@
                                             Position
                                         </th>
                                         <th class="py-2 px-8 text-left border-b border-gray-300">Candidate</th>
-                                        <th class="py-2 px-6 text-left border-b border-gray-300">Partylist</th>
+                                        <th class="py-2 px-6 text-left border-b border-gray-300">Party list</th>
                                         <th class="py-2 px-6 text-left border-b border-gray-300">Abstain Count</th>
                                         <th class="py-2 px-6 text-left rounded-tr-lg border-b border-gray-300">Vote
                                             Tally
