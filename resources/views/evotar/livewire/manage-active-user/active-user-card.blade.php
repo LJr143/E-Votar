@@ -1,4 +1,4 @@
-<div class="bg-white p-6 rounded-lg shadow">
+<div class="bg-white p-6 rounded-lg lg:shadow">
     @if ($userSelected)
         <div class="text-center">
             <p class="text-[11px] font-semibold mb-3">USER INFORMATION</p>
@@ -48,6 +48,13 @@
             </div>
         </div>
     @else
-        <p class="text-center text-gray-400">Select a user to view details.</p>
+        <!-- Different messages based on screen size -->
+        <p class="text-center text-gray-400 hidden lg:block">Select a user to view details.</p>
+
+        <!-- Loading indicator for small screens -->
+        <div class="flex flex-col items-center justify-center lg:hidden">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mb-2"></div>
+            <p class="text-center text-gray-500 text-sm">Loading user data...</p>
+        </div>
     @endif
 </div>

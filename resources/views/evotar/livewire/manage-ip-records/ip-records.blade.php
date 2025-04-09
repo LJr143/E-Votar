@@ -39,17 +39,14 @@
                        placeholder="Search by IP or user name..." aria-label="Search"
                        class="rounded-md text-[10px] border bg-white text-black border-gray-300 h-8 pl-8 pr-4 focus:ring-1 focus:ring-black focus:border-black w-full">
                 <span class="absolute left-3 top-1/2 transform -translate-y-1/2">
-                            <svg width="12" height="12" viewBox="0 0 14 14" fill="none"
-                                 xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" clip-rule="evenodd"
-                                      d="M9.68208 10.7458C8.66576 11.5361 7.38866 12.0067 6.00167 12.0067C2.68704 12.0067 0 9.31891 0 6.00335C0 2.68779 2.68704 0 6.00167 0C9.31631 0 12.0033 2.68779 12.0033 6.00335C12.0033 7.39059 11.533 8.66794 10.743 9.6845L13.7799 12.7186C14.0731 13.0115 14.0734 13.4867 13.7806 13.7799C13.4878 14.0731 13.0128 14.0734 12.7196 13.7805L9.68208 10.7458ZM10.5029 6.00335C10.5029 8.49002 8.48765 10.5059 6.00167 10.5059C3.5157 10.5059 1.50042 8.49002 1.50042 6.00335C1.50042 3.51668 3.5157 1.50084 6.00167 1.50084C8.48765 1.50084 10.5029 3.51668 10.5029 6.00335Z"
-                                      fill="#000000"/>
-                            </svg>
-                        </span>
+                    <svg width="12" height="12" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M9.68208 10.7458C8.66576 11.5361 7.38866 12.0067 6.00167 12.0067C2.68704 12.0067 0 9.31891 0 6.00335C0 2.68779 2.68704 0 6.00167 0C9.31631 0 12.0033 2.68779 12.0033 6.00335C12.0033 7.39059 11.533 8.66794 10.743 9.6845L13.7799 12.7186C14.0731 13.0115 14.0734 13.4867 13.7806 13.7799C13.4878 14.0731 13.0128 14.0734 12.7196 13.7805L9.68208 10.7458ZM10.5029 6.00335C10.5029 8.49002 8.48765 10.5059 6.00167 10.5059C3.5157 10.5059 1.50042 8.49002 1.50042 6.00335C1.50042 3.51668 3.5157 1.50084 6.00167 1.50084C8.48765 1.50084 10.5029 3.51668 10.5029 6.00335Z" fill="#000000"/>
+                    </svg>
+                </span>
             </div>
         </div>
     </div>
-    <div class="overflow-x-auto" x-data="{
+    <div class="overflow-x-auto min-h-[400px]" x-data="{
                                 selectAll: false,
                                 checkboxes: [],
                                 init() {
@@ -67,9 +64,9 @@
                                     });
                                 }
                             }" wire:key="ip-records-table">
-        <table class="min-w-full bg-white" id="ipRecordTable">
+        <table class="min-w-full" id="ipRecordTable">
             <thead>
-            <tr class="w-full bg-black text-white uppercase text-[11px] leading-normal">
+            <tr class="w-full bg-gray-100 text-gray-700 uppercase text-xs leading-normal whitespace-nowrap">
                 <th class="py-3 px-6 text-center rounded-tl-lg border-b border-gray-300 exclude-print">
                     <input type="checkbox" class="form-checkbox rounded h-4 w-4 text-black"
                            x-model="selectAll"
@@ -79,37 +76,39 @@
                 <th class="py-3 px-6 text-left border-b border-gray-300">IP Address</th>
                 <th class="py-3 px-6 text-left border-b border-gray-300">Status</th>
                 <th class="py-3 px-6 text-left border-b border-gray-300">Last Seen</th>
-                <th class="py-3 px-6 text-left rounded-tr-lg border-b border-gray-300">Actions</th>
+                <th class="py-3 px-6 text-center rounded-tr-lg border-b border-gray-300">Actions</th>
             </tr>
             </thead>
             <tbody class="text-black text-[12px] font-light">
             @foreach ($ipRecords as $record)
-                <tr class="border-b border-gray-300 hover:bg-gray-100" wire:key="ip-record-{{$record->id}}">
-                <td class="py-3 px-6 text-center exclude-print">
-                    <input type="checkbox" class="form-checkbox rounded h-4 w-4 text-black row-checkbox"
-                           x-ref="rowCheckbox">
-                </td>
-                <td class="py-3 px-6 text-left"> {{ $record->user ? $record->user->first_name . $record->user->last_name : 'Guest' }}</td>
-                <td class="py-3 px-6 text-left">{{ $record->ip_address }}</td>
-                <td class="py-3 px-6 text-left">
+                <tr class="border-b border-gray-300 whitespace-nowrap" wire:key="ip-record-{{$record->id}}">
+                    <td class="py-3 px-6 text-center exclude-print">
+                        <input type="checkbox" class="form-checkbox rounded h-4 w-4 text-black row-checkbox"
+                               x-ref="rowCheckbox">
+                    </td>
+                    <td class="py-3 px-6 text-left font-bold">
+                        {{ $record->user ? $record->user->first_name . ' ' . $record->user->last_name : 'Guest' }}
+                    </td>
+                    <td class="py-3 px-6 text-left">{{ $record->ip_address }}</td>
+                    <td class="py-3 px-6 text-left">
                     <span class="px-2 py-1 text-sm rounded {{ $record->status === 'allowed' ? 'bg-green-500 text-white' : 'bg-red-500 text-white' }}">
                                 {{ $record->status }}
                             </span>
-                </td>
-                <td class="py-3 px-6 text-left">
-                    {{ $record->last_seen_at ? $record->last_seen_at->diffForHumans() : 'Never' }}
-                </td>
-                <td class="py-3 px-6 text-left flex space-x-2" wire:key="action-btn-{{$record->id}}">
-                   <div  class="flex space-x-2" wire:key="action-btn-{{$record->id}}">
-                       @if($record->status == 'allowed')
-                           <livewire:technical-officer.block-user :user_id="$record->user->id" wire:key="block-user-{{$record->id}}"/>
-                       @else
-                           <livewire:technical-officer.unblock-user :user_id="$record->user->id" wire:key="allow-user-{{$record->id}}"/>
-                       @endif
-                       <livewire:technical-officer.delete-ip-address :user_id="$record->user->id" wire:key="delete-user-record-{{$record->id}}"/>
-                   </div>
-                </td>
-            </tr>
+                    </td>
+                    <td class="py-3 px-6 text-left">
+                        {{ $record->last_seen_at ? $record->last_seen_at->diffForHumans() : 'Never' }}
+                    </td>
+                    <td class="py-3 px-2 sm:px-4 md:px-6 text-center whitespace-nowrap" wire:key="action-btn-{{$record->id}}">
+                        <div  class="flex justify-center items-center space-x-2" wire:key="action-btn-{{$record->id}}">
+                            @if($record->status == 'allowed')
+                                <livewire:technical-officer.block-user :user_id="$record->user->id" wire:key="block-user-{{$record->id}}"/>
+                            @else
+                                <livewire:technical-officer.unblock-user :user_id="$record->user->id" wire:key="allow-user-{{$record->id}}"/>
+                            @endif
+                            <livewire:technical-officer.delete-ip-address :user_id="$record->user->id" wire:key="delete-user-record-{{$record->id}}"/>
+                        </div>
+                    </td>
+                </tr>
             @endforeach
             </tbody>
         </table>
