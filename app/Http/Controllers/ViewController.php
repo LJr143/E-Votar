@@ -273,6 +273,12 @@ class ViewController extends Controller
         return view('evotar.admin.feedback');
     }
 
+    public function announcement()
+    {
+        return view('evotar.admin.announcement');
+    }
+
+
     public function college()
     {
         return view('evotar.admin.college');
@@ -317,6 +323,9 @@ class ViewController extends Controller
     {
         return view('evotar.admin.unregistered_admin');
     }
+
+
+
 
     /**
      * Register an admin user.
