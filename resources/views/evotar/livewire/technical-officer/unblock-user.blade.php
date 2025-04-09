@@ -1,4 +1,4 @@
-<div x-data="{ open: false }" x-cloak @system-user-blocked.window="open = false">
+<div x-data="{ open: false }" x-cloak @system-user-allowed.window="open = false">
     <!-- Trigger Button -->
     <button @click="open = true"
             class="flex items-center text-[12px] bg-green-500 text-white px-4 py-2 rounded-md mb-4 hover:bg-gray-200">

@@ -1,4 +1,4 @@
-<x-app-layout mainClass="flex" headerClass="" page_title="- IP Records">
+<x-app-layout mainClass="flex" headerClass="" page_title="- Database Backup">
 
     <x-slot name="sidebar">
         <x-sidebar></x-sidebar>
@@ -13,11 +13,11 @@
         <div class="mx-auto p-6">
             <div class="flex flex-row justify-between items-start mb-4">
                 <div class="mb-2 md:mb-0 text-left">
-                    <h1 class="text-base font-semibold leading-6 text-black">IP Records</h1>
-                    <p class="text-[11px] text-gray-500">List of IP records</p>
+                    <h1 class="text-base font-semibold leading-6 text-black">Database Backup</h1>
+                    <p class="text-[11px] text-gray-500"> Manage and create backups of the database to ensure data safety and recovery.</p>
                 </div>
             </div>
-                <livewire:manage-ip-records.ip-records/>
+                <livewire:manage-database.manage-database-backup/>
             </div>
     </x-slot>
 </x-app-layout>

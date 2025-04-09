@@ -50,7 +50,7 @@ class UnblockUser extends Component
 
         // Flash success message and reset form
         session()->flash('success', 'User allowed successfully.');
-        $this->password = '';
+        $this->reset();
 
         // Dispatch events
         $this->dispatch('system-user-allowed');

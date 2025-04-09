@@ -262,6 +262,11 @@ class ViewController extends Controller
         return view('evotar.technical-officer.ip-record');
     }
 
+    public function databaseBackup()
+    {
+        return view('evotar.technical-officer.database-backup');
+    }
+
 
     public function voterElectionRedirect()
     {
