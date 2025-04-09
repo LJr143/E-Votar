@@ -47,7 +47,7 @@ class ManageDatabaseBackup extends Component
             ->when($this->search, fn($q) => $q->where('name', 'like', "%{$this->search}%"))
             ->when($this->filterDate, fn($q) => $q->whereDate('created_at', $this->filterDate))
             ->withCount('backupFiles')
-            ->with('backupFiles') // Load backup files relationship
+            ->with('backupFiles')
             ->orderBy('created_at', 'desc');
 
         return view('evotar.livewire.manage-database.manage-database-backup', [
@@ -125,7 +125,7 @@ class ManageDatabaseBackup extends Component
                 $backup->backupFiles()->create([
                     'file_path' => $filePath,
                     'file_size' => Storage::disk('public')->size($filePath),
-                    'created_by' => auth()->id(),
+                    'created_by' => auth()->id() ?? 1,
                 ]);
 
                 Log::info('Backup completed', [
@@ -190,7 +190,13 @@ class ManageDatabaseBackup extends Component
         $this->dayOfMonth = $params['day_of_month'] ?? 1;
         $this->customTime = $params['custom_time'] ?? '00:00';
 
-        return $this->calculateNextBackupTime();
+        $next = $this->calculateNextBackupTime();
+
+        if ($this->scheduleType === 'custom' && $next->isPast()) {
+            return Carbon::now()->setTimeFromTimeString($this->customTime)->addDay()->startOfMinute();
+        }
+
+        return $next;
     }
 
     public function deleteBackup($backupId)

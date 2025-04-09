@@ -12,4 +12,9 @@ class BackupFile extends Model
         'file_path',
         'file_size',
         'created_by',];
+
+    public function backupSchedule(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(BackupSchedule::class);
+    }
 }
