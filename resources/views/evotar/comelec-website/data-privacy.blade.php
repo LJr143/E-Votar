@@ -19,7 +19,7 @@
                           &gt;
                          </span>
                         <a class="text-white text-xs" href="#">
-                            Feedback
+                            Data Privacy
                         </a>
                     </nav>
                 </div>

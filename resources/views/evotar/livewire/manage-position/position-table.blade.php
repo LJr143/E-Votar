@@ -157,10 +157,10 @@
                     <div class="mt-4 min-h-[300px]">
                         <table class="min-w-full" id="positionsTable">
                             <thead class="bg-gray-50 text-left ">
-                            <tr>
-                                <th class="px-4 py-3 font-bold">ID</th>
-                                <th class="px-4 py-3 font-bold">Position Name</th>
-                                <th class="px-4 py-3 font-bold text-center exclude-print">Actions</th>
+                            <tr class="w-full bg-gray-100 text-black uppercase text-[11px] leading-normal">
+                                <th class="px-4 py-3 border-b border-gray-300 font-bold ">ID</th>
+                                <th class="px-4 py-3 border-b border-gray-300 font-bold">Position Name</th>
+                                <th class="px-4 py-3 border-b border-gray-300  font-bold text-center exclude-print">Actions</th>
                             </tr>
                             </thead>
                             <tr></tr>
