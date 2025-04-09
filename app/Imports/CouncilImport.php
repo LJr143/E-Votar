@@ -23,7 +23,7 @@ class CouncilImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnF
         $this->currentRow++;
 
         // Skip row 2 (the sample row)
-        if ($this->currentRow == 1 || $this->currentRow == 2 || $this->currentRow == 3) {
+        if ($this->currentRow == 1 ) {
             return null;
         }
         // Normalize headers to lowercase

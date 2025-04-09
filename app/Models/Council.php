@@ -8,12 +8,12 @@ class Council extends Model
 {
     protected $table = 'councils';
     protected $fillable = [
-        'name', 'program_id'
+        'name',
     ];
 
-    public function program(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function program(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->belongsTo(Program::class, 'program_id');
+        return $this->hasMany(Program::class, 'id');
     }
 
     public function councilPositionSetting(): \Illuminate\Database\Eloquent\Relations\HasMany

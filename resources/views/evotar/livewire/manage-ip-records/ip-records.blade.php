@@ -84,7 +84,7 @@
             </thead>
             <tbody class="text-black text-[12px] font-light">
             @foreach ($ipRecords as $record)
-            <tr class="border-b border-gray-300 hover:bg-gray-100" wire:key="table-row-{{$record->id}}">
+                <tr class="border-b border-gray-300 hover:bg-gray-100" wire:key="ip-record-{{$record->id}}">
                 <td class="py-3 px-6 text-center exclude-print">
                     <input type="checkbox" class="form-checkbox rounded h-4 w-4 text-black row-checkbox"
                            x-ref="rowCheckbox">
@@ -100,12 +100,14 @@
                     {{ $record->last_seen_at ? $record->last_seen_at->diffForHumans() : 'Never' }}
                 </td>
                 <td class="py-3 px-6 text-left flex space-x-2" wire:key="action-btn-{{$record->id}}">
-                    @if($record->status == 'allowed')
-                        <livewire:technical-officer.block-user :user_id="$record->user->id" wire:key="block-user-{{$record->user->id ?? 'guest'}}"/>
-                    @else
-                        <livewire:technical-officer.unblock-user :user_id="$record->user->id" wire:key="allow-user-{{$record->user->id ?? 'guest'}}"/>
-                    @endif
-                    <livewire:technical-officer.delete-ip-address :user_id="$record->user->id" wire:key="delete-user-record-{{$record->user->id}}"/>
+                   <div  class="flex space-x-2" wire:key="action-btn-{{$record->id}}">
+                       @if($record->status == 'allowed')
+                           <livewire:technical-officer.block-user :user_id="$record->user->id" wire:key="block-user-{{$record->id}}"/>
+                       @else
+                           <livewire:technical-officer.unblock-user :user_id="$record->user->id" wire:key="allow-user-{{$record->id}}"/>
+                       @endif
+                       <livewire:technical-officer.delete-ip-address :user_id="$record->user->id" wire:key="delete-user-record-{{$record->id}}"/>
+                   </div>
                 </td>
             </tr>
             @endforeach

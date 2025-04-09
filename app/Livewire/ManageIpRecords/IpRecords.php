@@ -19,15 +19,11 @@ class IpRecords extends Component
 
     protected $listeners = [
         'ip-record-deleted' => '$refresh',
-        'echo:user-logged-in,UserLoggedIn' => 'refreshTable'
+        'system-user-allowed' => '$refresh',
+        'system-user-blocked' => '$refresh',
+        'echo:user-logged-in,UserLoggedIn' => '$refresh'
     ];
 
-    public function refreshTable(): void
-    {
-        $this->resetPage();
-        $this->refreshKey++;
-        Log::debug('Table refresh triggered', ['key' => $this->refreshKey]);
-    }
 
     public function exportIpRecords()
     {
@@ -35,17 +31,28 @@ class IpRecords extends Component
 
     }
 
-
     public function render()
     {
         $ipRecords = IpRecord::query()
             ->whereNotNull('user_id')
-            ->when($this->search, fn($q) => $q->where('ip_address', 'like', "%{$this->search}%")
-                ->orWhereHas('user', fn($q) => $q->where('first_name', 'like', "%{$this->search}%")
-                    ->orWhere('last_name', 'like', "%{$this->search}%")))
+            ->whereHas('user', function ($query) {
+                $query->whereDoesntHave('roles', function ($q) {
+                    $q->where('name', 'technical_officer');
+                });
+            })
+            ->when($this->search, function ($query) {
+                $query->where(function ($q) {
+                    $q->where('ip_address', 'like', "%{$this->search}%")
+                        ->orWhereHas('user', function ($userQuery) {
+                            $userQuery->where('first_name', 'like', "%{$this->search}%")
+                                ->orWhere('last_name', 'like', "%{$this->search}%");
+                        });
+                });
+            })
             ->with('user')
             ->orderByDesc('last_seen_at')
             ->paginate($this->perPage);
+
 
         return view('evotar.livewire.manage-ip-records.ip-records', [
             'ipRecords' => $ipRecords

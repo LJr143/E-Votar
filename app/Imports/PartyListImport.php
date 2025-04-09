@@ -23,7 +23,7 @@ class PartyListImport implements ToModel, WithHeadingRow, WithValidation, SkipsO
         $this->currentRow++;
 
         // Skip row 2 (the sample row)
-        if ($this->currentRow == 1 || $this->currentRow == 2 ) {
+        if ($this->currentRow == 1) {
             return null;
         }
         // Normalize headers to lowercase
