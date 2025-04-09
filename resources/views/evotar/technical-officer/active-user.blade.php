@@ -1,4 +1,4 @@
-<x-app-layout mainClass="flex" headerClass="" page_title="- Dashboard">
+<x-app-layout mainClass="flex" headerClass="" page_title="- Active Users">
 
     <x-slot name="sidebar">
         <x-sidebar></x-sidebar>

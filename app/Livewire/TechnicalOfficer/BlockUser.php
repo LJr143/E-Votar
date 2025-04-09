@@ -63,7 +63,7 @@ class BlockUser extends Component
 
         // Flash success message and reset form
         session()->flash('success', 'User blocked successfully.');
-        $this->password = '';
+        $this->reset();
 
         // Dispatch events
         $this->dispatch('system-user-blocked');

@@ -308,6 +308,7 @@
                     </ul>
                 </li>
                 @endcanany
+
                 @can('view system logs')
                     <li x-data="{ open: {{ request()->routeIs('admin.system.logs') ? 'true' : 'false' }} }" class="relative group mb-2">
                         <!-- Parent Button -->
@@ -361,8 +362,6 @@
                         </ul>
                     </li>
                 @endcan
-
-
 
                 @can('view system logs')
                     <li x-data="{ open: {{ request()->routeIs('admin.announcement') || request()->routeIs('admin.feedback') ? 'true' : 'false' }} }" class="relative group mb-2">
@@ -418,13 +417,9 @@
                     </li>
                 @endcan
 
-
-
-
-
                 @if(auth()->user()->hasRole('technical_officer'))
                     <li class="group flex items-center space-x-2 w-full px-4 py-2 mb-2 rounded-md
-                {{ request()->routeIs('technical-officer.active.user')  ? 'bg-black text-white' : 'hover:bg-black hover:text-white' }}">
+                        {{ request()->routeIs('technical-officer.active.user')  ? 'bg-black text-white' : 'hover:bg-black hover:text-white' }}">
                         <div class="flex items-center space-x-1 ">
                             <svg class="icon w-[15px] h-[15px] mr-2 text-[#757575] fill-[#757575]
                         {{ request()->routeIs('technical-officer.active.user')  ? 'text-white fill-white' : 'group-hover:text-white group-hover:fill-white' }}"
@@ -461,6 +456,27 @@
                                class="text-[12px] font-normal text-[#757575]
                             {{ request()->routeIs('technical-officer.ip.records') ? 'text-white' : 'group-hover:text-white' }}">
                                 IP Records
+                            </a>
+                        </div>
+                    </li>
+                @endif
+
+                @if(auth()->user()->hasRole('technical_officer'))
+                    <li class="group flex items-center space-x-2 w-full px-4 py-2 mb-2 rounded-md
+                {{ request()->routeIs('technical-officer.database.backup')  ? 'bg-black text-white' : 'hover:bg-black hover:text-white' }}">
+                        <div class="flex items-center space-x-1 ">
+
+                            <svg class="icon w-[15px] h-[15px] mr-2 text-[#757575] fill-[#757575]
+                                {{ request()->routeIs('technical-officer.database.backup')  ? 'text-white fill-white' : 'group-hover:text-white group-hover:fill-white' }}"
+                                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 0C6.48 0 2 2.24 2 5v14c0 2.76 4.48 5 10 5s10-2.24 10-5V5c0-2.76-4.48-5-10-5zm0 2c4.41 0 8 1.79 8 4s-3.59 4-8 4-8-1.79-8-4 3.59-4 8-4zm0 18c-4.41 0-8-1.79-8-4v-2c1.68 1.25 4.39 2 8 2s6.32-.75 8-2v2c0 2.21-3.59 4-8 4zm0-6c-4.41 0-8-1.79-8-4V8c1.68 1.25 4.39 2 8 2s6.32-.75 8-2v2c0 2.21-3.59 4-8 4z"/>
+                                <path d="M15 13h-2v3.59l-1.3-1.29-1.4 1.41 4 4 4-4-1.4-1.41-1.3 1.29V13z"/>
+                            </svg>
+
+                            <a href="{{ auth()->user()->hasAnyRole($rolesExceptVoter) ? route('technical-officer.database.backup') : '#' }}"
+                               class="text-[12px] font-normal text-[#757575]
+                            {{ request()->routeIs('technical-officer.database.backup') ? 'text-white' : 'group-hover:text-white' }}">
+                                Database Backup
                             </a>
                         </div>
                     </li>

@@ -41,6 +41,7 @@ Route::middleware(['splash.screen', 'set.selected.election',  'track.ip.user', '
     Route::get('technical/dashboard', [ViewController::class, 'technicalOfficerDashboard'])->name('technical-officer.dashboard');
     Route::get('active-users', [ViewController::class, 'activeUsers'])->name('technical-officer.active.user');
     Route::get('ip-records', [ViewController::class, 'ipRecords'])->name('technical-officer.ip.records');
+    Route::get('technical/database/backup', [ViewController::class, 'databaseBackup'])->name('technical-officer.database.backup');
 
 
 });

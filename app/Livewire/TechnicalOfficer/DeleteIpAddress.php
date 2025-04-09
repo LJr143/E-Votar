@@ -71,7 +71,7 @@ class DeleteIpAddress extends Component
 
         // Flash success message and reset form
         session()->flash('success', 'IP address deleted successfully.');
-        $this->password = '';
+        $this->reset();
 
 
         // Dispatch events
