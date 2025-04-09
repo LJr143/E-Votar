@@ -58,6 +58,46 @@ class PermissionsSeeder extends Seeder
                 'edit majors',
                 'delete majors',
             ],
+            'Technical Management' => [
+              'view active users',
+              'view ip records',
+              'print ip records',
+              'export ip records',
+              'delete ip records',
+              'block ip records',
+              'allow ip records',
+              'view database backup',
+              'create database backup',
+              'export database backup',
+              'delete database backup',
+              'run database backup',
+            ],
+            'Reports Management' => [
+              'export election',
+              'export election results',
+              'export vote tally',
+              'export candidates',
+              'export positions',
+              'export councils',
+              'export party list',
+              'export voters',
+              'export users admin',
+
+            ],
+
+            'Imports Management' => [
+                'import election',
+                'import positions',
+                'import councils',
+                'import party list',
+                'import voters',
+            ],
+
+            'Website Management' => [
+                'view website management',
+                'create website announcement',
+                'view feedback'
+            ],
 
             'System Logs' => [
                 'view system logs',
@@ -70,7 +110,7 @@ class PermissionsSeeder extends Seeder
         // Create permissions
         foreach ($permissions as $group => $actions) {
             foreach ($actions as $action) {
-                Permission::firstOrCreate(['name' => $action]);
+                Permission::firstOrCreate(['name' => $action, 'guard_name' => 'web']);
             }
         }
 
@@ -83,22 +123,58 @@ class PermissionsSeeder extends Seeder
                 'Voter Management',
                 'User Management',
                 'University Management',
+                'Reports Management',
                 'System Logs',
+            ],
+            'admin' => [
+                'Election Management',
+                'Candidate Management',
+                'Party List Management',
+                'Voter Management',
+                'University Management',
+                'Reports Management',
+                'Imports Management',
+                'Website Management',
+                'System Logs',
+            ],
+            'technical_officer' => [
+               'Technical Management',
+            ],
+            'student-council-watcher' => [
+                'view vote tally',
+                'view election results',
+            ],
+            'local-council-watcher' => [
+                'view vote tally',
+                'view election results',
+            ],
+            'faculty' => [
+                'view election',
+                'view election results',
+                'view vote tally',
+                'view candidate',
+                'view party list',
+                'view system logs',
+                'view colleges',
+                'view programs',
+                'view majors',
+                'view vote tally',
+                'view election results',
             ],
         ];
 
         // Assign permissions to roles dynamically
         foreach ($roles as $roleName => $permissionGroups) {
-            $role = Role::firstOrCreate(['name' => $roleName]);
+            $role = Role::firstOrCreate(['name' => $roleName, 'guard_name' => 'web']);
 
             $rolePermissions = [];
             foreach ($permissionGroups as $groupOrAction) {
-                if (is_array($groupOrAction)) {
-                    // Add specific permissions
-                    $rolePermissions = array_merge($rolePermissions, $groupOrAction);
-                } elseif (isset($permissions[$groupOrAction])) {
-                    // Add permissions from a group
+                if (isset($permissions[$groupOrAction])) {
+                    // It's a group name, add all permissions in the group
                     $rolePermissions = array_merge($rolePermissions, $permissions[$groupOrAction]);
+                } else {
+                    // It's an individual permission, add it directly
+                    $rolePermissions[] = $groupOrAction;
                 }
             }
 

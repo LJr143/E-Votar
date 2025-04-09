@@ -89,6 +89,7 @@
                     <div class="w-full">
                         <div class="container mx-auto px-4 py-4">
                             <!-- Student Council Section -->
+                            @if(!auth()->user()->hasRole('local-council-watcher'))
                             @if($hasStudentCouncilPositions && $hasStudentCouncilCandidate)
                                 <h2 class="text-[16px] font-bold uppercase text-center mb-4">{{ $selectedElectionCampus->name ?? 'No campus available' }}
                                     Student Council Candidates</h2>
@@ -149,7 +150,9 @@
                                     @endforeach
                                 </div>
                             @endif
+                            @endif
                             <!-- Local Councils Section -->
+                            @if(!auth()->user()->hasRole('student-council-watcher'))
                             @if($hasLocalCouncilPositions && $hasLocalCouncilCandidate)
                                 <h2 class="text-[16px] font-bold uppercase text-center mt-8 mb-4">Local Councils
                                     Candidates</h2>
@@ -213,6 +216,7 @@
                                     </div>
                                 @endforeach
                             @endif
+                            @endif
                            </div>
 
                     </div>
@@ -220,19 +224,23 @@
             </div>
         </div>
 
-
         <div x-show="tab === 'graphical'" wire:poll="$refresh">
 
 
             <div>
+
                 <!-- Student Council Chart -->
+                @if(!auth()->user()->hasRole('local-council-watcher'))
                 @if ($hasStudentCouncilPositions)
                     <livewire:charts.vote-chart-student-council :electionId="$selectedElection"/>
                 @endif
+                @endif
 
                 <!-- Local Council Chart -->
+                @if(!auth()->user()->hasRole('student-council-watcher'))
                 @if ($hasLocalCouncilPositions)
                     <livewire:charts.vote-chart-local-council :electionId="$selectedElection"/>
+                @endif
                 @endif
             </div>
 
@@ -297,6 +305,7 @@
                         <div class="mt-4 min-h-[400px]">
                             <div class="space-y-6">
                                 <!-- Student Council Election -->
+                                @if(!auth()->user()->hasRole('local-council-watcher'))
                                 @if ($hasStudentCouncilPositions)
                                     <div x-data="{ open: false }" class="bg-white shadow-lg rounded-lg p-4" wire:key="student-council">
                                         <div class="flex w-full justify-center items-center">
@@ -322,8 +331,10 @@
                                         </div>
                                     </div>
                                 @endif
+                                @endif
 
                                 <!-- Local Council Election -->
+                                @if(!auth()->user()->hasRole('student-council-watcher'))
                                 @if ($hasLocalCouncilPositions)
                                     <div x-data="{ open: false }" class="bg-white shadow-lg rounded-lg p-4" wire:key="local-council">
                                         <div class="flex w-full justify-center items-center">
@@ -357,6 +368,7 @@
                                             @endforeach
                                         </div>
                                     </div>
+                                @endif
                                 @endif
                             </div>
 

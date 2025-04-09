@@ -22,6 +22,9 @@ class RedirectMiddleware
         if (Auth::check() && Auth::user()->hasRole('admin')) {
             return redirect()->route('admin.dashboard');
         }
+        if (Auth::check() && Auth::user()->hasAnyRole('student-council-watcher', 'local-council-watcher')) {
+            return redirect()->route('watcher.dashboard');
+        }
         if (Auth::check() && Auth::user()->hasRole('technical_officer')) {
             return redirect()->route('technical-officer.dashboard');
         }

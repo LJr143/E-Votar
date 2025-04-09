@@ -126,3 +126,35 @@ function initChart(canvasId, eventName) {
 // Export the function for reuse
 window.initChart = initChart;
 
+
+import Swiper from 'swiper';
+import 'swiper/css';
+
+document.addEventListener('DOMContentLoaded', () => {
+    new Swiper('#studentCouncil', {
+        slidesPerView: 1,
+        spaceBetween: 16,
+        grabCursor: true,
+        pagination: { el: '.swiper-pagination', clickable: true },
+        navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+        breakpoints: {
+            640: { slidesPerView: 2 },
+            768: { slidesPerView: 3 },
+            1024: { slidesPerView: 4 },
+        },
+    });
+
+    new Swiper('#localCouncil', {
+        slidesPerView: 1,
+        spaceBetween: 16,
+        grabCursor: true,
+        pagination: { el: '.swiper-pagination', clickable: true },
+        navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+        breakpoints: {
+            640: { slidesPerView: 2 },
+            768: { slidesPerView: 3 },
+            1024: { slidesPerView: 4 },
+        },
+    });
+});
+

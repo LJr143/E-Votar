@@ -24,6 +24,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
 
 
@@ -176,7 +177,6 @@
 {{ $slot }}
 
 @livewireScripts
-@reverb
 @stack('modals')
 {{--@if(session('script'))--}}
 {{--    {!! session('script') !!}--}}

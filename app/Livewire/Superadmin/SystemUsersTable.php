@@ -45,7 +45,7 @@ class SystemUsersTable extends Component
         $query = User::query();
 
         $query->whereHas('roles', function ($q) {
-            $q->whereIn('name', ['superadmin', 'admin', 'technical_officer', 'watcher']);
+            $q->whereIn('name', ['superadmin', 'admin', 'technical_officer', 'student-council-watcher', 'local-council-watcher']);
         });
 
         if ($this->search) {
@@ -54,15 +54,19 @@ class SystemUsersTable extends Component
 
         if ($this->filter === 'all_users') {
             $query->whereHas('roles', function ($q) {
-                $q->whereIn('name', ['superadmin', 'admin', 'technical_officer', 'watcher']);
+                $q->whereIn('name', ['superadmin', 'admin', 'technical_officer','student-council-watcher', 'local-council-watcher']);
             });
         } elseif ($this->filter === 'admin') {
             $query->whereHas('roles', function ($q) {
                 $q->where('name', 'admin');
             });
-        } elseif ($this->filter === 'watcher') {
+        } elseif ($this->filter === 'student-council-watcher') {
             $query->whereHas('roles', function ($q) {
-                $q->where('name', 'watcher');
+                $q->where('name', 'student-council-watcher');
+            });
+        } elseif ($this->filter === 'local-council-watcher') {
+            $query->whereHas('roles', function ($q) {
+                $q->where('name', 'local-council-watcher');
             });
         } elseif ($this->filter === 'technical_officer') {
             $query->whereHas('roles', function ($q) {

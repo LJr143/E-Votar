@@ -21,6 +21,10 @@ class VoteChartLocalCouncil extends Component
         $this->electionId = $electionId;
         $this->localCouncils = Council::all();
         $this->selectedLocalCouncil = $this->localCouncils->first()->id;
+        if (auth()->user() && auth()->user()->hasAnyRole(['student-council-watcher', 'local-council-watcher'])) {
+            $user = auth()->user();
+            $this->selectedLocalCouncil = $user->program && $user->program->council ? $user->program->council->id : $this->selectedLocalCouncil;
+        }
         $this->loadChartData();
         $this->fetchVoterTally();
     }

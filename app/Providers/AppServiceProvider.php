@@ -24,9 +24,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Gate::before(function ($user, $ability) {
-            return $user->hasRole('superadmin') ? true : null;
-        });
+//        Gate::before(function ($user, $ability) {
+//            return $user->hasRole('superadmin') ? true : null;
+//        });
 
 //        Livewire::setScriptRoute(function ($handle) {
 //            return Route::get('/evotar/public/livewire/livewire.js', $handle);

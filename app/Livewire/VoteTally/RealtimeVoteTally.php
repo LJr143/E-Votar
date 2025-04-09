@@ -117,6 +117,20 @@ class RealtimeVoteTally extends Component
                 $q->where('elections.id', $this->selectedElection);
             });
 
+        // Check if the logged-in user has the 'local-council-watcher' role
+        $user = auth()->user();
+        if ($user && $user->hasRole('local-council-watcher')) {
+            // Filter for Local Council Election candidates
+            $query->whereHas('election_positions.position.electionType', function ($q) {
+                $q->where('name', 'Local Council Election');
+            });
+
+            // Filter candidates by the same program as the logged-in user
+            $query->whereHas('users', function ($q) use ($user) {
+                $q->where('program_id', $user->program_id);
+            });
+        }
+
         // Apply search filter
         if ($this->search) {
             $query->whereHas('users', function ($q) {

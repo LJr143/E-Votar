@@ -10,9 +10,13 @@
                         class="whitespace-nowrap border-b-2 pb-1 px-1 text-[10px] font-medium {{ $filter === 'admin' ? 'border-black text-black' : 'text-gray-500 hover:text-black' }}">
                     Administrators
                 </button>
-                <button wire:click="$set('filter', 'watcher')"
+                <button wire:click="$set('filter', 'student-council-watcher')"
                         class="whitespace-nowrap border-b-2 pb-1 px-1 text-[10px] font-medium {{ $filter === 'watcher' ? 'border-black text-black' : 'text-gray-500 hover:text-black' }}">
-                    Election Watchers
+                    Student Council Election Watchers
+                </button>
+                <button wire:click="$set('filter', 'local-council-watcher')"
+                        class="whitespace-nowrap border-b-2 pb-1 px-1 text-[10px] font-medium {{ $filter === 'watcher' ? 'border-black text-black' : 'text-gray-500 hover:text-black' }}">
+                    Local Council Election Watchers
                 </button>
                 <button wire:click="$set('filter', 'technical_officer')"
                         class="whitespace-nowrap border-b-2 pb-1 px-1 text-[10px] font-medium {{ $filter === 'technical_officer' ? 'border-black text-black' : 'text-gray-500 hover:text-black' }}">

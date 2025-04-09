@@ -146,8 +146,8 @@
                                      class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 px-4 py-4"
                                      wire:key="student-council-list">
                                     @foreach($candidates->where('election_positions.position.electionType.name', 'Student Council Election') as $candidate)
-                                        <div wire:key="candidate-{{ $candidate->id }}" class=" relative">
-                                            <div class="flip-card-container mt-[-45px]" wire:key="cards-{{ $candidate->id}}">
+                                        <div wire:key="candidate-{{ $candidate->id }}" class=" relative mb-2">
+                                            <div class="flip-card-container mt-[0px]" wire:key="cards-{{ $candidate->id}}">
                                                 <div class="flip-card" onclick="this.classList.toggle('flipped')">
 
                                                     <!-- Front of the card -->
@@ -235,8 +235,8 @@
                                     <div
                                         class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 px-4 py-4 mt-4">
                                         @foreach($localCandidates as $candidate)
-                                            <div wire:key="candidate-{{ $candidate->id }}" class="relative">
-                                                <div class="flip-card-container mt-[-45px]">
+                                            <div wire:key="candidate-{{ $candidate->id }}" class="relative mb-2">
+                                                <div class="flip-card-container mt-[-0px]">
                                                     <div class="flip-card" onclick="this.classList.toggle('flipped')">
                                                         <!-- Front of the card -->
                                                         <div class="flip-card-front bg-white p-6 shadow-md min-h-[320px]">

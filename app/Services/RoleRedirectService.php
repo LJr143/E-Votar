@@ -14,6 +14,9 @@ class RoleRedirectService
         if ($user->hasRole('admin')) {
             return redirect()->route('admin.dashboard');
         }
+        if ($user->hasAnyRole('student-council-watcher', 'local-council-watcher')) {
+            return redirect()->route('watcher.dashboard');
+        }
         if ($user->hasRole('technical_officer')) {
             return redirect()->route('technical-officer.dashboard');
         }

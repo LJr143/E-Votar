@@ -171,6 +171,12 @@ class ViewController extends Controller
         return view('evotar.technical-officer.dashboard',compact('candidates'));
 
     }
+    public function watcherDashboard()
+    {
+        $candidates = app(DashboardController::class)->getCandidates();
+        return view('evotar.watcher.dashboard',compact('candidates'));
+
+    }
 
 
     /**
@@ -205,6 +211,7 @@ class ViewController extends Controller
     {
         return view('evotar.admin.vote_tally');
     }
+
 
     /**
      * Election result view.

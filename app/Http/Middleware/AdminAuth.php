@@ -49,7 +49,7 @@ class AdminAuth
      */
     protected function isAdmin(): bool
     {
-        return Auth::user()->hasAnyRole('admin', 'superadmin', 'technical_officer', 'watcher');
+        return Auth::user()->hasAnyRole('admin', 'superadmin', 'technical_officer', 'student-council-watcher', 'local-council-watcher');
     }
 
     /**
