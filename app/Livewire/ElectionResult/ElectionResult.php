@@ -69,11 +69,12 @@ class ElectionResult extends Component
     {
         $election = Election::find($this->selectedElection);
         $this->selectedElectionName = $election?->name;
-        $this->selectedElectionCampus = $election?->campus;
+        $this->selectedElectionCampus = $election?->campus->name;
 
         $this->fetchElection($this->filter);
         $this->fetchCandidates();
         $this->fetchWinners();
+        $this->fetchVoterTally($election->id);
         $this->dispatch('updateChartData', $this->selectedElection);
     }
 
@@ -153,12 +154,14 @@ class ElectionResult extends Component
 
     public function fetchElection($filter): void
     {
-        $this->latestElection = Election::with('election_type')
-            ->whereHas('election_type', function ($q) use ($filter) {
-                $q->where('name', $filter);
-            })
-            ->orderBy('created_at', 'desc')
-            ->first();
+//        $this->latestElection = Election::with('election_type')
+//            ->whereHas('election_type', function ($q) use ($filter) {
+//                $q->where('name', $filter);
+//            })
+//            ->orderBy('created_at', 'desc')
+//            ->first();
+
+        $this->latestElection = Election::with('election_type')->find($this->selectedElection);
 
         $this->selectedElectionName = $this->latestElection ? $this->latestElection->name : null;
         $this->selectedElectionCampus = $this->latestElection ? $this->latestElection->campus : null;
@@ -188,7 +191,6 @@ class ElectionResult extends Component
             })
             ->get();
     }
-
 
     public function fetchWinners(): void
     {

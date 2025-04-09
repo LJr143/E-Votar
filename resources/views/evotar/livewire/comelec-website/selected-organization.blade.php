@@ -4,15 +4,17 @@
         <div class="container mx-auto py-8 md:px-4">
             <div class="flex items-center text-white space-x-4">
                 <div class="text-[12px]">
-                    Tagum Unit
+                    {{ $election->campus->name }}
                 </div>
                 <div class="text-[12px]">
-                    Jan 04, 2025 - Jan 10, 2025
+                    {{ \Carbon\Carbon::parse($election->date_started)->format('M d, Y') }} -
+                    {{ \Carbon\Carbon::parse($election->date_ended)->format('M d, Y') }}
                 </div>
+
             </div>
             <div class="mt-4">
-                <h1 class="text-[20px] font-bold text-white">
-                    Tagum Student Council and Local Council Election 2025
+                <h1 class="text-[20px] font-bold text-white capitalize">
+                    {{ $election->name }}
                 </h1>
             </div>
 
@@ -33,15 +35,15 @@
         </div>
         <div class="tab-content-container mt-4 text-[12px]">
             <div x-show="activeTab === 0" class="tab-content">
-                <livewire:selected-election.candidates-in-website/>
+                <livewire:selected-election.candidates-in-website :councilId="$council->id"/>
 
             </div>
             <div x-show="activeTab === 1" class="tab-content">
-                <livewire:selected-election.vote-tally-in-website/>
+                <livewire:selected-election.vote-tally-in-website wire:key="vote-tally-{{ $council->id }}" :councilId="$council->id"/>
             </div>
 
             <div x-show="activeTab === 2" class="tab-content">
-                <livewire:selected-election.election-result-in-website/>
+                <livewire:selected-election.election-result-in-website wire:key="election-result-{{ $council->id}}" :councilId="$council->id"/>
             </div>
         </div>
     </div>

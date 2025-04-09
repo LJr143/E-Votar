@@ -24,7 +24,7 @@
                                 <span class="bg-green-600 text-white rounded inline-flex items-center justify-center px-2">ongoing</span>
                             </p>
                         </div>
-                        <a href="{{ route('comelec-website.selected-election') }}" class="bg-black text-white text-center px-4 py-2 rounded-lg text-[11px] mt-4">See details</a>
+                        <a href="{{ route('comelec-website.selected-election', 1) }}" class="bg-black text-white text-center px-4 py-2 rounded-lg text-[11px] mt-4">See details</a>
                     </div>
                     <div class="bg-white p-6 rounded-lg shadow-md flex flex-col justify-between transition-transform transform hover:scale-105 hover:shadow-lg cursor-pointer">
                         <div>
@@ -36,7 +36,7 @@
                                 <span class="bg-yellow-600 text-white rounded inline-flex items-center justify-center px-2">pending</span>
                             </p>
                         </div>
-                        <a href="{{ route('comelec-website.selected-election') }}" class="bg-black text-white text-center px-4 py-2 rounded-lg text-[11px] mt-4">See details</a>
+                        <a href="{{ route('comelec-website.selected-election', 1) }}" class="bg-black text-white text-center px-4 py-2 rounded-lg text-[11px] mt-4">See details</a>
                     </div>
                     <div class="bg-white p-6 rounded-lg shadow-md flex flex-col justify-between transition-transform transform hover:scale-105 hover:shadow-lg cursor-pointer">
                         <div>
@@ -48,7 +48,7 @@
                                 <span class="bg-gray-600 text-white rounded inline-flex items-center justify-center px-2">completed</span>
                             </p>
                         </div>
-                        <a href="{{ route('comelec-website.selected-election') }}" class="bg-black text-white text-center px-4 py-2 rounded-lg text-[11px] mt-4">See details</a>
+                        <a href="{{ route('comelec-website.selected-election', 1) }}" class="bg-black text-white text-center px-4 py-2 rounded-lg text-[11px] mt-4">See details</a>
                     </div>
                     <div class="bg-white p-6 rounded-lg shadow-md flex flex-col justify-between transition-transform transform hover:scale-105 hover:shadow-lg cursor-pointer">
                         <div>
@@ -60,7 +60,7 @@
                                 <span class="bg-gray-600 text-white rounded inline-flex items-center justify-center px-2">completed</span>
                             </p>
                         </div>
-                        <a href="{{ route('comelec-website.selected-election') }}" class="bg-black text-white text-center px-4 py-2 rounded-lg text-[11px] mt-4">See details</a>
+                        <a href="{{ route('comelec-website.selected-election', 1) }}" class="bg-black text-white text-center px-4 py-2 rounded-lg text-[11px] mt-4">See details</a>
                     </div>
                     <div class="bg-white p-6 rounded-lg shadow-md flex flex-col justify-between transition-transform transform hover:scale-105 hover:shadow-lg cursor-pointer">
                         <div>
@@ -72,7 +72,7 @@
                                 <span class="bg-gray-600 text-white rounded inline-flex items-center justify-center px-2">completed</span>
                             </p>
                         </div>
-                        <a href="{{ route('comelec-website.selected-election') }}" class="bg-black text-white text-center px-4 py-2 rounded-lg text-[11px] mt-4">See details</a>
+                        <a href="{{ route('comelec-website.selected-election', 1) }}" class="bg-black text-white text-center px-4 py-2 rounded-lg text-[11px] mt-4">See details</a>
                     </div>
                     <div class="bg-white p-6 rounded-lg shadow-md flex flex-col justify-between transition-transform transform hover:scale-105 hover:shadow-lg cursor-pointer">
                         <div>
@@ -84,7 +84,7 @@
                                 <span class="bg-gray-600 text-white rounded inline-flex items-center justify-center px-2">completed</span>
                             </p>
                         </div>
-                        <a href="{{ route('comelec-website.selected-election') }}" class="bg-black text-white text-center px-4 py-2 rounded-lg text-[11px] mt-4">See details</a>
+                        <a href="{{ route('comelec-website.selected-election', 1) }}" class="bg-black text-white text-center px-4 py-2 rounded-lg text-[11px] mt-4">See details</a>
                     </div>
                 </div>
 

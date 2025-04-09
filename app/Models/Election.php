@@ -43,5 +43,11 @@ class Election extends Model
         return $this->hasMany(Vote::class, 'election_id');
     }
 
+    public function hasEnded()
+    {
+        return now()->greaterThan($this->date_ended);
+    }
+
+
 
 }

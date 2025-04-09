@@ -6,7 +6,7 @@
     <x-slot name="main">
 
         <main>
-                <
+                <livewire:comelec-website.selected-organization :council="$council"/>
         </main>
 
     </x-slot>

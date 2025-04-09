@@ -369,7 +369,7 @@
     <script>
         $(document).ready(function () {
             // Fetch campuses
-            $.get('/campuses', function (data) {
+            $.get('{{ url('/campuses') }}', function (data) {
                 $.each(data, function (index, campus) {
                     $('#campus').append(new Option(campus.name, campus.id));
                 });
@@ -385,7 +385,7 @@
                 $('#program').empty().append(new Option('Select program', '', true, true));
                 $('#program_major').empty().append(new Option('Select program major', '', true, true));
 
-                $.get('/colleges/' + campusId, function (data) {
+                $.get(`{{ url('/colleges') }}/${campusId}`, function (data) {
                     $.each(data, function (index, college) {
                         $('#college').append(new Option(college.name, college.id));
                     });
@@ -401,7 +401,7 @@
                 $('#program').empty().append(new Option('Select program', '', true, true));
                 $('#program_major').empty().append(new Option('Select program major', '', true, true));
 
-                $.get('/programs/' + collegeId, function (data) {
+                $.get(`{{ url('/programs') }}/${collegeId}`, function (data) {
                     $.each(data, function (index, program) {
                         $('#program').append(new Option(program.name, program.id));
                     });
@@ -416,7 +416,7 @@
                 var programId = $(this).val();
                 $('#program_major').empty().append(new Option('Select program major', '', true, true));
 
-                $.get('/majors/' + programId, function (data) {
+                $.get(`{{ url('/majors') }}/${programId}`, function (data) {
                     $.each(data, function (index, program_major) {
                         $('#program_major').append(new Option(program_major.name, program_major.id));
                     });

@@ -128,7 +128,7 @@ class Home extends Component
         $selectedElectionId = session('selectedElectionWeb');
 
         if (!Election::exists()) {
-            session()->forget('selectedElection');
+            session()->forget('selectedElectionWeb');
             $this->latestElection = null;
             $this->selectedElection = null;
             return;

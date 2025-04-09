@@ -46,18 +46,19 @@
                 </p>
             </div>
         </div>
+        @if($selectedElection)
+            <livewire:election-dropdown/>
+            <div class="absolute bottom-0 left-0 right-0 p-2 flex justify-center" style="transform: translateY(50%);">
+                <div class="rounded-lg shadow-lg p-4 flex flex-col items-center w-full max-w-2xl"
+                     style="background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3);">
+                    <h2 class="text-center text-gray-800 font-semibold text-lg uppercase">{{ $latestElection ? $latestElection->campus->name . ' ' . $latestElection->name : '' }}</h2>
 
-        <livewire:election-dropdown/>
-        <div class="absolute bottom-0 left-0 right-0 p-2 flex justify-center" style="transform: translateY(50%);">
-            <div class="rounded-lg shadow-lg p-4 flex flex-col items-center w-full max-w-2xl"
-                 style="background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3);">
-                <h2 class="text-center text-gray-800 font-semibold text-lg uppercase">{{ $latestElection->campus->name . ' ' . $latestElection->name }}</h2>
+                    <livewire:timer.website-dashboard-timer :selectedElection="$selectedElection"
+                                                            wire:key="timer-election-{{$selectedElection}}"/>
 
-                <livewire:timer.website-dashboard-timer :selectedElection="$selectedElection"
-                                                      wire:key="timer-election-{{ $selectedElection}}"/>
-
+                </div>
             </div>
-        </div>
+        @endif
     </div>
 
 
@@ -166,7 +167,12 @@
     <div class="px-8">
         <div class="flex flex-wrap justify-center">
             <div class="w-full  sm:mb-10">
-                <h1 class="text-center text-[20px] font-bold text-black mb-8 uppercase">{{$latestElection->name}} - OFFICIAL CANDIDATES</h1>
+                @if($latestElection)
+                    <h1 class="text-center text-[20px] font-bold text-black mb-8 uppercase">{{$latestElection->name}} -
+                        OFFICIAL CANDIDATES</h1>
+                    @else
+                    <h1 class="text-center text-[20px] font-bold text-black mb-8 uppercase">NO ELECTION ADDED YET</h1>
+                @endif
                 <h2 class="text-center text-[16px] font-medium text-gray-700 mb-4">Select an organization to view the
                     corresponding list of candidates.</h2>
 

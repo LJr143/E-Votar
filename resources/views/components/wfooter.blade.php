@@ -1,6 +1,6 @@
 
 <footer class="mx-auto px-8 py-8 bg-black text-white">
-    <a href="https://evotar-system-link.com" class="fixed right-4 bottom-4 bg-black text-white text-[12px] px-4 py-2 rounded-full shadow-lg hover:bg-gray-700 transition duration-300 flex items-center">
+    <a href="{{ route('voter.login') }}" class="fixed z-[9999] right-4 bottom-4 bg-black text-white text-[12px] px-4 py-2 rounded-full shadow-lg hover:bg-gray-700 transition duration-300 flex items-center">
         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
         </svg>

@@ -20,20 +20,20 @@ use Livewire\Component;
         // Check if there are any elections
         if ($this->elections->isEmpty()) {
             $this->selectedElection = null; // No election available
-            session()->forget('selectedElection'); // Remove any old session value
+            session()->forget('selectedElectionWeb'); // Remove any old session value
             \Log::info('No elections found.');
             return;
         }
 
         // Initialize selectedElection from session
-        if (session()->has('selectedElection')) {
-            $this->selectedElection = session('selectedElection');
+        if (session()->has('selectedElectionWeb')) {
+            $this->selectedElection = session('selectedElectionWeb');
             \Log::info('Selected Election from Session:', ['selectedElection' => $this->selectedElection]);
         } else {
             // Set the selected election to the latest election if no session value exists
             $latestElection = Election::latest('created_at')->first();
             $this->selectedElection = $latestElection->id; // Store the election ID
-            session(['selectedElection' => $latestElection->id]); // Store the latest election ID in the session
+            session(['selectedElectionWeb' => $latestElection->id]); // Store the latest election ID in the session
             \Log::info('Selected Election set to Latest:', ['selectedElection' => $this->selectedElection]);
         }
     }
@@ -41,7 +41,7 @@ use Livewire\Component;
     public function updatedSelectedElection($value): void
     {
         // Store the selected election in the session
-        session(['selectedElection' => $value]);
+        session(['selectedElectionWeb' => $value]);
 
         // Save the session to ensure the changes are persisted
         session()->save();

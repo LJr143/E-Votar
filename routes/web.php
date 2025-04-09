@@ -31,7 +31,7 @@ require __DIR__ . '/comelec-website/routes.php';
 
 
 // Campus Management Routes
-Route::get('/campuses', [CampusController::class, 'index']);
+Route::get('/campuses', [CampusController::class, 'index'])->name('campuses');
 Route::get('/colleges/{campusId}', [CampusController::class, 'getColleges']);
 Route::get('/programs/{collegeId}', [CampusController::class, 'getPrograms']);
 Route::get('/majors/{programId}', [CampusController::class, 'getMajors']);
@@ -69,7 +69,7 @@ Route::post('/logout', function (Request $request) {
         }
     }
     // Redirect to Google Logout
-    return redirect('https://accounts.google.com/Logout');
+    return redirect()->route('voter.login');
 })->name('logout');
 
 Route::get('/fetch-elections/{voterId}', [VoterElectionController::class, 'getElectionsForVoter'])->name('fetch.elections');

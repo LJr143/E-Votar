@@ -6,7 +6,7 @@
         <option value="" selected disabled>Select an election</option>
         @foreach($elections as $election)
             <option value="{{ $election->id }}" {{ $election->id == $selectedElection ? 'selected' : '' }}>
-                {{ $election->name }} - {{ $election->campus->name }} - {{ $election->election_type->name }}
+                {{ $election->name }} - {{ $election->campus->name }}
             </option>
         @endforeach
     </select>

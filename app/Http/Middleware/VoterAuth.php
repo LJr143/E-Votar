@@ -22,7 +22,8 @@ class VoterAuth
         }
 
         if (!$this->isVoter()) {
-            abort(403, 'Unauthorized action.');
+//            abort(403, 'Unauthorized action.');
+           return redirect()->route('voter.login')->withErrors(['error' => 'Please login to continue']);
         }
 
         $user = Auth::user();
