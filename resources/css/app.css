@@ -33,7 +33,7 @@
 
 /* Value flip styling */
 .tick-value {
-    font-size: 36px;
+    font-size: clamp(18px, 2.5vw, 48px); /* Min:24px, Preferred:3vw, Max:36px */
     font-weight: bold;
     color: #333;
     padding: 5px 10px;
@@ -48,7 +48,7 @@
 .tick-label {
     font-size: 18px;
     color: #ffffff;
-    margin-top: 5px;
+    margin-top: 10px;
 }
 
 /* Time's up message */
@@ -62,18 +62,97 @@
 }
 
 /* Responsive adjustments */
-@media (max-width: 768px) {
+@media (max-width: 1440px) {
     .tick {
-        padding: 5px;
+        padding: 4px;
     }
 
     .tick-value {
-        font-size: 14px;
-        padding: 3px 8px;
+        font-size: 32px;
+        padding: 1px 4px;
     }
 
     .tick-label {
-        font-size: 8px;
+        font-size: 12px;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .tick {
+        padding: 4px;
+    }
+
+    .tick-value {
+        font-size: 26px;
+        padding: 1px 4px;
+    }
+
+    .tick-label {
+        font-size: 14px;
+    }
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .tick {
+        padding: 6px;
+    }
+
+    .tick-value {
+        font-size: 32px;
+        padding: 4px 8px;
+    }
+
+    .tick-label {
+        font-size: 12px;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 554px) {
+    .tick {
+        padding: 4px;
+    }
+
+    .tick-value {
+        font-size: 20px;
+        padding: 3px 6px;
+    }
+
+    .tick-label {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 375px) {
+    .tick {
+        padding: 4px;
+    }
+
+    .tick-value {
+        font-size: 18px;
+        padding: 1px 4px;
+    }
+
+    .tick-label {
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 320px) {
+    .tick {
+        padding: 3px;
+    }
+
+    .tick-value {
+        font-size: 17px;
+        padding: 1px 1px;
+    }
+
+    .tick-label {
+        font-size: 10px;
     }
 }
 
