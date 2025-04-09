@@ -1,10 +1,13 @@
 <?php
 namespace App\Livewire\ManageIpRecords;
 
+use App\Exports\IpRecordsExport;
+use App\Exports\SystemUserAdminExport;
 use App\Models\IpRecord;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Maatwebsite\Excel\Facades\Excel;
 
 class IpRecords extends Component
 {
@@ -25,6 +28,13 @@ class IpRecords extends Component
         $this->refreshKey++;
         Log::debug('Table refresh triggered', ['key' => $this->refreshKey]);
     }
+
+    public function exportIpRecords()
+    {
+        return Excel::download(new IpRecordsExport($this->search), 'LIST_OF_IP_RECORDS_'. now() . '.xlsx');
+
+    }
+
 
     public function render()
     {
