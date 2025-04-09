@@ -54,7 +54,7 @@ class WebsiteController extends Controller
         return view('evotar.comelec-website.selected-election');
     }
 
-    public function SelectedPartylist()
+    public function SelectedPartylist($id)
     {
         return view('evotar.comelec-website.selected-partylist');
     }

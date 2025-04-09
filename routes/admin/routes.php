@@ -32,9 +32,9 @@ Route::middleware(['splash.screen', 'set.selected.election',  'track.ip.user', '
     Route::get('election/party-list', [ViewController::class, 'partyList'])->name('admin.election.party.list')->middleware('admin.auth:view party list');
     Route::get('system/logs', [ViewController::class, 'systemLogs'])->name('admin.system.logs')->middleware('admin.auth:view system logs');
     Route::get('feedback', [ViewController::class, 'feedback'])->name('admin.feedback')->middleware('admin.auth:view feedback');
-    Route::get('announcement', [ViewController::class, 'announcement'])->name('admin.announcement')->middleware('admin.auth:view announcement');
+    Route::get('announcement', [ViewController::class, 'announcement'])->name('admin.announcement')->middleware('admin.auth:view website management');
 
-    Route::get('account-settings', [ViewController::class, 'AccountSettings'])->name('admin.account-settings')->middleware('admin.auth:view account-settings');
+    Route::get('account-settings', [ViewController::class, 'AccountSettings'])->name('admin.account-settings')->middleware('admin.auth');
 
 
     // Technical Officer Based Routes
