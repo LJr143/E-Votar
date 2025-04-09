@@ -1,25 +1,22 @@
-<div class="w-full">
+<div>
     <div class="flex flex-col md:flex-row justify-between items-center mb-2">
         <div class="flex space-x-2">
         </div>
-        <div class="flex flex-col sm:flex-row sm:justify-center gap-3 md:gap-3 w-full md:w-auto mt-2">
+        <div class="flex flex-col sm:flex-row sm:justify-end gap-3 md:gap-3 w-full md:w-auto mt-2">
             <div class="relative sm:w-[250px] mb-4">
                 <input type="text" wire:model.live="search" placeholder="Search..." aria-label="Search" class="rounded-md text-[10px] border bg-white text-black border-gray-300 h-8 pl-8 pr-4 focus:ring-1 focus:ring-black focus:border-black w-full">
                 <span class="absolute left-3 top-1/2 transform -translate-y-1/2">
-                            <svg width="12" height="12" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" clip-rule="evenodd" d="M9.68208 10.7458C8.66576 11.5361 7.38866 12.0067 6.00167 12.0067C2.68704 12.0067 0 9.31891 0 6.00335C0 2.68779 2.68704 0 6.00167 0C9.31631 0 12.0033 2.68779 12.0033 6.00335C12.0033 7.39059 11.533 8.66794 10.743 9.6845L13.7799 12.7186C14.0731 13.0115 14.0734 13.4867 13.7806 13.7799C13.4878 14.0731 13.0128 14.0734 12.7196 13.7805L9.68208 10.7458ZM10.5029 6.00335C10.5029 8.49002 8.48765 10.5059 6.00167 10.5059C3.5157 10.5059 1.50042 8.49002 1.50042 6.00335C1.50042 3.51668 3.5157 1.50084 6.00167 1.50084C8.48765 1.50084 10.5029 3.51668 10.5029 6.00335Z" fill="#000000"/>
-                            </svg>
-                        </span>
+                    <svg width="12" height="12" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M9.68208 10.7458C8.66576 11.5361 7.38866 12.0067 6.00167 12.0067C2.68704 12.0067 0 9.31891 0 6.00335C0 2.68779 2.68704 0 6.00167 0C9.31631 0 12.0033 2.68779 12.0033 6.00335C12.0033 7.39059 11.533 8.66794 10.743 9.6845L13.7799 12.7186C14.0731 13.0115 14.0734 13.4867 13.7806 13.7799C13.4878 14.0731 13.0128 14.0734 12.7196 13.7805L9.68208 10.7458ZM10.5029 6.00335C10.5029 8.49002 8.48765 10.5059 6.00167 10.5059C3.5157 10.5059 1.50042 8.49002 1.50042 6.00335C1.50042 3.51668 3.5157 1.50084 6.00167 1.50084C8.48765 1.50084 10.5029 3.51668 10.5029 6.00335Z" fill="#000000"/>
+                    </svg>
+                </span>
             </div>
         </div>
     </div>
-    <div class="overflow-x-auto">
-        <table class="min-w-full bg-white">
+    <div class="min-h-[400px] overflow-x-auto">
+        <table class="min-w-full">
             <thead>
-            <tr class="w-full bg-black text-white uppercase text-[11px] leading-normal">
-{{--                <th class="py-3 px-6 text-left rounded-tl-lg border-b border-gray-300">--}}
-{{--                    <input type="checkbox" class="form-checkbox h-4 w-4 text-black" wire:model="selectAll">--}}
-{{--                </th>--}}
+            <tr class="w-full bg-gray-100 text-black uppercase text-[11px] leading-normal whitespace-nowrap">
                 <th class="py-3 px-6 text-left border-b border-gray-300">User</th>
                 <th class="py-3 px-6 text-left border-b border-gray-300">User ID</th>
                 <th class="py-3 px-6 text-left border-b border-gray-300">Last Active</th>
@@ -28,15 +25,22 @@
             </thead>
             <tbody class="text-black text-[12px] font-light">
             @forelse ($activeUsers as $user)
-                <tr class="border-b border-gray-300 hover:bg-gray-100 cursor-pointer"
-                    wire:click="selectUser({{ $user->id }})">
-{{--                    <td class="py-3 px-6 text-left">--}}
-{{--                        <input type="checkbox" class="form-checkbox h-4 w-4 text-black row-checkbox">--}}
-{{--                    </td>--}}
-                    <td class="py-3 px-6 text-left flex items-center">
-                        <div class="flex items-center space-x-4">
-                            <div class="relative">
-                                <img alt="Profile picture" class="w-10 h-10 rounded-full" src="{{ asset('storage/assets/profile/cat_meme.jpg') }}">
+                <tr class="border-b border-gray-300 cursor-pointer whitespace-nowrap"
+                    wire:click="selectUser({{ $user->id }})"
+                    x-on:click="$dispatch('user-selected')">
+                    {{--                    <td class="py-3 px-6 text-left">--}}
+                    {{--                        <input type="checkbox" class="form-checkbox h-4 w-4 text-black row-checkbox">--}}
+                    {{--                    </td>--}}
+                    <td class="py-3 px-2 sm:px-6 text-left">
+                        <div class="flex items-center space-x-2 sm:space-x-4">
+                            <div class="relative flex-shrink-0">
+                                <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden">
+                                    <img
+                                        alt="Profile picture"
+                                        class="w-full h-full object-cover"
+                                        src="{{ asset('storage/assets/profile/cat_meme.jpg') }}"
+                                    >
+                                </div>
                                 <span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>
                             </div>
                             <div>
@@ -71,5 +75,4 @@
             {{ $activeUsers->links('evotar.components.pagination.tailwind-pagination') }}
         </div>
     </div>
-
 </div>
