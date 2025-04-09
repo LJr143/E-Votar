@@ -120,12 +120,19 @@
                         {{ $backup->backup_files_count }}
                         @if ($backup->backup_files_count > 0)
                             <div class="relative inline-block">
-                                <button class="ml-2 text-blue-600 hover:underline" @click="$refs.filesDropdown{{ $backup->id }}.classList.toggle('hidden')">View</button>
+                                <button class="ml-2 text-blue-600 hover:underline" @click="$refs.filesDropdown{{ $backup->id }}.classList.toggle('hidden')">
+                                    View
+                                </button>
                                 <div class="absolute z-10 mt-2 w-48 bg-white border border-gray-200 rounded shadow-lg hidden" x-ref="filesDropdown{{ $backup->id }}">
                                     @foreach ($backup->backupFiles as $file)
-                                        <div class="px-4 py-2 hover:bg-gray-100 flex justify-between">
-                                            <span>{{ basename($file->file_path) }}</span>
-                                            <button wire:click="downloadBackupFile({{ $file->id }})" class="text-blue-500 hover:text-blue-700">Download</button>
+                                        <div class="px-4 py-2 hover:bg-gray-100 flex justify-between items-center">
+                                            <span class="truncate">{{ basename($file->file_path) }}</span>
+                                            <button
+                                                wire:click="downloadBackupFile({{ $file->id }})"
+                                                class="text-blue-500 hover:text-blue-700 whitespace-nowrap ml-2"
+                                            >
+                                                Download
+                                            </button>
                                         </div>
                                     @endforeach
                                 </div>
