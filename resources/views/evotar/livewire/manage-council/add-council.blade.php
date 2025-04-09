@@ -172,7 +172,7 @@
                         </button>
                         <button wire:click="submit"
                                 wire:loading.attr="disabled"
-                                class="px-4 py-1 bg-black text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors">
+                                class="bg-black text-white px-6 py-1 h-7 rounded shadow-md hover:bg-gray-700 text-[12px] justify-center text-center hover:drop-shadow  hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110">
                             <span wire:loading.remove wire:target="editCouncil" class="tex-[12px]">Save Changes</span>
                             <span wire:loading wire:target="editCouncil">
                     <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline" xmlns="http://www.w3.org/2000/svg"

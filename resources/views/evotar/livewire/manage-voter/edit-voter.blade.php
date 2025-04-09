@@ -234,7 +234,7 @@
                     </div>
                 </div>
 
-                <div class="mt-3 sm:mt-6 pt-3 flex flex-col md:flex-row  w-full justify-end items-center">
+                <div class="mt-2 sm:mt-4 pt-3 flex flex-col md:flex-row  w-full justify-end items-center">
                     <div class="flex space-x-2 justify-end w-full md:w-auto">
                         <button type="button"
                                 class="bg-white text-black text-[12px] border border-gray-300 h-7 px-4 py-1 rounded shadow-md hover:bg-gray-200 justify-center text-center hover:drop-shadow hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"
