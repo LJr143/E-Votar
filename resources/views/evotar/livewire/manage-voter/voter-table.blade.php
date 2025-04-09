@@ -7,7 +7,7 @@
                     <div class="flex flex-col md:flex-row w-full items-center justify-between">
                         <div class="flex items-center justify-between flex-wrap md:flex-nowrap gap-2">
                             <button
-                                class="bg-white border border-gray-300 rounded h-8 px-3 py-2 flex items-center space-x-1 hover:drop-shadow hover:bg-gray-200 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"
+                                class="bg-white border border-gray-300 rounded h-8 px-3 py-2 flex items-center justify-center w-full sm:w-auto text-center space-x-1 hover:drop-shadow hover:bg-gray-200 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"
                                 wire:click="exportVoterLists"
                                 wire:loading.attr="disabled">
                                 <svg wire:loading.remove wire:target="exportVoterLists"
@@ -27,7 +27,7 @@
                                 <span wire:loading wire:target="exportVoterLists">Exporting...</span>
                             </button>
                             <button
-                                class="bg-white border border-gray-300 rounded h-8 px-3 py-2 flex items-center space-x-1 hover:drop-shadow hover:bg-gray-200 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"
+                                class="bg-white border border-gray-300 rounded h-8 px-3 py-2 flex items-center justify-center w-full sm:w-auto text-center space-x-1 hover:drop-shadow hover:bg-gray-200 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"
                                 wire:click="$toggle('importing')"
                                 wire:loading.attr="disabled">
                                 <svg wire:loading.remove wire:target="import" width="12" height="18" viewBox="0 0 16 19"
@@ -51,8 +51,8 @@
                             <!-- Import Modal -->
                             @if($importing)
                                 <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                                    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-                                        <h3 class="text-lg font-medium mb-4">Import Voters</h3>
+                                    <div class="bg-white p-6 rounded shadow-md max-w-md w-full mx-4 sm:mx-6 md:mx-8 lg:mx-10 xl:mx-12">
+                                        <h3 class="text-lg font-medium text-center mb-4">Import Voters</h3>
 
                                         @if($importError)
                                             <div class="mb-4 p-3 bg-red-100 text-red-700 rounded text-sm">
@@ -60,16 +60,33 @@
                                             </div>
                                         @endif
 
-                                        <input type="file" wire:model="importFile" class="mb-4 w-full">
+                                        <div class="mb-6 relative">
+                                            <!-- File input with spinner to the right -->
+                                            <div class="flex items-center">
+                                                <input type="file" wire:model="importFile"
+                                                       class="w-full p-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+
+                                                <!-- Spinner shown while file is uploading -->
+                                                <div wire:loading wire:target="importFile" class="flex items-center ml-2">
+                                                    <svg class="animate-spin h-4 w-4 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                         viewBox="0 0 24 24">
+                                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                                                stroke-width="4"></circle>
+                                                        <path class="opacity-75" fill="currentColor"
+                                                              d="M4 12a8 8 0 018-8v4l3.5-3.5L12 0v4a8 8 0 00-8 8z"/>
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                        </div>
 
                                         <div class="flex justify-end space-x-3">
                                             <button wire:click="$set('importing', false)"
-                                                    class="px-4 py-2 text-gray-600 hover:text-gray-800">
+                                                    class="bg-white text-black text-[12px] border border-gray-300 h-7 px-4 py-1 rounded shadow-md hover:bg-gray-200 justify-center text-center hover:drop-shadow hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110">
                                                 Cancel
                                             </button>
                                             <button wire:click="import"
                                                     wire:loading.attr="disabled"
-                                                    class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                                                    class="bg-black text-white px-6 py-1 h-7 rounded shadow-md hover:bg-gray-700 text-[12px] justify-center text-center hover:drop-shadow hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110">
                                                 <span wire:loading.remove wire:target="import">Import</span>
                                                 <span wire:loading wire:target="import">Importing...</span>
                                             </button>
@@ -78,7 +95,7 @@
                                 </div>
                             @endif
                             <button
-                                class="bg-green-600 border text-white border-gray-300 rounded h-8 px-3 py-2 flex items-center space-x-1 hover:drop-shadow hover:bg-gray-200 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"
+                                class="bg-green-600 border text-white border-gray-300 rounded h-8 px-3 py-2 flex items-center justify-center w-full sm:w-auto text-center mb-2 sm:mb-0 space-x-1 hover:drop-shadow hover:bg-gray-200 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"
                                 wire:click="downloadExcelFormat"
                                 wire:loading.attr="disabled">
                                 <svg wire:loading.remove wire:target="downloadExcelFormat" width="12" height="18"
@@ -101,19 +118,19 @@
                             </button>
                         </div>
                         <div class="flex items-center gap-2">
-                            <!-- Search Bar -->
-                            <div class="relative w-full md:w-[250px]">
-                                <x-input type="text" wire:model.live="search"
-                                         class="rounded-md text-[10px] border bg-white text-black border-gray-300 h-8 pl-8 pr-4 focus:ring-1 focus:ring-black focus:border-black w-full"
-                                         placeholder="Search elections..." aria-label="Search"></x-input>
-                                <span class="absolute left-3 top-1/2 transform -translate-y-1/2">
-                                    <svg width="12" height="12" viewBox="0 0 14 14" fill="none"
-                                         xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                              d="M9.68208 10.7458C8.66576 11.5361 7.38866 12.0067 6.00167 12.0067C2.68704 12.0067 0 9.31891 0 6.00335C0 2.68779 2.68704 0 6.00167 0C9.31631 0 12.0033 2.68779 12.0033 6.00335C12.0033 7.39059 11.533 8.66794 10.743 9.6845L13.7799 12.7186C14.0731 13.0115 14.0734 13.4867 13.7806 13.7799C13.4878 14.0731 13.0128 14.0734 12.7196 13.7805L9.68208 10.7458ZM10.5029 6.00335C10.5029 8.49002 8.48765 10.5059 6.00167 10.5059C3.5157 10.5059 1.50042 8.49002 1.50042 6.00335C1.50042 3.51668 3.5157 1.50084 6.00167 1.50084C8.48765 1.50084 10.5029 3.51668 10.5029 6.00335Z"
-                                              fill="#000000"/>
-                                    </svg>
-                                </span>
+                            <div class="w-full md:w-[250px]">
+                                <!-- Search Input -->
+                                <div class="flex items-center border bg-white text-black border-gray-300 rounded-md h-8 px-3">
+                                    <span class="flex items-center">
+                                        <svg width="12" height="12" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M9.68208 10.7458C8.66576 11.5361 7.38866 12.0067 6.00167 12.0067C2.68704 12.0067 0 9.31891 0 6.00335C0 2.68779 2.68704 0 6.00167 0C9.31631 0 12.0033 2.68779 12.0033 6.00335C12.0033 7.39059 11.533 8.66794 10.743 9.6845L13.7799 12.7186C14.0731 13.0115 14.0734 13.4867 13.7806 13.7799C13.4878 14.0731 13.0128 14.0734 12.7196 13.7805L9.68208 10.7458ZM10.5029 6.00335C10.5029 8.49002 8.48765 10.5059 6.00167 10.5059C3.5157 10.5059 1.50042 8.49002 1.50042 6.00335C1.50042 3.51668 3.5157 1.50084 6.00167 1.50084C8.48765 1.50084 10.5029 3.51668 10.5029 6.00335Z" fill="#000000"/>
+                                        </svg>
+                                    </span>
+                                    <x-input type="text" wire:model.live="search"
+                                             class="text-[12px] bg-transparent border-0 focus:ring-0 focus:outline-none w-full h-8 px-2"
+                                             placeholder="Search elections..." aria-label="Search">
+                                    </x-input>
+                                </div>
                             </div>
 
                             <!-- Button -->

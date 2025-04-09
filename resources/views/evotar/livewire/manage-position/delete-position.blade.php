@@ -1,7 +1,7 @@
 <div x-data="{ open: false }" x-cloak @position-deleted.window="open = false">
     <!-- Trigger Button -->
     <button @click="open = true"
-            class="bg-white border border-gray-100 rounded p-1 w-[30px] flex-row  items-center justify-items-center">
+            class="bg-white border border-gray-100 rounded p-1 w-[30px] flex-row  items-center justify-items-center hover:drop-shadow  hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110">
         <svg width="15" height="17" viewBox="0 0 15 17" fill="none"
              xmlns="http://www.w3.org/2000/svg">
             <path
@@ -59,10 +59,10 @@
 
                 <!-- Buttons -->
                 <div class="flex justify-end mt-4 space-x-2">
-                    <button @click="open = false" type="button" class="px-4 py-2 border rounded-md text-xs">
+                    <button @click="open = false" type="button" class="px-4 py-2 border rounded-md text-xs hover:drop-shadow  hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110">
                         Cancel
                     </button>
-                    <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-md text-xs">
+                    <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-md text-xs hover:drop-shadow  hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110">
                         Delete
                     </button>
                 </div>
