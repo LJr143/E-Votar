@@ -78,22 +78,22 @@
                         <div class="overflow-x-auto">
                             <table class="min-w-full table-auto">
                                 <thead class="bg-gray-50 text-left">
-                            <tr>
-                                <th class="font-bold text-[10px] text-left px-4 py-3"><input type="checkbox" class="rounded"></th>
-                                <th class="font-bold text-[10px] text-left px-4 py-3">User Id</th>
-                                <th class="font-bold text-[10px] text-left px-4 py-3">Full Name</th>
-                                <th class="font-bold text-[10px] text-left px-4 py-3">Access Role</th>
-                                <th class="font-bold text-[10px] text-left px-4 py-3">Email</th>
-                                <th class="font-bold text-[10px] text-left px-4 py-3">Year Level</th>
-                                <th class="font-bold text-[10px] text-left px-4 py-3">College</th>
-                                <th class="font-bold text-[10px] text-left px-4 py-3">Program</th>
-                                <th class="font-bold text-[10px] text-left px-4 py-3"></th>
+                            <tr class="w-full bg-gray-100 text-black uppercase text-[11px] leading-normal">
+                                <th class="font-bold  border-b border-gray-300 text-left px-4 py-3"><input type="checkbox" class="rounded"></th>
+                                <th class="font-bold  border-b border-gray-300 text-left px-4 py-3">User Id</th>
+                                <th class="font-bold  border-b border-gray-300 text-left px-4 py-3">Full Name</th>
+                                <th class="font-bold border-b border-gray-300 text-left px-4 py-3">Access Role</th>
+                                <th class="font-bold  border-b border-gray-300text-left px-4 py-3">Email</th>
+                                <th class="font-bold border-b border-gray-300text-left px-4 py-3">Year Level</th>
+                                <th class="font-bold  border-b border-gray-300 text-left px-4 py-3">College</th>
+                                <th class="font-bold  border-b border-gray-300text-left px-4 py-3">Program</th>
+                                <th class="font-bold  border-b border-gray-300 text-left px-4 py-3"></th>
                             </tr>
                             </thead>
                             <tr></tr>
                             <tbody>
                             @foreach($users as $user)
-                                <tr class="font-light text-[10px]">
+                                <tr class="font-light text-[12px]">
                                     <td class="px-4 py-1"><input type="checkbox" class="rounded"></td>
                                     <td class="px-4 py-1">{{ $user->id }}</td>
                                     <td class="px-4 py-1">
@@ -139,4 +139,5 @@
             </div>
         </div>
     </div>
+</div>
 </div>
