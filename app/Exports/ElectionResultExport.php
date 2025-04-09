@@ -32,7 +32,7 @@ class ElectionResultExport extends ElectionResult implements FromView, ShouldAut
         $this->selectedElection = $selectedElection;
         $this->election = Election::with('election_type')->find($this->selectedElection);
         $this->fetchWinners();
-        $this->fetchVoterTally();
+        $this->fetchVoterTally($this->election->id);
     }
 
     public function fetchWinners(): void
@@ -46,7 +46,7 @@ class ElectionResultExport extends ElectionResult implements FromView, ShouldAut
         }
     }
 
-    public function fetchVoterTally(): void
+    public function fetchVoterTally($electionId): void
     {
         $election = Election::find($this->selectedElection);
         if ($election) {

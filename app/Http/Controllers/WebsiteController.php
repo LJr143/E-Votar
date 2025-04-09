@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Council;
 use Illuminate\Http\Request;
 
 class WebsiteController extends Controller
@@ -49,12 +50,15 @@ class WebsiteController extends Controller
         return view('evotar.comelec-website.selected-announcement');
     }
 
-    public function SelectedElection()
+    public function SelectedElection($id)
     {
-        return view('evotar.comelec-website.selected-election');
+        $council = Council::find($id);
+        return view('evotar.comelec-website.selected-election', [
+            'council' => $council,
+        ]);
     }
 
-    public function SelectedPartylist($id)
+    public function SelectedPartylist()
     {
         return view('evotar.comelec-website.selected-partylist');
     }
