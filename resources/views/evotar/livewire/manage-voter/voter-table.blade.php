@@ -211,7 +211,7 @@
                                             echo $program;
                                         @endphp
                                     </td>
-                                    <td class="py-3 px-6 text-left">{{ $voter->programMajor->name ?? 'error' }}</td>
+                                    <td class="py-3 px-6 text-left">{{ $voter->programMajor->name ?? 'No Major Available' }}</td>
                                     <td class="py-3 px-6 text-left">{{ $voter->year_level }}</td>
                                     <td class="py-3 px-6 text-center">
                                         <span
