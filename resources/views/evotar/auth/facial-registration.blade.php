@@ -152,9 +152,9 @@
                 // Load face-api models
                 try {
                     await Promise.all([
-                        faceapi.nets.ssdMobilenetv1.loadFromUri(modelUrl),
-                        faceapi.nets.faceLandmark68Net.loadFromUri(modelUrl),
-                        faceapi.nets.faceRecognitionNet.loadFromUri(modelUrl),
+                        faceapi.nets.ssdMobilenetv1.loadFromUri('storage/models'),
+                        faceapi.nets.faceLandmark68Net.loadFromUri('storage/models'),
+                        faceapi.nets.faceRecognitionNet.loadFromUri('storage/models'),
                     ]);
                 } catch (error) {
                     statusMessage.textContent = "Failed to load face detection models!";
