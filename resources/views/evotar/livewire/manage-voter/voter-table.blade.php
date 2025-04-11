@@ -193,14 +193,14 @@
                                                class="form-checkbox rounded h-4 w-4 text-black row-checkbox">
                                     </td>
                                     <td class="py-3 px-6 text-left">{{ $voter->id }}</td>
-                                    <td class="py-3 px-6 text-left font-bold">{{ $voter->first_name }} {{ $voter->last_name }}</td>
+                                    <td class="py-3 px-6 text-left font-bold">{{ $voter->first_name }} {{ $voter->last_name ?? ' error'}}</td>
                                     <td class="py-3 px-6 text-left">{{ $voter->student_id }}</td>
                                     <td class="py-3 px-6 text-left">{{ $voter->email }}</td>
                                     {{--                                    <td class="px-4 py-1 text-[12px]">{{ $voter->college->name }}</td>--}}
                                     <td class="py-3 px-6 text-left">
                                         @php
                                             // Convert program names
-                                            $program = $voter->program->name;
+                                            $program = ($voter->program->name ?? 'error');
                                             if (str_starts_with($program, 'Bachelor of Science')) {
                                                 $program = 'BS ' . substr($program, strlen('Bachelor of Science '));
                                             } elseif (str_starts_with($program, 'Bachelor of Education')) {
@@ -211,7 +211,7 @@
                                             echo $program;
                                         @endphp
                                     </td>
-                                    <td class="py-3 px-6 text-left">{{ $voter->programMajor->name }}</td>
+                                    <td class="py-3 px-6 text-left">{{ $voter->programMajor->name ?? 'error' }}</td>
                                     <td class="py-3 px-6 text-left">{{ $voter->year_level }}</td>
                                     <td class="py-3 px-6 text-center">
                                         <span
