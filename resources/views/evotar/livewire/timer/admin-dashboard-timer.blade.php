@@ -34,7 +34,7 @@
 
     <script>
         function handleTickInit(tick) {
-            fetch("{{ route('election.end.time' , ['electionId' => $selectedElection] ) }}")
+            fetch("{{ url('/api/election-end-time/' . $selectedElection) }}")
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Failed to fetch election data');

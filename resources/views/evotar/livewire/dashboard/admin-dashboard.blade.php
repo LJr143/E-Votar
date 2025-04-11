@@ -267,7 +267,7 @@
             if (ctx) {
                 const chartCtx = ctx.getContext('2d');
 
-                fetch('/labels')  // Fetch data from your backend
+                $.get('{{ url('/labels') }}' )     // Fetch data from your backend
                     .then(response => response.json())
                     .then(data => {
                         const labels = data.labels;  // Labels fetched from the backend
