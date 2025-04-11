@@ -210,6 +210,7 @@
                     return;
                 }
 
+                const modelPath = "storage/models";
 
                 // Load face-api models
                 try {
