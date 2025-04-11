@@ -81,7 +81,7 @@
                 {{ ucfirst($voter->program->name) }}
             </td>
             <td style="font-size: 10px; font-weight: bold; border: 1px solid black; text-align: left; height: 30px; vertical-align: middle;">
-                {{ ucfirst($voter->programMajor->name) ?? 'n/a' }}
+                {{ ucfirst($voter->programMajor->name ?? 'No Major Available') }}
             </td>
             <td style="font-size: 10px; font-weight: bold; border: 1px solid black; text-align: left; height: 30px; vertical-align: middle; color: #000000">
                 {{ ucfirst($voter->account_status) }}
