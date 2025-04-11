@@ -33,8 +33,6 @@
 
     </div>
 
-    <link href="https://unpkg.com/@pqina/flip/dist/flip.min.css" rel="stylesheet">
-    <script src="https://unpkg.com/@pqina/flip/dist/flip.min.js"></script>
 
     <script>
         console.log('window.Tick before fetch:', window.Tick);

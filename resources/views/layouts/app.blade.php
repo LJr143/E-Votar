@@ -28,6 +28,8 @@
 
     <link href="https://unpkg.com/@pqina/flip/dist/flip.min.css" rel="stylesheet">
 
+    <link href="https://unpkg.com/@pqina/flip/dist/flip.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/@pqina/flip/dist/flip.min.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/print-js/1.6.0/print.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/print-js/1.6.0/print.min.css">
