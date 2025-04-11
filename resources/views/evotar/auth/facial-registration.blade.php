@@ -148,7 +148,7 @@
                     return;
                 }
 
-                const modelUrl = '/evotar/public/storage/models';
+                const modelUrl = 'storage/models';
                 // Load face-api models
                 try {
                     await Promise.all([
