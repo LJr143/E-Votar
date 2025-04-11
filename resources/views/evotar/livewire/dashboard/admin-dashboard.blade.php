@@ -261,7 +261,16 @@
             <i>E-Votar@2024</i>
         </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.min.js"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Chart.js Data Labels Plugin CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
+    <script>
+        // Register the plugin with Chart.js
+        Chart.register(ChartDataLabels);
+    </script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const ctx = document.getElementById('voteChart');
