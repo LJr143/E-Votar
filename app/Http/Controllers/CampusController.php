@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Campus;
-use App\Models\college;
+use App\Models\College;
 use App\Models\Program;
 use App\Models\program_major;
 use Illuminate\Http\Request;
