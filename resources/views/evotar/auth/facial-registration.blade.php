@@ -148,14 +148,18 @@
                     return;
                 }
 
-                const modelUrl = '/storage/models';
+                const modelPath = "/storage/models"; // leading slash is key
+
                 // Load face-api models
                 try {
                     await Promise.all([
-                        faceapi.nets.ssdMobilenetv1.loadFromUri('modelUrl'),
-                        faceapi.nets.faceLandmark68Net.loadFromUri(modelUrl),
-                        faceapi.nets.faceRecognitionNet.loadFromUri(modelUrl),
+                        faceapi.nets.ssdMobilenetv1.loadFromUri(modelPath),
+                        faceapi.nets.faceLandmark68Net.loadFromUri(modelPath),
+                        faceapi.nets.faceRecognitionNet.loadFromUri(modelPath),
+                        faceapi.nets.ageGenderNet.loadFromUri(modelPath),
+                        faceapi.nets.faceExpressionNet.loadFromUri(modelPath),
                     ]);
+
                 } catch (error) {
                     statusMessage.textContent = "Failed to load face detection models!";
                     console.error("Model loading error:", error);
