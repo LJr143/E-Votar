@@ -33,9 +33,6 @@
     </div>
 
     <script>
-        import '@pqina/flip/dist/flip.css'
-        import '@pqina/flip/dist/flip.js';
-        import Tick from '@pqina/flip';
         function handleTickInit(tick) {
             fetch("{{ route('election.end.time', ['electionId' => $selectedElection]) }}")
                 .then(response => {

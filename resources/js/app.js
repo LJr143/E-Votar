@@ -123,7 +123,6 @@ function initChart(canvasId, eventName) {
 }
 
 
-
 // Export the function for reuse
 window.initChart = initChart;
 
