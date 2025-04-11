@@ -26,10 +26,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
-
-    <link href="https://unpkg.com/@pqina/flip/dist/flip.min.css" rel="stylesheet">
-    <script src="https://unpkg.com/@pqina/flip/dist/flip.min.js"></script>
-
     <link href="https://unpkg.com/@pqina/flip/dist/flip.min.css" rel="stylesheet">
 
 
