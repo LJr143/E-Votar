@@ -1,4 +1,5 @@
 <div>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <div class="bg-black text-white p-4 rounded-lg shadow-md text-center min-h-[160px] ">
         <div class="flex justify-between items-center">
             <div class="flex items-center space-x-2">
@@ -33,6 +34,7 @@
     </div>
 
     <script>
+        console.log('window.Tick before fetch:', window.Tick);
         function handleTickInit(tick) {
             fetch("{{ route('election.end.time', ['electionId' => $selectedElection]) }}")
                 .then(response => {
