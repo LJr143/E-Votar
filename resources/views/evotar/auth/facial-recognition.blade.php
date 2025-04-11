@@ -210,17 +210,16 @@
                     return;
                 }
 
-                const modelPath = "storage/models";
+                const modelPath = "/storage/models"; // leading slash is key
 
                 // Load face-api models
                 try {
                     await Promise.all([
-                        faceapi.nets.ssdMobilenetv1.loadFromUri('storage/models'),
-                        faceapi.nets.faceLandmark68Net.loadFromUri('storage/models'),
-                        faceapi.nets.faceRecognitionNet.loadFromUri('storage/models'),
-                        faceapi.nets.ageGenderNet.loadFromUri('storage/models'),
-                        faceapi.nets.faceExpressionNet.loadFromUri('storage/models'),
-
+                        faceapi.nets.ssdMobilenetv1.loadFromUri(modelPath),
+                        faceapi.nets.faceLandmark68Net.loadFromUri(modelPath),
+                        faceapi.nets.faceRecognitionNet.loadFromUri(modelPath),
+                        faceapi.nets.ageGenderNet.loadFromUri(modelPath),
+                        faceapi.nets.faceExpressionNet.loadFromUri(modelPath),
                     ]);
 
                     // Start verification process
