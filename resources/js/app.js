@@ -5,7 +5,6 @@ import 'aos/dist/aos.css';
 import '@pqina/flip/dist/flip.css'
 import '@pqina/flip/dist/flip.js';
 import Tick from '@pqina/flip';
-console.log('Tick loaded:', window.Tick);
 import Chart from 'chart.js/auto';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import * as FilePond from 'filepond';
