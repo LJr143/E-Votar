@@ -34,23 +34,32 @@
 
     <script>
         function handleTickInit(tick) {
-            $.get("{{ url('/api/election-end-time/' . $selectedElection) }}", function (data) {
-                if (data.end_time) {
-                    var counter = Tick.count.down(data.end_time);
+            fetch("{{ route('election.end.time' , ['electionId' => $selectedElection] ) }}")
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch election data');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.end_time) {
+                        var counter = Tick.count.down(data.end_time);
 
-                    counter.onupdate = function (value) {
-                        tick.value = value;
-                    };
+                        counter.onupdate = function (value) {
+                            tick.value = value;
+                        };
 
-                    counter.onended = function () {
-                        alert('Election countdown ended!');
-                    };
-                } else {
-                    console.error('No end time found');
-                }
-            }).fail(function (jqXHR, textStatus, errorThrown) {
-                console.error('Error:', textStatus, errorThrown);
-            });
+                        counter.onended = function () {
+                            alert('Election countdown ended!');
+                        };
+                    } else {
+                        console.error('No end time found');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error.message);
+                });
+
         }
     </script>
 </div>
