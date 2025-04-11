@@ -261,13 +261,14 @@
             <i>E-Votar@2024</i>
         </div>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const ctx = document.getElementById('voteChart');
             if (ctx) {
                 const chartCtx = ctx.getContext('2d');
 
-                fetch('/labels')  // Fetch data from your backend
+                fetch('/labels')
                     .then(response => response.json())
                     .then(data => {
                         const labels = data.labels;  // Labels fetched from the backend
