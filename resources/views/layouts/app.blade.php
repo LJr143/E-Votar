@@ -27,8 +27,11 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
 
+    <link href="https://unpkg.com/@pqina/flip/dist/flip.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/@pqina/flip/dist/flip.min.js"></script>
 
     <link href="https://unpkg.com/@pqina/flip/dist/flip.min.css" rel="stylesheet">
+
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/print-js/1.6.0/print.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/print-js/1.6.0/print.min.css">
