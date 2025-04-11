@@ -34,7 +34,7 @@
 
     <script>
         function handleTickInit(tick) {
-            fetch("{{ route('election.end.time' , ['electionId' => $selectedElection] ) }}")
+            fetch("{{ route('election.end.time', ['electionId' => $selectedElection]) }}")
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Failed to fetch election data');
@@ -42,13 +42,12 @@
                     return response.json();
                 })
                 .then(data => {
+                    console.log('End time:', data.end_time); // Confirm this logs correctly
                     if (data.end_time) {
                         var counter = Tick.count.down(data.end_time);
-
                         counter.onupdate = function (value) {
                             tick.value = value;
                         };
-
                         counter.onended = function () {
                             alert('Election countdown ended!');
                         };
@@ -57,9 +56,8 @@
                     }
                 })
                 .catch(error => {
-                    console.error('Error:', error.message);
+                    console.error('Error:', error);
                 });
-
         }
     </script>
 </div>
