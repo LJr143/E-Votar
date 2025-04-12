@@ -25,7 +25,8 @@
         "maatwebsite/excel": "^3.1",
         "spatie/db-dumper": "^3.8",
         "spatie/laravel-permission": "^6.10",
-        "spatie/livewire-filepond": "^1.4"
+        "spatie/livewire-filepond": "^1.4",
+        "wire-elements/modal": "^2.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.14",

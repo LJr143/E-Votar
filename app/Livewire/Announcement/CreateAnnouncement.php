@@ -3,6 +3,7 @@
 namespace App\Livewire\Announcement;
 
 use Livewire\Component;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Announcement;
@@ -18,37 +19,53 @@ class CreateAnnouncement extends Component
     public string $content = '';
     public string $dateTimeLocal = '';
     public $coverImage;
-    public array $mediaFiles = [];
+    public array $mediaPreviews = [];
+    public array $mediaFiles = [
+        'images' => [],
+        'videos' => [],
+    ];
     public bool $titleError = false;
     public bool $contentError = false;
     public bool $dateTimeError = false;
     public string $selectedFileName = '';
-    public array $mediaPreviews = [];
+    public $coverImageUrl;
+
+    protected $listeners = [
+        'fileUploaded' => 'handleMediaUpload',
+    ];
 
     protected $rules = [
         'title' => 'required|string|max:255',
         'content' => 'required|string',
         'dateTimeLocal' => 'required|date|after_or_equal:now',
         'coverImage' => 'nullable|image|max:2048',
-        'mediaFiles' => 'nullable|array',
-        'mediaFiles.*' => 'file|max:10240',
+        'mediaFiles.images.*' => 'nullable|image|max:2048',
+        'mediaFiles.videos.*' => 'nullable|mimes:mp4,mov,avi|max:10240',
     ];
 
     protected $messages = [
         'dateTimeLocal.after_or_equal' => 'The publication date and time must be now or in the future.',
         'coverImage.image' => 'The cover image must be an image file.',
         'coverImage.max' => 'The cover image must not exceed 2MB.',
-        'mediaFiles.*.max' => 'Each media file must not exceed 10MB.',
-    ];
-
-    protected $listeners = [
-        'fileUploaded' => 'handleMediaUpload',
+        'mediaFiles.images.*.image' => 'Each image must be a valid image file.',
+        'mediaFiles.images.*.max' => 'Each image must not exceed 2MB.',
+        'mediaFiles.videos.*.mimes' => 'Each video must be in mp4, mov, or avi format.',
+        'mediaFiles.videos.*.max' => 'Each video must not exceed 10MB.',
     ];
 
     public function mount(): void
     {
         $this->dateTimeLocal = now()->format('Y-m-d\TH:i');
-        $this->mediaFiles = [];
+        $this->mediaFiles = [
+            'images' => [],
+            'videos' => [],
+        ];
+        $this->mediaPreviews = [];
+    }
+
+    public function updatedCoverImage()
+    {
+        $this->coverImageUrl = $this->coverImage->temporaryUrl();
     }
 
     public function updated($propertyName): void
@@ -84,38 +101,78 @@ class CreateAnnouncement extends Component
         }
     }
 
-    public function updatedMediaFiles($value, $key): void
+    public function updatedMediaFiles($value, $key)
     {
-        if (isset($this->mediaFiles[$key]) && $this->isValidUploadedFile($this->mediaFiles[$key])) {
-            $file = $this->mediaFiles[$key];
-            $mimeType = $file->getMimeType();
-            $isPreviewable = in_array($mimeType, config('livewire.temporary_file_upload.preview_mimes', ['image/jpeg', 'image/png', 'image/gif']));
+        $this->handleMediaUpload();
+    }
 
-            $preview = [
-                'id' => (string) Str::uuid(),
-                'type' => $key,
+    // Add this method to handle media uploads consistently
+    public function handleMediaUpload()
+    {
+        $this->validate([
+            'mediaFiles.images.*' => 'nullable|image|max:2048',
+            'mediaFiles.videos.*' => 'nullable|mimes:mp4,mov,avi|max:10240',
+        ]);
+
+        $this->mediaPreviews = []; // Clear previous previews
+
+        // Process images
+        foreach ($this->mediaFiles['images'] as $file) {
+            $this->addMediaPreview($file, 'images');
+        }
+
+        // Process videos
+        foreach ($this->mediaFiles['videos'] as $file) {
+            $this->addMediaPreview($file, 'videos');
+        }
+
+        Log::info('Media files processed', [
+            'image_count' => count($this->mediaFiles['images']),
+            'video_count' => count($this->mediaFiles['videos']),
+            'previews_count' => count($this->mediaPreviews)
+        ]);
+    }
+
+    protected function addMediaPreview($file, string $type)
+    {
+        try {
+            $this->mediaPreviews[] = [
+                'id' => Str::random(20), // Simple string ID
+                'type' => $type,
                 'name' => $file->getClientOriginalName(),
                 'size' => $file->getSize(),
+                'temp_url' => $file->temporaryUrl(),
             ];
-
-            if ($isPreviewable) {
-                $preview['temp_url'] = $file->temporaryUrl();
-            }
-
-            // Store preview using the same key as mediaFiles
-            $this->mediaPreviews[$key] = $preview;
-            Log::info('Media file uploaded via wire:model', ['type' => $key, 'name' => $file->getClientOriginalName(), 'mime' => $mimeType]);
+        } catch (\Exception $e) {
+            Log::error("Media preview error", ['error' => $e->getMessage()]);
         }
     }
 
     public function removeMedia(string $id): void
     {
-        foreach ($this->mediaPreviews as $key => $preview) {
-            if ($preview['id'] === $id) {
-                unset($this->mediaPreviews[$key], $this->mediaFiles[$key]);
-                Log::info('Media file removed', ['id' => $id, 'key' => $key]);
-                break;
+        // Find the media to remove
+        $index = array_search($id, array_column($this->mediaPreviews, 'id'));
+
+        if ($index !== false) {
+            $media = $this->mediaPreviews[$index];
+            $type = $media['type'];
+
+            // Remove from mediaFiles array
+            foreach ($this->mediaFiles[$type] as $key => $file) {
+                if ($file->getClientOriginalName() === $media['name']) {
+                    unset($this->mediaFiles[$type][$key]);
+                    break;
+                }
             }
+
+            // Reindex array
+            $this->mediaFiles[$type] = array_values($this->mediaFiles[$type]);
+
+            // Remove from previews
+            unset($this->mediaPreviews[$index]);
+            $this->mediaPreviews = array_values($this->mediaPreviews);
+
+            $this->dispatch('media-removed');
         }
     }
 
@@ -174,25 +231,26 @@ class CreateAnnouncement extends Component
 
     protected function processMediaFiles(): array
     {
-        if (empty($this->mediaFiles) || !is_array($this->mediaFiles)) {
-            Log::info('No media files to process');
-            return [];
+        $mediaData = [];
+
+        foreach (['images', 'videos'] as $type) {
+            if (!empty($this->mediaFiles[$type])) {
+                foreach ($this->mediaFiles[$type] as $file) {
+                    if (!$this->isValidUploadedFile($file)) {
+                        Log::warning('Skipping invalid media file', ['type' => $type]);
+                        continue;
+                    }
+                    $path = $this->storeFile($file, 'announcements/' . $type);
+                    $mediaData[] = [
+                        'type' => $type,
+                        'name' => $file->getClientOriginalName(),
+                        'path' => $path,
+                        'size' => $file->getSize(),
+                    ];
+                }
+            }
         }
 
-        $mediaData = [];
-        foreach ($this->mediaFiles as $key => $file) {
-            if (!$this->isValidUploadedFile($file)) {
-                Log::warning('Skipping invalid media file', ['key' => $key]);
-                continue;
-            }
-            $path = $this->storeFile($file, 'announcements/media');
-            $mediaData[] = [
-                'type' => $this->mediaPreviews[$key]['type'] ?? $key, // Fallback to key if preview missing
-                'name' => $file->getClientOriginalName(),
-                'path' => $path,
-                'size' => $file->getSize(),
-            ];
-        }
         return $mediaData;
     }
 
@@ -203,7 +261,7 @@ class CreateAnnouncement extends Component
 
     protected function isValidUploadedFile($file): bool
     {
-        return is_object($file) && method_exists($file, 'getClientOriginalName') && method_exists($file, 'store');
+        return $file instanceof TemporaryUploadedFile && method_exists($file, 'getClientOriginalName') && method_exists($file, 'store');
     }
 
     protected function resetCoverImageState(): void
@@ -233,6 +291,7 @@ class CreateAnnouncement extends Component
         }
         return $bytes . ' B';
     }
+
 
     public function render()
     {

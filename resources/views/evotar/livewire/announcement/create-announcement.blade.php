@@ -17,7 +17,9 @@
                                 placeholder="Enter announcement title"
                                 class="w-full px-3 py-2 border rounded-md text-sm focus:ring-2 focus:ring-black focus:border-black transition-colors {{ $titleError ? 'border-red-500' : 'border-gray-300' }}"
                             >
-                            @error('title') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
+                            @error('title')
+                            <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                            @enderror
                         </div>
 
                         <!-- Publication Date & Time -->
@@ -66,68 +68,77 @@
                         <!-- Media Upload -->
                         <div>
                             <label class="block text-xs font-medium text-gray-700 mb-1">Media</label>
-                            <div class="grid grid-cols-3 gap-2 mb-4">
-                                @foreach (['image' => 'Images', 'video' => 'Video', 'attachment' => 'Attachment'] as $type => $label)
-                                    <div>
+                            <div class="grid grid-cols-2 gap-2 mb-4">
+                                @foreach (['images' => 'Images', 'videos' => 'Videos'] as $type => $label)
+                                    <div class="relative">
                                         <input
                                             type="file"
                                             id="media-{{ $type }}-upload"
                                             class="hidden"
                                             wire:model="mediaFiles.{{ $type }}"
-                                            accept="{{ $type === 'image' ? 'image/*' : ($type === 'video' ? 'video/*' : '*/*') }}"
+                                            wire:loading.attr="disabled"
+                                            accept="{{ $type === 'images' ? 'image/*' : 'video/*' }}"
+                                            multiple
                                         >
                                         <button
                                             type="button"
                                             onclick="document.getElementById('media-{{ $type }}-upload').click()"
-                                            class="w-full flex items-center justify-center gap-1 px-3 py-1 border border-gray-300 rounded-md text-xs text-gray-800 hover:bg-gray-100 transition-all duration-300"
+                                            class="w-full flex items-center justify-center gap-1 px-3 py-1 border border-gray-300 rounded-md text-xs text-gray-800 hover:bg-gray-100 transition-all duration-300 disabled:opacity-50"
+                                            wire:loading.attr="disabled"
+                                            wire:target="mediaFiles.{{ $type }}"
                                         >
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
                                             </svg>
-                                            <span>{{ $label }}</span>
+                                            <span>Add {{ $label }}</span>
                                         </button>
+                                        <!-- Loading Indicator -->
+                                        <div wire:loading wire:target="mediaFiles.{{ $type }}" class="absolute inset-0 flex items-center justify-center bg-gray-100 bg-opacity-75 rounded-md">
+                                            <svg class="animate-spin h-5 w-5 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                            </svg>
+                                        </div>
                                     </div>
                                 @endforeach
                             </div>
 
-                            <!-- Media Previews -->
-                            @if (!empty($mediaPreviews))
-                                <div class="mt-4 space-y-3">
-                                    @foreach ($mediaPreviews as $media)
-                                        <div class="relative border border-gray-200 rounded-md p-3 bg-gray-50 flex items-center gap-3">
-                                            <button
-                                                wire:click="removeMedia('{{ $media['id'] }}')"
-                                                class="absolute top-2 right-2 h-5 w-5 rounded-full bg-white hover:bg-gray-100 flex items-center justify-center transition-colors"
-                                            >
-                                                <svg class="h-3 w-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                                                </svg>
-                                            </button>
-                                            @if ($media['type'] === 'image' && isset($media['temp_url']))
-                                                <img src="{{ $media['temp_url'] }}" alt="{{ $media['name'] }}" class="w-16 h-16 object-cover rounded-md">
-                                            @elseif ($media['type'] === 'video')
-                                                <div class="w-16 h-16 flex items-center justify-center bg-gray-100 rounded-md">
-                                                    <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <polygon points="23 7 16 12 23 17 23 7"/>
-                                                        <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
-                                                    </svg>
-                                                </div>
-                                            @else
-                                                <svg class="h-6 w-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l-9 5 9 5 9-5-9-5zm0-7v7m-9 5V7"/>
-                                                </svg>
-                                            @endif
-                                            <div class="flex-1 min-w-0">
-                                                <p class="text-xs text-gray-800 truncate">{{ $media['name'] }}</p>
-                                                <p class="text-xs text-gray-500">{{ $this->formatFileSize($media['size']) }}</p>
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                </div>
-                            @endif
                             @error('mediaFiles') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
                             @error('mediaFiles.*') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
                         </div>
+
+                        <!-- In your media preview section -->
+                        @foreach ($mediaPreviews as $media)
+                            <div class="relative border border-gray-200 rounded-md p-3 bg-gray-50 flex items-center gap-3">
+                                <!-- Remove Button -->
+                                <button
+                                    wire:click="removeMedia('{{ $media['id'] }}')"
+                                    class="absolute top-2 right-2 h-5 w-5 rounded-full bg-white hover:bg-gray-100 flex items-center justify-center transition-colors"
+                                    title="Remove media"
+                                >
+                                    <svg class="h-3 w-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                    </svg>
+                                </button>
+
+                                <!-- Media Preview -->
+                                @if ($media['type'] === 'images')
+                                    <img src="{{ $media['temp_url'] }}"
+                                         alt="{{ $media['name'] }}"
+                                         class="w-16 h-16 object-cover rounded-md">
+                                @elseif ($media['type'] === 'videos')
+                                    <video class="w-24 h-16 rounded-md object-cover">
+                                        <source src="{{ $media['temp_url'] }}" type="video/mp4">
+                                    </video>
+                                @endif
+
+                                <!-- Media Info -->
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-xs text-gray-800 truncate">{{ $media['name'] }}</p>
+                                    <p class="text-xs text-gray-500">{{ $this->formatFileSize($media['size']) }}</p>
+                                </div>
+                            </div>
+                        @endforeach
 
                         <!-- Action Buttons -->
                         <div class="space-y-3 pt-4">
@@ -183,30 +194,9 @@
                             </div>
                         </div>
 
+                        <div class="p-6 space-y-6">
                         <!-- Content and Media -->
                         <div class="p-6 space-y-6">
-                            @if (!empty($mediaPreviews))
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                    @foreach ($mediaPreviews as $media)
-                                        @if ($media['type'] !== 'attachment')
-                                            <div class="border border-gray-200 rounded-md p-3">
-                                                @if ($media['type'] === 'image' && isset($media['temp_url']))
-                                                    <img src="{{ $media['temp_url'] }}" alt="{{ $media['name'] }}" class="w-full h-48 object-cover rounded-md">
-                                                @elseif ($media['type'] === 'video')
-                                                    <div class="flex items-center justify-center h-48 bg-gray-100 rounded-md">
-                                                        <svg class="h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <polygon points="23 7 16 12 23 17 23 7"/>
-                                                            <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
-                                                        </svg>
-                                                    </div>
-                                                @endif
-                                                <p class="text-xs text-gray-600 mt-2 truncate">{{ $media['name'] }}</p>
-                                            </div>
-                                        @endif
-                                    @endforeach
-                                </div>
-                            @endif
-
                             <textarea
                                 wire:model.debounce.500ms="content"
                                 placeholder="Enter announcement text content"
@@ -214,42 +204,38 @@
                             ></textarea>
                             @error('content') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
 
-                            <!-- Attachments -->
-                            @if (!empty($mediaPreviews))
-                                @php $attachments = array_filter($mediaPreviews, fn($m) => $m['type'] === 'attachment') @endphp
-                                @if (!empty($attachments))
-                                    <div class="border-t border-gray-200 pt-4">
-                                        <h3 class="text-xs font-medium text-gray-700 mb-3">Attachments</h3>
-                                        <div class="space-y-2">
-                                            @foreach ($attachments as $attachment)
-                                                <div class="flex items-center justify-between p-3 border border-gray-200 rounded-md bg-gray-50">
-                                                    <div class="flex items-center gap-2">
-                                                        <svg class="h-5 w-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l-9 5 9 5 9-5-9-5zm0-7v7m-9 5V7"/>
-                                                        </svg>
-                                                        <div>
-                                                            <p class="text-xs text-gray-800 truncate">{{ $attachment['name'] }}</p>
-                                                            <p class="text-xs text-gray-500">{{ $this->formatFileSize($attachment['size']) }}</p>
-                                                        </div>
-                                                    </div>
-                                                    <button
-                                                        wire:click="removeMedia('{{ $attachment['id'] }}')"
-                                                        class="h-5 w-5 rounded-full hover:bg-gray-100 flex items-center justify-center transition-colors"
-                                                    >
-                                                        <svg class="h-3 w-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                                                        </svg>
-                                                    </button>
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                @endif
-                            @endif
                         </div>
+
+                            @if (count($mediaPreviews) > 0)
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    @foreach ($mediaPreviews as $media)
+                                        <div class="border border-gray-200 rounded-md overflow-hidden">
+                                            @if ($media['type'] === 'images')
+                                                <img src="{{ $media['temp_url'] }}"
+                                                     alt="{{ $media['name'] }}"
+                                                     class="w-full h-48 object-cover">
+                                            @elseif ($media['type'] === 'videos')
+                                                <video controls class="w-full h-48 object-cover">
+                                                    <source src="{{ $media['temp_url'] }}" type="video/mp4">
+                                                    Your browser doesn't support videos
+                                                </video>
+                                            @endif
+                                            <div class="p-3 bg-gray-50">
+                                                <p class="text-xs font-medium text-gray-800 truncate">
+                                                    {{ $media['name'] }}
+                                                </p>
+                                                <p class="text-xs text-gray-500 mt-1">
+                                                    {{ $this->formatFileSize($media['size']) }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @endif
                     </div>
                 </div>
             </div>
+        </div>
         </div>
     </form>
 

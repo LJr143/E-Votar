@@ -40,8 +40,11 @@
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
+
+
     <!-- Styles -->
     @livewireStyles
+    @livewire('livewire-ui-modal')
 </head>
 
 <body class="font-poppins antialiased bg-[#F7F7F9]">
