@@ -24,7 +24,7 @@ class PartyListExport implements FromView, ShouldAutoSize, WithDrawings
     public function view(): View
     {
 
-        $query = Council::query()
+        $query = PartyList::query()
             ->orderBy('created_at', 'asc');
 
         if ($this->search) {
