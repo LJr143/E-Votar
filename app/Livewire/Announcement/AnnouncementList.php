@@ -19,6 +19,8 @@ class AnnouncementList extends Component
         'filter' => ['except' => 'all'],
     ];
 
+    protected $listeners = ['announcement-draft-create' => '$refresh', 'announcement-edit-update' => '$refresh', 'delete' => '$refresh'];
+
     public function updatingSearch()
     {
         $this->resetPage();

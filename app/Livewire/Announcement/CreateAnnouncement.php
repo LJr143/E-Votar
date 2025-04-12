@@ -203,6 +203,7 @@ class CreateAnnouncement extends Component
             $data = $this->prepareAnnouncementData($status);
             Announcement::create($data);
             $this->clearForm();
+            $this->dispatch('announcement-draft-created');
             session()->flash('message', "Announcement $status successfully.");
             Log::info('Announcement saved', ['status' => $status, 'title' => $data['title']]);
         } catch (ValidationException $e) {

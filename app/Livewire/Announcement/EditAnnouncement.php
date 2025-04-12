@@ -186,7 +186,7 @@ class EditAnnouncement extends Component
             $data = $this->prepareAnnouncementData($status);
             $this->announcement->update($data);
             $this->cleanupRemovedMedia();
-
+            $this->dispatch('announcement-edit-update');
             session()->flash('message', "Announcement updated successfully.");
 
         } catch (\Exception $e) {
