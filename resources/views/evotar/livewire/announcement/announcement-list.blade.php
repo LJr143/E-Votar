@@ -69,7 +69,7 @@
                 <div class="border border-gray-200 rounded-md overflow-hidden">
                     <div class="relative h-40">
                         <img
-                            src="{{ $announcement->cover_image ? asset('storage/'.$announcement->cover_image) : 'https://via.placeholder.com/400x200' }}"
+                            src="{{ $announcement->cover_image ? asset('/storage/'.$announcement->cover_image) : 'https://via.placeholder.com/400x200' }}"
                             alt="{{ $announcement->title }}"
                             class="w-full h-full object-cover"
                         />
