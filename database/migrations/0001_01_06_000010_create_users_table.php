@@ -24,10 +24,10 @@ return new class extends Migration
             $table->string('phone_number')->unique();
             $table->string('year_level');
             $table->string('student_id')->unique();
-            $table->foreignId('campus_id')->constrained('campuses');
-            $table->foreignId('college_id')->constrained('colleges');
-            $table->foreignId('program_id')->constrained('programs');
-            $table->foreignId('program_major_id')->nullable()->constrained('program_majors');
+            $table->foreignId('campus_id')->constrained('campuses')->nullOnDelete();
+            $table->foreignId('college_id')->constrained('colleges')->nullOnDelete();
+            $table->foreignId('program_id')->constrained('programs')->nullOnDelete();
+            $table->foreignId('program_major_id')->nullable()->constrained('program_majors')->nullOnDelete();
             $table->string('username')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

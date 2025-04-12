@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('positions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('election_type_id')->constrained('election_types');
+            $table->foreignId('election_type_id')->constrained('election_types')->cascadeOnDelete();
             $table->string('name');
             $table->unsignedInteger('num_winners')->default(1);
             $table->timestamps();

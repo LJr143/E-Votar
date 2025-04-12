@@ -56,7 +56,7 @@
                 @if($search)
                     No announcements match your search criteria.
                 @elseif($filter !== 'all')
-                    There are no {{ $filter }} announcements available.
+                    There are no {{ $filter }} announcements available :<.
                 @else
                     No announcements found.
                 @endif
