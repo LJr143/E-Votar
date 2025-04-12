@@ -31,8 +31,13 @@ class ViewController extends Controller
     {
         $this->validateInput($request);
         $user = $this->createUser($request->all());
+        $previousUrl = url()->previous();
 
-        return redirect()->route('admin.login')->with('success', 'Superadmin registered successfully.');
+        return redirect()->route('voter.facial.registration.get', [
+            'id' => $user->id,
+            'return_url' => $previousUrl,
+        ]);
+
     }
 
     /**
