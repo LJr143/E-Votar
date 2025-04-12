@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('council_position_settings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('council_id')->constrained('councils')->cascadeOnDelete();
-            $table->foreignId('position_id')->constrained('positions')->cascadeOnDelete();
+            $table->foreignId('council_id')->constrained('councils');
+            $table->foreignId('position_id')->constrained('positions');
             $table->boolean('separate_by_major')->default(false);
             $table->timestamps();
         });

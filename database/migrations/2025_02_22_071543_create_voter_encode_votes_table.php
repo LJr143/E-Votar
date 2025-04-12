@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('voter_encode_votes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('null');
-            $table->foreignId('election_id')->constrained('elections')->onDelete('null');
+            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('election_id')->constrained('elections');
             $table->string('encoded_image_path');
             $table->binary('encrypted_data');
             $table->timestamps();
