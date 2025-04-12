@@ -95,9 +95,9 @@
                                 Created: {{ $announcement->created_at->format('M j, Y') }}
                             </p>
                             <div class="flex space-x-2">
-                                <livewire:announcement.view-announcement :announcement="$announcement"/>
+                                <livewire:announcement.view-announcement :announcement="$announcement" wire:key="view-{{$announcement}}"/>
 
-                               <livewire:announcement.edit-announcement :announcement="$announcement"/>
+                               <livewire:announcement.edit-announcement :announcement="$announcement" wire:key="edit-{{$announcement}}"/>
 
                                 <!-- Delete button -->
                                 <button
