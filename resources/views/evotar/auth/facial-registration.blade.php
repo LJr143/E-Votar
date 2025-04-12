@@ -107,7 +107,7 @@
         <p id="status-message">Initializing camera...</p>
         <button id="capture-button" data-user-id="{{ $user->id }}">Start Registration</button>
 
-        <script src="/storage/models/face-api.min.js"></script>
+        <script src="{{ asset('storage/js/face-api.min.js') }}"></script>
         <script>
             (async () => {
                 const video = document.getElementById('video-feed');
