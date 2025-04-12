@@ -158,7 +158,7 @@
                         faceapi.nets.ssdMobilenetv1.loadFromUri(modelPath),
                         faceapi.nets.faceLandmark68Net.loadFromUri(modelPath),
                         faceapi.nets.faceRecognitionNet.loadFromUri(modelPath),
-                        faceapi.nets.ageGenderNet.loadFromUri(modelPath),
+                        // faceapi.nets.ageGenderNet.loadFromUri(modelPath),
                         faceapi.nets.faceExpressionNet.loadFromUri(modelPath),
                     ]);
 
