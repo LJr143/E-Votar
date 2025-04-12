@@ -106,6 +106,8 @@
         </div>
         <p id="status-message">Initializing camera...</p>
         <button id="capture-button" data-user-id="{{ $user->id }}">Start Registration</button>
+        <script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+
 
         <script src="{{ asset('storage/js/face-api.min.js') }}"></script>
         <script>
