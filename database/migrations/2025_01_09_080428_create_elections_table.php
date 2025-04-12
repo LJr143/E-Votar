@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('slug')->unique();
-            $table->foreignId('type')->constrained('election_types')->nullOnDelete();
-            $table->foreignId('campus_id')->constrained('campuses')->nullOnDelete();
+            $table->foreignId('type')->constrained('election_types');
+            $table->foreignId('campus_id')->constrained('campuses');
             $table->timestamp('date_started')->nullable(); // Use timestamp() for custom timestamps
             $table->timestamp('date_ended')->nullable();   // Use timestamp() for custom timestamps
             $table->string('status');
