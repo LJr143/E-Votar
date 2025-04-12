@@ -9,7 +9,7 @@ export default defineConfig({
         }),
     ],
     server: {
-        host: '192.168.20.50',
+        host: '192.168.193.50',
         https: true
     },
 });
