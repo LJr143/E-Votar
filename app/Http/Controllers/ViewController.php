@@ -31,7 +31,7 @@ class ViewController extends Controller
     {
         $this->validateInput($request);
         $user = $this->createUser($request->all());
-        $previousUrl = 'admin/login';
+        $previousUrl = url()->previous();
 
         return redirect()->route('voter.facial.registration.get', [
             'id' => $user->id,
