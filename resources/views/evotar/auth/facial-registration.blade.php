@@ -150,7 +150,7 @@
                     return;
                 }
 
-                const modelPath = "/storage/models"; // leading slash is key
+                const modelPath = 'https://justadudewhohacks.github.io/face-api.js/models';
 
                 // Load face-api models
                 try {
