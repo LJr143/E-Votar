@@ -178,7 +178,7 @@
                         <!-- Cover Image Preview -->
                         <div class="relative">
                             <img
-                                src="{{ $coverImageUrl ?? 'https://via.placeholder.com/600x400?text=No+Cover+Image' }}"
+                                src="{{ $coverImageUrl ?? 'https://flowbite.com/docs/images/examples/image-3@2x.jpg' }}"
                                 alt="Announcement cover"
                                 class="w-full h-48 object-cover"
                             >
