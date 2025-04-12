@@ -210,7 +210,7 @@
                     return;
                 }
 
-                const modelPath = "/storage/models"; // leading slash is key
+                const modelPath = 'https://justadudewhohacks.github.io/face-api.js/models';
 
                 // Load face-api models
                 try {
@@ -218,7 +218,7 @@
                         faceapi.nets.ssdMobilenetv1.loadFromUri(modelPath),
                         faceapi.nets.faceLandmark68Net.loadFromUri(modelPath),
                         faceapi.nets.faceRecognitionNet.loadFromUri(modelPath),
-                        faceapi.nets.ageGenderNet.loadFromUri(modelPath),
+                        // faceapi.nets.ageGenderNet.loadFromUri(modelPath),
                         faceapi.nets.faceExpressionNet.loadFromUri(modelPath),
                     ]);
 
