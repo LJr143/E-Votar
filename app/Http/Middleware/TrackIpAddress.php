@@ -14,28 +14,31 @@ class TrackIpAddress
         $ipAddress = $request->ip();
         $userId = Auth::id(); // Will be null if not authenticated
 
-        // Find or create the IP record
-        $ipRecord = IpRecord::firstOrCreate(
-            ['ip_address' => $ipAddress, 'user_id' => $userId],
-            ['status' => 'allowed', 'last_seen_at' => now()]
-        );
+        if ($userId !== null) {
+            // Find or create the IP record only if the user is authenticated
+            $ipRecord = IpRecord::firstOrCreate(
+                ['ip_address' => $ipAddress, 'user_id' => $userId],
+                ['status' => 'allowed', 'last_seen_at' => now()]
+            );
 
-        // Check if the IP is blocked
-        if ($ipRecord->status === 'blocked') {
-            if (Auth::check()) {
-                Auth::logout();
-                $request->session()->invalidate();
-                $request->session()->regenerateToken();
+            // Check if the IP is blocked
+            if ($ipRecord->status === 'blocked') {
+                if (Auth::check()) {
+                    Auth::logout();
+                    $request->session()->invalidate();
+                    $request->session()->regenerateToken();
+                }
+                return redirect()->route('voter.login')->with('error', 'Your IP is blocked. Please contact support.');
             }
-            return redirect()->route('voter.login')->with('error', 'Your IP is blocked. Please contact support.');
+
+            // Update the record only if it’s not blocked
+            $ipRecord->update([
+                'status' => 'allowed', // Only if not blocked
+                'last_seen_at' => now(),
+                'user_id' => $userId ?: $ipRecord->user_id, // Preserve user_id if already set
+            ]);
         }
 
-        // Update the record only if it’s not blocked
-        $ipRecord->update([
-            'status' => 'allowed', // Only if not blocked
-            'last_seen_at' => now(),
-            'user_id' => $userId ?: $ipRecord->user_id, // Preserve user_id if already set
-        ]);
 
         // Proceed with the request
         return $next($request);

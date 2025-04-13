@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('ip_records', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('user_id');
             $table->string('ip_address');
             $table->enum('status', ['allowed', 'blocked'])->default('allowed');
             $table->timestamp('last_seen_at')->nullable();
             $table->timestamps();
-            $table->foreign('user_id')->references('id')->on('users')->nullOnDelete();
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

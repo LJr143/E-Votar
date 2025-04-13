@@ -268,11 +268,11 @@
                                         <select name="year_level" id="year_level"
                                                 class="px-2 py-0 h-[28px] text-[12px] w-full rounded border border-gray-300 focus:border-blue-500 focus:outline-none @error('year_level') border-red-500 @enderror">
                                             <option value="" disabled selected>Select year level</option>
-                                            <option value="1st Year" {{ old('year_level') == '1st Year' ? 'selected' : '' }}>1st Year</option>
-                                            <option value="2nd Year" {{ old('year_level') == '2nd Year' ? 'selected' : '' }}>2nd Year</option>
-                                            <option value="3rd Year" {{ old('year_level') == '3rd Year' ? 'selected' : '' }}>3rd Year</option>
-                                            <option value="4th Year" {{ old('year_level') == '4th Year' ? 'selected' : '' }}>4th Year</option>
-                                            <option value="5th Year" {{ old('year_level') == '5th Year' ? 'selected' : '' }}>5th Year</option>
+                                            <option value="1" {{ old('year_level') == '1' ? 'selected' : '' }}>1st Year</option>
+                                            <option value="2" {{ old('year_level') == '2' ? 'selected' : '' }}>2nd Year</option>
+                                            <option value="3" {{ old('year_level') == '3' ? 'selected' : '' }}>3rd Year</option>
+                                            <option value="4" {{ old('year_level') == '4' ? 'selected' : '' }}>4th Year</option>
+                                            <option value="5" {{ old('year_level') == '5' ? 'selected' : '' }}>5th Year</option>
                                         </select>
                                         @error('year_level')
                                         <div class="text-red-500 text-[10px] italic mt-1">{{ $message }}</div>

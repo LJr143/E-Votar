@@ -17,7 +17,6 @@ class FaceRegistrationController extends Controller
             $validated = $request->validate([
                 'user_id' => 'required|exists:users,id',
                 'captures' => 'required|array|min:1',
-                'captures.*.angle' => 'required|numeric',
                 'captures.*.image' => 'required|string',
                 'captures.*.quality' => 'required|numeric',
                 'captures.*.descriptor' => 'required|array'
@@ -25,11 +24,10 @@ class FaceRegistrationController extends Controller
 
             $user = User::findOrFail($request->user_id);
 
+            // Update user status
             $user->update([
                 'account_status' => 'Active',
             ]);
-
-            $user->save();
 
             // Delete any existing face data
             $user->faceData()->delete();
@@ -39,13 +37,12 @@ class FaceRegistrationController extends Controller
                 $imagePath = $this->storeImage($capture['image']);
 
                 $user->faceData()->create([
-                    'angle' => $capture['angle'],
+                    'angle' => 0, // Default angle since we're not capturing multiple angles
                     'image_path' => $imagePath,
                     'quality_score' => $capture['quality'],
-                    'descriptor' => $capture['descriptor']
+                    'descriptor' => json_encode($capture['descriptor']) // Store descriptor as JSON
                 ]);
             }
-
 
             return response()->json([
                 'success' => true,

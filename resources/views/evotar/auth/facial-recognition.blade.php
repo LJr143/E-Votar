@@ -6,20 +6,23 @@
                 justify-content: center;
                 position: relative;
                 margin: 20px auto;
-                width: 720px;
-                height: 560px;
+                width: 400px;
+                height: 400px;
+                border-radius: 50%;
+                overflow: hidden;
             }
 
             #video-feed {
                 transform: scaleX(-1);
-                z-index: 10;
+                width: 100%;
+                height: 100%;
                 object-fit: cover;
             }
 
             #face-guide {
                 position: absolute;
-                width: 400px;
-                height: 400px;
+                width: 350px;
+                height: 350px;
                 border: 3px dashed #fff;
                 border-radius: 50%;
                 top: 50%;
@@ -39,20 +42,76 @@
                 min-height: 60px;
             }
 
-            #quality-indicator {
-                height: 10px;
-                width: 100%;
-                background: linear-gradient(to right, red, yellow, green);
-                margin: 10px 0;
-                position: relative;
+            #instructions {
+                text-align: center;
+                margin: 15px 0;
+                font-size: 16px;
+                color: #333;
             }
 
-            #quality-marker {
+            .validation-message {
+                text-align: center;
+                color: #ff5722;
+                font-weight: bold;
+                margin: 5px 0;
+                min-height: 20px;
+            }
+
+            .progress-circle {
                 position: absolute;
-                height: 15px;
-                width: 2px;
-                background: black;
-                top: -2px;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 10;
+                pointer-events: none;
+            }
+
+            .progress-circle svg {
+                width: 100%;
+                height: 100%;
+                transform: rotate(-90deg);
+            }
+
+            .progress-circle circle {
+                fill: none;
+                stroke-width: 8;
+                stroke-linecap: round;
+            }
+
+            .progress-circle-bg {
+                stroke: #f1f1f1;
+            }
+
+            .progress-circle-fg {
+                stroke: #4CAF50;
+                stroke-dasharray: 0;
+                transition: stroke-dasharray 0.3s;
+            }
+
+            .quality-indicators {
+                display: flex;
+                justify-content: space-between;
+                margin: 10px 0;
+            }
+
+            .quality-item {
+                text-align: center;
+                flex: 1;
+            }
+
+            .quality-value {
+                font-weight: bold;
+            }
+
+            .quality-good { color: green; }
+            .quality-warning { color: orange; }
+            .quality-bad { color: red; }
+
+            .match-counter {
+                text-align: center;
+                font-size: 16px;
+                margin: 10px 0;
             }
 
             .verification-result {
@@ -79,36 +138,24 @@
                 background-color: #2196F3;
                 color: white;
             }
-
-            .match-counter {
-                text-align: center;
-                font-size: 16px;
-                margin: 10px 0;
-            }    .quality-indicators {
-                     display: flex;
-                     justify-content: space-between;
-                     margin: 10px 0;
-                 }
-            .quality-item {
-                text-align: center;
-                flex: 1;
-            }
-            .quality-value {
-                font-weight: bold;
-            }
-            .quality-good { color: green; }
-            .quality-warning { color: orange; }
-            .quality-bad { color: red; }
         </style>
 
         <div id="container">
-            <video id="video-feed" height="560" width="720" autoplay></video>
+            <video id="video-feed" autoplay></video>
             <div id="face-guide"></div>
+            <div class="progress-circle">
+                <svg viewBox="0 0 100 100">
+                    <circle class="progress-circle-bg" cx="50" cy="50" r="45" />
+                    <circle class="progress-circle-fg" cx="50" cy="50" r="45" />
+                </svg>
+            </div>
         </div>
 
+        <div id="instructions">Please position your face in the circle and look straight at the camera</div>
+        <div class="validation-message hidden" id="validation-message"></div>
         <p id="status-message">Initializing camera...</p>
 
-        <div class="quality-indicators">
+        <div class="quality-indicators hidden" hidden="true">
             <div class="quality-item">
                 <div>Brightness</div>
                 <div id="brightness-value" class="quality-value">--</div>
@@ -127,22 +174,23 @@
             </div>
         </div>
 
-        <div id="match-counter" class="match-counter">
-            Successful matches: <span id="match-count">0</span>/10 |
-            Failed attempts: <span id="fail-count">0</span>/10
+        <div id="match-counter" class="match-counter hidden">
+            Successful matches: <span id="match-count">0</span>/<span id="required-matches">10</span> |
+            Failed attempts: <span id="fail-count">0</span>/<span id="max-fail-attempts">10</span>
         </div>
 
         <div id="verification-result" class="verification-result"></div>
 
         <script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
         <script>
-            // URLs for redirection
             const voterLoginUrl = "{{ route('voter.login') }}";
             const logoutUrl = "{{ route('logout') }}";
 
             (async () => {
                 const video = document.getElementById('video-feed');
                 const statusMessage = document.getElementById('status-message');
+                const instructions = document.getElementById('instructions');
+                const validationMessage = document.getElementById('validation-message');
                 const verificationResult = document.getElementById('verification-result');
                 const matchCountElement = document.getElementById('match-count');
                 const failCountElement = document.getElementById('fail-count');
@@ -150,28 +198,46 @@
                 const contrastValue = document.getElementById('contrast-value');
                 const sharpnessValue = document.getElementById('sharpness-value');
                 const similarityValue = document.getElementById('similarity-value');
+                const progressCircle = document.querySelector('.progress-circle-fg');
 
-                // Strict verification parameters
-                const requiredMatches = 10;
-                const maxFailAttempts = 10;
-                const minSimilarity = 0.65; // 90% similarity required
-                const minBrightness = 0.1; // 0-1 scale (50%)
-                const maxBrightness = 0.6; // Avoid overexposure
-                const minContrast = 0.1; // 0-1 scale
-                const minSharpness = 0.7; // 0-1 scale
-                const minFaceWidth = 150; // Minimum face width in pixels
-                const minFaceHeight = 150; // Minimum face height in pixels
+                // Verification parameters
+                const requiredMatches = 3;
+                const maxFailAttempts = 5;
+                const minSimilarity = 0.68;
+                const minBrightness = 0.1;
+                const maxBrightness = 0.6;
+                const minContrast = 0.1;
+                const minSharpness = 0.7;
+                const minFaceWidth = 100; // Adjusted for smaller container
+                const minFaceHeight = 100;
 
                 // State variables
                 let matchCount = 0;
                 let failCount = 0;
                 let verificationInterval;
                 let isProcessing = false;
-
-                // Load registered face descriptors
                 let registeredDescriptors = [];
                 let registeredLabels = [];
 
+                // Start webcam
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({
+                        video: {
+                            width: { ideal: 400 },
+                            height: { ideal: 400 },
+                            facingMode: 'user'
+                        }
+                    });
+                    video.srcObject = stream;
+                    statusMessage.textContent = "Camera ready. Positioning your face in the circle...";
+                    instructions.textContent = "Please position your face in the circle and look straight at the camera";
+                } catch (error) {
+                    statusMessage.textContent = "Camera access denied! Please enable camera permissions.";
+                    console.error("Camera error:", error);
+                    return;
+                }
+
+                // Load registered face descriptors
                 try {
                     const response = await fetch("{{ route('api.face.get-descriptors') }}", {
                         headers: {
@@ -179,7 +245,6 @@
                             "Accept": "application/json"
                         }
                     });
-
                     if (response.ok) {
                         const data = await response.json();
                         registeredDescriptors = data.descriptors.map(desc => new Float32Array(desc));
@@ -193,72 +258,43 @@
                     return;
                 }
 
-                // Start webcam
-                try {
-                    const stream = await navigator.mediaDevices.getUserMedia({
-                        video: {
-                            width: 720,
-                            height: 560,
-                            facingMode: 'user'
-                        }
-                    });
-                    video.srcObject = stream;
-                    statusMessage.textContent = "Camera ready. Positioning your face in the circle...";
-                } catch (error) {
-                    statusMessage.textContent = "Camera access denied! Please enable camera permissions.";
-                    console.error("Camera error:", error);
-                    return;
-                }
-
-                const modelPath = 'https://justadudewhohacks.github.io/face-api.js/models';
-
                 // Load face-api models
+                const modelPath = 'https://justadudewhohacks.github.io/face-api.js/models';
                 try {
                     await Promise.all([
                         faceapi.nets.ssdMobilenetv1.loadFromUri(modelPath),
                         faceapi.nets.faceLandmark68Net.loadFromUri(modelPath),
                         faceapi.nets.faceRecognitionNet.loadFromUri(modelPath),
-                        // faceapi.nets.ageGenderNet.loadFromUri(modelPath),
-                        faceapi.nets.faceExpressionNet.loadFromUri(modelPath),
                     ]);
-
-                    // Start verification process
-                    startVerificationProcess();
+                    statusMessage.textContent = "Models loaded. Starting verification...";
                 } catch (error) {
                     statusMessage.textContent = "Failed to load face detection models!";
                     console.error("Model loading error:", error);
-
+                    return;
                 }
 
-                // Calculate image sharpness (edge detection)
+                // Calculate image sharpness
                 function calculateSharpness(imageData) {
                     const width = imageData.width;
                     const height = imageData.height;
                     const data = imageData.data;
-
-                    // Convert to grayscale first
                     const gray = new Array(width * height);
                     for (let i = 0, j = 0; i < data.length; i += 4, j++) {
-                        gray[j] = 0.299 * data[i] + 0.587 * data[i+1] + 0.114 * data[i+2];
+                        gray[j] = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
                     }
-
-                    // Simple edge detection (Sobel operator)
                     let edgeStrength = 0;
-                    for (let y = 1; y < height-1; y++) {
-                        for (let x = 1; x < width-1; x++) {
+                    for (let y = 1; y < height - 1; y++) {
+                        for (let x = 1; x < width - 1; x++) {
                             const idx = y * width + x;
-                            const gx = -gray[idx-1-width] + gray[idx+1-width]
-                                -2*gray[idx-1] + 2*gray[idx+1]
-                                -gray[idx-1+width] + gray[idx+1+width];
-                            const gy = -gray[idx-1-width] - 2*gray[idx-width] - gray[idx+1-width]
-                                + gray[idx-1+width] + 2*gray[idx+width] + gray[idx+1+width];
-                            edgeStrength += Math.sqrt(gx*gx + gy*gy);
+                            const gx = -gray[idx - 1 - width] + gray[idx + 1 - width]
+                                - 2 * gray[idx - 1] + 2 * gray[idx + 1]
+                                - gray[idx - 1 + width] + gray[idx + 1 + width];
+                            const gy = -gray[idx - 1 - width] - 2 * gray[idx - width] - gray[idx + 1 - width]
+                                + gray[idx - 1 + width] + 2 * gray[idx + width] + gray[idx + 1 + width];
+                            edgeStrength += Math.sqrt(gx * gx + gy * gy);
                         }
                     }
-
-                    // Normalize (empirically determined values)
-                    const sharpness = Math.min(1, edgeStrength / (width * height * 10));
-                    return sharpness;
+                    return Math.min(1, edgeStrength / (width * height * 10));
                 }
 
                 // Calculate image quality metrics
@@ -267,65 +303,46 @@
                     let contrast = 0;
                     const data = imageData.data;
                     const pixels = data.length / 4;
-
-                    // Calculate brightness (average luminance)
                     for (let i = 0; i < data.length; i += 4) {
                         brightness += (data[i] + data[i + 1] + data[i + 2]) / 3;
                     }
                     brightness /= pixels;
-
-                    // Calculate contrast (standard deviation of luminance)
                     for (let i = 0; i < data.length; i += 4) {
                         const luminance = (data[i] + data[i + 1] + data[i + 2]) / 3;
                         contrast += Math.pow(luminance - brightness, 2);
                     }
                     contrast = Math.sqrt(contrast / pixels);
-
-                    // Calculate sharpness
                     const sharpness = calculateSharpness(imageData);
-
-                    // Normalize values (0-1)
-                    brightness = brightness / 255;
-                    contrast = contrast / 255;
-
                     return {
-                        brightness: brightness,
-                        contrast: contrast,
+                        brightness: brightness / 255,
+                        contrast: contrast / 255,
                         sharpness: sharpness
                     };
                 }
 
-                // Update quality indicators with color coding
+                // Update quality indicators
                 function updateQualityIndicators(quality, similarity) {
-                    // Brightness
                     brightnessValue.textContent = (quality.brightness * 100).toFixed(0) + '%';
                     brightnessValue.className = quality.brightness >= minBrightness && quality.brightness <= maxBrightness
                         ? 'quality-value quality-good'
                         : 'quality-value quality-bad';
-
-                    // Contrast
                     contrastValue.textContent = (quality.contrast * 100).toFixed(0) + '%';
                     contrastValue.className = quality.contrast >= minContrast
                         ? 'quality-value quality-good'
                         : 'quality-value quality-bad';
-
-                    // Sharpness
                     sharpnessValue.textContent = (quality.sharpness * 100).toFixed(0) + '%';
                     sharpnessValue.className = quality.sharpness >= minSharpness
                         ? 'quality-value quality-good'
                         : 'quality-value quality-bad';
-
-                    // Similarity
                     similarityValue.textContent = (similarity * 100).toFixed(0) + '%';
                     similarityValue.className = similarity >= minSimilarity
                         ? 'quality-value quality-good'
                         : 'quality-value quality-bad';
                 }
 
-                // Find best match among registered faces
+                // Find best match
                 function findBestMatch(descriptor) {
                     let bestMatch = { distance: 1, label: "unknown" };
-
                     for (let i = 0; i < registeredDescriptors.length; i++) {
                         const distance = faceapi.euclideanDistance(descriptor, registeredDescriptors[i]);
                         if (distance < bestMatch.distance) {
@@ -336,11 +353,10 @@
                             };
                         }
                     }
-
                     return bestMatch;
                 }
 
-                // Check if all quality metrics are met
+                // Check quality requirements
                 function checkQualityRequirements(quality) {
                     return (
                         quality.brightness >= minBrightness &&
@@ -348,6 +364,14 @@
                         quality.contrast >= minContrast &&
                         quality.sharpness >= minSharpness
                     );
+                }
+
+                // Update progress circle
+                function updateProgress(percent) {
+                    const circumference = 2 * Math.PI * 45;
+                    const offset = circumference - (percent / 100) * circumference;
+                    progressCircle.style.strokeDasharray = `${circumference} ${circumference}`;
+                    progressCircle.style.strokeDashoffset = offset;
                 }
 
                 // Main verification process
@@ -374,7 +398,7 @@
                                 const ctx = canvas.getContext('2d');
                                 ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-                                // Get face region for quality check
+                                // Get face region
                                 const faceImage = ctx.getImageData(
                                     Math.max(0, box.x - 20),
                                     Math.max(0, box.y - 20),
@@ -398,23 +422,27 @@
                                 const similarityOK = similarity >= minSimilarity;
                                 const allConditionsMet = faceSizeOK && qualityOK && similarityOK;
 
+                                // Update progress based on match count
+                                updateProgress((matchCount / requiredMatches) * 100);
+
                                 if (!faceSizeOK) {
                                     statusMessage.textContent = "Please move closer to the camera";
+                                    validationMessage.textContent = "Face too small";
                                     isProcessing = false;
                                     return;
-                                }
-                                else if (!qualityOK) {
+                                } else if (!qualityOK) {
                                     statusMessage.textContent = "Poor image quality. Please adjust lighting.";
+                                    validationMessage.textContent = "Adjust lighting or position";
                                     isProcessing = false;
                                     return;
                                 }
 
                                 if (match.label !== "unknown" && allConditionsMet) {
                                     matchCount++;
-                                    failCount = 0; // Reset fail count on successful match
+                                    failCount = 0;
                                     statusMessage.textContent = `Strong match found (${match.label}) - ${(similarity * 100).toFixed(1)}% similarity`;
+                                    validationMessage.textContent = "";
 
-                                    // Update counters display
                                     matchCountElement.textContent = matchCount;
                                     failCountElement.textContent = failCount;
 
@@ -423,8 +451,8 @@
                                         verificationResult.textContent = "High Confidence Verification Successful!";
                                         verificationResult.className = "verification-result success";
                                         verificationResult.style.display = "block";
+                                        updateProgress(100);
 
-                                        // Update session and redirect
                                         await fetch("{{ route('update.face.verified') }}", {
                                             method: 'POST',
                                             headers: {
@@ -437,20 +465,22 @@
                                             })
                                         });
 
-                                        window.location.href = voterLoginUrl;
+                                        setTimeout(() => {
+                                            window.location.href = voterLoginUrl;
+                                        }, 1000);
                                     }
                                 } else {
                                     matchCount = 0;
                                     failCount++;
-
-                                    // Update counters display
                                     matchCountElement.textContent = matchCount;
                                     failCountElement.textContent = failCount;
 
                                     if (!similarityOK) {
                                         statusMessage.textContent = `Insufficient match (${(similarity * 100).toFixed(1)}% similarity)`;
+                                        validationMessage.textContent = "Face not recognized";
                                     } else {
                                         statusMessage.textContent = "Verification conditions not met";
+                                        validationMessage.textContent = "Conditions not met";
                                     }
 
                                     if (failCount >= maxFailAttempts) {
@@ -458,8 +488,8 @@
                                         verificationResult.textContent = "Too many failed attempts";
                                         verificationResult.className = "verification-result failure";
                                         verificationResult.style.display = "block";
+                                        updateProgress(0);
 
-                                        // Send logout request via fetch
                                         fetch(logoutUrl, {
                                             method: 'POST',
                                             headers: {
@@ -469,29 +499,31 @@
                                             }
                                         })
                                             .then(response => {
-                                                if (response.ok) {
-                                                    window.location.href = voterLoginUrl;
-                                                } else {
-                                                    throw new Error('Logout failed');
-                                                }
+                                                window.location.href = voterLoginUrl;
                                             })
                                             .catch(error => {
                                                 console.error('Logout error:', error);
-                                                window.location.href = voterLoginUrl; // Fallback redirect
+                                                window.location.href = voterLoginUrl;
                                             });
                                     }
                                 }
                             } else {
                                 statusMessage.textContent = "Face not detected. Please position your face in the circle.";
+                                validationMessage.textContent = "No face detected";
+                                updateProgress(0);
                             }
                         } catch (error) {
                             console.error("Verification error:", error);
                             statusMessage.textContent = "Error during verification";
+                            validationMessage.textContent = "";
                         } finally {
                             isProcessing = false;
                         }
-                    }, 1000); // Check every second
+                    }, 1000);
                 }
+
+                // Start verification
+                startVerificationProcess();
             })();
         </script>
     </x-slot>

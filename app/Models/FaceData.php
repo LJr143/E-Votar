@@ -7,19 +7,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class FaceData extends Model
 {
-    use HasFactory;
 
     protected $fillable = [
         'user_id',
         'angle',
+        'expression',
         'image_path',
         'quality_score',
-        'descriptor'
+        'descriptor',
+        'landmarks'
     ];
 
     protected $casts = [
         'descriptor' => 'array',
-        'quality_score' => 'float'
+        'landmarks' => 'array'
     ];
 
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
