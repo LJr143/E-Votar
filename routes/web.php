@@ -58,18 +58,26 @@ Route::get('login/google/callback', [LoginController::class, 'handleGoogleCallba
 
 
 Route::post('/logout', function (Request $request) {
+    $redirectRoute = 'admin.login';
+
     if (Auth::check()) {
-        Auth::logout();
+        $user = Auth::user();
+
+        // Use Spatie role check
+        if ($user->hasRole('voter')) {
+            $redirectRoute = 'voter.login';
+        }
+
+        // Clean up session if using database driver
+        if (config('session.driver') === 'database') {
+            DB::table('sessions')->where('user_id', $user->id)->delete();
+        }
 
         Session::flush();
         Auth::logout();
-
-        if (config('session.driver') === 'database') {
-            \DB::table('sessions')->where('user_id', Auth::id())->delete();
-        }
     }
-    // Redirect to Google Logout
-    return redirect()->route('voter.login');
+
+    return redirect()->route($redirectRoute);
 })->name('logout');
 
 Route::get('/fetch-elections/{voterId}', [VoterElectionController::class, 'getElectionsForVoter'])->name('fetch.elections');

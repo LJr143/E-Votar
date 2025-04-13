@@ -108,7 +108,7 @@
     @endphp
 
 
-    <div class="fixed inset-0 z-50 flex items-center justify-start bg-black bg-opacity-50" x-show="sidebarOpen" @click.away="sidebarOpen = false" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+    <div class="fixed inset-0 z-50 flex items-center justify-start bg-black bg-opacity-50" x-cloak x-show="sidebarOpen" @click.away="sidebarOpen = false" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
         <div class="bg-white w-64 h-full overflow-y-auto p-4 shadow-lg md:hidden z-50">
             <div class="flex items-center justify-between mb-4">
                 <img alt="evotar_logo" class="w-40 h-8" height="32" src="{{ asset('storage/assets/logo/evotar_red_1.png') }}" alt="evotar_logo" width="32"/>

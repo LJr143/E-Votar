@@ -40,6 +40,7 @@
                 margin: 10px 0;
                 color: red;
                 min-height: 60px;
+                display: none;
             }
 
             #instructions {
@@ -90,9 +91,9 @@
             }
 
             .quality-indicators {
-                display: flex;
                 justify-content: space-between;
                 margin: 10px 0;
+                display: none;
             }
 
             .quality-item {
@@ -112,6 +113,7 @@
                 text-align: center;
                 font-size: 16px;
                 margin: 10px 0;
+                display: none;
             }
 
             .verification-result {
@@ -121,7 +123,6 @@
                 margin: 20px 0;
                 padding: 15px;
                 border-radius: 5px;
-                display: none;
             }
 
             .success {
@@ -155,7 +156,7 @@
         <div class="validation-message hidden" id="validation-message"></div>
         <p id="status-message">Initializing camera...</p>
 
-        <div class="quality-indicators hidden" hidden="true">
+        <div class="quality-indicators hidden">
             <div class="quality-item">
                 <div>Brightness</div>
                 <div id="brightness-value" class="quality-value">--</div>
@@ -174,7 +175,7 @@
             </div>
         </div>
 
-        <div id="match-counter" class="match-counter hidden">
+        <div id="match-counter" class="match-counter">
             Successful matches: <span id="match-count">0</span>/<span id="required-matches">10</span> |
             Failed attempts: <span id="fail-count">0</span>/<span id="max-fail-attempts">10</span>
         </div>
@@ -202,8 +203,8 @@
 
                 // Verification parameters
                 const requiredMatches = 3;
-                const maxFailAttempts = 5;
-                const minSimilarity = 0.68;
+                const maxFailAttempts = 20;
+                const minSimilarity = 0.60;
                 const minBrightness = 0.1;
                 const maxBrightness = 0.6;
                 const minContrast = 0.1;
