@@ -178,7 +178,7 @@
                                         </x-label>
                                         <input type="text" name="phone_number"
                                                class="px-2 py-0 h-[28px] text-[12px] w-full rounded border border-gray-300 focus:border-blue-500 focus:outline-none @error('phone_number') border-red-500 @enderror"
-                                               placeholder="Enter phone number (+63)"
+                                               placeholder="Enter phone number"
                                                value="{{ old('phone_number') }}">
                                         @error('phone_number')
                                         <div class="text-red-500 text-[10px] italic mt-1">{{ $message }}</div>
