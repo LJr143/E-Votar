@@ -22,8 +22,9 @@ class PartyListTable extends Component
 
     public $perPage = 5;
     public $importFile;
-    public $importError = null;
     public $importing = false;
+    public $importErrors = [];
+    public $importError = '';
 
     protected $listeners = [
         'party-list-created' => '$refresh',
@@ -159,24 +160,40 @@ class PartyListTable extends Component
         ]);
 
         $this->importing = true;
-        $this->importError = null;
+        $this->importError = '';
+        $this->importErrors = [];
 
         try {
             $import = new PartyListImport();
             Excel::import($import, $this->importFile->getRealPath());
 
             $successCount = $import->getRowCount();
-            $failureCount = count($import->failures());
+            $failures = $import->failures();
+            $failureCount = count($failures);
 
-            $this->dispatch('success-party-list-import', [
-                'title' => 'Import Failed',
-                'message' => "Imported {$successCount} party list/s. " .
-                    ($failureCount ? "{$failureCount} records skipped." : "")
-            ]);
+            // Store errors for display in modal
+            $this->importErrors = collect($failures)->map(function ($failure) {
+                return [
+                    'row' => $failure->row(),
+                    'field' => $failure->attribute(),
+                    'errors' => $failure->errors()
+                ];
+            })->toArray();
 
+            if ($failureCount > 0) {
+                $this->importError = "Imported {$successCount} positions. {$failureCount} records had errors.";
+            }
 
-            $this->reset('importFile');
-            $this->dispatch('party-list-imported');
+            else{
+
+                $this->dispatch('success-party-list-import', [
+                    'title' => 'Import Failed',
+                    'message' => "Imported {$successCount} party list/s. " .
+                        ($failureCount ? "{$failureCount} records skipped." : "")
+                ]);
+                $this->reset('importFile');
+                $this->dispatch('party-list-imported');
+            }
 
         } catch (\Exception $e) {
             // Simplified error messages
@@ -207,6 +224,11 @@ class PartyListTable extends Component
     {
         $this->resetPage();
     }
+    public function resetImport(): void
+    {
+        $this->reset(['importing', 'importError', 'importErrors', 'importFile']);
+    }
+
 
     public function render(): \Illuminate\Contracts\View\View
     {

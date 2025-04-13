@@ -39,15 +39,17 @@ class ElectionResult extends Component
     public function mount(): void
     {
         $this->selectedElection = session('selectedElection');
-        $this->filter = Election::with('election_type')
-            ->find(($this->selectedElection))
-            ->election_type
-            ->name;
-        $this->fetchElection($this->filter);
-        $this->councils = Council::all();
-        $this->selectedFilter = $this->filter;
-        $this->fetchCandidates();
-        $this->fetchWinners();
+        if ($this->selectedElection){
+            $this->filter = Election::with('election_type')
+                ->find(($this->selectedElection))
+                ->election_type
+                ->name;
+            $this->fetchElection($this->filter);
+            $this->councils = Council::all();
+            $this->selectedFilter = $this->filter;
+            $this->fetchCandidates();
+            $this->fetchWinners();
+        }
     }
 
     public function updatedSearch(): void

@@ -1,4 +1,4 @@
-<div x-data="{ open: false }" x-cloak @council-updated.window="open = false">
+<div x-data="{ open: false }" x-cloak @council-edited.window="open = false">
     <!-- Trigger Button -->
     <button @click="open = true"
             class="bg-white border border-gray-100 rounded p-1 w-[30px] flex-row  items-center justify-items-center hover:drop-shadow  hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110">
@@ -46,7 +46,7 @@
                 </button>
             </div>
 
-            <form wire:submit.prevent="editCouncil">
+            <form wire:submit.prevent="editCouncil" enctype="multipart/form-data">
                 <div class="flex flex-col space-y-4">
                     <div class="w-full">
                         <div class="mb-3 relative w-full">
@@ -69,14 +69,15 @@
                                     <div class="w-32 h-32 flex-shrink-0 relative border-2 border-dashed border-gray-300 rounded-lg overflow-hidden bg-gray-50 flex items-center justify-center">
                                         @if($tempLogoUrl)
                                             <img src="{{ $tempLogoUrl }}" alt="New logo preview" class="absolute inset-0 w-full h-full object-contain p-2" />
-                                            <button wire:click="$set('logo', null)"
-                                                    class="absolute top-1 right-1 bg-white/80 hover:bg-white rounded-full p-1 shadow-sm transition-all"
+                                            <button type="button"
+                                                    wire:click="$set('logo', null)"
+                                                    class="absolute top-1 right-1 bg-white/80 hover:bg-white rounded-full p-1 shadow-sm transition-all z-10"
                                                     aria-label="Remove new logo">
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                                                 </svg>
                                             </button>
-                                        @elseif($council->logo_path && !$removeLogo)
+                                        @elseif($council->logo_path)
                                             <img src="{{ Storage::url($council->logo_path) }}" alt="Current logo" class="absolute inset-0 w-full h-full object-contain p-2" />
                                         @else
                                             <div class="text-center p-4">
@@ -91,13 +92,17 @@
                                     <!-- Upload Controls -->
                                     <div class="flex-1 w-full min-w-0">
                                         <div class="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
-                                            <div class="relative flex-1 w-full">
+                                            <div class="relative flex-1 w-full overflow-hidden">
+                                                <!-- Hidden file input -->
                                                 <input type="file"
+                                                       id="logo-upload"
                                                        wire:model="logo"
                                                        accept="image/*"
-                                                       class="block w-full text-sm text-gray-700 file:hidden border border-gray-300 rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition h-10 px-3 py-2">
+                                                       class="sr-only">
 
-                                                <label class="absolute inset-0 flex items-center justify-between px-3 py-2 bg-white border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition">
+                                                <!-- Custom styled button -->
+                                                <label for="logo-upload"
+                                                       class="block w-full h-10 px-3 py-2 bg-white border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition flex items-center justify-between">
                                         <span class="text-sm text-gray-500 truncate mr-2">
                                             @if($logo)
                                                 {{ $logo->getClientOriginalName() }}
@@ -111,16 +116,16 @@
                                                 </label>
                                             </div>
 
-                                            @if($council->logo_path && !$removeLogo)
-                                                <button wire:click="removeLogo"
-                                                        type="button"
-                                                        class="text-sm text-red-600 hover:text-red-800 flex items-center gap-1 transition">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                                    </svg>
-                                                    Remove Logo
-                                                </button>
-                                            @endif
+{{--                                            @if($council->logo_path && !$removeLogo)--}}
+{{--                                                <button type="button"--}}
+{{--                                                        wire:click="removeLogo"--}}
+{{--                                                        class="text-sm text-red-600 hover:text-red-800 flex items-center gap-1 transition px-3 py-2 border border-red-200 rounded-lg hover:bg-red-50">--}}
+{{--                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">--}}
+{{--                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />--}}
+{{--                                                    </svg>--}}
+{{--                                                    Remove Logo--}}
+{{--                                                </button>--}}
+{{--                                            @endif--}}
                                         </div>
 
                                         @error('logo')
@@ -212,6 +217,7 @@
                                                 <label class="block text-[10px] text-gray-500 mb-1">Major Separation</label>
                                                 <select wire:model="councilSettings.{{ $index }}.separated_by_major"
                                                         class="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-2 focus:ring-black">
+                                                    <option value="">Select Status</option>
                                                     <option value="0">No</option>
                                                     <option value="1">Yes</option>
                                                 </select>
@@ -220,7 +226,7 @@
                                             @if($index > 0)
                                                 <button type="button"
                                                         wire:click="removeCouncilSettings({{ $index }})"
-                                                        class="mt-6 text-red-400 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity"
+                                                        class="mt-6 text-red-400 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity px-2 py-1 rounded hover:bg-red-50"
                                                         aria-label="Remove specification">
                                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -246,16 +252,23 @@
                         </button>
                         <button type="submit"
                                 wire:loading.attr="disabled"
-                                class="px-4 py-1 bg-black text-white rounded-md hover:bg-gray-800 hover:drop-shadow hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110">
-                            <span wire:loading.remove wire:target="editCouncil" class="text-[12px]">Save Changes</span>
-                            <span wire:loading wire:target="editCouncil" class="inline-flex items-center">
-                    <svg class="animate-spin h-4 w-4 mr-1 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    Saving...
-                </span>
+                                class="relative px-4 py-1 bg-black w-[250px] text-white rounded-md hover:bg-gray-800 hover:drop-shadow hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110">
+                            <div class="relative">
+                                <span wire:loading.remove wire:target="editCouncil" class="text-[12px]">
+                                    Save Changes
+                                </span>
+                                <span wire:loading wire:target="editCouncil" class="absolute inset-0 flex justify-center items-center">
+                                <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor"
+                                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2
+                                           5.291A7.962 7.962 0 014 12H0c0 3.042
+                                           1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                            </span>
+                            </div>
                         </button>
+
                     </div>
                 </div>
             </form>

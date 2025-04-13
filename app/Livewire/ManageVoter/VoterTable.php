@@ -27,8 +27,9 @@ class VoterTable extends Component
     public $perPage = 10;
 
     public $importFile;
-    public $importError = null;
     public $importing = false;
+    public $importErrors = [];
+    public $importError = '';
 
     public function updatingSearch(): void
     {
@@ -46,7 +47,13 @@ class VoterTable extends Component
 //        $this->resetPage();
 //    }
 
-    public function fetchUsers(): array|\LaravelIdea\Helper\App\Models\_IH_User_C|\Illuminate\Pagination\LengthAwarePaginator
+    public function resetImport(): void
+    {
+        $this->reset(['importing', 'importError', 'importErrors', 'importFile']);
+    }
+
+
+    public function fetchUsers()
     {
         $usersQuery = User::whereHas('roles', function ($q) {
             $q->where('name', 'voter');
@@ -203,9 +210,9 @@ class VoterTable extends Component
         ]);
 
         $this->importing = true;
-        $this->importError = null;
+        $this->importError = '';
+        $this->importErrors = [];
 
-        Log::info('Starting voter import process...');
 
         try {
             if (!$this->importFile || !$this->importFile->getRealPath()) {
@@ -213,36 +220,37 @@ class VoterTable extends Component
             }
 
             $filePath = $this->importFile->getRealPath();
-            Log::debug('Import file path:', ['path' => $filePath]);
 
             $import = new VotersImport();
 
-            Log::info('Beginning Excel import...');
             Excel::import($import, $filePath);
-            foreach ($import->failures() as $failure) {
-                Log::warning('Import row failure', [
-                    'row' => $failure->row(), // Excel row number
-                    'attribute' => $failure->attribute(), // Failing column
-                    'errors' => $failure->errors(), // Validation errors
-                    'values' => $failure->values(), // The entire row
-                ]);
-            }
-
-            Log::info('Excel import completed.');
 
 
             $successCount = $import->getRowCount();
-            $failureCount = count($import->failures());
+            $failures = $import->failures();
+            $failureCount = count($failures);
 
-            Log::info("Voter import results: {$successCount} success(es), {$failureCount} failure(s)");
+            // Store errors for display in modal
+            $this->importErrors = collect($failures)->map(function ($failure) {
+                return [
+                    'row' => $failure->row(),
+                    'field' => $failure->attribute(),
+                    'errors' => $failure->errors()
+                ];
+            })->toArray();
 
-            $this->dispatch('success-voter-import', [
-                'title' => 'Import Complete',
-                'message' => "Imported {$successCount} voter/s. " . ($failureCount ? "{$failureCount} records skipped." : "")
-            ]);
+            if ($failureCount > 0) {
+                $this->importError = "Imported {$successCount} positions. {$failureCount} records had errors.";
+            }else {
+                $this->dispatch('success-voter-import', [
+                    'title' => 'Import Complete',
+                    'message' => "Imported {$successCount} voter/s. " . ($failureCount ? "{$failureCount} records skipped." : "")
+                ]);
+                $this->reset('importFile');
+                $this->dispatch('voter-imported');
+            }
 
-            $this->reset('importFile');
-            $this->dispatch('voter-imported');
+
 
         } catch (\Exception $e) {
             $errorMessage = match (true) {
@@ -251,21 +259,14 @@ class VoterTable extends Component
                 default => 'Error importing voters. Please check the file format and data.'
             };
 
-            Log::error('Import failed with exception: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString()
-            ]);
-
             $this->dispatch('fail-voter-import', [
                 'title' => 'Import Failed',
                 'message' => $errorMessage
             ]);
         } finally {
             $this->importing = false;
-            Log::info('Voter import process finished.');
         }
     }
-
-
 
     public function exportVoterLists()
     {

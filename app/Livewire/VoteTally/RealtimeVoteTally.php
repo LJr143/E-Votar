@@ -37,16 +37,18 @@ class RealtimeVoteTally extends Component
 
     public function mount(): void
     {
-        $this->filter = Election::with('election_type')
-            ->find(session('selectedElection'))
-            ->election_type
-            ->name;
         $this->selectedElection = session('selectedElection');
-        $this->fetchElection($this->filter);
-        $this->selectedFilter = $this->filter;
-        $this->councils = Council::all();
-        $this->fetchCandidates();
-        $this->fetchVoterTally();
+        if ($this->selectedElection) {
+            $this->filter = Election::with('election_type')
+                ->find(session('selectedElection'))
+                ->election_type
+                ->name;
+            $this->fetchElection($this->filter);
+            $this->selectedFilter = $this->filter;
+            $this->councils = Council::all();
+            $this->fetchCandidates();
+            $this->fetchVoterTally();
+        }
     }
 
     public function updatedSearch(): void

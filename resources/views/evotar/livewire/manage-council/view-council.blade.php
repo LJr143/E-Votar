@@ -50,41 +50,63 @@
                                     <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
                                         <h3 class="text-lg font-medium mb-4">Import Councils</h3>
 
-                                        @if($importError)
+                                        @if($importError || count($importErrors))
                                             <div class="mb-4 p-3 bg-red-100 text-red-700 rounded text-sm">
-                                                {{ $importError }}
+                                                @if($importError)
+                                                    <p class="font-semibold">{{ $importError }}</p>
+                                                @endif
+
+                                                @if(count($importErrors))
+                                                    <div class="mt-2 max-h-60 overflow-y-auto">
+                                                        <ul class="list-disc pl-5">
+                                                            @foreach($importErrors as $error)
+                                                                <li class="mt-1">
+                                                                    <span class="font-medium">Row {{ $error['row'] }}</span>
+                                                                    ({{ $error['field'] }}):
+                                                                    {{ implode(', ', $error['errors']) }}
+                                                                </li>
+                                                            @endforeach
+                                                        </ul>
+                                                    </div>
+                                                @endif
                                             </div>
                                         @endif
 
-                                        <div class="mb-6 relative">
-                                            <!-- File input with spinner to the right -->
-                                            <div class="flex items-center">
-                                                <input type="file" wire:model="importFile"
-                                                       class="w-full p-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                        @unless($importError || count($importErrors))
+                                            <div class="mb-6 relative">
+                                                <!-- File input with spinner to the right -->
+                                                <div class="flex items-center">
+                                                    <input type="file" wire:model="importFile"
+                                                           class="w-full p-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
 
-                                                <!-- Spinner shown while file is uploading -->
-                                                <div wire:loading wire:target="importFile" class="flex items-center ml-2">
-                                                    <svg class="animate-spin h-4 w-4 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                         viewBox="0 0 24 24">
-                                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                                                stroke-width="4"></circle>
-                                                        <path class="opacity-75" fill="currentColor"
-                                                              d="M4 12a8 8 0 018-8v4l3.5-3.5L12 0v4a8 8 0 00-8 8z"/>
-                                                    </svg>
+                                                    <!-- Spinner shown while file is uploading -->
+                                                    <div wire:loading wire:target="importFile" class="flex items-center ml-2">
+                                                        <svg class="animate-spin h-4 w-4 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                             viewBox="0 0 24 24">
+                                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                                                    stroke-width="4"></circle>
+                                                            <path class="opacity-75" fill="currentColor"
+                                                                  d="M4 12a8 8 0 018-8v4l3.5-3.5L12 0v4a8 8 0 00-8 8z"/>
+                                                        </svg>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        @endunless
+
                                         <div class="flex justify-end space-x-3">
-                                            <button wire:click="$set('importing', false)"
+                                            <button wire:click="resetImport()"
                                                     class="bg-white text-black text-[12px] border border-gray-300 h-7 px-4 py-1 rounded shadow-md hover:bg-gray-200 justify-center text-center hover:drop-shadow hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110">
-                                                Cancel
+                                                {{ $importError || count($importErrors) ? 'Close' : 'Cancel' }}
                                             </button>
-                                            <button wire:click="import"
-                                                    wire:loading.attr="disabled"
-                                                    class="bg-black text-white px-6 py-1 h-7 rounded shadow-md hover:bg-gray-700 text-[12px] justify-center text-center hover:drop-shadow hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110">
-                                                <span wire:loading.remove wire:target="import">Import</span>
-                                                <span wire:loading wire:target="import">Importing...</span>
-                                            </button>
+
+                                            @unless($importError || count($importErrors))
+                                                <button wire:click="import"
+                                                        wire:loading.attr="disabled"
+                                                        class="bg-black text-white px-6 py-1 h-7 rounded shadow-md hover:bg-gray-700 text-[12px] justify-center text-center hover:drop-shadow hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110">
+                                                    <span wire:loading.remove wire:target="import">Import</span>
+                                                    <span wire:loading wire:target="import">Importing...</span>
+                                                </button>
+                                            @endunless
                                         </div>
                                     </div>
                                 </div>
@@ -173,6 +195,22 @@
                             @endforeach
                             </tbody>
                         </table>
+                        <!-- Empty State -->
+                        @if ($councils->isEmpty())
+                            <div class="border border-gray-200 rounded-md p-8 text-center">
+                                <div class="flex justify-center mb-4">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-500 opacity-20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                                </div>
+                                <h3 class="text-[14px] font-medium mb-2">No councils found</h3>
+                                <p class="text-[12px] text-gray-500">
+                                    @if($search)
+                                        No councils match your search criteria.
+                                    @else
+                                        No councils found.
+                                    @endif
+                                </p>
+                            </div>
+                        @endif
                         <div class="mt-4" wire:key="pagination-table">
                             {{ $councils->links('evotar.components.pagination.tailwind-pagination') }}
                         </div>

@@ -47,14 +47,12 @@
                     {{ session('success') }}
                 </div>
             @endif
-
             @if (session('error'))
                 <div class="alert alert-danger">
                     {{ session('error') }}
                 </div>
             @endif
             <p class="text-gray-700 mb-6 ml-5 text-xs text-left">Are you sure you want to remove this user? This process cannot be undone {{ $user->first_name }}.</p>
-
             <form wire:submit.prevent="deleteUser">
                 <div>
                     <x-input

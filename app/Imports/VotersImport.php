@@ -10,6 +10,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\SkipsFailures;
 use Maatwebsite\Excel\Concerns\SkipsOnFailure;
 use Maatwebsite\Excel\Concerns\ToModel;
@@ -20,7 +21,7 @@ use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class VotersImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFailure
 {
-    use SkipsFailures;
+    use SkipsFailures, Importable;
 
     private $rowCount = 0;
     private $currentRow = 0;
@@ -124,11 +125,18 @@ class VotersImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFa
                 return Date::excelToDateTimeObject($dateValue)->format('Y-m-d');
             }
 
-            // Try common date formats
-            return Carbon::createFromFormat(
-                ['Y-m-d', 'm/d/Y', 'd/m/Y', 'n/j/Y', 'Y-m-d H:i:s'],
-                $dateValue
-            )->format('Y-m-d');
+            // Try common date formats one by one
+            $formats = ['Y-m-d', 'm/d/Y', 'd/m/Y', 'n/j/Y', 'Y-m-d H:i:s'];
+
+            foreach ($formats as $format) {
+                try {
+                    return Carbon::createFromFormat($format, $dateValue)->format('Y-m-d');
+                } catch (\Exception $e) {
+                    continue;
+                }
+            }
+
+            throw new Exception("None of the date formats matched");
         } catch (\Exception $e) {
             Log::warning("Failed to parse birth date: {$dateValue}");
             throw new Exception("Invalid date format for birth date. Please use YYYY-MM-DD format.");
@@ -214,10 +222,23 @@ class VotersImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFa
                         if (is_numeric($value)) {
                             Date::excelToDateTimeObject($value);
                         } else {
-                            Carbon::createFromFormat(
-                                ['Y-m-d', 'm/d/Y', 'd/m/Y', 'n/j/Y'],
-                                $value
-                            );
+                            // Try each format one by one
+                            $formats = ['Y-m-d', 'm/d/Y', 'd/m/Y', 'n/j/Y'];
+                            $parsed = false;
+
+                            foreach ($formats as $format) {
+                                try {
+                                    Carbon::createFromFormat($format, $value);
+                                    $parsed = true;
+                                    break;
+                                } catch (\Exception $e) {
+                                    continue;
+                                }
+                            }
+
+                            if (!$parsed) {
+                                throw new \Exception('Invalid date format');
+                            }
                         }
                     } catch (\Exception $e) {
                         $fail('Invalid date format. Use YYYY-MM-DD format.');

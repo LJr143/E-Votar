@@ -23,8 +23,9 @@ class ViewCouncil extends Component
     public $perPage = 5;
 
     public $importFile;
-    public $importError = null;
     public $importing = false;
+    public $importErrors = [];
+    public $importError = '';
 
     protected $listeners = [
         'council-created' => '$refresh',
@@ -147,24 +148,39 @@ class ViewCouncil extends Component
         ]);
 
         $this->importing = true;
-        $this->importError = null;
+        $this->importError = '';
+        $this->importErrors = [];
 
         try {
             $import = new CouncilImport();
             Excel::import($import, $this->importFile->getRealPath());
 
             $successCount = $import->getRowCount();
-            $failureCount = count($import->failures());
+            $failures = $import->failures();
+            $failureCount = count($failures);
 
-            $this->dispatch('success-position-import', [
-                'title' => 'Import Failed',
-                'message' => "Imported {$successCount} council/s. " .
-                    ($failureCount ? "{$failureCount} records skipped." : "")
-            ]);
+            // Store errors for display in modal
+            $this->importErrors = collect($failures)->map(function ($failure) {
+                return [
+                    'row' => $failure->row(),
+                    'field' => $failure->attribute(),
+                    'errors' => $failure->errors()
+                ];
+            })->toArray();
+
+            if ($failureCount > 0) {
+                $this->importError = "Imported {$successCount} positions. {$failureCount} records had errors.";
+            }else{
+                $this->dispatch('success-position-import', [
+                    'title' => 'Import Failed',
+                    'message' => "Imported {$successCount} council/s. " .
+                        ($failureCount ? "{$failureCount} records skipped." : "")
+                ]);
+                $this->reset('importFile');
+                $this->dispatch('council-imported');
+            }
 
 
-            $this->reset('importFile');
-            $this->dispatch('council-imported');
 
         } catch (\Exception $e) {
             // Simplified error messages
@@ -185,6 +201,11 @@ class ViewCouncil extends Component
             $this->importing = false;
         }
     }
+    public function resetImport(): void
+    {
+        $this->reset(['importing', 'importError', 'importErrors', 'importFile']);
+    }
+
 
     public function exportCouncils()
     {

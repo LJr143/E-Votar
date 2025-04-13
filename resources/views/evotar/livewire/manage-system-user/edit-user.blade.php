@@ -148,7 +148,7 @@
                         </div>
                     </div>
                 </form>
-                <div class=" w-full flex justify-start mt-[-25px]">
+                <div class=" w-full flex justify-start mt-[-50px]">
                     @if($user->account_status == 'Active')
                         <livewire:account-status-management.deactivation :user_id="$user->id"/>
                     @elseif($user->account_status == 'Deactivated')

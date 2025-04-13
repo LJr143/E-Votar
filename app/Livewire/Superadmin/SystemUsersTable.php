@@ -5,88 +5,81 @@ namespace App\Livewire\Superadmin;
 use App\Exports\SystemUserAdminExport;
 use App\Models\User;
 use Livewire\Component;
+use Livewire\WithPagination;
 use Maatwebsite\Excel\Facades\Excel;
-use PhpOffice\PhpSpreadsheet\Exception;
 
 class SystemUsersTable extends Component
 {
-    protected $listeners = ['system-user-created' => '$refresh', 'system-user-updated'=>'$refresh', 'system-user-deleted' => '$refresh'];
+    use WithPagination;
+
+    protected $listeners = [
+        'system-user-created' => '$refresh',
+        'system-user-updated' => '$refresh',
+        'system-user-deleted' => '$refresh',
+    ];
+
     public $showEditModal = false;
     public $showDeleteModal = false;
     public $userId;
-    public $users;
     public $filter = 'all_users';
     public $search = '';
-
-    public function mount(): void
-    {
-        $this->fetchUsers();
-    }
+    public $perPage = 10;
 
     public function updatedSearch(): void
     {
-        $this->fetchUsers();
+        $this->resetPage();
     }
 
     public function updatedFilter(): void
     {
-        $this->fetchUsers();
+        $this->resetPage();
     }
 
     public function setFilter(string $filter): void
     {
         $this->filter = $filter;
-        $this->fetchUsers();
+        $this->resetPage();
     }
 
-
-    public function fetchUsers(): void
+    public function exportSystemUsers()
     {
-        $query = User::query();
+        return Excel::download(
+            new SystemUserAdminExport($this->search, $this->filter),
+            'LIST_OF_SYSTEM_USERS_ADMINS.xlsx'
+        );
+    }
 
-        $query->whereHas('roles', function ($q) {
-            $q->whereIn('name', ['superadmin', 'admin', 'technical_officer', 'student-council-watcher', 'local-council-watcher']);
-        });
+    public function render()
+    {
+        $query = User::query()
+            ->whereHas('roles', function ($q) {
+                $q->whereIn('name', [
+                    'superadmin', 'admin', 'technical_officer',
+                    'student-council-watcher', 'local-council-watcher'
+                ]);
+            })
+            ->where('id', '!=', auth()->id());
 
         if ($this->search) {
             $query->where('first_name', 'like', '%' . $this->search . '%');
         }
 
-        if ($this->filter === 'all_users') {
-            $query->whereHas('roles', function ($q) {
-                $q->whereIn('name', ['superadmin', 'admin', 'technical_officer','student-council-watcher', 'local-council-watcher']);
-            });
-        } elseif ($this->filter === 'admin') {
-            $query->whereHas('roles', function ($q) {
-                $q->where('name', 'admin');
-            });
-        } elseif ($this->filter === 'student-council-watcher') {
-            $query->whereHas('roles', function ($q) {
-                $q->where('name', 'student-council-watcher');
-            });
-        } elseif ($this->filter === 'local-council-watcher') {
-            $query->whereHas('roles', function ($q) {
-                $q->where('name', 'local-council-watcher');
-            });
-        } elseif ($this->filter === 'technical_officer') {
-            $query->whereHas('roles', function ($q) {
-                $q->where('name', 'technical_officer');
-            });
+        switch ($this->filter) {
+            case 'admin':
+            case 'student-council-watcher':
+            case 'local-council-watcher':
+            case 'technical_officer':
+                $query->whereHas('roles', fn($q) => $q->where('name', $this->filter));
+                break;
+            case 'all_users':
+            default:
+                break;
         }
 
-        $this->users = $query->get();
-    }
+        $users = $query->paginate($this->perPage);
 
-
-    public function exportSystemUsers()
-    {
-        return Excel::download(new SystemUserAdminExport($this->search, $this->filter), 'LIST_OF_SYSTEM_USERS_ADMINS.xlsx');
-
-    }
-
-    public function render(): \Illuminate\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\View\View
-    {
-        $this->fetchUsers();
-        return view('evotar.livewire.superadmin.system-users-table', ['users' => $this->users,]);
+        return view('evotar.livewire.superadmin.system-users-table', [
+            'users' => $users,
+        ]);
     }
 }

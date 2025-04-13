@@ -17,9 +17,9 @@ class EditCouncil extends Component
     public $name;
     public $councilSettings = [];
     public $electionTypesWithPositions = [];
-    public $logo; // For new uploads
-    public $tempLogoUrl; // For preview
-    public $removeLogo = false; // Flag for logo removal
+    public $logo;
+    public $tempLogoUrl = null;
+    public $removeLogo = false;
 
     public function mount($councilId): void
     {
@@ -32,7 +32,6 @@ class EditCouncil extends Component
         $this->loadElectionTypesWithPositions();
         $this->name = $this->council->name;
 
-        // Load existing position settings
         $this->councilSettings = $this->council->councilPositionSetting->isEmpty()
             ? [['position_id' => null, 'separated_by_major' => false]]
             : $this->council->councilPositionSetting->map(function ($setting) {
@@ -52,18 +51,21 @@ class EditCouncil extends Component
 
     public function updatedLogo()
     {
-        $this->validate([
+        $this->validateOnly('logo', [
             'logo' => 'nullable|image|max:1024',
         ]);
-        $this->tempLogoUrl = $this->logo->temporaryUrl();
-        $this->removeLogo = false; // Reset removal flag if new image is uploaded
+
+        if ($this->logo) {
+            $this->tempLogoUrl = $this->logo->temporaryUrl();
+            $this->removeLogo = false;
+        }
     }
 
     public function removeLogo()
     {
-        $this->logo = null;
-        $this->tempLogoUrl = null;
+        $this->reset(['logo', 'tempLogoUrl']);
         $this->removeLogo = true;
+        $this->dispatch('logo-removed');
     }
 
     public function addCouncilSettings(): void
@@ -94,21 +96,31 @@ class EditCouncil extends Component
         $this->validate([
             'name' => 'required|string|max:255',
             'logo' => 'nullable|image|max:1024',
-            'councilSettings.*.position_id' => 'required|exists:positions,id',
-            'councilSettings.*.separated_by_major' => 'required|boolean',
         ]);
 
-        $logoPath = $this->council->logo_path;
+        // Only validate settings if any position is filled
+        $hasValidSettings = collect($this->councilSettings)
+            ->filter(fn ($setting) => !empty($setting['position_id']))
+            ->isNotEmpty();
 
-        // Handle logo updates
+        if ($hasValidSettings) {
+            $this->validate([
+                'councilSettings.*.position_id' => 'nullable|exists:positions,id',
+                'councilSettings.*.separated_by_major' => 'nullable|boolean',
+            ]);
+        }
+
+        // Check if logo_path exists and assign it to $logoPath
+        $logoPath = $this->council->logo_path ?? null;
+
+        // Handle logo removal
         if ($this->removeLogo) {
-            // Delete existing logo
             if ($logoPath && Storage::disk('public')->exists($logoPath)) {
                 Storage::disk('public')->delete($logoPath);
             }
             $logoPath = null;
         } elseif ($this->logo) {
-            // Store new logo and delete old one
+            // Handle new logo upload
             if ($logoPath && Storage::disk('public')->exists($logoPath)) {
                 Storage::disk('public')->delete($logoPath);
             }
@@ -121,33 +133,43 @@ class EditCouncil extends Component
             'logo_path' => $logoPath
         ]);
 
-        // Process position settings
+        // Only process valid settings
         $existingSettings = CouncilPositionSetting::where('council_id', $this->council->id)
             ->get()
             ->keyBy('position_id');
 
-        foreach ($this->councilSettings as $setting) {
-            if ($existingSettings->has($setting['position_id'])) {
-                CouncilPositionSetting::where([
-                    'council_id' => $this->council->id,
-                    'position_id' => $setting['position_id']
-                ])->update([
-                    'separate_by_major' => $setting['separated_by_major']
-                ]);
-            } else {
-                CouncilPositionSetting::create([
-                    'council_id' => $this->council->id,
-                    'position_id' => $setting['position_id'],
-                    'separate_by_major' => $setting['separated_by_major']
-                ]);
-            }
-        }
+        if ($hasValidSettings) {
+            foreach ($this->councilSettings as $setting) {
+                if (empty($setting['position_id'])) continue;
 
-        // Delete removed settings
-        $currentPositionIds = collect($this->councilSettings)->pluck('position_id');
-        CouncilPositionSetting::where('council_id', $this->council->id)
-            ->whereNotIn('position_id', $currentPositionIds)
-            ->delete();
+                if ($existingSettings->has($setting['position_id'])) {
+                    CouncilPositionSetting::where([
+                        'council_id' => $this->council->id,
+                        'position_id' => $setting['position_id']
+                    ])->update([
+                        'separate_by_major' => $setting['separated_by_major'] ?? false
+                    ]);
+                } else {
+                    CouncilPositionSetting::create([
+                        'council_id' => $this->council->id,
+                        'position_id' => $setting['position_id'],
+                        'separate_by_major' => $setting['separated_by_major'] ?? false
+                    ]);
+                }
+            }
+
+            // Delete removed settings
+            $currentPositionIds = collect($this->councilSettings)
+                ->pluck('position_id')
+                ->filter();
+
+            CouncilPositionSetting::where('council_id', $this->council->id)
+                ->whereNotIn('position_id', $currentPositionIds)
+                ->delete();
+        } else {
+            // If no settings at all, delete all existing for the council
+            CouncilPositionSetting::where('council_id', $this->council->id)->delete();
+        }
 
         $this->dispatch('council-edited', message: 'Council updated successfully');
     }
