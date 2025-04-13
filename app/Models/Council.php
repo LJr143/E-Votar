@@ -8,7 +8,7 @@ class Council extends Model
 {
     protected $table = 'councils';
     protected $fillable = [
-        'name',
+        'name', 'logo_path'
     ];
 
     public function program(): \Illuminate\Database\Eloquent\Relations\HasMany

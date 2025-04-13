@@ -17,6 +17,7 @@ class PositionExport implements FromView, ShouldAutoSize, WithDrawings
     public $search;
     public $filter;
 
+
     public function __construct($search, $filter){
         $this->search = $search;
         $this->filter = $filter;

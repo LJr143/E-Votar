@@ -6,10 +6,16 @@ use App\Models\Council;
 use App\Models\CouncilPositionSetting;
 use App\Models\election_type;
 use Livewire\Component;
+use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Storage;
 
 class AddCouncil extends Component
 {
+    use WithFileUploads;
+
     public $name;
+    public $logo; // Temporary uploaded file
+    public $logoPath; // This should be removed as we'll store directly
     public $councilSettings = [];
     public $electionTypesWithPositions = [];
 
@@ -24,8 +30,8 @@ class AddCouncil extends Component
     public function loadElectionTypesWithPositions(): void
     {
         $this->electionTypesWithPositions = election_type::with(['positions' => function($query) {
-            $query->orderBy('created_at'); // Typically you'd order by name, not created_at
-        }])->orderBy('created_at')->get(); // Order election types by name as well
+            $query->orderBy('created_at');
+        }])->orderBy('created_at')->get();
     }
 
     public function addCouncilSettings(): void
@@ -44,15 +50,23 @@ class AddCouncil extends Component
 
     public function submit(): void
     {
-        // Validate only the council name first
         $this->validate([
             'name' => 'required|string|max:255|unique:councils,name',
+            'logo' => 'nullable|image|max:1024', // 1MB Max
         ]);
 
-        // Create the council
-        $council = Council::create(['name' => $this->name]);
+        // Store the logo and get the path
+        $logoPath = $this->logo
+            ? $this->logo->store('assets/logo/', 'public') // Stores in storage/app/public/council-logos
+            : null;
 
-        // Only validate and create position settings if at least one position is selected
+        // Create the council with logo path
+        $council = Council::create([
+            'name' => $this->name,
+            'logo_path' => $logoPath // Store the full path including filename
+        ]);
+
+        // Validate and create position settings if positions are selected
         if (!empty(array_filter($this->councilSettings, fn($setting) => !empty($setting['position_id'])))) {
             $this->validate([
                 'councilSettings.*.position_id' => 'required|exists:positions,id',
@@ -73,7 +87,6 @@ class AddCouncil extends Component
         $this->dispatch('council-created');
         $this->reset();
     }
-
 
     public function render()
     {

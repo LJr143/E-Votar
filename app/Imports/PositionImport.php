@@ -5,6 +5,7 @@ use App\Models\election_type;
 use App\Models\Position;
 use Exception;
 use Log;
+use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
@@ -13,7 +14,7 @@ use Maatwebsite\Excel\Concerns\SkipsFailures;
 
 class PositionImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFailure
 {
-    use SkipsFailures;
+    use SkipsFailures, Importable;
 
     private $rowCount = 0;
     private $currentRow = 0;

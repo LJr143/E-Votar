@@ -30,6 +30,7 @@ class AdminDashboard extends Component
      */
     public function mount(): void
     {
+
         $this->fetchElection();
         $this->fetchCandidates();
         $this->fetchVoterTally();

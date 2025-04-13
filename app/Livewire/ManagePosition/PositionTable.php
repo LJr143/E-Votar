@@ -10,6 +10,7 @@ use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use Log;
 use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Validators\Failure;
 use PhpOffice\PhpSpreadsheet\Writer\Exception;
 
 class PositionTable extends Component
@@ -18,8 +19,9 @@ class PositionTable extends Component
 
     protected $listeners = [
         'position-created' => '$refresh',
-        'position-edited' => '$refresh',
-        'party-lists-imported' => '$refresh'
+        'position-updated' => '$refresh',
+        'party-lists-imported' => '$refresh',
+        'position-deleted' => '$refresh'
     ];
 
     // Component properties
@@ -27,8 +29,9 @@ class PositionTable extends Component
     public $search = '';
     public $perPage = 5;
     public $importFile;
-    public $importError = null;
     public $importing = false;
+    public $importErrors = [];
+    public $importError = '';
 
 
     /**
@@ -185,46 +188,57 @@ class PositionTable extends Component
         ]);
 
         $this->importing = true;
-        $this->importError = null;
+        $this->importError = '';
+        $this->importErrors = [];
 
         try {
             $import = new PositionImport();
             Excel::import($import, $this->importFile->getRealPath());
 
             $successCount = $import->getRowCount();
-            $failureCount = count($import->failures());
+            $failures = $import->failures();
+            $failureCount = count($failures);
 
-            $this->dispatch('success-position-import', [
-                'title' => 'Import Failed',
-                'message' => "Imported {$successCount} positions. " .
-                    ($failureCount ? "{$failureCount} records skipped." : "")
-            ]);
+            // Store errors for display in modal
+            $this->importErrors = collect($failures)->map(function ($failure) {
+                return [
+                    'row' => $failure->row(),
+                    'field' => $failure->attribute(),
+                    'errors' => $failure->errors()
+                ];
+            })->toArray();
 
-
-            $this->reset('importFile');
-            $this->dispatch('party-lists-imported');
+            if ($failureCount > 0) {
+                $this->importError = "Imported {$successCount} positions. {$failureCount} records had errors.";
+            } else {
+                // Only dispatch success and close modal if no errors
+                $this->dispatch('success-position-import', [
+                    'title' => 'Import Successful',
+                    'message' => "Successfully imported {$successCount} positions."
+                ]);
+                $this->reset(['importFile', 'importing']);
+                $this->dispatch('party-lists-imported');
+            }
 
         } catch (\Exception $e) {
-            // Simplified error messages
             $errorMessage = match(true) {
                 str_contains($e->getMessage(), 'duplicate') => 'Duplicate values found in import file',
                 str_contains($e->getMessage(), 'required') => 'Missing required fields in import file',
+                str_contains($e->getMessage(), 'Undefined array key') => 'Invalid column headers in import file',
+                str_contains($e->getMessage(), 'Council type field not found') => 'Council type column missing in import file',
+                str_contains($e->getMessage(), 'Election type') => 'Invalid council type specified',
                 default => 'Error importing positions. Please check the file format.'
             };
 
-            $this->dispatch('fail-position-import', [
-                'title' => 'Import Failed',
-                'message' => $errorMessage
-            ]);
-
-
+            $this->importError = $errorMessage;
             Log::error('Import failed: ' . $e->getMessage());
-        } finally {
-            $this->importing = false;
         }
     }
 
-
+    public function resetImport(): void
+    {
+        $this->reset(['importing', 'importError', 'importErrors', 'importFile']);
+    }
     public function exportPositions()
     {
         return Excel::download(new PositionExport($this->search, $this->filter), 'LIST_OF_POSITION.xlsx');

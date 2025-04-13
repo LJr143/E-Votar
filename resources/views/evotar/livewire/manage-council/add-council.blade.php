@@ -41,7 +41,7 @@
                 </button>
             </div>
 
-            <form wire:submit.prevent="submit">
+            <form wire:submit.prevent="submit" enctype="multipart/form-data">
                 <div>
                     <div class="flex space-x-4">
                         <div class="w-full">
@@ -56,6 +56,77 @@
                                     <span class="text-red-500 text-[10px] italic">{{ $message }}</span>
                                     @enderror
                                 </div>
+                                <div class="mb-6">
+                                    <label for="logo" class="block text-[10px] font-medium mb-2">Upload Logo</label>
+
+                                    <div class="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+                                        <!-- Preview Container -->
+                                        <div class="w-32 h-32 flex-shrink-0 relative border-2 border-dashed border-gray-300 rounded-lg overflow-hidden bg-gray-50 flex items-center justify-center">
+                                            @if ($logo)
+                                                <img src="{{ $logo->temporaryUrl() }}"
+                                                     alt="Logo preview"
+                                                     class="absolute inset-0 w-full h-full object-contain p-2" />
+                                                <button wire:click="$set('logo', null)"
+                                                        class="absolute top-1 right-1 bg-white/80 hover:bg-white rounded-full p-1 shadow-sm transition-all"
+                                                        aria-label="Remove logo">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                                    </svg>
+                                                </button>
+                                            @else
+                                                <div class="text-center p-4">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mx-auto text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                    </svg>
+                                                    <p class="text-xs text-gray-500 mt-1">No logo selected</p>
+                                                </div>
+                                            @endif
+                                        </div>
+
+                                        <!-- Upload Controls -->
+                                        <div class="flex-1 w-full min-w-0">
+                                            <div class="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+                                                <div class="relative flex-1 w-full">
+                                                    <input type="file"
+                                                           id="logo"
+                                                           wire:model="logo"
+                                                           accept="image/*"
+                                                           class="block w-full text-sm text-gray-700 file:hidden border border-gray-300 rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition h-10 px-3 py-2">
+
+                                                    <label for="logo"
+                                                           class="absolute inset-0 flex items-center justify-between px-3 py-2 bg-white border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition">
+                        <span class="text-sm text-gray-500 truncate mr-2">
+                            {{ $logo ? $logo->getClientOriginalName() : 'Choose a file...' }}
+                        </span>
+                                                        <span class="text-xs bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded transition">
+                            Browse
+                        </span>
+                                                    </label>
+                                                </div>
+
+                                                @if($logo)
+                                                    <button wire:click="$set('logo', null)"
+                                                            type="button"
+                                                            class="text-sm text-red-600 hover:text-red-800 flex items-center gap-1 transition">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                        </svg>
+                                                        Remove
+                                                    </button>
+                                                @endif
+                                            </div>
+
+                                            @error('logo')
+                                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                            @enderror
+
+                                            <p class="mt-2 text-xs text-gray-500">
+                                                Recommended: Square image (1:1 aspect ratio), 300×300 pixels minimum
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
 
                             </div>
 

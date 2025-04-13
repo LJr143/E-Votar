@@ -14,28 +14,11 @@
         {{--                    fill="#757575"/>--}}
         {{--            </svg>--}}
         {{--        </div>--}}
-        <div class="w-full">
-            <div class="relative w-full hidden md:block bg-transparent min-w-[450px] py-2 items-center cursor-pointer space-x-2">
-                <div class="flex-1 w-full">
-                    <select name="selectedElection" id="selectedElection"
-                            class="border-gray-300 text-xs rounded-lg px-4 py-2 w-full"
-                            wire:model.live="selectedElection">
-                        @if($elections)
-                            <option value="" selected disabled>Select an election</option>
-                            @foreach($elections as $election)
-                                <option value="{{ $election->id }}" {{ $election->id == $selectedElection ? 'selected' : '' }}>
-                                    {{ $election->name }} - {{ $election->campus->name }} - {{ $election->election_type->name }}
-                                </option>
-                            @endforeach
-                        @else
-                            <option value="" selected disabled>No Election Created Yet</option>
-                        @endif
-                    </select>
-                    @error('selectedElection')
-                    <span class="text-red-500 text-[10px] italic">{{ $message }}</span>
-                    @enderror
-                </div>
-            </div>
+
+        <div class="flex-row justify-center items-center">
+            <p class="text-[10px] text-center">University of Southeastern Philippines</p>
+            <p class="text-[12px] font-semibold text-red-900">USeP COMMISSION ON ELECTIONS</p>
+            <p class="text-[10px] text-center">Impartiality, Transparency, Integrity </p>
         </div>
     </div>
     <!-- Icons and Profile -->

@@ -1,9 +1,12 @@
 <div>
     <div class="container mx-auto px-6 mt-2">
-        <div class="flex flex-row justify-between items-start mb-4 ">
-            <div class="mb-2 md:mb-0 text-left">
+        <div class="flex flex-row w-full justify-between items-start mb-4 ">
+            <div class="mb-2 md:mb-0 text-left w-1/2">
                 <h1 class="text-base font-semibold leading-6 text-gray-900">Dashboard</h1>
                 <p class=" text-gray-500 text-[11px]">Hi, {{ auth()->user()->first_name }} . Welcome back!</p>
+            </div>
+            <div class="w-1/2">
+                <livewire:election-select/>
             </div>
         </div>
 

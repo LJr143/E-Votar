@@ -153,10 +153,27 @@
                             @endforeach
                             </tbody>
                         </table>
+                        <!-- Empty State -->
+                        @if ($elections->isEmpty())
+                            <div class="border border-gray-200 rounded-md p-8 text-center">
+                                <div class="flex justify-center mb-4">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-500 opacity-20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                                </div>
+                                <h3 class="text-[14px] font-medium mb-2">No elections found</h3>
+                                <p class="text-[12px] text-gray-500">
+                                    @if($search)
+                                        No elections match your search criteria.
+                                    @else
+                                        No elections found.
+                                    @endif
+                                </p>
+                            </div>
+                        @endif
                         <div class="mt-4">
                             {{ $elections->links('evotar.components.pagination.tailwind-pagination') }}
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
