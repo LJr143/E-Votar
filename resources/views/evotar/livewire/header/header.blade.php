@@ -33,7 +33,7 @@
                 <button class="focus:outline-none flex items-center space-x-2">
                     <!-- Profile Picture (Always Clickable) -->
                     <img alt="Profile Picture" class="w-8 h-8 rounded-full" height="32"
-                         src="{{ asset('storage/assets/profile/cat_meme.jpg') }}" width="32"/>
+                         src="{{ asset('storage/'. auth()->user()->profile_photo_path) }}" width="32"/>
 
                     <!-- Name and Role (Visible Only on md and Larger Screens) -->
                     <div class="hidden md:block">

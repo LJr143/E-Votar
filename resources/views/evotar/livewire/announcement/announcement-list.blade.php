@@ -21,23 +21,23 @@
     </div>
 
     <!-- Filter Tabs -->
-    <div class="flex items-center gap-4 mb-4">
+    <div class="flex items-center gap-4 mb-4" x-data="{ filter: @entangle('filter') }">
         <button
-            wire:click="filter = 'all'"
+            wire:click="$set('filter', 'all')"
             class="px-3 py-1 border border-gray-300 rounded-md text-[11px]"
             :class="filter === 'all' ? 'bg-black text-white' : 'text-black'"
         >
             All
         </button>
         <button
-            wire:click="filter = 'published'"
+            wire:click="$set('filter', 'published')"
             class="px-3 py-1 border border-gray-300 rounded-md text-[11px]"
             :class="filter === 'published' ? 'bg-black text-white' : 'text-black'"
         >
             Published
         </button>
         <button
-            wire:click="filter = 'draft'"
+            wire:click="$set('filter', 'draft')"
             class="px-3 py-1 border border-gray-300 rounded-md text-[11px]"
             :class="filter === 'draft' ? 'bg-black text-white' : 'text-black'"
         >

@@ -36,8 +36,15 @@
             <div class="flex justify-between items-center mb-4 border-b border-gray-300 pb-2">
                 <div>
                     <h2 class="text-sm font-bold text-left w-full sm:w-auto">Edit Election</h2>
-                    <p class="text-[10px] text-gray-500 italic">To edit an election please fill out the required
-                        information.</p>
+                    @if($election->status == 'completed' || $election->status == 'ongoing')
+                        <p class="text-[10px] text-gray-500 italic">
+                            You are in <span class="text-red-600 font-semibold">read-only mode</span>. Updates are not permitted while the election is ongoing or has started.
+                        </p>
+                    @else
+                        <p class="text-[10px] text-gray-500 italic">To edit an election please fill out the required
+                            information.</p>
+                    @endif
+
                 </div>
 
                 <!-- Close Button (X) -->
@@ -50,8 +57,9 @@
             </div>
 
             <!-- Election Details-->
-            <form wire:submit.prevent="update">
+            <form wire:submit.prevent="update" >
                 <div>
+                    <fieldset @disabled(in_array($election->status, ['completed', 'ongoing']))>
                     <div class="flex flex-col md:flex-row md:space-x-4">
                         <div class="flex-col w-full md:w-1/2">
                             <div class="mb-3">
@@ -69,7 +77,8 @@
                                 <label for="election_type" class="text-xs font-semibold block mb-1">
                                     Election Type</label>
                                 <select name="election_type" id="election_type" wire:model.live="election_type"
-                                        class="border-gray-300 text-xs rounded-lg px-4 py-2 w-full focus:ring-black focus:border-black" disabled>
+                                        class="border-gray-300 text-xs rounded-lg px-4 py-2 w-full focus:ring-black focus:border-black"
+                                        disabled>
                                     <option value="" selected>Select election type</option>
                                     @foreach($electionTypes as $type)
                                         <option value="{{ $type->id }}">{{ $type->name }}</option>
@@ -121,14 +130,15 @@
 
                                 <label class="block text-xs font-semibold mb-1">Election Image</label>
 
-                                <div class="relative border-2 border-dashed border-gray-300 rounded-lg p-6 flex flex-col items-center justify-center"
-                                     x-bind:class="{ 'border-green-500 bg-green-50': isDragging }"
-                                     @dragover.prevent="isDragging = true"
-                                     @dragleave.prevent="isDragging = false"
-                                     @drop.prevent="isDragging = false;
+                                <div
+                                    class="relative border-2 border-dashed border-gray-300 rounded-lg p-6 flex flex-col items-center justify-center"
+                                    x-bind:class="{ 'border-green-500 bg-green-50': isDragging }"
+                                    @dragover.prevent="isDragging = true"
+                                    @dragleave.prevent="isDragging = false"
+                                    @drop.prevent="isDragging = false;
                                     $refs.fileInput.files = event.dataTransfer.files;
                                     $refs.fileInput.dispatchEvent(new Event('change'))"
-                                     @click="$refs.fileInput.click()">
+                                    @click="$refs.fileInput.click()">
 
                                     <!-- File Preview -->
                                     <template x-if="previewUrl">
@@ -138,20 +148,24 @@
 
                                     <!-- Upload Icon & Message -->
                                     <div x-show="!previewUrl" class="text-center flex justify-center items-center">
-                                        <svg class="w-12 h-12 text-gray-400 mb-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16v4m10-4v4M5 12h14M12 3v13m-3-3l3-3 3 3" />
+                                        <svg class="w-12 h-12 text-gray-400 mb-2" xmlns="http://www.w3.org/2000/svg"
+                                             fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                  d="M7 16v4m10-4v4M5 12h14M12 3v13m-3-3l3-3 3 3"/>
                                         </svg>
                                         <p class="text-sm text-gray-500">Drag & Drop or Click to Upload</p>
                                     </div>
 
                                     <!-- Hidden File Input -->
-                                    <input type="file" class="hidden" id="electionImageEdit" wire:model="electionImageEdit" x-ref="fileInput"
+                                    <input type="file" class="hidden" id="electionImageEdit"
+                                           wire:model="electionImageEdit" x-ref="fileInput"
                                            @change="previewFile">
 
                                     <!-- Progress Bar -->
                                     <div wire:loading wire:target="electionImageEdit" class="w-full mt-2">
                                         <div class="h-2 bg-gray-300 rounded-full">
-                                            <div class="h-2 bg-red-500 rounded-full animate-pulse" style="width: 100%;"></div>
+                                            <div class="h-2 bg-red-500 rounded-full animate-pulse"
+                                                 style="width: 100%;"></div>
                                         </div>
                                         <p class="text-xs text-gray-500 mt-1">Uploading...</p>
                                     </div>
@@ -163,9 +177,9 @@
                             </div>
 
 
-
                             <p class="text-[12px] font-medium">Election Period</p>
-                            <div class="flex flex-col md:flex-row md:space-x-4 mb-4 border border-gray-300 rounded-md p-4">
+                            <div
+                                class="flex flex-col md:flex-row md:space-x-4 mb-4 border border-gray-300 rounded-md p-4">
                                 <div class="flex-1 mb-3 md:mb-0 min-w-0">
                                     <label for="election_start" class="text-[10px] block mb-1">From</label>
                                     <input id="election_start" type="datetime-local"
@@ -192,7 +206,8 @@
 
                                 <!-- Student Council Positions -->
                                 @if(!empty($studentCouncilPositions))
-                                    <p class="text-[11px] font-normal text-center mt-4 sm:mt-1 mb-2">Student Council Positions</p>
+                                    <p class="text-[11px] font-normal text-center mt-4 sm:mt-1 mb-2">Student Council
+                                        Positions</p>
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         @foreach($studentCouncilPositions as $positionId => $positionName)
                                             @if(in_array($positionId, $selectedPositions))
@@ -200,15 +215,15 @@
                                                 <div
                                                     class="border border-gray-300 rounded-lg p-4 flex justify-between items-center w-full">
                                                     <span class="text-[10px]">{{ $positionName }}</span>
-                                                    {{--                                                        <button type="button"--}}
-                                                    {{--                                                                wire:click="removePosition({{ $positionId }})"--}}
-                                                    {{--                                                                class="text-white px-2 py-1 rounded bg-red-500">--}}
-                                                    {{--                                                            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"--}}
-                                                    {{--                                                                 xmlns="http://www.w3.org/2000/svg">--}}
-                                                    {{--                                                                <path d="M9 1L1 9M9 9L1 0.999998" stroke="white"--}}
-                                                    {{--                                                                      stroke-width="2" stroke-linecap="round"/>--}}
-                                                    {{--                                                            </svg>--}}
-                                                    {{--                                                        </button>--}}
+                                                    <button type="button" wire:click="removePosition({{ $positionId }})"
+                                                            class="text-white px-2 py-1 rounded bg-red-500  @if($election->status == 'completed'
+                                                        || $election->status == 'ongoing')  hidden @endif">
+                                                        <svg width="10" height="10" viewBox="0 0 10 10" fill="none"
+                                                             xmlns="http://www.w3.org/2000/svg">
+                                                            <path d="M9 1L1 9M9 9L1 0.999998" stroke="white"
+                                                                  stroke-width="2" stroke-linecap="round"/>
+                                                        </svg>
+                                                    </button>
                                                 </div>
                                             @endif
                                         @endforeach
@@ -221,18 +236,18 @@
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         @foreach($localCouncilPositions as $positionId => $positionName)
                                             @if(in_array($positionId, $selectedPositions))
-                                                <!-- Only show selected positions -->
-                                                <div class="border border-gray-300 rounded-lg p-4 flex justify-between items-center w-full">
+                                                <div
+                                                    class="border border-gray-300 rounded-lg p-4 flex justify-between items-center w-full">
                                                     <span class="text-[10px]">{{ $positionName }}</span>
-                                                    {{--                                                    <button type="button"--}}
-                                                    {{--                                                            wire:click="removePosition({{ $positionId }})"--}}
-                                                    {{--                                                            class="text-white px-2 py-1 rounded bg-red-500">--}}
-                                                    {{--                                                        <svg width="10" height="10" viewBox="0 0 10 10" fill="none"--}}
-                                                    {{--                                                             xmlns="http://www.w3.org/2000/svg">--}}
-                                                    {{--                                                            <path d="M9 1L1 9M9 9L1 0.999998" stroke="white"--}}
-                                                    {{--                                                                  stroke-width="2" stroke-linecap="round"/>--}}
-                                                    {{--                                                        </svg>--}}
-                                                    {{--                                                    </button>--}}
+                                                    <button type="button" wire:click="removePosition({{ $positionId }})"
+                                                            class="text-white px-2 py-1 rounded bg-red-500  @if($election->status == 'completed'
+                                                        || $election->status == 'ongoing')  hidden @endif">
+                                                        <svg width="10" height="10" viewBox="0 0 10 10" fill="none"
+                                                             xmlns="http://www.w3.org/2000/svg">
+                                                            <path d="M9 1L1 9M9 9L1 0.999998" stroke="white"
+                                                                  stroke-width="2" stroke-linecap="round"/>
+                                                        </svg>
+                                                    </button>
                                                 </div>
                                             @endif
                                         @endforeach
@@ -243,16 +258,20 @@
 
                     </div>
                     <div class="mt-[-28px] pt-1 flex justify-end space-x-2">
-                        <button type="button"
-                                class="bg-white text-black text-[12px] border border-gray-300 h-7 px-4 py-1 rounded shadow-md hover:bg-gray-200 justify-center text-center hover:drop-shadow hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"
-                                @click="open = false">
-                            Cancel
-                        </button>
-                        <button type="submit"
-                                class="bg-black text-white px-6 py-1 h-7 rounded shadow-md hover:bg-gray-700 text-[12px] justify-center text-center hover:drop-shadow hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110">
-                            Save Election
-                        </button>
+
+                        @unless(in_array($election->status, ['completed', 'ongoing']))
+                            <button type="button"
+                                    class="bg-white text-black text-[12px] border border-gray-300 h-7 px-4 py-1 rounded shadow-md hover:bg-gray-200 justify-center text-center hover:drop-shadow hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"
+                                    @click="open = false">
+                                Cancel
+                            </button>
+                            <button type="submit"
+                                    class="bg-black text-white px-6 py-1 h-7 rounded shadow-md hover:bg-gray-700 text-[12px] justify-center text-center hover:drop-shadow hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110">
+                                Save Changes
+                            </button>
+                        @endunless
                     </div>
+                    </fieldset>
                 </div>
             </form>
         </div>

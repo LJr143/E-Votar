@@ -130,10 +130,11 @@
                                     <td class="py-3 px-6 text-center">{{ $election->election_type->name }}</td>
                                     <td class="py-3 px-6 text-center">{{ $election->date_started }}</td>
                                     <td class="py-3 px-6 text-center">{{ $election->date_ended }}</td>
-                                    <td class="py-3 px-6 text-white text-center">
-                                        <p class="bg-green-600 w-[60px] rounded">{{ $election->status }}</p>
+                                    <td class="py-4 px-6 text-white text-center">
+                                        <p class="@if($election->status == 'ongoing') bg-red-500 @elseif($election->status == 'pending') bg-yellow-500
+                                               @elseif($election->status == 'completed')  bg-black   @endif w-[100px] py-2 px-2 rounded">{{ ucfirst($election->status) }}</p>
                                     </td>
-                                    <td class="py-3 px-6 text-center flex justify-center items-center exclude-print">
+                                    <td class="py-3 px-6 text-center flex justify-center space-x-2 items-center exclude-print">
                                         @can('view election')
                                             <livewire:manage-election.view-election :election_id="$election->id"
                                                                                     wire:key="view-{{$election->id}}"/>

@@ -12,7 +12,7 @@ use App\Models\Program;
 use App\Models\User;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Storage;
+use Illuminate\Support\Facades\Storage;
 
 class EditElection extends Component
 {
@@ -171,7 +171,17 @@ class EditElection extends Component
             'election_name' => 'required|string|max:255',
             'election_type' => 'required',
             'election_campus' => 'required',
-            'election_start' => 'required|date',
+            'election_start' => [
+                'required',
+                'date',
+                function ($attribute, $value, $fail) {
+                    // Ensure the new start date is >= the original start date
+                    $originalStartDate = $this->election->date_started;
+                    if (strtotime($value) < strtotime($originalStartDate)) {
+                        $fail("The election start date cannot be earlier than the current start date ($originalStartDate).");
+                    }
+                },
+            ],
             'election_end' => 'required|date|after:election_start',
             'selectedPositions' => 'required|array',
             'electionImageEdit' => 'nullable|image|max:2048',

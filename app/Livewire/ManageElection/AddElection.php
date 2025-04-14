@@ -162,10 +162,10 @@ class AddElection extends Component
 
     public function submit(): void
     {
-        if ($this->election_start >= now()) {
+        if ($this->election_start == now()) {
             $this->status = 'ongoing';
         } else {
-            $this->status = 'unverified';
+            $this->status = 'pending';
         }
 
         $this->validate();

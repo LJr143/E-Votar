@@ -5,7 +5,14 @@
 [x-cloak] {
     display: none;
 }
-
+body {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500; /* Medium weight (better than 400) */
+    font-size: 12px;
+    line-height: 1.6;
+    color: #333; /* Dark gray (softer than pure black) */
+    -webkit-font-smoothing: antialiased; /* Smoother text on Mac/Win */
+}
 
 .tick {
     display: flex;
@@ -33,7 +40,7 @@
 
 /* Value flip styling */
 .tick-value {
-    font-size: clamp(18px, 2.5vw, 48px); /* Min:24px, Preferred:3vw, Max:36px */
+    font-size: clamp(14px, 2.2vw, 44px); /* Min:24px, Preferred:3vw, Max:36px */
     font-weight: bold;
     color: #333;
     padding: 5px 10px;
@@ -46,7 +53,7 @@
 
 /* Label styling */
 .tick-label {
-    font-size: 18px;
+    font-size: 12px;
     color: #ffffff;
     margin-top: 10px;
 }

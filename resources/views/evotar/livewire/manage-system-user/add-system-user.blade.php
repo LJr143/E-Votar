@@ -1,7 +1,7 @@
 <div x-data="{ open: false }" x-cloak @system-user-created.window="open = false">
     <!-- Trigger Button -->
     <button @click="open = true"
-            class="w-[110px] mr-2 rounded py-[6px] px-2 bg-black text-white text-[12px] hover:bg-gray-700 hover:drop-shadow  hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110">
+            class="w-[140px] mr-2 rounded py-[6px] px-2 bg-black text-white text-[12px] hover:bg-gray-700 hover:drop-shadow  hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110">
         Add System User
     </button>
     <!-- Modal -->

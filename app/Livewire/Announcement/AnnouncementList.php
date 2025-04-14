@@ -19,7 +19,7 @@ class AnnouncementList extends Component
         'filter' => ['except' => 'all'],
     ];
 
-    protected $listeners = ['announcement-draft-create' => '$refresh', 'announcement-edit-update' => '$refresh', 'delete' => '$refresh'];
+    protected $listeners = ['announcement-draft-created' => '$refresh', 'announcement-edit-update' => '$refresh', 'delete' => '$refresh'];
 
     public function updatingSearch()
     {

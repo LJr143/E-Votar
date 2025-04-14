@@ -243,18 +243,48 @@
             @elseif ($currentStep === 2)
                 <form wire:submit.prevent="submit">
                     <!-- Election Voters-->
+                    <div x-data="{ showInfo: false }">
+                        <div class="mb-4 w-[480px] relative flex">
+                            <p class="text-[10px] font-semibold italic">Please select the programs you wish to exclude from this election. Note that programs excluded from voting will not be allowed to participate in the election process or influence the outcome.</p> <!-- Title with bold font -->
+                            <!-- Info Button -->
+                            <button type="button"
+                                    @click="showInfo = !showInfo"
+                                    class="text-gray-400 hover:text-gray-600 transition-colors"
+                                    aria-label="More information">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2h-1V9z"
+                                          clip-rule="evenodd"></path>
+                                </svg>
+                            </button>
+                            <div x-show="showInfo"
+                                 x-transition
+                                 class="absolute z-10 right-5 mt-1 w-64 bg-white border border-gray-200 rounded-lg shadow-lg p-3 text-xs">
+                                <h4 class="font-medium text-gray-800 mb-1">Voting Configuration (Exclusion of Voter by Program)</h4>
+                                <ul class="space-y-2">
+                                    <li>
+                                        <span class="font-medium">Exclusion Criteria:</span>
+                                        <ul class="mt-1 pl-3 space-y-1">
+                                            <li class="flex items-start">
+                                                <span class="text-green-600 mr-1">✓</span>
+                                                <span class="text-gray-600">Eligible: Programs that are included can vote and participate.</span>
+                                            </li>
+                                            <li class="flex items-start">
+                                                <span class="text-red-600 mr-1">✗</span>
+                                                <span class="text-gray-600">Excluded: Programs that are excluded will not have voting rights.</span>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                     <div>
-                        <div>
                             <div class="mb-2">
                                 <p class="text-[12px] font-semibold"> Manage election voter here</p>
                             </div>
                             <div>
                                 <div class="min-h-[300px]">
-                                    <div class="bg-white text-black p-4"> <!-- White background with black text -->
-                                        <div class="mb-4">
-                                            <p class="text-[12px] font-bold">Select Colleges and Programs</p> <!-- Title with bold font -->
-                                        </div>
-
+                                    <div class="bg-white text-black p-4">
                                         <div>
                                             @foreach($colleges as $college)
                                                 <div class="flex items-center mb-2"> <!-- Flex for alignment -->

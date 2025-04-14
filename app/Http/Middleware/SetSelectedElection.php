@@ -16,12 +16,20 @@ class SetSelectedElection
      */
     public function handle(Request $request, Closure $next)
     {
-        // Check if selectedElection is not set in the session
-        if (!session()->has('selectedElection')) {
-            // Fetch the latest election
-            $latestElection = Election::latest('created_at')->first();
+        // Update election statuses before proceeding
+        $now = now();
 
-            // Set the selectedElection in the session
+        Election::where('date_started', '<=', $now)
+            ->where('status', 'upcoming')
+            ->update(['status' => 'ongoing']);
+
+        Election::where('date_ended', '<', $now)
+            ->where('status', 'ongoing')
+            ->update(['status' => 'completed']);
+
+        // Your existing session logic
+        if (!session()->has('selectedElection')) {
+            $latestElection = Election::latest('created_at')->first();
             session(['selectedElection' => $latestElection->id ?? null]);
         }
 

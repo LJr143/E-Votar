@@ -20,13 +20,23 @@ class VoteChartLocalCouncil extends Component
     {
         $this->electionId = $electionId;
         $this->localCouncils = Council::all();
-        $this->selectedLocalCouncil = $this->localCouncils->first()->id;
-        if (auth()->user() && auth()->user()->hasAnyRole(['student-council-watcher', 'local-council-watcher'])) {
-            $user = auth()->user();
-            $this->selectedLocalCouncil = $user->program && $user->program->council ? $user->program->council->id : $this->selectedLocalCouncil;
+
+        // Check if localCouncils is not empty before proceeding
+        if ($this->localCouncils->isNotEmpty()) {
+            $this->selectedLocalCouncil = $this->localCouncils->first()->id;
+
+            if (auth()->user() && auth()->user()->hasAnyRole(['student-council-watcher', 'local-council-watcher'])) {
+                $user = auth()->user();
+                $this->selectedLocalCouncil = $user->program && $user->program->council
+                    ? $user->program->council->id
+                    : $this->selectedLocalCouncil;
+            }
+
+            $this->loadChartData();
+            $this->fetchVoterTally();
+        } else {
+            $this->selectedLocalCouncil = null;
         }
-        $this->loadChartData();
-        $this->fetchVoterTally();
     }
 
     public function updateChart($electionId): void
