@@ -222,6 +222,7 @@
             customClass: '',
             customIcon: '',
         });
+    }
 </script>
 
 
