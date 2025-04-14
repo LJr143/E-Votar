@@ -38,7 +38,7 @@
                                     <img
                                         alt="Profile picture"
                                         class="w-full h-full object-cover"
-                                        src="{{ asset('storage/assets/profile/cat_meme.jpg') }}"
+                                        src="{{ asset('storage/' . ($user->profile_photo_path ?? 'profile-images/cat_meme.jpg')) }}"
                                     >
                                 </div>
                                 <span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>

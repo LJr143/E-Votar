@@ -171,7 +171,7 @@
                                                             <div class="mt-[-38px] flex justify-center">
                                                                 <div class="border-2 border-black">
                                                                     <img class="w-[110px]"
-                                                                         src="{{ asset('storage/assets/profile/cat_meme.jpg') }}"
+                                                                         src="{{ asset('storage/' . ($candidate->users->profile_photo_path ?? 'profile-images/cat_meme.jpg')) }}"
                                                                          alt="">
                                                                 </div>
                                                             </div>
@@ -259,7 +259,7 @@
                                                                 <div class="mt-[-38px] flex justify-center">
                                                                     <div class="border-2 border-black">
                                                                         <img class="w-[110px]"
-                                                                             src="{{ asset('storage/assets/profile/cat_meme.jpg') }}"
+                                                                             src="{{ asset('storage/' . ($candidate->users->profile_photo_path ?? 'profile-images/cat_meme.jpg')) }}"
                                                                              alt="">
                                                                     </div>
                                                                 </div>
