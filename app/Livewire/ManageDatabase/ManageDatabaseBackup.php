@@ -148,7 +148,8 @@ class ManageDatabaseBackup extends Component
         $filePath = "backups/{$filename}";
         $fullPath = storage_path("app/public/{$filePath}");
 
-        $mysqlDumpPath = 'C:\laragon\bin\mysql\mysql-8.0.30-winx64\bin\mysqldump.exe'; // Adjust version
+//        $mysqlDumpPath = 'C:\laragon\bin\mysql\mysql-8.0.30-winx64\bin\mysqldump.exe'; // Adjust version
+        $mysqlDumpPath = 'mysqldump';
 
         $command = sprintf(
             '"%s" --user=%s --password=%s --host=%s --port=%s %s > "%s"',
