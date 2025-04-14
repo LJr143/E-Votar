@@ -93,7 +93,7 @@
                             <tr></tr>
                             <tbody>
                             @foreach($users as $user)
-                                <tr class="font-light text-[10px]">
+                                <tr class="font-light text-[10px]" wire:key="tr-system-user-{{ $user->id }}">
                                     <td class="px-4 py-1"><input type="checkbox" class="rounded"></td>
                                     <td class="px-4 py-1">{{ $user->id }}</td>
                                     <td class="px-4 py-1">
@@ -121,14 +121,14 @@
                                                 {{ strlen($programName) > 15 ? substr($programName, 0, 15) . '...' : $programName }}
                                             </span>
                                     </td>
-                                    <td class="px-4 py-1 text-center flex">
+                                    <td class="px-4 py-1 text-center flex " wire:key="table-td-system-user-{{ $user->id }}">
                                         @can('edit users')
                                         <livewire:manage-system-user.edit-user :user_id="$user->id"
-                                                                               :key="'edit-system-user'.$user->id"/>
+                                                                               wire:key="edit-system-user-{{ $user->id }}" />
                                         @endcan
                                         @can('delete users')
                                         <livewire:manage-system-user.delete-user :user_id="$user->id"
-                                                                                 :key="'delete-system-user'.$user->id"/>
+                                                                                 wire:key="delete-system-user-{{ $user->id }}"/>
                                     @endcan
                                 </tr>
                             @endforeach

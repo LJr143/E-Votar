@@ -244,11 +244,11 @@
                                         <div class="inline-flex" wire:key="voter-action-column-{{ $voter->id }}">
                                         @can('edit voter')
                                                 <livewire:manage-voter.edit-voter :userId="$voter->id"
-                                                                                  :key="'edit-election-'.$voter->id"/>
+                                                                                  wire:key="edit-election-{{ $voter->id }}"/>
                                             @endcan
                                             @can('delete voter')
                                                 <livewire:manage-voter.delete-voter :userId="$voter->id"
-                                                                                    :key="'delete-election-'.$voter->id"/>
+                                                                                    wire:key="delete-election-{{ $voter->id }}"/>
                                             @endcan
                                         </div>
                                     </td>
