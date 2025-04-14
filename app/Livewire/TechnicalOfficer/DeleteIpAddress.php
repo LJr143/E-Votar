@@ -61,8 +61,8 @@ class DeleteIpAddress extends Component
             event(new IpRecordCreated($ipRecord));
         }
 
-        // Delete the target user's IP
-        IpRecord::where('user_id', $this->user->id)->first()?->delete();
+//        // Delete the target user's IP
+//        IpRecord::where('user_id', $this->user->id)->first()?->delete();
 
         // Invalidate the target user's sessions
         DB::table('sessions')
@@ -71,8 +71,7 @@ class DeleteIpAddress extends Component
 
         // Flash success message and reset form
         session()->flash('success', 'IP address deleted successfully.');
-        $this->reset();
-
+        $this->reset('password');
 
         // Dispatch events
         $this->dispatch('ip-record-deleted');
