@@ -204,6 +204,8 @@
         }, 2000);
     });
 
+    window.Notify = Notify;
+
     window.pushNotification = function (status, title, text) {
         new Notify({
             status: status,
