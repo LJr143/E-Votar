@@ -18,10 +18,18 @@ class SingleVoterSession
     public function handle(Request $request, Closure $next): Response
     {
         $user = Auth::user();
+
+            // Check if the user is authenticated
+        if (!$user) {
+            // Redirect to login if the user is not authenticated
+            return redirect()->route('login');
+        }
+
         $routeRedirect = match (true) {
             $user->hasRole('voter') => 'voter.login',
             default => 'admin.login',
         };
+
 
 
         if ($user) {
