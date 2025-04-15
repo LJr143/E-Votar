@@ -23,7 +23,7 @@ class CheckBlockedIp
             Auth::logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();
-            return redirect()->route('voter.login')->with('error', 'Your IP has been blocked. Please contact support.');
+            return redirect()->route('voter.login')->with('error', 'You are currently blocked on this IP. Please contact comelec technical support .');
         }
 
         return $next($request);
