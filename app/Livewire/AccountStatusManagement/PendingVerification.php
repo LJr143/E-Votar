@@ -35,11 +35,11 @@ class PendingVerification extends Component
             ]);
         }
 
-        if ($this->user->hasRole('superadmin')) {
-            throw ValidationException::withMessages([
-                'password' => ['Superadmin accounts cannot be deactivated.'],
-            ]);
-        }
+//        if ($this->user->hasRole('superadmin')) {
+//            throw ValidationException::withMessages([
+//                'password' => ['Superadmin accounts cannot be deactivated.'],
+//            ]);
+//        }
 
         try {
 
