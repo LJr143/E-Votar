@@ -58,6 +58,21 @@
                         <span class="text-red-500 text-[10px] italic">{{ $message }}</span>
                         @enderror
                     </div>
+                    <div class="mb-3">
+                        <label for="council" class="text-xs font-semibold block mb-1">Council <span
+                                class="text-red-500">*</span></label>
+                        <select name="council" id="council" wire:model="councilId" class="border border-gray-300 text-xs rounded-lg px-4 py-2 w-full">
+                            <option value="">Select Council</option>
+                            @foreach($councils as $council)
+                                <option value="{{ $council->id }}">{{ $council->name }}</option>
+                            @endforeach
+
+                        </select>
+
+                        @error('councilId')
+                        <span class="text-red-500 text-[10px] italic">{{ $message }}</span>
+                        @enderror
+                    </div>
                     <div class="mt-6 pt-3 flex justify-end space-x-2">
                         <button type="button"
                                 class="bg-gray-300 text-gray-700 text-[12px] h-7 px-4 py-1 rounded shadow-md hover:bg-gray-400 justify-center text-center  hover:drop-shadow hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"

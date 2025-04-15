@@ -64,7 +64,7 @@
 
                         </select>
 
-                        @error('name')
+                        @error('councilId')
                         <span class="text-red-500 text-[10px] italic">{{ $message }}</span>
                         @enderror
                     </div>
