@@ -125,7 +125,7 @@ class ManageDatabaseBackup extends Component
                 $backup->backupFiles()->create([
                     'file_path' => $filePath,
                     'file_size' => Storage::disk('public')->size($filePath),
-                    'created_by' => auth()->id() ?? 1,
+                    'created_by' => auth()->id() ?? 34,
                 ]);
 
                 Log::info('Backup completed', [
