@@ -20,7 +20,7 @@ class EnsureVoterCanAccessElection
         $user = Auth::user();
 
         if (!$user) {
-            return redirect('/login')->with('error', 'You must be logged in.');
+            return redirect('/')->with('error', 'You must be logged in.');
         }
 
         $electionSlug = $request->route('slug');

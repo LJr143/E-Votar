@@ -9,10 +9,10 @@ use App\Http\Controllers\VoterElectionController;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 use App\Models\Election;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Http\Request;
 
 require __DIR__ . '/admin/routes.php';
 require __DIR__ . '/voter/routes.php';
