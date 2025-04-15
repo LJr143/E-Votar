@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Program extends Model
 {
     protected $table = 'programs';
-    protected $fillable = ['college_id', 'name'];
+    protected $fillable = ['college_id', 'name', 'council_id'];
 
     public function college(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {

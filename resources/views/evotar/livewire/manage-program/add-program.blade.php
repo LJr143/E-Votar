@@ -23,11 +23,11 @@
             x-transition:leave="transition ease-in duration-200"
             x-transition:leave-start="opacity-100 transform scale-100"
             x-transition:leave-end="opacity-0 transform scale-90"
-            class="bg-white p-6 rounded shadow-md w-full max-w-md sm:w-3/4 md:w-2/3 lg:w-1/3"
+            class="bg-white p-6 rounded shadow-md w-full min-w-[550px] max-w-md sm:w-3/4 md:w-2/3 lg:w-1/3"
         >
             <div class="flex justify-between items-center mb-4 border-b border-gray-300 pb-2">
                 <div>
-                    <h2 class="text-sm font-bold text-left w-full sm:w-auto">Add Program to {{ $college->name }}</h2>
+                    <h2 class="text-sm font-semibold text-left w-full sm:w-auto">Add Program to <span class="italic  font-bold uppercase">{{ $college->name }}</span></h2>
                     <p class="text-[10px] text-gray-500 italic">To add an program please fill out the required
                         information.</p>
                 </div>
@@ -47,7 +47,22 @@
                                 class="text-red-500">*</span></label>
                         <input id="name" type="text" placeholder="e.g. Bachelor of Science in Information Security"
                                class="border border-gray-300 text-xs rounded-lg px-4 py-2 w-full"
-                               wire:model="name">
+                               wire:model="name" required>
+
+                        @error('name')
+                        <span class="text-red-500 text-[10px] italic">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label for="council" class="text-xs font-semibold block mb-1">Council <span
+                                class="text-red-500">*</span></label>
+                        <select name="council" id="council" wire:model="councilId" class="border border-gray-300 text-xs rounded-lg px-4 py-2 w-full">
+                            <option value="">Select Council</option>
+                            @foreach($councils as $council)
+                                <option value="{{ $council->id }}">{{ $council->name }}</option>
+                            @endforeach
+
+                        </select>
 
                         @error('name')
                         <span class="text-red-500 text-[10px] italic">{{ $message }}</span>
