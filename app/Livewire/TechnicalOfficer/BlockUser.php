@@ -8,6 +8,7 @@ use App\Models\IpRecord;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Livewire\Component;
 
@@ -50,16 +51,25 @@ class BlockUser extends Component
             return redirect()->route('login')->with('success', 'User blocked successfully.');
         }
 
-        // Invalidate the target user's sessions
-        DB::table('sessions')
-            ->where('user_id', $this->user->id)
-            ->delete();
+        // Check if the target user has any active sessions
+        $activeSessions = DB::table('sessions')->where('user_id', $this->user->id)->count();
+
+        if ($activeSessions > 0) {
+            // Invalidate the target user's sessions if any exist
+            DB::table('sessions')
+                ->where('user_id', $this->user->id)
+                ->delete();
+
+        } else {
+            Log::info("No active sessions found for user {$this->user->id}.");
+        }
 
         // Block the target user's IP
         $ipRecord = IpRecord::where('user_id', $this->user->id)->first();
         if ($ipRecord) {
             $ipRecord->update(['status' => 'blocked']);
         }
+
 
         // Flash success message and reset form
         session()->flash('success', 'User blocked successfully.');
