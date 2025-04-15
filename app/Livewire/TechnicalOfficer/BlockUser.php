@@ -60,15 +60,16 @@ class BlockUser extends Component
                 ->where('user_id', $this->user->id)
                 ->delete();
 
+            // Block the target user's IP
+            $ipRecord = IpRecord::where('user_id', $this->user->id)->first();
+            if ($ipRecord) {
+                $ipRecord->update(['status' => 'blocked']);
+            }
+
         } else {
             Log::info("No active sessions found for user {$this->user->id}.");
         }
 
-        // Block the target user's IP
-        $ipRecord = IpRecord::where('user_id', $this->user->id)->first();
-        if ($ipRecord) {
-            $ipRecord->update(['status' => 'blocked']);
-        }
 
 
         // Flash success message and reset form
