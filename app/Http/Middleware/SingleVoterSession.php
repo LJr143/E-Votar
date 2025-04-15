@@ -2,11 +2,13 @@
 
 namespace App\Http\Middleware;
 
+use Carbon\Carbon;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
+
 
 class SingleVoterSession
 {
@@ -16,22 +18,34 @@ class SingleVoterSession
     public function handle(Request $request, Closure $next): Response
     {
         $user = Auth::user();
+        $routeRedirect = match (true) {
+            $user->hasRole('voter') => 'voter.login',
+            default => 'admin.login',
+        };
+
 
         if ($user) {
-            $sessionId = session()->getId();
-
             // Check if user has a different active session
+            $sessionId = session()->getId();
+            $lifetimeInMinutes = config('session.lifetime');
+            $threshold = Carbon::now()->subMinutes($lifetimeInMinutes)->timestamp;
+
             $existingSession = DB::table('sessions')
                 ->where('user_id', $user->id)
                 ->where('id', '!=', $sessionId)
+                ->where('last_activity', '>=', $threshold)
                 ->exists();
 
             if ($existingSession) {
                 Auth::logout();
-                return redirect()->route('voter.login')->withErrors([
+                session()->invalidate();
+                session()->regenerateToken();
+
+                return redirect()->route($routeRedirect)->withErrors([
                     'error' => 'You are already logged in on another device.',
                 ]);
             }
+
 
         }
 

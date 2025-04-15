@@ -6,7 +6,7 @@ use App\Http\Controllers\VoterElectionController;
 use Illuminate\Support\Facades\Route;
 
 // Voter Authentication Routes
-Route::group(['middleware' => ['superadmin.check','single.voter.session', 'redirect.auth']], function () {
+Route::group(['middleware' => ['superadmin.check', 'redirect.auth']], function () {
     Route::get('/', [LoginController::class, 'loginVoter'])->name('voter.login');
     Route::post('/', [LoginController::class, 'authenticateVoter'])->name('voter.login');
 });
@@ -20,7 +20,6 @@ Route::middleware(['splash.screen', 'single.voter.session', 'check.blocked.ip', 
     Route::get('/voting-process/{slug}', [VoterElectionController::class, 'voting'])->name('voter.voting')->middleware(['voter.auth', 'vote.checker']);
     Route::get('/voting/vote-submission', [VoterElectionController::class, 'confirmVoting'])->name('voter.voting.confirm')->middleware('voter.auth');
     Route::get('/accounts-settings', [ViewController::class, 'voterAccountSettings'])    ->name('voter.account.settings')->middleware('voter.auth');
-
     Route::get('/verify-vote', [VoterElectionController::class, 'showVerifyVotePage']) ->name('verify.vote.page')->middleware('auth');
     Route::post('/verify-vote', [VoterElectionController::class, 'verifyVote'])->name('verify.vote.submit')->middleware('auth');
     Route::get('/download-receipt/{id}', [VoterElectionController::class, 'downloadReceipt'])->name('voter.download.receipt');

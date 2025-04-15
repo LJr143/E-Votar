@@ -7,8 +7,12 @@ use App\Http\Controllers\FaceRegistrationController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\VoterElectionController;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 use App\Models\Election;
+use Illuminate\Support\Facades\Session;
 
 require __DIR__ . '/admin/routes.php';
 require __DIR__ . '/voter/routes.php';
@@ -16,21 +20,6 @@ require __DIR__ . '/common/routes.php';
 require __DIR__ . '/comelec-website/routes.php';
 
 
-
-//Route::get('/api/election-end-time', function () {
-//    $latestElection = Election::latest()->first();
-//
-//    if ($latestElection) {
-//        $startTime = $latestElection->date_started;
-//        $endTime = $latestElection->date_ended;
-//        return response()->json(['start_time' => $startTime, 'end_time' => $endTime]);
-//    }
-//
-//    return response()->json(['error' => 'No election found'], 404);
-//})->name('election.date.time');
-
-
-// Campus Management Routes
 Route::get('/campuses', [CampusController::class, 'index'])->name('campuses');
 Route::get('/colleges/{campusId}', [CampusController::class, 'getColleges']);
 Route::get('/programs/{collegeId}', [CampusController::class, 'getPrograms']);
@@ -56,19 +45,16 @@ Route::post('/update-face-verified', [LoginController::class, 'updateFaceVerifie
 Route::get('login/google', [LoginController::class, 'redirectToGoogle'])->name('login.google');
 Route::get('login/google/callback', [LoginController::class, 'handleGoogleCallback']);
 
-
 Route::post('/logout', function (Request $request) {
     $redirectRoute = 'admin.login';
 
     if (Auth::check()) {
         $user = Auth::user();
 
-        // Use Spatie role check
         if ($user->hasRole('voter')) {
             $redirectRoute = 'voter.login';
         }
 
-        // Clean up session if using database driver
         if (config('session.driver') === 'database') {
             DB::table('sessions')->where('user_id', $user->id)->delete();
         }
@@ -95,9 +81,7 @@ Route::get('/api/election-end-time/{electionId}', function ($electionId) {
 
 })->name('election.end.time');
 
-Route::post('/face/registration', [FaceRegistrationController::class, 'register'])
-    ->name('api.face.registration');
-
+Route::post('/face/registration', [FaceRegistrationController::class, 'register'])->name('api.face.registration');
 
 Route::get('/api/face/descriptors', [FaceAuthController::class, 'getDescriptors'])->name('api.face.get-descriptors');
 Route::post('/api/face/verification', [FaceAuthController::class, 'verify'])->name('api.face.verification');

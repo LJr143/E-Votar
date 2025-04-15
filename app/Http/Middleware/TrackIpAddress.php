@@ -12,16 +12,15 @@ class TrackIpAddress
     public function handle(Request $request, Closure $next)
     {
         $ipAddress = $request->ip();
-        $userId = Auth::id(); // Will be null if not authenticated
+        $userId = Auth::id();
 
         if ($userId !== null) {
-            // Find or create the IP record only if the user is authenticated
+
             $ipRecord = IpRecord::firstOrCreate(
                 ['ip_address' => $ipAddress, 'user_id' => $userId],
                 ['status' => 'allowed', 'last_seen_at' => now()]
             );
 
-            // Check if the IP is blocked
             if ($ipRecord->status === 'blocked') {
                 if (Auth::check()) {
                     Auth::logout();
@@ -31,16 +30,13 @@ class TrackIpAddress
                 return redirect()->route('voter.login')->with('error', 'Your IP is blocked. Please contact support.');
             }
 
-            // Update the record only if it’s not blocked
             $ipRecord->update([
-                'status' => 'allowed', // Only if not blocked
+                'status' => 'allowed',
                 'last_seen_at' => now(),
-                'user_id' => $userId ?: $ipRecord->user_id, // Preserve user_id if already set
+                'user_id' => $userId ?: $ipRecord->user_id,
             ]);
         }
 
-
-        // Proceed with the request
         return $next($request);
     }
 }

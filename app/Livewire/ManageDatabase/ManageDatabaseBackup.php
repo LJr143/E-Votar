@@ -69,7 +69,7 @@ class ManageDatabaseBackup extends Component
                 'schedule_parameters' => $this->getScheduleParameters(),
                 'next_backup_at' => $nextBackup,
                 'last_backup_at' => null,
-                'created_by' => auth()->id(),
+                'created_by' => auth()->user()->id ?? 'scheduled back up',
             ]);
 
             $this->resetForm();
