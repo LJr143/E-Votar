@@ -22,7 +22,7 @@ class SingleVoterSession
             // Check if the user is authenticated
         if (!$user) {
             // Redirect to login if the user is not authenticated
-            return redirect()->route('login');
+            return redirect('/');
         }
 
         $routeRedirect = match (true) {
