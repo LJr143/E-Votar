@@ -18,6 +18,7 @@ class AdminAuth
     public function handle(Request $request, Closure $next, $permission = null): Response
     {
 
+
         if (!$this->isAuthenticated()) {
             return $this->redirectToLogin();
         }

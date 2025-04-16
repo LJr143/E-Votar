@@ -27,6 +27,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'single.voter.session' => \App\Http\Middleware\SingleVoterSession::class,
             'set.selected.election' => \App\Http\Middleware\SetSelectedElection::class,
             'check.blocked.ip' => \App\Http\Middleware\CheckBlockedIp::class,
+            'check.first.creation.superadmin' => \App\Http\Middleware\CheckFirstCreationSuperadmin::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

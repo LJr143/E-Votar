@@ -11,10 +11,9 @@ Route::group(['middleware' => ['superadmin.check', 'redirect.auth']], function (
 });
 
 // Admin Protected Routes
-Route::middleware(['splash.screen', 'set.selected.election', 'single.voter.session','track.ip.user'])->prefix('admin')->group(function () {
+Route::middleware(['splash.screen', 'set.selected.election','single.voter.session', 'track.ip.user'])->prefix('admin')->group(function () {
     Route::get('register', [ViewController::class, 'view'])->name('admin.register');
-    Route::post('register', [ViewController::class, 'register'])->name('admin.register');
-
+    Route::post('register', [ViewController::class, 'register'])->name('admin.register.post');
     Route::get('dashboard', [ViewController::class, 'adminDashboard'])->name('admin.dashboard')->middleware('admin.auth');
     Route::get('elections', [ViewController::class, 'elections'])->name('admin.elections')->middleware('admin.auth:view election');
     Route::get('election/candidates', [ViewController::class, 'candidates'])->name('admin.candidates')->middleware('admin.auth:view candidate');

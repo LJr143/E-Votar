@@ -17,7 +17,7 @@ class SuperadminChecker
     public function handle(Request $request, Closure $next): Response
     {
         if (!$this->isSuperAdminExists()) {
-            return redirect()->route('admin.register');
+            return redirect()->route('admin.register.get.superadmin');
         }
 
         return $next($request);

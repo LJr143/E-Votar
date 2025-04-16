@@ -11,6 +11,7 @@ use App\Models\Vote;
 use App\Models\VoterEncodeVote;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Livewire\Component;
 
 class VotingProcess extends Component
@@ -261,6 +262,15 @@ class VotingProcess extends Component
             'election_id' => $this->election->id,
             'encrypted_data' => $encryptedData,
             'encoded_image_path' => $relativePath,
+        ]);
+
+        $feedbackCode = Str::uuid(); // or use Str::random(16) for shorter code
+
+// Save the feedback code for the user and election
+        FeedbackToken::create([
+            'user_id' => auth()->id(),
+            'election_id' => $this->election->id,
+            'token' => $feedbackCode,
         ]);
 
         // Reset selections and show success message

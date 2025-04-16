@@ -104,51 +104,7 @@
                             <hr class="border-t border-gray-300 mb-2 w-3/4 mx-auto lg:mx-0">
                         </div>
                         <div class="lg:w-1/2 w-full px-4">
-                            <form class="space-y-4 w-full">
-                                <div>
-                                    <label class="block text-gray-700 text-xs text-left " for="name">
-                                        Full Name
-                                    </label>
-                                    <input class="w-full px-4 py-2 border border-gray-300 rounded-md text-xs" id="name" placeholder="Alice" required="" type="text"/>
-                                </div>
-
-                                <div>
-                                    <label class="block text-gray-700 text-xs text-left" for="name">
-                                        Email
-                                    </label>
-                                    <input class="w-full px-4 py-2 border border-gray-300 rounded-md text-xs" id="name" placeholder="example@gmail.com" required="" type="text"/>
-                                </div>
-
-
-                                <div x-data="{ rating: 0 }">
-                                    <label class="block text-gray-700 text-xs text-left" for="rating">
-                                        Rate Your Experience
-                                    </label>
-                                    <div class="flex space-x-2">
-                                        <template x-for="i in 5" :key="i">
-                                            <button
-                                                class="text-gray-300 hover:text-yellow-400 text-4xl"
-                                                :class="{ 'text-yellow-400': i <= rating }"
-                                                @click="rating = i"
-                                            >
-                                                &#9733;
-                                            </button>
-                                        </template>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <label class="block text-gray-700 text-xs text-left" for="message">
-                                        Feedback
-                                    </label>
-                                    <textarea class="w-full px-4 py-2 border border-gray-300 rounded-md text-xs" id="message" placeholder="Hi! I'd like to provide feedback on..." required="" rows="4"></textarea>
-                                </div>
-                                <div>
-                                    <button class="w-full px-4 py-2 bg-black text-white rounded-md text-xs" type="submit">
-                                        Submit
-                                    </button>
-                                </div>
-                            </form>
+                            <livewire:feedback-form/>
                             <p class="text-center text-gray-600 mt-4 text-[10px]">
                                 The data gathered through this platform will be handled in accordance with RA 10173 or the Data Privacy Act of 2012, as well as the Data Privacy Policy of USEP, and will be utilized only for the intended purpose.
                             </p>

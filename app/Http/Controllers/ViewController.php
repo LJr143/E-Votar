@@ -40,6 +40,31 @@ class ViewController extends Controller
 
     }
 
+    public function viewSuperadminRegister()
+    {
+        if ($this->superAdminExists()) {
+            return redirect()->route('admin.login');
+        }
+
+        return view('evotar.admin.super_admin_register');
+    }
+
+    /**
+     * Handle superadmin registration.
+     */
+    public function registerSuperadminRegister(Request $request)
+    {
+        $this->validateInput($request);
+        $user = $this->createUser($request->all());
+        $previousUrl = url()->previous();
+
+        return redirect()->route('voter.facial.registration.get', [
+            'id' => $user->id,
+            'return_url' => $previousUrl,
+        ]);
+
+    }
+
     /**
      * Check if a superadmin already exists.
      */
