@@ -1,4 +1,4 @@
-<x-app-layout mainClass="" page_title="- Dashboard">
+<x-app-layout mainClass="" page_title="- Main Voter Page">
     <style>
         .main {
             padding: 0;
@@ -45,9 +45,8 @@
 
                         <div class="flex items-center gap-2 focus:outline-none">
                             <div class="border-[1px] border-gray-800 rounded-full overflow-hidden w-[33px] h-[33px]">
-                                <img class="w-full h-full object-cover"
-                                     src="{{ asset('storage/assets/profile/cat_meme.jpg') }}"
-                                     alt="Profile Picture">
+                                <img alt="Profile Picture" class="w-8 h-8 rounded-full" height="32"
+                                     src="{{ asset('storage/' . (auth()->user()->profile_photo_path ?? 'profile-images/cat_meme.jpg')) }}" width="32"/>
                             </div>
                             <div class="mt-2">
                                 <x-dropdown align="right" width="58" contentClasses="py-2 bg-white"
@@ -349,6 +348,7 @@
                         @foreach($elections as $election)
                             @php
                                 $hasVoted = in_array($election->id, $votedElections);
+                                $hasEnded = $election->date_ended <= now();
                             @endphp
 
                                 <!-- Election Card - Entire card is clickable -->
@@ -367,6 +367,21 @@
                                                 </svg>
                                             </div>
                                             <span class="text-white font-bold text-[12px] text-center">You've Voted</span>
+                                        </div>
+                                    @endif
+
+                                    @if (!$hasVoted && $hasEnded)
+                                        <!-- Election Ended Overlay -->
+                                        <div class="absolute inset-0 bg-black bg-opacity-60 flex flex-col items-center justify-center">
+                                            <div class="bg-white rounded-full h-12 w-12 flex items-center justify-center mb-1">
+                                                <svg class="h-7 w-7 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                                     xmlns="http://www.w3.org/2000/svg">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                          d="M6.75 3v2.25M17.25 3v2.25M3 7.5h18M4.5 21h15a1.5 1.5 0 001.5-1.5v-12a1.5 1.5 0 00-1.5-1.5h-15A1.5 1.5 0 003 7.5v12A1.5 1.5 0 004.5 21z" />
+                                                    <line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                                </svg>
+                                            </div>
+                                            <span class="text-white font-bold text-[12px] text-center">Election Ended<br>You didn't vote</span>
                                         </div>
                                     @endif
                                 </div>
@@ -437,7 +452,7 @@
                  style="background-image: url('{{ asset('storage/assets/image/bg-voter-side.png') }}');">
 
                 <div class=" min-h-screen w-full flex justify-center items-center">
-                    <img src="{{ asset('storage/assets/election-image/student-and-local-council-election-2023.png') }}"
+                    <img src="{{ asset('storage/assets/image/voter_login_bg.png') }}"
                          alt="" class="object-contain max-h-screen w-full mix-blend-multiply" style="mix-blend-mode: multiply;">
                 </div>
             </div>

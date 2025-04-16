@@ -13,7 +13,7 @@ class UpdateElectionStatus extends Command
      *
      * @var string
      */
-    protected $signature = 'app:update-election-status';
+    protected $signature = 'elections:update-status';
 
     /**
      * The console command description.

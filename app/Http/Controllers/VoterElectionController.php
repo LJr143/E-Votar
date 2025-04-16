@@ -49,7 +49,10 @@ class VoterElectionController extends Controller
             $query->select('election_id')
                 ->from('election_excluded_voters')
                 ->where('user_id', $voterId);
-        })->get();
+        })
+            ->where('status', '!=', 'pending')
+            ->orderBy('created_at', 'desc')
+            ->get();
     }
 
     public function getElectionEndTime($electionId = null)

@@ -3,6 +3,8 @@ namespace App\Livewire\Voter;
 
 use App\Models\Election;
 use App\Models\Vote;
+use App\Models\VoterEncodeVote;
+use Carbon\Carbon;
 use Livewire\Component;
 class VoterDashboard extends Component
 {
@@ -10,6 +12,9 @@ class VoterDashboard extends Component
     public $election;
     public $voter;
     public $hasVoted;
+    public $hasEnded;
+
+    public $encodedVotes;
 
     public function mount($slug)
     {
@@ -19,6 +24,14 @@ class VoterDashboard extends Component
         $this->hasVoted = Vote::where('user_id', $this->voter->id)
             ->where('election_id', $this->election->id)
             ->exists();
+
+        $this->hasEnded = $this->election->date_ended <= now();
+        $this->encodedVotes = VoterEncodeVote::where([
+            ['election_id', '=', $this->election->id],
+            ['user_id', '=', $this->voter->id]
+        ])->first();
+
+
 
         if (!$this->election) {
             session()->flash('error', 'Election not found.');

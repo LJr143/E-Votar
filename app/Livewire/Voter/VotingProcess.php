@@ -160,58 +160,45 @@ class VotingProcess extends Component
             return;
         }
 
-        // Prepare vote data
-        $voteData = [
-            'election_id' => $this->election->id,
-            'voter_id' => auth()->id(),
-            'votes' => $this->selectedCandidates,
-            'abstentions' => array_keys($this->abstainSelections),
-            'timestamp' => now()->toDateTimeString(),
-        ];
+        $encryptedVoteDetails = [];
+        $abstentions = [];
 
-        // Encode the vote data as JSON
-        $jsonData = json_encode($voteData);
-
-        // Debugging: Log the JSON data
-        \Log::info('JSON Data before Encryption:', ['data' => $jsonData]);
-
-        // Encrypt the JSON data
-        EncryptionHelper::setKey(config('app.stegano_secret_key'));
-        $encryptedData = EncryptionHelper::encrypt($jsonData);
-
-        // Debugging: Log the encrypted data
-        \Log::info('Encrypted Data:', ['data' => $encryptedData]);
-
-        // Encode the encrypted data into an image
-        $imagePath = storage_path('app/public/assets/election-image/student-and-local-council-election-2023.png');
-        $outputFileName = auth()->user()->first_name . '_' . auth()->user()->last_name . '_' . $this->election->name . '_vote.png';
-        $relativePath = 'encoded_votes/' . $outputFileName;
-        $outputPath = storage_path('app/public/' . $relativePath);
-        SteganographyHelper::encode($imagePath, $encryptedData, $outputPath);
-
-        \Log::info('Encoded Image Path:', ['path' => $outputPath]);
-
-        VoterEncodeVote::create([
-            'user_id' => auth()->id(),
-            'election_id' => $this->election->id,
-            'encrypted_data' => $encryptedData,
-            'encoded_image_path' => $relativePath,
-        ]);
-        // Create regular vote records
         foreach ($this->selectedCandidates as $key => $candidateId) {
             [$positionId, $slot] = explode('_', str_replace('selected_candidate_', '', $key));
 
             if ($candidateId === 'abstain') {
-                // Record abstention
+                // Encryptable abstention
+                $positionName = optional($this->positionsWithCandidates->firstWhere('id', $positionId))->name;
+                $abstentions[] = [
+                    'position_id' => $positionId,
+                    'position_name' => $positionName ?? 'N/A',
+                ];
+
+                // DB record
                 AbstainVote::create([
                     'user_id' => auth()->id(),
                     'election_id' => $this->election->id,
                     'position_id' => $positionId,
                     'created_at' => now(),
                 ]);
+
+                continue; // Skip candidate logic
             }
-            $candidate = Candidate::find($candidateId);
+
+            $candidate = Candidate::with(['users.program', 'users.programMajor', 'partyLists', 'election_positions'])->find($candidateId);
+
             if ($candidate) {
+                $encryptedVoteDetails[] = [
+                    'candidate_id' => $candidate->id,
+                    'candidate_name' => $candidate->users->first_name . ' ' . $candidate->users->last_name,
+                    'position_id' => $positionId,
+                    'position_name' => $candidate->election_positions->position->name ?? 'N/A',
+                    'party_list' => $candidate->partyLists->name ?? 'Independent',
+                    'program' => $candidate->users->program->name ?? 'N/A',
+                    'major' => $candidate->users->programMajor->name ?? 'N/A',
+                    'vote_slot' => $slot,
+                ];
+
                 Vote::create([
                     'user_id' => auth()->id(),
                     'candidate_id' => $candidate->id,
@@ -223,13 +210,65 @@ class VotingProcess extends Component
             }
         }
 
+        // Include abstentions not already processed (in case they come from a different source)
+        foreach ($this->abstainSelections as $positionId => $_) {
+            $alreadyAdded = collect($abstentions)->contains('position_id', $positionId);
+            if (!$alreadyAdded) {
+                $positionName = optional($this->positionsWithCandidates->firstWhere('id', $positionId))->name;
+                $abstentions[] = [
+                    'position_id' => $positionId,
+                    'position_name' => $positionName ?? 'N/A',
+                ];
+
+                AbstainVote::create([
+                    'user_id' => auth()->id(),
+                    'election_id' => $this->election->id,
+                    'position_id' => $positionId,
+                    'created_at' => now(),
+                ]);
+            }
+        }
+
+        $voteData = [
+            'election_id' => $this->election->id,
+            'election_name' => $this->election->name,
+            'voter_id' => auth()->id(),
+            'voter_name' => auth()->user()->first_name . ' ' . auth()->user()->last_name,
+            'voter_program' => auth()->user()->program->name ?? 'N/A',
+            'voter_major' => auth()->user()->programMajor->name ?? 'N/A',
+            'votes' => $encryptedVoteDetails,
+            'abstentions' => $abstentions,
+            'timestamp' => now()->toDateTimeString(),
+        ];
+
+        // Encode the vote data as JSON
+        $jsonData = json_encode($voteData);
+
+        // Encrypt the JSON data
+        EncryptionHelper::setKey(config('app.stegano_secret_key'));
+        $encryptedData = EncryptionHelper::encrypt($jsonData);
+
+        // Encode the encrypted data into an image
+        $imagePath = storage_path('app/public/' . $this->election->image_path);
+        $outputFileName = auth()->user()->first_name . '_' . auth()->user()->last_name . '_' . $this->election->name . '_vote.png';
+        $relativePath = 'encoded_votes/' . $outputFileName;
+        $outputPath = storage_path('app/public/' . $relativePath);
+        SteganographyHelper::encode($imagePath, $encryptedData, $outputPath);
+
+        // Save encoded vote record
+        VoterEncodeVote::create([
+            'user_id' => auth()->id(),
+            'election_id' => $this->election->id,
+            'encrypted_data' => $encryptedData,
+            'encoded_image_path' => $relativePath,
+        ]);
+
         // Reset selections and show success message
         $this->selectedCandidates = [];
         logger()->info("🚀 Dispatching vote-submitted event for election ID: " . $this->election->id);
         $this->dispatch('updateChartData', $this->election->id);
         session()->flash('success', 'Votes submitted successfully. Download your encoded vote receipt.');
         $this->redirect(route('voter.voting.confirm'));
-
     }
 
     public function getAbstentionCounts()

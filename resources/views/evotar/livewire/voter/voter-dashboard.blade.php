@@ -35,9 +35,8 @@
 
                 <div class="flex items-center gap-2 focus:outline-none">
                     <div class="border-[1px] border-gray-800 rounded-full overflow-hidden w-[33px] h-[33px]">
-                        <img class="w-full h-full object-cover"
-                             src="{{ asset('storage/assets/profile/cat_meme.jpg') }}"
-                             alt="Profile Picture">
+                        <img alt="Profile Picture" class="w-8 h-8 rounded-full" height="32"
+                             src="{{ asset('storage/' . (auth()->user()->profile_photo_path ?? 'profile-images/cat_meme.jpg')) }}" width="32"/>
                     </div>
                     <div class="mt-2">
                         <x-dropdown align="right" width="58" contentClasses="py-2 bg-white"
@@ -337,6 +336,12 @@
                                             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                                         </svg>
                                         You Already Voted
+                                    @elseif($hasEnded)
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M12 1.75a10.25 10.25 0 1 0 10.25 10.25A10.26 10.26 0 0 0 12 1.75zm0 18.5a8.25 8.25 0 1 1 8.25-8.25 8.26 8.26 0 0 1-8.25 8.25z"/>
+                                            <path d="M12.75 7a.75.75 0 0 0-1.5 0v5a.75.75 0 0 0 .22.53l3.25 3.25a.75.75 0 1 0 1.06-1.06l-3.03-3.03V7z"/>
+                                        </svg>
+                                        <span class="ml-1 text-sm text-gray-600 font-medium">Election Ended</span>
                                     @else
                                         Vote Now
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -356,40 +361,125 @@
              style="background-image: url('{{ asset('storage/assets/image/bg-voter-side.png') }}');">
 
             <div>
-                <img src="{{ asset('storage/assets/election-image/student-and-local-council-election-2023.png') }}"
+                <img src="{{ asset('storage/' . $election->image_path) }}"
                      alt="" class="max-h-screen lg:hidden" style="mix-blend-mode: multiply;">
             </div>
         </div>
 
-        <div class="mb-6 bg-black text-white p-4 rounded-lg shadow-md text-center min-h-[100px] sm:min-h-[160px] ">
-            <div class="flex justify-between items-center">
-                <div class="flex items-center space-x-2 mb-4">
-                    <i class="fas fa-stopwatch text-white text-sm"></i>
-                    <span class="text-sm font-bold text-white">Election Ends In:</span>
+        @if(!$hasEnded && !$hasVoted)
+            <div class="mb-6 bg-black text-white p-4 rounded-lg shadow-md text-center min-h-[100px] sm:min-h-[160px] ">
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center space-x-2 mb-4">
+                        <i class="fas fa-stopwatch text-white text-sm"></i>
+                        <span class="text-sm font-bold text-white">Election Ends In:</span>
+                    </div>
+
                 </div>
+                <div class="tick" data-did-init="handleTickInit" data-credits="false">
+                    <div
+                        data-repeat="true"
+                        data-layout="horizontal fit"
+                        data-transform="preset(d, h, m, s) -> delay"
+                        class="tick-container">
 
-            </div>
-            <div class="tick" data-did-init="handleTickInit" data-credits="false">
-                <div
-                    data-repeat="true"
-                    data-layout="horizontal fit"
-                    data-transform="preset(d, h, m, s) -> delay"
-                    class="tick-container">
-
-                    <div class="tick-group">
-                        <div data-key="value" data-repeat="true" data-transform="pad(00) -> split -> delay">
-                            <span data-view="flip" class="tick-value"></span>
+                        <div class="tick-group">
+                            <div data-key="value" data-repeat="true" data-transform="pad(00) -> split -> delay">
+                                <span data-view="flip" class="tick-value"></span>
+                            </div>
+                            <span data-key="label" data-view="text" class="tick-label"></span>
                         </div>
-                        <span data-key="label" data-view="text" class="tick-label"></span>
+                    </div>
+                    <div class="tick-onended-message" style="display: none">
+                        <p>Time's up</p>
                     </div>
                 </div>
-                <div class="tick-onended-message" style="display: none">
-                    <p>Time's up</p>
-                </div>
+
+            </div>
+        @else
+            <div class="mb-6 bg-black text-white p-4 rounded-lg shadow-md text-center min-h-[100px] sm:min-h-[160px] flex items-center justify-center">
+                @if($hasVoted)
+                    <div class="w-full">
+                        <h2 class="text-[12px] sm:text-[12px] font-semibold mb-1">Thank You for Participating!</h2>
+                        <p class="text-[10px] text-gray-300">
+                            Your vote has been recorded. Your voice contributes to shaping the future of this community.
+                        </p>
+                        <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                            <div class="flex items-center mb-5 space-x-3">
+                                <svg class="h-4 w-4 text-blue-600" viewBox="0 0 24 24" fill="none">
+                                    <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z"
+                                          stroke="currentColor"
+                                          stroke-width="2"
+                                          stroke-linecap="round"
+                                          stroke-linejoin="round"/>
+                                    <path d="M14 2V8H20"
+                                          stroke="currentColor"
+                                          stroke-width="2"
+                                          stroke-linecap="round"
+                                          stroke-linejoin="round"/>
+                                </svg>
+                                <h3 class="text-[12px] font-bold text-gray-800">Election Receipt</h3>
+                            </div>
+
+                            <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+                                <a href="{{ route('voter.download.receipt', $encodedVotes->id) }}"
+                                   class="group relative w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-lg transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                                    <svg class="h-5 w-5 text-white" viewBox="0 0 24 24" fill="none">
+                                        <path d="M12 3V16M12 16L16 12M12 16L8 12"
+                                              stroke="currentColor"
+                                              stroke-width="2"
+                                              stroke-linecap="round"
+                                              stroke-linejoin="round"/>
+                                        <path d="M3 17V19C3 19.5304 3.21071 20.0391 3.58579 20.4142C3.96086 20.7893 4.46957 21 5 21H19C19.5304 21 20.0391 20.7893 20.4142 20.4142C20.7893 20.0391 21 19.5304 21 19V17"
+                                              stroke="currentColor"
+                                              stroke-width="2"
+                                              stroke-linecap="round"
+                                              stroke-linejoin="round"/>
+                                    </svg>
+                                    <span class="font-semibold text-sm">Download Secure Receipt</span>
+                                    <div class="absolute inset-0 border-2 border-white/20 rounded-lg group-hover:border-white/30 transition-all"></div>
+                                </a>
+
+                                <div class="flex items-center space-x-3">
+                                    <div class="hidden sm:block w-px h-8 bg-gray-200"></div>
+                                    <a href="{{ route('verify.vote.page', ['voteId' => $encodedVotes->id]) }}"
+                                       class="flex items-center gap-2 text-purple-600 hover:text-purple-700 group transition-colors">
+                                        <svg class="h-5 w-5 text-purple-500 group-hover:text-purple-600" viewBox="0 0 24 24" fill="none">
+                                            <path d="M12 22C12 22 20 18 20 12V5L12 2L4 5V12C4 18 12 22 12 22Z"
+                                                  stroke="currentColor"
+                                                  stroke-width="2"
+                                                  stroke-linecap="round"
+                                                  stroke-linejoin="round"/>
+                                            <path d="M9 12L11 14L15 10"
+                                                  stroke="currentColor"
+                                                  stroke-width="2"
+                                                  stroke-linecap="round"
+                                                  stroke-linejoin="round"/>
+                                        </svg>
+                                        <span class="font-medium text-sm relative">
+                    Verify Your Vote
+                    <span class="absolute bottom-0 left-0 w-0 h-px bg-purple-600 group-hover:w-full transition-all duration-300"></span>
+                </span>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <p class="mt-4 text-xs text-gray-500 text-center">
+                                Receipt contains encrypted verification data. Store securely.
+                            </p>
+                        </div>
+                    </div>
+
+                @else
+                    <div>
+                        <h2 class="text-[12px] sm:text-xl font-semibold mb-1">You Missed a Milestone</h2>
+                        <p class="text-sm sm:text-base text-gray-300">
+                            You have not participated in this election. Every vote counts—let your voice be heard next time.
+                        </p>
+                    </div>
+                @endif
             </div>
 
-        </div>
-
+        @endif
 
 
 
@@ -435,7 +525,7 @@
          style="background-image: url('{{ asset('storage/assets/image/bg-voter-side.png') }}');">
 
         <div class=" min-h-screen w-full flex justify-center items-center">
-            <img src="{{ asset('storage/assets/election-image/student-and-local-council-election-2023.png') }}"
+            <img src="{{ asset('storage/' . $election->image_path) }}"
                  alt="" class="object-contain max-h-screen w-full mix-blend-multiply" style="mix-blend-mode: multiply;">
         </div>
     </div>
