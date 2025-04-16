@@ -30,7 +30,7 @@ class FeedbackForm extends Component
 
         // Store feedback
         Feedback::create([
-            'token' => $feedbackToken->id,
+            'token' => $feedbackToken->token,
             'name' => $this->name,
             'email' => $this->email,
             'rating' => $this->rating,
