@@ -189,7 +189,7 @@
 
                 // Get the return URL from the query parameter
                 const urlParams = new URLSearchParams(window.location.search);
-                const returnUrl = urlParams.get('return_url') || '/admin/voters';
+                const returnUrl = urlParams.get('return_url') || '/admin/login';
 
                 // Registration state
                 let registrationState = {
