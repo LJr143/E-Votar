@@ -59,7 +59,7 @@ Route::post('/logout', function (Request $request) {
             DB::table('sessions')->where('user_id', $user->id)->delete();
         }
 
-        Session::flush();
+//        Session::flush();
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();

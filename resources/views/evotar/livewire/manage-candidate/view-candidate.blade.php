@@ -169,8 +169,8 @@
                                                                      alt="">
                                                             </div>
                                                             <div class="mt-[-38px] flex justify-center">
-                                                                <div class="border-2 border-black">
-                                                                    <img class="w-[110px]"
+                                                                <div class="border-2 border-black p-1 overflow-hidden w-[110px] max-h-[110px] flex items-center justify-center">
+                                                                    <img class="w-[105px] max-h-[105px] object-cover"
                                                                          src="{{ asset('storage/' . ($candidate->users->profile_photo_path ?? 'profile-images/cat_meme.jpg')) }}"
                                                                          alt="">
                                                                 </div>
@@ -252,13 +252,13 @@
                                                             </div>
                                                             <div>
                                                                 <div class="flex justify-end mt-2 mr-[15px]">
-                                                                    <img class="w-[85px]"
+                                                                    <img class="w-[85px] "
                                                                          src="{{ asset('storage/assets/icon/usep_logo_svg.png') }}"
                                                                          alt="">
                                                                 </div>
                                                                 <div class="mt-[-38px] flex justify-center">
-                                                                    <div class="border-2 border-black">
-                                                                        <img class="w-[110px]"
+                                                                    <div class="border-2 border-black p-1 overflow-hidden w-[110px] max-h-[110px] flex items-center justify-center">
+                                                                        <img class="w-[105px] max-h-[105px] object-cover"
                                                                              src="{{ asset('storage/' . ($candidate->users->profile_photo_path ?? 'profile-images/cat_meme.jpg')) }}"
                                                                              alt="">
                                                                     </div>

@@ -1,7 +1,7 @@
 <div x-data="{ open: false }" x-cloak @candidate-created.window="open = false">
     <!-- Trigger Button -->
     <button @click="open = true"
-            class="w-[100px] mr-2 rounded py-[6px] px-2 bg-black text-white text-[12px] hover:bg-gray-700">
+            class="w-[130px] mr-2 rounded py-[6px] px-2 bg-black text-white text-[12px] hover:bg-gray-700">
         Add Candidate
     </button>
     <style>

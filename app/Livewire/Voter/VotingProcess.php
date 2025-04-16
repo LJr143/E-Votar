@@ -4,6 +4,7 @@ namespace App\Livewire\Voter;
 
 use App\Helpers\EncryptionHelper;
 use App\Helpers\SteganographyHelper;
+use App\Models\AbstainVote;
 use App\Models\Candidate;
 use App\Models\Election;
 use App\Models\Vote;
@@ -27,6 +28,7 @@ class VotingProcess extends Component
     public $showSummaryModal = false;
     public $showDuplicateErrorModal = false;
     public $duplicateError = '';
+    public $abstainSelections = [];
 
     public function mount($slug)
     {
@@ -97,7 +99,6 @@ class VotingProcess extends Component
     public function addSelections($selections): void
     {
         foreach ($selections as $key => $value) {
-            // Keep the original key format: selected_candidate_{position_id}_{slot_number}
             $this->selectedCandidates[$key] = $value;
         }
     }
@@ -105,6 +106,23 @@ class VotingProcess extends Component
     public function selectCandidate($positionId, $candidateId): void
     {
         $this->selectedCandidates[$positionId] = $candidateId;
+
+        if (isset($this->abstainSelections[$positionId])) {
+            unset($this->abstainSelections[$positionId]);
+        }
+    }
+
+    public function toggleAbstain($positionId): void
+    {
+        if (isset($this->abstainSelections[$positionId])) {
+            unset($this->abstainSelections[$positionId]);
+        } else {
+            $this->abstainSelections[$positionId] = true;
+            // If abstaining, remove any candidate selection for this position
+            if (isset($this->selectedCandidates[$positionId])) {
+                unset($this->selectedCandidates[$positionId]);
+            }
+        }
     }
 
     private function hasDuplicateVotes(): bool
@@ -147,6 +165,7 @@ class VotingProcess extends Component
             'election_id' => $this->election->id,
             'voter_id' => auth()->id(),
             'votes' => $this->selectedCandidates,
+            'abstentions' => array_keys($this->abstainSelections),
             'timestamp' => now()->toDateTimeString(),
         ];
 
@@ -182,6 +201,15 @@ class VotingProcess extends Component
         foreach ($this->selectedCandidates as $key => $candidateId) {
             [$positionId, $slot] = explode('_', str_replace('selected_candidate_', '', $key));
 
+            if ($candidateId === 'abstain') {
+                // Record abstention
+                AbstainVote::create([
+                    'user_id' => auth()->id(),
+                    'election_id' => $this->election->id,
+                    'position_id' => $positionId,
+                    'created_at' => now(),
+                ]);
+            }
             $candidate = Candidate::find($candidateId);
             if ($candidate) {
                 Vote::create([
@@ -204,8 +232,18 @@ class VotingProcess extends Component
 
     }
 
+    public function getAbstentionCounts()
+    {
+        return AbstainVote::where('election_id', $this->election->id)
+            ->select('position_id', DB::raw('count(*) as total'))
+            ->groupBy('position_id')
+            ->pluck('total', 'position_id');
+    }
+
+
     public function render(): \Illuminate\Contracts\View\View
     {
+        $abstentionCounts = $this->getAbstentionCounts();
         // Filter positions based on the current stage
         if ($this->currentStage === 'student') {
             // Student Council Election: No separation by major
@@ -260,6 +298,7 @@ class VotingProcess extends Component
             });
         }
 
+
         return view('evotar.livewire.voter.voting-process', [
             'election' => $this->election,
             'positions' => $positionsWithCandidates,
@@ -267,6 +306,8 @@ class VotingProcess extends Component
             'showProceedButton' => $this->showProceedButton,
             'selectedCandidates' => $this->selectedCandidates,
             'showSummaryModal' => $this->showSummaryModal,
+            'abstentionCounts' => $abstentionCounts,
+            'abstainSelections' => $this->abstainSelections,
         ]);
     }
 }
