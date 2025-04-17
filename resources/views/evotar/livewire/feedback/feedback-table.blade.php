@@ -42,6 +42,8 @@
                         <div>
                             <div class="font-semibold text-gray-800 text-sm">
                                 {{ $review->name ?? 'anonymous' }}
+                            </div><div class=" text-gray-800 text-[10px]">
+                                {{ $review->token ?? 'unverified' }}
                             </div>
                             <div class="text-xs text-gray-500">
                                 {{ $review->created_at->format('d.m.Y') }}
