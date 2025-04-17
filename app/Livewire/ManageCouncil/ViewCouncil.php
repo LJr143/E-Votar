@@ -31,6 +31,7 @@ class ViewCouncil extends Component
         'council-created' => '$refresh',
         'council-updated' => '$refresh',
         'council-deleted' => '$refresh',
+        'council-edited' => '$refresh',
     ];
 
     public function mount(): void

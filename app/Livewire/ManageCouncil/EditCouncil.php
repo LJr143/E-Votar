@@ -18,19 +18,25 @@ class EditCouncil extends Component
     public $councilSettings = [];
     public $electionTypesWithPositions = [];
     public $logo;
-    public $tempLogoUrl = null;
-    public $removeLogo = false;
+    public $temporaryLogoUrl = null;
+    public $currentLogoPath;
+    public $currentLogoUrl;
+    public $councilId;
 
     public function mount($councilId): void
     {
-        $this->council = Council::with('councilPositionSetting')->find($councilId);
+        $this->councilId = $councilId;
+        $this->loadCouncilData();
+    }
 
-        if (!$this->council) {
-            abort(404, 'Council not found');
-        }
-
-        $this->loadElectionTypesWithPositions();
+    public function loadCouncilData(): void
+    {
+        $this->council = Council::with('councilPositionSetting')->findOrFail($this->councilId);
         $this->name = $this->council->name;
+        $this->currentLogoPath = $this->council->logo_path;
+        $this->temporaryLogoUrl = $this->getCurrentLogoUrl();
+        $this->currentLogoUrl = $this->currentLogoPath;
+        $this->loadElectionTypesWithPositions();
 
         $this->councilSettings = $this->council->councilPositionSetting->isEmpty()
             ? [['position_id' => null, 'separated_by_major' => false]]
@@ -56,16 +62,16 @@ class EditCouncil extends Component
         ]);
 
         if ($this->logo) {
-            $this->tempLogoUrl = $this->logo->temporaryUrl();
-            $this->removeLogo = false;
+            $this->temporaryLogoUrl = $this->logo->temporaryUrl();
+            $this->currentLogoUrl = null;
         }
     }
 
     public function removeLogo()
     {
-        $this->reset(['logo', 'tempLogoUrl']);
-        $this->removeLogo = true;
-        $this->dispatch('logo-removed');
+        $this->reset(['logo', 'temporaryLogoUrl']);
+        $this->currentLogoPath = null;
+        $this->currentLogoUrl = null;
     }
 
     public function addCouncilSettings(): void
@@ -78,15 +84,6 @@ class EditCouncil extends Component
 
     public function removeCouncilSettings($index): void
     {
-        $setting = $this->councilSettings[$index];
-
-        if (!empty($setting['position_id'])) {
-            CouncilPositionSetting::where([
-                'council_id' => $this->council->id,
-                'position_id' => $setting['position_id']
-            ])->delete();
-        }
-
         unset($this->councilSettings[$index]);
         $this->councilSettings = array_values($this->councilSettings);
     }
@@ -98,80 +95,62 @@ class EditCouncil extends Component
             'logo' => 'nullable|image|max:1024',
         ]);
 
-        // Only validate settings if any position is filled
-        $hasValidSettings = collect($this->councilSettings)
-            ->filter(fn ($setting) => !empty($setting['position_id']))
-            ->isNotEmpty();
-
-        if ($hasValidSettings) {
-            $this->validate([
-                'councilSettings.*.position_id' => 'nullable|exists:positions,id',
-                'councilSettings.*.separated_by_major' => 'nullable|boolean',
-            ]);
-        }
-
-        // Check if logo_path exists and assign it to $logoPath
-        $logoPath = $this->council->logo_path ?? null;
-
-        // Handle logo removal
-        if ($this->removeLogo) {
-            if ($logoPath && Storage::disk('public')->exists($logoPath)) {
-                Storage::disk('public')->delete($logoPath);
+        // Handle logo update
+        if ($this->logo) {
+            // Delete old logo if exists
+            if ($this->currentLogoPath && Storage::disk('public')->exists($this->currentLogoPath)) {
+                Storage::disk('public')->delete($this->currentLogoPath);
             }
-            $logoPath = null;
-        } elseif ($this->logo) {
-            // Handle new logo upload
-            if ($logoPath && Storage::disk('public')->exists($logoPath)) {
-                Storage::disk('public')->delete($logoPath);
-            }
-            $logoPath = $this->logo->store('council-logos', 'public');
+            $this->currentLogoPath = $this->logo->store('council-logos', 'public');
         }
 
         // Update council
         $this->council->update([
             'name' => $this->name,
-            'logo_path' => $logoPath
+            'logo_path' => $this->currentLogoPath
         ]);
 
-        // Only process valid settings
+        // Update council settings
         $existingSettings = CouncilPositionSetting::where('council_id', $this->council->id)
             ->get()
             ->keyBy('position_id');
 
-        if ($hasValidSettings) {
-            foreach ($this->councilSettings as $setting) {
-                if (empty($setting['position_id'])) continue;
+        foreach ($this->councilSettings as $setting) {
+            if (empty($setting['position_id'])) continue;
 
-                if ($existingSettings->has($setting['position_id'])) {
-                    CouncilPositionSetting::where([
-                        'council_id' => $this->council->id,
-                        'position_id' => $setting['position_id']
-                    ])->update([
-                        'separate_by_major' => $setting['separated_by_major'] ?? false
-                    ]);
-                } else {
-                    CouncilPositionSetting::create([
-                        'council_id' => $this->council->id,
-                        'position_id' => $setting['position_id'],
-                        'separate_by_major' => $setting['separated_by_major'] ?? false
-                    ]);
-                }
+            if ($existingSettings->has($setting['position_id'])) {
+                CouncilPositionSetting::where([
+                    'council_id' => $this->council->id,
+                    'position_id' => $setting['position_id']
+                ])->update([
+                    'separate_by_major' => $setting['separated_by_major'] ?? false
+                ]);
+            } else {
+                CouncilPositionSetting::create([
+                    'council_id' => $this->council->id,
+                    'position_id' => $setting['position_id'],
+                    'separate_by_major' => $setting['separated_by_major'] ?? false
+                ]);
             }
-
-            // Delete removed settings
-            $currentPositionIds = collect($this->councilSettings)
-                ->pluck('position_id')
-                ->filter();
-
-            CouncilPositionSetting::where('council_id', $this->council->id)
-                ->whereNotIn('position_id', $currentPositionIds)
-                ->delete();
-        } else {
-            // If no settings at all, delete all existing for the council
-            CouncilPositionSetting::where('council_id', $this->council->id)->delete();
         }
 
+        // Delete removed settings
+        $currentPositionIds = collect($this->councilSettings)
+            ->pluck('position_id')
+            ->filter();
+
+        CouncilPositionSetting::where('council_id', $this->council->id)
+            ->whereNotIn('position_id', $currentPositionIds)
+            ->delete();
+
         $this->dispatch('council-edited', message: 'Council updated successfully');
+    }
+
+    protected function getCurrentLogoUrl(): ?string
+    {
+        return $this->currentLogoPath
+            ? Storage::disk('public')->url($this->currentLogoPath)
+            : null;
     }
 
     public function render()

@@ -176,19 +176,22 @@
                                     <td class="py-3 px-6 text-left">{{ $council->id }}</td>
                                     <td class="py-3 px-6 text-left font-bold">{{ $council->name }}</td>
 
-                                    <td class="py-3 px-6 text-left exclude-print" wire:key="actions-{{ $council->id }}">
+                                    <td class="py-3 px-6 text-left exclude-print">
                                         <div class="flex space-x-2">
                                             <!-- Edit Council -->
-                                            <livewire:manage-council.edit-council
-                                                :councilId="$council->id"
-                                                wire:key="edit-council-{{ $council->id }}"
-                                            />
-
+                                            <div wire:key="edit-council-wrapper-{{ $council->id }}">
+                                                <livewire:manage-council.edit-council
+                                                    :councilId="$council->id"
+                                                    :key="'edit-council-'.$council->id"
+                                                />
+                                            </div>
                                             <!-- Delete Council -->
-                                            <livewire:manage-council.delete-council
-                                                :councilId="$council->id"
-                                                wire:key="delete-council-{{ $council->id }}"
-                                            />
+                                            <div wire:key="delete-council-wrapper-{{ $council->id }}">
+                                                <livewire:manage-council.delete-council
+                                                    :councilId="$council->id"
+                                                    :key="'delete-council-'.$council->id"
+                                                />
+                                            </div>
                                         </div>
                                     </td>
                                 </tr>

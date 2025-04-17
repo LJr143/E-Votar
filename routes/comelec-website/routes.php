@@ -17,7 +17,7 @@ Route::get('about-us', [WebsiteController::class, 'AboutUs'])->name('comelec-web
 Route::get('data-privacy', [WebsiteController::class, 'DataPrivacy'])->name('comelec-website.data-privacy');
 Route::get('policies', [WebsiteController::class, 'Policies'])->name('comelec-website.policies');
 
-Route::get('selected-announcement', [WebsiteController::class, 'SelectedAnnouncement'])->name('comelec-website.selected-announcement');
+Route::get('selected-announcement/{id}', [WebsiteController::class, 'SelectedAnnouncement'])->name('comelec-website.selected-announcement');
 Route::get('selected-election/{id}', [WebsiteController::class, 'SelectedElection'])->name('comelec-website.selected-election');
 Route::get('selected-partylist', [WebsiteController::class, 'SelectedPartylist'])->name('comelec-website.selected-partylist');
 

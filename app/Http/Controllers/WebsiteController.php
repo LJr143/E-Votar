@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Announcement;
 use App\Models\Council;
 use Illuminate\Http\Request;
 
@@ -45,9 +46,12 @@ class WebsiteController extends Controller
     }
 
 
-    public function SelectedAnnouncement()
+    public function SelectedAnnouncement($id)
     {
-        return view('evotar.comelec-website.selected-announcement');
+        $announcement = Announcement::find($id);
+        return view('evotar.comelec-website.selected-announcement', [
+            'announcement' => $announcement
+        ]);
     }
 
     public function SelectedElection($id)
