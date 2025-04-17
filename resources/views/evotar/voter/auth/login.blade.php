@@ -136,7 +136,7 @@
     <script>
         document.addEventListener('keydown', function (event) {
             if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === 'u') {
-                window.location.href = '{{ route("login") }}';
+                window.location.href = '{{ route("admin.login") }}';
             }
         });
 

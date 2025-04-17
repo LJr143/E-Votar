@@ -220,7 +220,6 @@ body {
     animation-delay: 0s, 0s, 0s, 2.6s;
 }
 
-
 .letter:nth-child(4) {
     animation-delay: 0.6s;
     transform: translateX(-110px);

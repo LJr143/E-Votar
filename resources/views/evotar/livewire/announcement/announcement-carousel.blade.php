@@ -19,11 +19,11 @@
         </button>
 
         <!-- Announcements Carousel -->
-        <div class="overflow-hidden">
+        <div class="overflow-hidden w-full h-[340px]">
             <div class="flex transition-transform duration-500 ease-in-out"
                  style="transform: translateX(-{{ $currentIndex * (100 / $visibleSlides) }}%)">
                 @forelse($announcements as $announcement)
-                    <div class="flex-shrink-0 w-full sm:w-1/2 lg:w-1/3 px-3" style="width: {{ 100 / $visibleSlides }}%">
+                    <div class="flex-shrink-0 w-full sm:w-1/2 lg:w-1/3 px-2" style="width: {{ 100 / $visibleSlides }}%">
                         <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 h-full flex flex-col">
                             <a href="{{ route('comelec-website.selected-announcement', $announcement['id']) }}" class="block">
                                 <div class="relative h-48 overflow-hidden">

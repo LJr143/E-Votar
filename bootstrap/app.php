@@ -28,6 +28,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'set.selected.election' => \App\Http\Middleware\SetSelectedElection::class,
             'check.blocked.ip' => \App\Http\Middleware\CheckBlockedIp::class,
             'check.first.creation.superadmin' => \App\Http\Middleware\CheckFirstCreationSuperadmin::class,
+            \App\Http\Middleware\CheckPrivacyAgreement::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

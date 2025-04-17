@@ -47,6 +47,7 @@
 </head>
 
 <body class="font-poppins antialiased bg-[#F7F7F9]">
+@livewire('privacy-agreement')
 @if(session('showSplash'))
     <div id="splash-screen" class="splash-screen">
         <div class="splash-screen">

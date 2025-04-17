@@ -30,6 +30,7 @@
     @livewireStyles
 </head>
 <body class="font-poppins antialiased">
+@livewire('privacy-agreement')
 <x-banner />
 
 <header>

@@ -1,6 +1,6 @@
 <x-guest-layout>
 
-    <div class="flex justify-between items-center align-middle p-3 bg-white sm:flex w-full h-[55px]">
+    <div class="z-50 flex justify-between items-center align-middle p-3 bg-white sm:flex w-full h-[55px]">
         <div class="flex space-x-4">
             <img class="h-[28px] " src="{{ asset('storage/assets/logo/evotar_red.png') }}" alt="evotar_logo"/>
         </div>
@@ -16,7 +16,7 @@
         </div>
     </div>
 
-    <div class="circle red-circle w-[200px] h-[200px]  sm:w-[300px] sm:h-[300px] md:w-[400px] md:h-[400px] bg-red-900 absolute rounded-full z-50 left-[50px] sm:left-[150px] md:left-[300px] top-[80px]"
+    <div class=" z-50 circle red-circle w-[200px] h-[200px]  sm:w-[300px] sm:h-[300px] md:w-[400px] md:h-[400px] bg-red-900 absolute rounded-full z-50 left-[50px] sm:left-[150px] md:left-[300px] top-[80px]"
          style="background: linear-gradient( #ba0404, #882222);">
 
     </div>
@@ -176,7 +176,7 @@
     <script>
         document.addEventListener('keydown', function (event) {
             if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === 'u') {
-                window.location.href = '{{ route("login") }}';
+                window.location.href = '{{ route("admin.login") }}';
             }
         });
 

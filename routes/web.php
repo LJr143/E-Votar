@@ -25,6 +25,12 @@ Route::group(['middleware' => ['check.first.creation.superadmin']], function () 
     Route::post('register/first', [ViewController::class, 'registerSuperadminRegister'])->name('admin.register.post.superadmin');
 });
 
+// Optional: Redirect or return 404 for disabled pages
+Route::get('login', function () {
+   return redirect(route('voter.login'));
+});
+
+
 
 Route::get('/campuses', [CampusController::class, 'index'])->name('campuses');
 Route::get('/colleges/{campusId}', [CampusController::class, 'getColleges']);
