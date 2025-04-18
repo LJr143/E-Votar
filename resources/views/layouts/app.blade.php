@@ -12,6 +12,8 @@
     <link rel="shortcut icon" href="{{ asset('storage/assets/icon/evotar_v_logo.png') }}">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"  />
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Poppins:400,500,600&display=swap" rel="stylesheet"/>
@@ -29,7 +31,6 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
     <link href="https://unpkg.com/@pqina/flip/dist/flip.min.css" rel="stylesheet">
 
@@ -196,6 +197,7 @@
 <script src="https://unpkg.com/filepond@^4/dist/filepond.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.1/gsap.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/face-api.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <!-- resources/views/layouts/app.blade.php -->
 {{--<script src="{{ asset('evotar/public/vendor/livewire/livewire.js') }}"></script>--}}
 
@@ -231,6 +233,58 @@
             customIcon: '',
         });
     }
+</script>
+
+<script>
+    window.Swiper = Swiper;
+
+    document.addEventListener('DOMContentLoaded', () => {
+        new Swiper('#studentCouncil', {
+            slidesPerView: 1,
+            spaceBetween: 16,
+            grabCursor: true,
+            pagination: { el: '.swiper-pagination', clickable: true },
+            navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+            breakpoints: {
+                640: { slidesPerView: 2 },
+                768: { slidesPerView: 3 },
+                1024: { slidesPerView: 4 },
+            },
+        });
+
+        new Swiper('#localCouncil', {
+            slidesPerView: 1,
+            spaceBetween: 16,
+            grabCursor: true,
+            pagination: { el: '.swiper-pagination', clickable: true },
+            navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+            breakpoints: {
+                640: { slidesPerView: 2 },
+                768: { slidesPerView: 3 },
+                1024: { slidesPerView: 4 },
+            },
+        });
+
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const swipers = document.querySelectorAll('.swiper-container');
+
+        swipers.forEach(swiperContainer => {
+            new Swiper(swiperContainer, {
+                slidesPerView: 1,
+                spaceBetween: 16,
+                grabCursor: true,
+                pagination: { el: '.swiper-pagination', clickable: true },
+                navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+                breakpoints: {
+                    640: { slidesPerView: 2 },
+                    768: { slidesPerView: 3 },
+                    1024: { slidesPerView: 4 },
+                },
+            });
+        });
+    });
 </script>
 
 
