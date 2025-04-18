@@ -121,3 +121,55 @@
         }
     }
 </script>
+
+<script>
+    window.Swiper = Swiper;
+
+    document.addEventListener('DOMContentLoaded', () => {
+        new Swiper('#studentCouncil', {
+            slidesPerView: 1,
+            spaceBetween: 16,
+            grabCursor: true,
+            pagination: { el: '.swiper-pagination', clickable: true },
+            navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+            breakpoints: {
+                640: { slidesPerView: 2 },
+                768: { slidesPerView: 3 },
+                1024: { slidesPerView: 4 },
+            },
+        });
+
+        new Swiper('#localCouncil', {
+            slidesPerView: 1,
+            spaceBetween: 16,
+            grabCursor: true,
+            pagination: { el: '.swiper-pagination', clickable: true },
+            navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+            breakpoints: {
+                640: { slidesPerView: 2 },
+                768: { slidesPerView: 3 },
+                1024: { slidesPerView: 4 },
+            },
+        });
+
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const swipers = document.querySelectorAll('.swiper-container');
+
+        swipers.forEach(swiperContainer => {
+            new Swiper(swiperContainer, {
+                slidesPerView: 1,
+                spaceBetween: 16,
+                grabCursor: true,
+                pagination: { el: '.swiper-pagination', clickable: true },
+                navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+                breakpoints: {
+                    640: { slidesPerView: 2 },
+                    768: { slidesPerView: 3 },
+                    1024: { slidesPerView: 4 },
+                },
+            });
+        });
+    });
+</script>
