@@ -106,7 +106,7 @@ class VoteTallyInWebsite extends Component
                                     $q->where('name', 'like', '%' . $this->search . '%');
                                 });
                         })
-                        ->with(['users.program', 'users.programMajor', 'partyLists'])
+                        ->with(['users.program', 'users.programMajor', 'partyLists'])->withCount('votes')
                         ->get();
 
                     $candidatesByPosition[$position->name] = $candidates;
