@@ -61,6 +61,88 @@
                                     <span class="text-red-500 text-[10px] italic">{{ $message }}</span>
                                     @enderror
                                 </div>
+                                <div class="mb-6">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Party List Logo</label>
+                                    <div class="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+                                        <!-- Preview Container -->
+                                        <div class="w-32 h-32 flex-shrink-0 relative border-2 border-dashed border-gray-300 rounded-lg overflow-hidden bg-gray-50 flex items-center justify-center">
+                                            @if($temporaryLogoUrl && !$currentLogoUrl)
+                                                <!-- Newly uploaded logo preview -->
+                                                <img src="{{ $temporaryLogoUrl }}" alt="New logo preview" class="absolute inset-0 w-full h-full object-contain p-2" />
+                                                <button type="button"
+                                                        wire:click="removeLogo"
+                                                        class="absolute top-1 right-1 bg-white/80 hover:bg-white rounded-full p-1 shadow-sm transition-all z-10">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                                    </svg>
+                                                </button>
+                                            @elseif($currentLogoUrl)
+                                                <!-- Existing saved logo -->
+                                                <img src="{{ asset('storage/'. $currentLogoUrl) }}" alt="Current logo" class="absolute inset-0 w-full h-full object-contain p-2" />
+                                                <button type="button"
+                                                        wire:click="removeLogo"
+                                                        class="absolute top-1 right-1 bg-white/80 hover:bg-white rounded-full p-1 shadow-sm transition-all z-10">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                                    </svg>
+                                                </button>
+                                            @else
+                                                <!-- Placeholder when no logo exists -->
+                                                <div class="text-center p-4">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mx-auto text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                    </svg>
+                                                    <p class="text-xs text-gray-500 mt-1">No logo</p>
+                                                </div>
+                                            @endif
+                                        </div>
+
+                                        <!-- Upload Controls -->
+                                        <div class="flex-1 w-full min-w-0">
+                                            <div class="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+                                                <div class="relative flex-1 w-full overflow-hidden">
+                                                    <input type="file"
+                                                           id="logo-upload-{{ $partyList->id }}"
+                                                           wire:model="logo"
+                                                           accept="image/*"
+                                                           class="sr-only">
+                                                    <label for="logo-upload-{{ $partyList->id }}"
+                                                           class="block w-full h-10 px-3 py-2 bg-white border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition flex items-center justify-between">
+                                                    <span class="text-sm text-gray-500 truncate mr-2">
+                                                        @if($logo)
+                                                            {{ $logo->getClientOriginalName() }}
+                                                        @else
+                                                            Choose a new logo...
+                                                        @endif
+                                                    </span>
+                                                        <span class="text-xs bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded transition">
+                                                        Browse
+                                                    </span>
+                                                    </label>
+                                                </div>
+
+                                                @if($currentLogoPath)
+                                                    <button type="button"
+                                                            wire:click="removeLogo"
+                                                            class="text-sm text-red-600 hover:text-red-800 flex items-center gap-1 transition px-3 py-2 border border-red-200 rounded-lg hover:bg-red-50">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                        </svg>
+                                                        Remove Logo
+                                                    </button>
+                                                @endif
+                                            </div>
+
+                                            @error('logo')
+                                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                            @enderror
+
+                                            <p class="mt-2 text-xs text-gray-500">
+                                                Recommended: Square image (1:1 aspect ratio), 300×300 pixels minimum
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

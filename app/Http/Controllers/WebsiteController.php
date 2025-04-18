@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Announcement;
 use App\Models\Council;
+use App\Models\PartyList;
 use Illuminate\Http\Request;
 
 class WebsiteController extends Controller
@@ -62,9 +63,12 @@ class WebsiteController extends Controller
         ]);
     }
 
-    public function SelectedPartylist()
+    public function SelectedPartylist($id)
     {
-        return view('evotar.comelec-website.selected-partylist');
+        $partyList = PartyList::find($id);
+        return view('evotar.comelec-website.selected-partylist', [
+            'partyList' => $partyList,
+        ]);
     }
 
 

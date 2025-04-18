@@ -7,6 +7,7 @@ use App\Models\Candidate;
 use App\Models\Council;
 use App\Models\Election;
 use App\Models\ElectionPosition;
+use App\Models\PartyList;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Carbon;
@@ -26,6 +27,7 @@ class Home extends Component
     public $latestElection;
     public $hasStudentCouncilPositions;
     public $hasLocalCouncilPositions;
+    public $partylists;
 
     public $totalVoters, $totalVoterVoted, $totalCandidates, $totalPositions;
 
@@ -37,12 +39,14 @@ class Home extends Component
         $this->date = Carbon::now();
         $this->fetchElection();
         $this->fetchCouncils();
+        $this->loadPartylists();
     }
 
     public function updatedSearch(): void
     {
         $this->fetchCandidates();
         $this->fetchVoterTally();
+        $this->loadPartylists();
     }
 
     /**
@@ -52,12 +56,14 @@ class Home extends Component
     {
         $this->fetchElection();
         $this->fetchCandidates();
+        $this->loadPartylists();
     }
 
     public function updatedSelectedElection(): void
     {
         $this->fetchCandidates();
         $this->fetchVoterTally();
+        $this->loadPartylists();
     }
 
     public function fetchCandidates(): void
@@ -225,6 +231,17 @@ class Home extends Component
             $this->totalPositions = ElectionPosition::where('election_id', $election->id)->count();
         }
     }
+
+    public function loadPartylists()
+    {
+        $query = Partylist::with(['candidates.users'])
+            ->when($this->search, function($query) {
+                return $query->where('name', 'like', '%'.$this->search.'%');
+            })
+            ->orderBy('name');
+
+        $this->partylists = $query->get();
+    }
     public function render()
     {
         return view('evotar.livewire.comelec-website.home', [
@@ -238,7 +255,8 @@ class Home extends Component
             'latestElection' => $this->latestElection,
             'councils' => $this->councils,
             'positions'=> $this->positions,
-            'councilOrgs'=> $this->councilsOrgs
+            'councilOrgs'=> $this->councilsOrgs,
+            'partyLists' => $this->partylists,
         ]);
     }
 }

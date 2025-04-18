@@ -14,8 +14,8 @@ class AddCouncil extends Component
     use WithFileUploads;
 
     public $name;
-    public $logo; // Temporary uploaded file
-    public $logoPath; // This should be removed as we'll store directly
+    public $logo;
+    public $logoPath;
     public $councilSettings = [];
     public $electionTypesWithPositions = [];
 

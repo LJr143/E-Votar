@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use App\Models\Election;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 
 require __DIR__ . '/admin/routes.php';
@@ -25,11 +24,14 @@ Route::group(['middleware' => ['check.first.creation.superadmin']], function () 
     Route::post('register/first', [ViewController::class, 'registerSuperadminRegister'])->name('admin.register.post.superadmin');
 });
 
-// Optional: Redirect or return 404 for disabled pages
 Route::get('login', function () {
    return redirect(route('voter.login'));
 });
 
+
+Route::get('/reset-password/{token}', function ($token) {
+    return view('auth.reset-password', ['token' => $token]);
+})->middleware('guest')->name('password.reset');
 
 
 Route::get('/campuses', [CampusController::class, 'index'])->name('campuses');

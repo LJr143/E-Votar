@@ -9,7 +9,7 @@ class PartyList extends Model
 {
     protected $table = 'party_lists';
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'logo_path'];
 
     public function candidates(): HasMany
     {

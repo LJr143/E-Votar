@@ -19,7 +19,7 @@ Route::get('policies', [WebsiteController::class, 'Policies'])->name('comelec-we
 
 Route::get('selected-announcement/{id}', [WebsiteController::class, 'SelectedAnnouncement'])->name('comelec-website.selected-announcement');
 Route::get('selected-election/{id}', [WebsiteController::class, 'SelectedElection'])->name('comelec-website.selected-election');
-Route::get('selected-partylist', [WebsiteController::class, 'SelectedPartylist'])->name('comelec-website.selected-partylist');
+Route::get('selected-partylist/{id}', [WebsiteController::class, 'SelectedPartylist'])->name('comelec-website.selected-partylist');
 
 
 Route::get('add-announcement', [WebsiteController::class, 'AddAnnouncement'])->name('comelec-website.add-announcement');

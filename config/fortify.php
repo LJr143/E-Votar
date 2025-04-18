@@ -74,6 +74,7 @@ return [
     */
 
     'home' => '/dashboard',
+    'login' => '/',
 
     /*
     |--------------------------------------------------------------------------
@@ -154,6 +155,9 @@ return [
             'confirmPassword' => true,
             // 'window' => 0,
         ]),
+    ],
+    'reset' => [
+        'passwords' => ['users' => 'users'], // Default table
     ],
 
 ];

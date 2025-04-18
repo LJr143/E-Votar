@@ -109,121 +109,74 @@
                     <h2 class="text-center text-[16px] font-medium text-gray-700 mb-4">Select a partylist to view the
                         corresponding members</h2>
 
-                    <div class="flex flex-wrap">
-                        <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-2">
-                            <a href="{{ route('comelec-website.selected-partylist') }}"
-                               class="border rounded-lg overflow-hidden shadow-lg h-full flex flex-col transition-transform transform hover:scale-105 hover:shadow-xl cursor-pointer">
-                                <img alt="Image of Yanong Agila, a majestic eagle with a sharp gaze and spread wings"
-                                     class="w-full h-16 object-cover" height="400"
-                                     src="https://storage.googleapis.com/a1aa/image/nCwM01gjm61HpHh9F04TN4hcO6f4V1D4KwLnjXxa3vM.jpg"
-                                     width="600"/>
-                                <div class="p-2 flex-grow">
-                                    <h2 class="text-center text-[12px] font-bold">
-                                        Yanong Agila
-                                    </h2>
-                                </div>
-                                <div class="flex items-center space-x-2 px-2">
-                                            <span class="text-gray-700 font-medium text-[9px]">
-                                                Members
-                                            </span>
-                                    <span
-                                        class="bg-gray-100 text-gray-700 text-[9px] font-medium px-2 py-0.5 rounded-full">
-                                                1.2m
-                                            </span>
-                                </div>
-                                <div class="flex items-center space-x-2 p-2">
-                                    <div class="flex -space-x-2">
-                                        <img alt="User  avatar 1" class="w-6 h-6 rounded-full border-2 border-white"
-                                             height="24"
-                                             src="https://storage.googleapis.com/a1aa/image/ZuTpJE6pJfJbppzY8Khmg-vOg6u2WXLzLMgz5_Uoc-0.jpg"
-                                             width="24"/>
-                                        <img alt="User  avatar 2" class="w-6 h-6 rounded-full border-2 border-white"
-                                             height="24"
-                                             src="https://storage.googleapis.com/a1aa/image/2pXhDPPK7gfhc2BafGJ_EAzRgUL9U11eKHP90gamIBo.jpg"
-                                             width="24"/>
-                                        <img alt="User  avatar 3" class="w-6 h-6 rounded-full border-2 border-white"
-                                             height="24"
-                                             src="https://storage.googleapis.com/a1aa/image/JiBdvOYQiJDmouspoR7oGEmdSCAvmDX0byxIpKTpbik.jpg"
-                                             width="24"/>
-                                        <img alt="User  avatar 4" class="w-6 h-6 rounded-full border-2 border-white"
-                                             height="24"
-                                             src="https://storage.googleapis.com/a1aa/image/-M0cg3Rd111OQRFnFY0nwtlNhSBGQiLq6cAOyZpeW5M.jpg"
-                                             width="24"/>
-                                        <img alt="User  avatar 5" class="w-6 h-6 rounded-full border-2 border-white"
-                                             height="24"
-                                             src="https://storage.googleapis.com/a1aa/image/gfEX5XQdkQ7irgoTAk4LgYP83FAwCT6UcvkAVb-AG8E.jpg"
-                                             width="24"/>
-                                        <img alt="User  avatar 6" class="w-6 h-6 rounded-full border-2 border-white"
-                                             height="24"
-                                             src="https://storage.googleapis.com/a1aa/image/bnKnpUdroN4U_87nsHuEijIHOY0ugMer4RvXvgjQuVg.jpg"
-                                             width="24"/>
-                                        <img alt="User  avatar 7" class="w-6 h-6 rounded-full border-2 border-white"
-                                             height="24"
-                                             src="https://storage.googleapis.com/a1aa/image/8y98ymkaXo-zARhuMtYOpHC7dVQksFPl3flWReilCps.jpg"
-                                             width="24"/>
-                                    </div>
-                                    <span class="text-black font-medium text-[10px]">
-                                            + 1,164,821
+                    <div class="container mx-auto px-4 py-8">
+                        <!-- Partylist Grid -->
+                        @if(!$partyLists)
+                            <div class="text-center py-12">
+                                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <h3 class="mt-2 text-lg font-medium text-gray-900">No partylists found</h3>
+                                <p class="mt-1 text-sm text-gray-500">Try adjusting your  filter to find what you're looking for.</p>
+                            </div>
+                        @else
+                            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                                @foreach($partyLists as $partylist)
+                                    <div wire:key="partylist-{{ $partylist->id }}" class="group">
+                                        <a href="{{ route('comelec-website.selected-partylist', $partylist->id) }}"
+                                           class="block h-full border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 bg-white group-hover:border-blue-500">
+                                            <!-- Partylist Logo -->
+                                            <div class="h-32 bg-gray-100 flex items-center justify-center overflow-hidden">
+                                                @if($partylist->logo_path)
+                                                    <img src="{{ asset('storage/'. $partylist->logo_path) }}"
+                                                         alt="{{ $partylist->name }} logo"
+                                                         class="w-full h-full object-cover">
+                                                @else
+                                                    <div class="text-gray-400">
+                                                        <svg class="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                                        </svg>
+                                                    </div>
+                                                @endif
+                                            </div>
+
+                                            <!-- Partylist Info -->
+                                            <div class="p-4">
+                                                <h3 class="text-[14px] font-semibold text-gray-900 text-center mb-2">{{ $partylist->name }}</h3>
+
+                                                <!-- Member Count -->
+                                                <div class="flex items-center justify-between mb-3">
+                                                    <span class="text-[12px] text-gray-600">Members</span>
+                                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[12px] font-medium bg-blue-100 text-blue-800">
+                                    {{ $partylist->candidates->count() }} members
+                                </span>
+                                                </div>
+
+                                                <!-- Member Avatars -->
+                                                @if($partylist->candidates->isNotEmpty())
+                                                    <div class="flex items-center">
+                                                        <div class="flex -space-x-2 overflow-hidden">
+                                                            @foreach($partylist->candidates->take(5) as $candidate)
+                                                                <img class="inline-block h-8 w-8 rounded-full ring-2 ring-white"
+                                                                     src="{{ $candidate->users->profile_photo_url ?? asset('images/default-avatar.jpg') }}"
+                                                                     alt="{{ $candidate->users->name ?? 'Candidate' }}">
+                                                            @endforeach
+                                                        </div>
+                                                        @if($partylist->candidates->count() > 5)
+                                                            <span class="ml-2 text-xs text-gray-500">
+                                            +{{ $partylist->candidates->count() - 5 }} more
                                         </span>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-2">
-                            <a href="{{ route('comelec-website.selected-partylist') }}"
-                               class="border rounded-lg overflow-hidden shadow-lg h-full flex flex-col transition-transform transform hover:scale-105 hover:shadow-xl cursor-pointer">
-                                <img alt="Image of Yanong Agila, a majestic eagle with a sharp gaze and spread wings"
-                                     class="w-full h-16 object-cover" height="400"
-                                     src="https://storage.googleapis.com/a1aa/image/nCwM01gjm61HpHh9F04TN4hcO6f4V1D4KwLnjXxa3vM.jpg"
-                                     width="600"/>
-                                <div class="p-2 flex-grow">
-                                    <h2 class="text-center text-[12px] font-bold">
-                                        Paragon
-                                    </h2>
-                                </div>
-                                <div class="flex items-center space-x-2 px-2">
-                                            <span class="text-gray-700 font-medium text-[9px]">
-                                                Members
-                                            </span>
-                                    <span
-                                        class="bg-gray-100 text-gray-700 text-[9px] font-medium px-2 py-0.5 rounded-full">
-                                                1.2m
-                                            </span>
-                                </div>
-                                <div class="flex items-center space-x-2 p-2">
-                                    <div class="flex -space-x-2">
-                                        <img alt="User  avatar 1" class="w-6 h-6 rounded-full border-2 border-white"
-                                             height="24"
-                                             src="https://storage.googleapis.com/a1aa/image/ZuTpJE6pJfJbppzY8Khmg-vOg6u2WXLzLMgz5_Uoc-0.jpg"
-                                             width="24"/>
-                                        <img alt="User  avatar 2" class="w-6 h-6 rounded-full border-2 border-white"
-                                             height="24"
-                                             src="https://storage.googleapis.com/a1aa/image/2pXhDPPK7gfhc2BafGJ_EAzRgUL9U11eKHP90gamIBo.jpg"
-                                             width="24"/>
-                                        <img alt="User  avatar 3" class="w-6 h-6 rounded-full border-2 border-white"
-                                             height="24"
-                                             src="https://storage.googleapis.com/a1aa/image/JiBdvOYQiJDmouspoR7oGEmdSCAvmDX0byxIpKTpbik.jpg"
-                                             width="24"/>
-                                        <img alt="User  avatar 4" class="w-6 h-6 rounded-full border-2 border-white"
-                                             height="24"
-                                             src="https://storage.googleapis.com/a1aa/image/-M0cg3Rd111OQRFnFY0nwtlNhSBGQiLq6cAOyZpeW5M.jpg"
-                                             width="24"/>
-                                        <img alt="User  avatar 5" class="w-6 h-6 rounded-full border-2 border-white"
-                                             height="24"
-                                             src="https://storage.googleapis.com/a1aa/image/gfEX5XQdkQ7irgoTAk4LgYP83FAwCT6UcvkAVb-AG8E.jpg"
-                                             width="24"/>
-                                        <img alt="User  avatar 6" class="w-6 h-6 rounded-full border-2 border-white"
-                                             height="24"
-                                             src="https://storage.googleapis.com/a1aa/image/bnKnpUdroN4U_87nsHuEijIHOY0ugMer4RvXvgjQuVg.jpg"
-                                             width="24"/>
-                                        <img alt="User  avatar 7" class="w-6 h-6 rounded-full border-2 border-white"
-                                             height="24"
-                                             src="https://storage.googleapis.com/a1aa/image/8y98ymkaXo-zARhuMtYOpHC7dVQksFPl3flWReilCps.jpg"
-                                             width="24"/>
+                                                        @endif
+                                                    </div>
+                                                @else
+                                                    <p class="text-sm text-gray-500 italic">No members yet</p>
+                                                @endif
+                                            </div>
+                                        </a>
                                     </div>
-                                    <span class="text-black font-medium text-[10px]">+ 1,164,821</span>
-                                </div>
-                            </a>
-                        </div>
+                                @endforeach
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
