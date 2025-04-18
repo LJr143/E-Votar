@@ -1,4 +1,5 @@
 <div class="container mx-auto px-4 py-8" x-data="tabsData()">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"  />
     <!-- TSC Content -->
     <div x-show="activeTab === 'tsc'" x-transition>
         <div class="px-4 md:px-12 pt-8">
@@ -121,6 +122,7 @@
         }
     }
 </script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
 <script>
     window.Swiper = Swiper;
