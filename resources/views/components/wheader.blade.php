@@ -52,10 +52,6 @@
                class="text-xs {{ request()->routeIs('comelec-website.about-us') ? 'font-semibold' : 'text-black hover:text-gray-500' }}">
                 About
             </a>
-            <a href="{{ route('comelec-website.list-of-elections') }}"
-               class="text-xs {{ request()->routeIs('comelec-website.list-of-elections') ? ' font-semibold' : 'text-black hover:text-gray-500' }}">
-                Elections
-            </a>
             <a href="{{ route('comelec-website.tutorial') }}"
                class="text-xs {{ request()->routeIs('comelec-website.tutorial') ? ' font-semibold' : 'text-black hover:text-gray-500' }}">
                 Tutorial
