@@ -126,11 +126,11 @@
                                 <li class="p-4 hover:bg-gray-50 transition-colors duration-150">
                                     <div class="flex items-center space-x-4">
                                         <img
-                                            src="{{ $member->user->profile_photo_url ?? asset('images/default-avatar.jpg') }}"
-                                            alt="{{ $member->user->name }}"
+                                            src="{{ $member->users->profile_photo_url ?? asset('images/default-avatar.jpg') }}"
+                                            alt="{{ $member->users->first_name }}"
                                             class="w-12 h-12 rounded-full object-cover">
                                         <div class="flex-1 min-w-0">
-                                            <p class="text-sm font-medium text-gray-900 truncate">{{ $member->user->name }}</p>
+                                            <p class="text-sm font-medium text-gray-900 truncate">{{ $member->users->first_name }}</p>
                                             <p class="text-sm text-gray-500 truncate">
                                                 {{ $member->position->name ?? 'Member' }} •
                                                 {{ $member->organization ?? 'No Organization' }}
