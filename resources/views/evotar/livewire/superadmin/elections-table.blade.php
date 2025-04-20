@@ -6,6 +6,10 @@
                         class=" whitespace-nowrap border-b-2 pb-1 px-1 text-[12px] font-medium {{ $filter === 'all_elections' ? 'border-black text-black' : 'text-gray-500 hover:text-black' }}">
                     All Elections
                 </button>
+                <button wire:click="$set('filter', 'pending_elections')"
+                        class="whitespace-nowrap border-b-2 pb-1 px-1 text-[12px] font-medium {{ $filter === 'pending_elections' ? 'border-black text-black' : 'text-gray-500 hover:text-black' }}">
+                    Pending
+                </button>
                 <button wire:click="$set('filter', 'ongoing_elections')"
                         class="whitespace-nowrap border-b-2 pb-1 px-1 text-[12px] font-medium {{ $filter === 'ongoing_elections' ? 'border-black text-black' : 'text-gray-500 hover:text-black' }}">
                     Ongoing

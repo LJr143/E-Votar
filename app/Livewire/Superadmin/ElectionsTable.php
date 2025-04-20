@@ -74,6 +74,8 @@ class ElectionsTable extends Component
             $query->where('status', 'ongoing');
         } elseif ($this->filter === 'completed_elections') {
             $query->where('status', 'completed');
+        }elseif ($this->filter === 'pending_elections') {
+            $query->where('status', 'pending');
         }
 
         $elections = $query->paginate($this->perPage);

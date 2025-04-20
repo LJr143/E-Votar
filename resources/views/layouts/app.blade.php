@@ -50,7 +50,7 @@
     @livewire('livewire-ui-modal')
 </head>
 
-<body class="font-poppins antialiased bg-[#F7F7F9] overflow-hidden">
+<body class="font-poppins antialiased bg-[#F7F7F9]">
 @livewire('privacy-agreement')
 @if(session('showSplash'))
     <div id="splash-screen" class="splash-screen">
@@ -76,7 +76,7 @@
 @endif
 
 
-<div class="min-h-screen mx-auto bg-[#F7F7F9] overflow-hidden {{ $mainClass }}"  id="main-content" style="display: none;">
+<div class="min-h-screen mx-auto bg-[#F7F7F9]  {{ $mainClass }}"  id="main-content" style="display: none;">
 @if (isset($sidebar))
         <sidebar class="h-screen w-[300px] lg:block hidden flex flex-col shadow z-10 sticky">
             {{ $sidebar }}
