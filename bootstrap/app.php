@@ -29,6 +29,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'check.blocked.ip' => \App\Http\Middleware\CheckBlockedIp::class,
             'check.first.creation.superadmin' => \App\Http\Middleware\CheckFirstCreationSuperadmin::class,
             'check.website.selected.election' => \App\Http\Middleware\CheckWebSelectedElection::class,
+            'check.deactivated' => \App\Http\Middleware\DeactivatedAccountChecker::class,
             \App\Http\Middleware\CheckPrivacyAgreement::class,
             \App\Http\Middleware\LogUserActivity::class,
         ]);
