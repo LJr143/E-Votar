@@ -44,7 +44,7 @@ class EditAnnouncement extends Component
         'mediaFiles.images.*.image' => 'Each image must be a valid image file.',
         'mediaFiles.images.*.max' => 'Each image must not exceed 2MB.',
         'mediaFiles.videos.*.mimes' => 'Each video must be in mp4, mov, or avi format.',
-        'mediaFiles.videos.*.max' => 'Each video must not exceed 10MB.',
+        'mediaFiles.videos.*.max' => 'Each video must not exceed 1GB.',
     ];
 
     protected $rules = [
@@ -53,7 +53,7 @@ class EditAnnouncement extends Component
         'dateTimeLocal' => 'required|date|after_or_equal:now',
         'coverImage' => 'nullable|image|max:2048',
         'mediaFiles.images.*' => 'nullable|image|max:2048',
-        'mediaFiles.videos.*' => 'nullable|mimes:mp4,mov,avi|max:10240',
+        'mediaFiles.videos.*' => 'nullable|mimes:mp4,mov,avi|max:1048576',
         'status' => 'required|in:draft,published',
     ];
 

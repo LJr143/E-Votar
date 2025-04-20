@@ -50,7 +50,7 @@ class CreateAnnouncement extends Component
         'mediaFiles.images.*.image' => 'Each image must be a valid image file.',
         'mediaFiles.images.*.max' => 'Each image must not exceed 2MB.',
         'mediaFiles.videos.*.mimes' => 'Each video must be in mp4, mov, or avi format.',
-        'mediaFiles.videos.*.max' => 'Each video must not exceed 10MB.',
+        'mediaFiles.videos.*.max' => 'Each video must not exceed 1GB.',
     ];
 
     public function mount(): void
