@@ -39,6 +39,10 @@ class UpdateElectionStatus extends Command
             ->where('status', 'ongoing')
             ->update(['status' => 'completed']);
 
+        Election::where('date_ended', '>', $now)
+            ->where('status', 'completed')
+            ->update(['status' => 'ongoing']);
+
         $this->info('Election statuses updated successfully.');
     }
 }

@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 class Election extends Model
 {
+    use LogsActivity;
     protected $table = 'elections';
     protected $fillable = ['name', 'type', 'campus_id', 'date_started', 'date_ended', 'status', 'image_path'];
 

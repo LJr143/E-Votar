@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Campus;
 use App\Models\College;
 use App\Models\Program;
+use App\Services\ActivityLogger;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
 use Illuminate\Support\Facades\Validator;
@@ -151,6 +152,8 @@ class EditVoter extends Component
                 'program_id' => $this->program_id,
                 'program_major_id' => $this->program_major_id,
             ]);
+
+
 
             session()->flash('success', 'Voter updated successfully.');
             $this->dispatch('voter-updated');

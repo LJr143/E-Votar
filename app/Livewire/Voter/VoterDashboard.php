@@ -2,6 +2,7 @@
 namespace App\Livewire\Voter;
 
 use App\Models\Election;
+use App\Models\FeedbackToken;
 use App\Models\Vote;
 use App\Models\VoterEncodeVote;
 use Carbon\Carbon;
@@ -15,11 +16,13 @@ class VoterDashboard extends Component
     public $hasEnded;
 
     public $encodedVotes;
+    public $feedbackToken;
 
     public function mount($slug)
     {
         $this->voter = auth()->user();
         $this->election = Election::where('slug', $slug)->first();
+        $this->feedbackToken = FeedbackToken::where('user_id', $this->voter->id)->where('election_id', $this->election->id)->first();
 
         $this->hasVoted = Vote::where('user_id', $this->voter->id)
             ->where('election_id', $this->election->id)

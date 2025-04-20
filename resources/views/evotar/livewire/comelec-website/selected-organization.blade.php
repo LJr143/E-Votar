@@ -4,17 +4,22 @@
         <div class="container mx-auto py-8 md:px-4">
             <div class="flex items-center text-white space-x-4">
                 <div class="text-[12px]">
-                    {{ $election->campus->name }}
+                    {{ $election->campus->name ?? 'No Campus' }}
                 </div>
                 <div class="text-[12px]">
-                    {{ \Carbon\Carbon::parse($election->date_started)->format('M d, Y') }} -
-                    {{ \Carbon\Carbon::parse($election->date_ended)->format('M d, Y') }}
+                    @if ($election)
+                        {{ $election->date_started ? \Carbon\Carbon::parse($election->date_started)->format('M d, Y') : '' }} -
+                        {{ $election->date_ended ? \Carbon\Carbon::parse($election->date_ended)->format('M d, Y') : '' }}
+                    @else
+                        <span>No election dates available</span>
+                    @endif
                 </div>
+
 
             </div>
             <div class="mt-4">
                 <h1 class="text-[20px] font-bold text-white capitalize">
-                    {{ $election->name }}
+                    {{ $election->name ?? '' }}
                 </h1>
             </div>
 

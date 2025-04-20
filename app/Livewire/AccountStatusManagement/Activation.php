@@ -3,6 +3,7 @@
 namespace App\Livewire\AccountStatusManagement;
 
 use App\Models\User;
+use App\Services\ActivityLogger;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Livewire\Component;
@@ -45,6 +46,16 @@ class Activation extends Component
             $this->user->update([
                 'account_status' => 'Active',
             ]);
+
+            ActivityLogger::log(
+                'User Activation',
+                "User has activated - {$this->user->first_name}",
+                $this->user,
+                [
+                    'activated_by' => auth()->user()->id ?? null,
+                    'activation_time' => now()->toDateTimeString()
+                ]
+            );
 
             session()->flash('success', 'User activated successfully.');
             $this->reset('password');

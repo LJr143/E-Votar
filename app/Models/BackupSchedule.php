@@ -2,10 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Model;
 
 class BackupSchedule extends Model
 {
+
+    use LogsActivity;
+
     protected $table = 'backup_schedules';
     protected $fillable = ['name', 'schedule_type', 'schedule_parameters', 'next_backup_at', 'last_backup_at', 'created_by'];
 

@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Model;
 
 class program_major extends Model
 {
+
+    use LogsActivity;
     protected $table = 'program_majors';
 
     protected $fillable = ['program_id', 'name'];

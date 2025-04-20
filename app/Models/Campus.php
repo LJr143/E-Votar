@@ -2,10 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Model;
 
 class Campus extends Model
 {
+
+    use LogsActivity;
+
     protected $table = 'campuses';
     protected $fillable = ['name'];
 

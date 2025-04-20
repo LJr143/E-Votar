@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Model;
 
 class Council extends Model
 {
+
+    use LogsActivity;
     protected $table = 'councils';
     protected $fillable = [
         'name', 'logo_path'

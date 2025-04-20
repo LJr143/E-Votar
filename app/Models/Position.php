@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Model;
 
 class Position extends Model
 {
+
+    use LogsActivity;
     protected $table = 'positions';
     protected $fillable = ['election_type_id', 'name', 'num_winners'];
 

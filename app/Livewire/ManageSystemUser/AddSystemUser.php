@@ -3,6 +3,7 @@
 namespace App\Livewire\ManageSystemUser;
 
 use App\Models\User;
+use App\Services\ActivityLogger;
 use Exception;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
@@ -11,7 +12,6 @@ use Spatie\Permission\Models\Role;
 
 class AddSystemUser extends Component
 {
-    // Properties
     public $search = '';
     public $users = [];
     public $selectedUser;
@@ -143,11 +143,12 @@ class AddSystemUser extends Component
                 'username' => $this->username,
                 'password' => Hash::make($this->password),
             ]);
+
         }
-// Detach all roles from the user
+        // Detach all roles from the user
         $user->roles()->detach();
 
-// Assign the selected role
+        // Assign the selected role
         $user->roles()->attach($this->selectedRole);
 
 

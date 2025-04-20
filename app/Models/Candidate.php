@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Model;
 
 class Candidate extends Model
 {
+
+    use LogsActivity;
     protected $table = 'candidates';
     protected $fillable = ['user_id','election_id', 'election_position_id', 'party_list_id', 'description'];
 

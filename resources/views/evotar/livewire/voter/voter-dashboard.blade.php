@@ -417,7 +417,10 @@
                                           stroke-linecap="round"
                                           stroke-linejoin="round"/>
                                 </svg>
-                                <h3 class="text-[12px] font-bold text-gray-800">Election Receipt</h3>
+                                <div class="flex justify-between w-full">
+                                    <h3 class="text-[12px] font-bold text-gray-800">Election Receipt</h3>
+                                    <h3 class="text-[12px] font-semibold text-gray-800">Feedback Token : <span class="text-[10px] font-semibold italic text-gray-800">{{ $this->feedbackToken->token ?? 'something went wrong.' }}</span></h3>
+                                </div>
                             </div>
 
                             <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
