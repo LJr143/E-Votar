@@ -82,7 +82,7 @@
                                             {{ $candidate->users?->first_name }}
                                             {{ $candidate->users?->middle_initial ? $candidate->users->middle_initial . '. ' : '' }}
                                             {{ $candidate->users?->last_name }}
-                                            {{ $candidate->users?->extension ? ' ' . $candidate->uses->extension : '' }}
+                                            {{ $candidate->users?->extension ? ' ' . $candidate->users->extension : '' }}
                                         </h3>
                                     </div>
                                 </div>
