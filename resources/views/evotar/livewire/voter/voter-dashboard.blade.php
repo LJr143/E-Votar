@@ -342,6 +342,12 @@
                                             <path d="M12.75 7a.75.75 0 0 0-1.5 0v5a.75.75 0 0 0 .22.53l3.25 3.25a.75.75 0 1 0 1.06-1.06l-3.03-3.03V7z"/>
                                         </svg>
                                         <span class="ml-1 text-sm text-gray-600 font-medium">Election Ended</span>
+                                    @elseif($election->status == 'paused')
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M12 1.75a10.25 10.25 0 1 0 10.25 10.25A10.26 10.26 0 0 0 12 1.75zm0 18.5a8.25 8.25 0 1 1 8.25-8.25 8.26 8.26 0 0 1-8.25 8.25z"/>
+                                            <path d="M12.75 7a.75.75 0 0 0-1.5 0v5a.75.75 0 0 0 .22.53l3.25 3.25a.75.75 0 1 0 1.06-1.06l-3.03-3.03V7z"/>
+                                        </svg>
+                                        <span class="ml-1 text-sm text-gray-600 font-medium">Election Paused</span>
                                     @else
                                         Vote Now
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
