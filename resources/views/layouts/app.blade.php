@@ -30,9 +30,7 @@
     <script src="https://cdn.jsdelivr.net/npm/simple-notify/dist/simple-notify.min.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
-
-    <link href="https://unpkg.com/@pqina/flip/dist/flip.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>`
 
     <link href="https://unpkg.com/@pqina/flip/dist/flip.min.css" rel="stylesheet">
     <script src="https://unpkg.com/@pqina/flip/dist/flip.min.js"></script>
@@ -52,7 +50,7 @@
     @livewire('livewire-ui-modal')
 </head>
 
-<body class="font-poppins antialiased bg-[#F7F7F9]">
+<body class="font-poppins antialiased bg-[#F7F7F9] overflow-hidden">
 @livewire('privacy-agreement')
 @if(session('showSplash'))
     <div id="splash-screen" class="splash-screen">
@@ -78,10 +76,7 @@
 @endif
 
 
-
-
-
-<div class="min-h-screen mx-auto bg-[#F7F7F9] {{ $mainClass }}">
+<div class="min-h-screen mx-auto bg-[#F7F7F9] overflow-hidden {{ $mainClass }}"  id="main-content" style="display: none;">
 @if (isset($sidebar))
         <sidebar class="h-screen w-[300px] lg:block hidden flex flex-col shadow z-10 sticky">
             {{ $sidebar }}
@@ -206,10 +201,16 @@
     window.addEventListener('load', function () {
         setTimeout(function () {
             const splashScreen = document.getElementById('splash-screen');
+            const mainContent = document.getElementById('main-content');
+
             if (splashScreen) {
                 splashScreen.style.display = 'none';
             }
-        }, 2000);
+
+            if (mainContent) {
+                mainContent.style.display = '';
+            }
+        }, 2000); // Adjust delay as needed
     });
 
     window.Notify = Notify;
