@@ -329,7 +329,7 @@
                                 'bg-white text-black hover:bg-gray-100' => !$hasVoted
                             ])>
                             <form wire:submit.prevent="submit">
-                                <button @if($hasVoted) disabled @endif type="submit"
+                                <button @if($hasVoted || $hasEnded || $election->status == 'paused') disabled @endif type="submit"
                                         class="h-10 px-6 flex items-center gap-2 transform scale-100 hover:scale-105 font-medium transition duration-300">
                                     @if($hasVoted)
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
