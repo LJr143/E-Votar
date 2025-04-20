@@ -40,7 +40,7 @@ class CreateAnnouncement extends Component
         'dateTimeLocal' => 'required|date|after_or_equal:now',
         'coverImage' => 'nullable|image|max:2048',
         'mediaFiles.images.*' => 'nullable|image|max:2048',
-        'mediaFiles.videos.*' => 'nullable|mimes:mp4,mov,avi|max:10240',
+        'mediaFiles.videos.*' => 'nullable|mimes:mp4,mov,avi|max:1048576',
     ];
 
     protected $messages = [
