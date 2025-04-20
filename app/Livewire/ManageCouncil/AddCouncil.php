@@ -52,7 +52,7 @@ class AddCouncil extends Component
     {
         $this->validate([
             'name' => 'required|string|max:255|unique:councils,name',
-            'logo' => 'nullable|image|max:1024', // 1MB Max
+            'logo' => 'nullable|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:1024',
         ]);
 
         // Store the logo and get the path

@@ -35,7 +35,7 @@ class EditPartyList extends Component
     public function updatedLogo()
     {
         $this->validateOnly('logo', [
-            'logo' => 'nullable|image|max:1024',
+            'logo' => 'nullable|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:1024',
         ]);
 
         if ($this->logo) {

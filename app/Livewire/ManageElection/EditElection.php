@@ -184,7 +184,7 @@ class EditElection extends Component
             ],
             'election_end' => 'required|date|after:election_start',
             'selectedPositions' => 'required|array',
-            'electionImageEdit' => 'nullable|image|max:2048',
+            'electionImageEdit' => 'nullable|mimes:png|image|max:2048',
         ]);
 
         if ($this->electionImageEdit) {

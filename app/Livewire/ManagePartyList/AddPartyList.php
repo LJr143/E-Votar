@@ -19,7 +19,7 @@ class AddPartyList extends Component
     {
         $this->validate([
             'name' => 'required|string',
-            'logo' => 'nullable|image|max:1024',
+            'logo' => 'nullable|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:1024',
         ]);
 
         $logoPath = $this->logo

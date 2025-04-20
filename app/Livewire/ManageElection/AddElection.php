@@ -52,7 +52,7 @@ class AddElection extends Component
         'election_start' => 'required|date',
         'election_end' => 'required|date|after:election_start',
         'selectedPositions' => 'required|array|min:1',
-        'electionImage' => 'required|image|max:2048',
+        'electionImage' => 'required|mimes:png|image|max:2048',
     ];
 
     public function mount(): void
