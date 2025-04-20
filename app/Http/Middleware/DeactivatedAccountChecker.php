@@ -11,16 +11,12 @@ use Symfony\Component\HttpFoundation\Response;
 
 class DeactivatedAccountChecker
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     */
+
     public function handle(Request $request, Closure $next): Response
     {
         $userId = Auth::id();
 
-        $user = User::where('id', $userId)->where('status', 'Deactivated')->first();
+        $user = User::where('id', $userId)->where('account_status', 'Deactivated')->first();
 
         if ($user && Auth::check()) {
             Auth::logout();
