@@ -40,4 +40,5 @@ return Application::configure(basePath: dirname(__DIR__))
         $schedule->command('session:clean')->everyFiveMinutes();
         $schedule->command('backups:run')->everyMinute();
         $schedule->command('elections:update-status')->everyMinute();
+        $schedule->command('publish-announcement')->everyMinute();
     })->create();
