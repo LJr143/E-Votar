@@ -6,10 +6,10 @@ window.Pusher = Pusher;
 window.Echo = new Echo({
     broadcaster: 'reverb',
     key: import.meta.env.VITE_REVERB_APP_KEY,
-    wsHost: window.location.hostname,
-    wsPort: window.location.port === '80' ? 80 : 443,
+    wsHost: import.meta.env.VITE_REVERB_HOST || window.location.hostname, // Fixed
+    wsPort: import.meta.env.VITE_REVERB_PORT || (window.location.protocol === 'https:' ? 443 : 80), // Fixed
     wssPort: 443,
-    forceTLS: window.location.protocol === 'https:',
+    forceTLS: (import.meta.env.VITE_REVERB_SCHEME === 'https'), // Fixed
     enabledTransports: ['ws', 'wss'],
     disableStats: true,
     authEndpoint: '/broadcasting/auth',
@@ -20,7 +20,7 @@ window.Echo = new Echo({
     },
 });
 
-// Add connection logging for debugging
+
 window.Echo.connector.pusher.connection.bind('state_change', (states) => {
     console.log('Connection state changed:', states.current);
 });
