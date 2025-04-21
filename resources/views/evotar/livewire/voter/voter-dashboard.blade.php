@@ -36,7 +36,7 @@
                 <div class="flex items-center gap-2 focus:outline-none">
                     <div class="border-[1px] border-gray-800 rounded-full overflow-hidden w-[33px] h-[33px]">
                         <img alt="Profile Picture" class="w-8 h-8 rounded-full" height="32"
-                             src="{{ asset('storage/' . (auth()->user()->profile_photo_path ?? 'profile-images/cat_meme.jpg')) }}" width="32"/>
+                             src="{{ asset('storage/' . (auth()->user()->profile_photo_path ?? 'assets/profile/default.jpg')) }}" width="32"/>
                     </div>
                     <div class="mt-2">
                         <x-dropdown align="right" width="58" contentClasses="py-2 bg-white"

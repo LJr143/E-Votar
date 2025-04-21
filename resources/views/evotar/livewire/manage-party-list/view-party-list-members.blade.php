@@ -63,7 +63,7 @@
                             <img
                                 alt="{{ $candidate->users->first_name }}"
                                 class="w-6 h-6 rounded-full border-2 border-white"
-                                src="{{ $candidate->users->profile_photo_path ? asset('storage/assets/profile/' . $candidate->users->profile_photo_path) : asset('storage/assets/profile/vargas.png') }}"
+                                src="{{ $candidate->users->profile_photo_path ? asset('storage/assets/profile/' . $candidate->users->profile_photo_path) : asset('storage/assets/profile/default.jpg') }}"
                                 width="30"
                                 height="30"
                             />

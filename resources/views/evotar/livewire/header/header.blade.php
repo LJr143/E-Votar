@@ -19,7 +19,7 @@
             <x-slot name="trigger">
                 <button class="focus:outline-none flex items-center space-x-2">
                     <img alt="Profile Picture" class="w-8 h-8 rounded-full" height="32"
-                         src="{{ asset('storage/' . (auth()->user()->profile_photo_path ?? 'profile-images/cat_meme.jpg')) }}" width="32"/>
+                         src="{{ asset('storage/' . (auth()->user()->profile_photo_path ?? 'assets/profile/default.jpg')) }}" width="32"/>
                     <div class="hidden md:block">
                         <p class="text-left text-gray-900 tracking-tight uppercase font-semibold text-[12px]">
                             {{ auth()->user()->first_name }} {{ auth()->user()->middle_initial }}. {{ auth()->user()->last_name }}

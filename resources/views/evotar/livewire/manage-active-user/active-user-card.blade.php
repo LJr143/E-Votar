@@ -5,7 +5,7 @@
             <p class="text-[11px] font-semibold mb-3">{{ $userSelected->student_id }}</p>
             <div class="relative w-20 h-20 mx-auto mb-4">
                 <img class="rounded-full w-full h-full object-cover"
-                     src="{{ asset('storage/' . ($userSelected->profile_photo_path ?? 'profile-images/cat_meme.jpg')) }}"
+                     src="{{ asset('storage/' . ($userSelected->profile_photo_path ?? 'assets/profile/default.jpg')) }}"
                      alt="Profile Picture">
                 <span class="absolute bottom-0 right-0 w-5 h-5 bg-green-500 border-2 border-white rounded-full"></span>
             </div>

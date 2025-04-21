@@ -203,7 +203,7 @@
                                                             <div
                                                                 class="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent opacity-30"></div>
                                                             <img class="h-full w-full object-contain"
-                                                                 src="{{ asset($candidate->users->profile_photo_path ?? 'storage/assets/profile/cat_meme.jpg') }}"
+                                                                 src="{{ asset($candidate->users->profile_photo_path ?? 'storage/assets/profile/default.jpg') }}"
                                                                  alt="Candidate photo">
                                                             <div class="absolute bottom-0 left-0 p-3">
                                                                 <span
@@ -265,7 +265,7 @@
                                                                 <div
                                                                     class="flex items-center justify-between text-[12px] font-semibold text-gray-700">
                                                                     <img
-                                                                        src="{{ $candidate->partyLists?->logo_path ? asset('storage/' . $candidate->partyLists->logo_path) : asset('images/default-logo.png') }}"
+                                                                        src="{{ $candidate->partyLists?->logo_path ? asset('storage/' . $candidate->partyLists->logo_path) : asset('storage/assets/logo/default-logo.jpg') }}"
                                                                         alt="{{ $candidate->partyLists?->name ?? 'Party Logo' }}"
                                                                         class="w-10 h-10 object-contain rounded-full"
                                                                     />
@@ -416,7 +416,7 @@
                                                                     <div
                                                                         class="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent opacity-30"></div>
                                                                     <img class="h-full w-full object-contain"
-                                                                         src="{{ asset($candidate->users->profile_photo_path ?? 'storage/assets/profile/cat_meme.jpg') }}"
+                                                                         src="{{ asset($candidate->users->profile_photo_path ?? 'storage/assets/profile/default.jpg') }}"
                                                                          alt="Candidate photo">
                                                                     <div class="absolute bottom-0 left-0 p-3">
                                                                 <span
@@ -480,7 +480,7 @@
                                                                         <div
                                                                             class="flex items-center justify-between text-[12px] font-semibold text-gray-700">
                                                                             <img
-                                                                                src="{{ $candidate->partyLists?->logo_path ? asset('storage/' . $candidate->partyLists->logo_path) : asset('images/default-logo.png') }}"
+                                                                                src="{{ $candidate->partyLists?->logo_path ? asset('storage/' . $candidate->partyLists->logo_path) : asset('storage/assets/logo/default-logo.jpg') }}"
                                                                                 alt="{{ $candidate->partyLists?->name ?? 'Party Logo' }}"
                                                                                 class="w-10 h-10 object-contain rounded-full"
                                                                             />

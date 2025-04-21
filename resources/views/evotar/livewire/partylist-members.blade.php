@@ -76,7 +76,7 @@
                                     <img
                                         src="{{ $candidate->users->profile_photo_path ? asset('storage/' . $candidate->users->profile_photo_path) : asset('storage/assets/logo/usep_logo.jpg') }}"
                                         alt="{{ $candidate->users->first_name }}"
-                                        class="w-full h-48 object-cover">
+                                        class="h-45 object-contain">
                                     <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
                                         <h3 class="text-white font-bold text-lg">
                                             {{ $candidate->users?->first_name }}

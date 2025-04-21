@@ -37,7 +37,7 @@
                         <img
                             alt="{{ $review->name ?? 'anonymous' }} profile picture"
                             class="w-10 h-10 rounded-full mr-3 object-cover"
-                            src="{{ $review->user->profile_photo_url ?? asset('storage/assets/image/University of Southeastern Philippines Tagum Unit.png') }}"
+                            src="{{ $review->user->profile_photo_url ?? asset('storage/assets/logo/usep_logo.jpg') }}"
                         />
                         <div>
                             <div class="font-semibold text-gray-800 text-sm">

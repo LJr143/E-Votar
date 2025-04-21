@@ -36,7 +36,7 @@
                                                             <img
                                                                 alt="{{ $user ? $user->first_name . ' ' . $user->last_name : 'Unknown' }}"
                                                                 class="w-full h-full object-contain rounded-t-lg"
-                                                                src="{{ $user->profile_photo_path ? asset('storage/' . $user->profile_photo_path) : asset('storage/assets/logo/usep_logo.jpg') }}" />
+                                                                src="{{ $user->profile_photo_path ? asset('storage/' . $user->profile_photo_path) : asset('storage/assets/profile/default.jpg') }}" />
                                                         </div>
 
                                                         <div class="p-2">

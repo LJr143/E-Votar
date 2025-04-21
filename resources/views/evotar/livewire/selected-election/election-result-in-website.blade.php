@@ -62,7 +62,7 @@
                                 <div class="relative rounded-full p-[3px] bg-gradient-to-r from-[#D4AF37] to-[#8B0000] mb-4">
                                     <div class="relative rounded-full overflow-hidden w-[140px] h-[140px] sm:w-[{{ $isPresident || $isGovernor ? '160px' : '120px' }}] sm:h-[{{ $isPresident || $isGovernor ? '160px' : '120px' }}]">
                                         <div class="absolute top-1 left-1 right-1 bottom-1 rounded-full bg-white"></div>
-                                        <img src="{{ asset($winner->profile_picture ? 'storage/' . $winner->profile_picture : 'storage/assets/profile/vargas.png') }}"
+                                        <img src="{{ asset($winner->profile_picture ? 'storage/' . $winner->profile_picture : 'storage/assets/profile/default.jpg') }}"
                                              alt="candidate profile"
                                              class="w-full h-full object-cover relative">
                                     </div>

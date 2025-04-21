@@ -1,4 +1,4 @@
-<!-- resources/views/livewire/activity-logs.blade.php -->
+
 <div>
     <div class="flex w-full gap-4 min">
         <div id="all_elections" class="w-full">
@@ -208,7 +208,7 @@
                     </div>
 
                     <div class="mt-4">
-                        {{ $logs->links() }}
+                        {{ $logs->links('evotar.components.pagination.tailwind-pagination') }}
                     </div>
                 </div>
             </div>
