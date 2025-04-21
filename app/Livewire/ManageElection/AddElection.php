@@ -2,6 +2,7 @@
 
 namespace App\Livewire\ManageElection;
 
+use App\Events\TableUpdated;
 use App\Events\UserLoggedIn;
 use App\Models\Campus;
 use App\Models\College;
@@ -162,7 +163,7 @@ class AddElection extends Component
 
     public function submit(): void
     {
-        if ($this->election_start == now()) {
+        if ($this->election_start <= now()) {
             $this->status = 'ongoing';
         } else {
             $this->status = 'pending';
@@ -200,6 +201,8 @@ class AddElection extends Component
                 $electionPosition->save();
             }
         }
+
+        event(new TableUpdated());
 
         $this->dispatch('election-created');
         $this->reset();

@@ -182,7 +182,7 @@
 
         <div id="verification-result" class="verification-result"></div>
 
-        <script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
         <script>
             const voterLoginUrl = "{{ route('voter.login')}}";
             const logoutUrl = "{{ route('logout') }}";
