@@ -27,7 +27,7 @@ class PositionTable extends Component
     // Component properties
     public $filter = 'all_position';
     public $search = '';
-    public $perPage = 5;
+    public $perPage = 10;
     public $importFile;
     public $importing = false;
     public $importErrors = [];
@@ -231,7 +231,6 @@ class PositionTable extends Component
             };
 
             $this->importError = $errorMessage;
-            Log::error('Import failed: ' . $e->getMessage());
         }
     }
 
@@ -250,7 +249,6 @@ class PositionTable extends Component
      */
     public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Foundation\Application|\Illuminate\Contracts\View\View|\Illuminate\View\View
     {
-        // Start a query on the Position model
         $query = Position::query()->with('electionType');
 
         if ($this->search) {
@@ -258,7 +256,6 @@ class PositionTable extends Component
         }
 
         if ($this->filter === 'all_position') {
-            // Do not filter anything, return all positions
             $query->whereHas('electionType', function ($query) {
                 $query->whereIn('name', [
                     'Student and Local Council Election',
