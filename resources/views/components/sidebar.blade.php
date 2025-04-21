@@ -594,7 +594,9 @@
 
                 @php
                     $election = session('selectedElection') ? \App\Models\Election::find(session('selectedElection')) : null;
-                     $isActive = request()->routeIs('dashboard', ['slug' => $election->slug]);
+                     if ($election){
+                         $isActive = request()->routeIs('dashboard', ['slug' => $election->slug]);
+                     }
                 @endphp
 
                 <li class="group flex items-center mt-4 border border-red-800 w-full px-4 py-2 mb-2 rounded-md transition-all duration-200
