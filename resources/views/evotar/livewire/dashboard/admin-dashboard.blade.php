@@ -258,11 +258,6 @@
             </div>
 
         </div>
-
-        <div class="flex flex-row justify-between text-gray-500 text-[10px] mt-4">
-            <i>Copyright@2025</i>
-            <i>E-Votar@2024</i>
-        </div>
     </div>
     <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

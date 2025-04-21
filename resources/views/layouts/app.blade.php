@@ -48,7 +48,7 @@
     @livewire('livewire-ui-modal')
 </head>
 
-<body class="font-poppins antialiased mt-[-19px] bg-white">
+<body class="font-poppins antialiased mt-[-19px]  bg-white">
 @livewire('privacy-agreement')
 @if(session('showSplash'))
     <div id="splash-screen" class="splash-screen">
@@ -166,7 +166,10 @@
                 </div>
             </main>
         @endif
-
+        <footer class="w-full px-6 py-2 mt-auto flex flex-row justify-between text-gray-500 text-[10px]">
+            <i>Copyright © 2025</i>
+            <i>E-Votar © 2025</i>
+        </footer>
     </div>
 </div>
 
