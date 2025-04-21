@@ -6,21 +6,11 @@ window.Pusher = Pusher;
 window.Echo = new Echo({
     broadcaster: 'reverb',
     key: import.meta.env.VITE_REVERB_APP_KEY,
-    wsHost: import.meta.env.VITE_REVERB_HOST || window.location.hostname,
-    wsPort: parseInt(import.meta.env.VITE_REVERB_PORT) || (window.location.protocol === 'https:' ? 443 : 80),
-    wssPort: 443,
-    forceTLS: (import.meta.env.VITE_REVERB_SCHEME === 'https'),
+    wsHost: import.meta.env.VITE_REVERB_HOST,
+    wsPort: import.meta.env.VITE_REVERB_PORT,
+    wssPort: import.meta.env.VITE_REVERB_PORT,
+    forceTLS: true,
     enabledTransports: ['ws', 'wss'],
-    disableStats: true,
-    auth: {
-        headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
-            'X-Requested-With': 'XMLHttpRequest'
-        },
-    },
-    cluster: import.meta.env.VITE_REVERB_CLUSTER || 'mt1',
-    activityTimeout: 60000, // 60 seconds
-    pongTimeout: 30000, // 30 seconds
 });
 
 
