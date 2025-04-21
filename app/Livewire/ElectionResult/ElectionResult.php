@@ -4,6 +4,7 @@ namespace App\Livewire\ElectionResult;
 
 use App\Exports\CandidateExport;
 use App\Exports\ElectionResultExport;
+use App\Models\AbstainVote;
 use App\Models\Candidate;
 use App\Models\Council;
 use App\Models\Election;
@@ -34,6 +35,7 @@ class ElectionResult extends Component
 
     public $studentCouncilWinners;
     public $localCouncilWinners;
+    public $abstainCounts;
 
 
     public function mount(): void
@@ -79,6 +81,7 @@ class ElectionResult extends Component
         $this->fetchVoterTally($election->id);
         $this->dispatch('updateChartData', $this->selectedElection);
     }
+
 
 
     public function fetchVoterTally($electionId): void
@@ -202,6 +205,11 @@ class ElectionResult extends Component
 
             // Fetch winning candidates for Local Council, grouped by program
             $this->localCouncilWinners = $this->getWinnersByProgram();
+            // Get abstain counts for each position
+            $this->abstainCounts = \App\Models\AbstainVote::where('election_id', $this->latestElection->id)
+                ->selectRaw('position_id, count(*) as count')
+                ->groupBy('position_id')
+                ->pluck('count', 'position_id');
         } else {
             $this->studentCouncilWinners = collect();
             $this->localCouncilWinners = collect();
@@ -221,6 +229,8 @@ class ElectionResult extends Component
             ->get();
 
         foreach ($positions as $position) {
+            $positionId = $position->position->id;
+            $positionName = $position->position->name;
             // Fetch council-specific settings for this position
             $councilPositionSettings = DB::table('council_position_settings')
                 ->where('position_id', $position->position->id)
@@ -250,6 +260,7 @@ class ElectionResult extends Component
                 foreach ($sortedCandidates as $candidate) {
                     $winners[] = [
                         'position' => $position->position->name,
+                        'position_id' => $positionId,
                         'candidate' => $candidate,
                         'council' => $candidate->users->program->council->name,
                         'major' => $candidate->users->major ?? 'N/A',
@@ -280,6 +291,8 @@ class ElectionResult extends Component
             $winners = [];
 
             foreach ($positions as $position) {
+                $positionId = $position->position->id;
+                $positionName = $position->position->name;
                 // Fetch council-specific settings for this position
                 $councilPositionSettings = DB::table('council_position_settings')
                     ->where('position_id', $position->position->id)
@@ -323,6 +336,7 @@ class ElectionResult extends Component
                     foreach ($candidates as $candidate) {
                         $winners[] = [
                             'position' => $position->position->name,
+                            'position_id' => $positionId,
                             'candidate' => $candidate,
                             'major' => 'N/A',
                         ];
@@ -358,6 +372,7 @@ class ElectionResult extends Component
             'hasLocalCouncilPositions' => $this->hasLocalCouncilPositions,
             'studentCouncilWinners' => $this->studentCouncilWinners,
             'localCouncilWinners' => $this->localCouncilWinners,
+            'abstainCounts' => $this->abstainCounts ?? collect()
         ]);
     }
 }

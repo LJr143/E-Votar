@@ -27,4 +27,8 @@ class ElectionPosition extends Model
     {
         return $this->belongsTo(Election::class, 'election_id');
     }
+    public function abstainVotes(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(AbstainVote::class, 'position_id');
+    }
 }

@@ -30,4 +30,9 @@ class AbstainVote extends Model
     {
         return $this->belongsTo(Position::class);
     }
+
+    public function electionPosition()
+    {
+        return $this->belongsTo(ElectionPosition::class, 'position_id');
+    }
 }

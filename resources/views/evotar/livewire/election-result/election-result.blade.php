@@ -112,10 +112,8 @@
                                 <td class="py-3 px-6 border-t border-b border-gray-100">Voters Who Actually Voted</td>
                                 <td class="py-3 px-6 border-t border-b border-gray-100">{{ $totalVoterVoted }}</td>
                             </tr>
-                            <tr class="bg-white">
-                                <td class="py-3 px-6 border-t border-b border-gray-100">Voters Who Did Not Vote</td>
-                                <td class="py-3 px-6 border-t border-b border-gray-100">{{ $totalVoters - $totalVoterVoted }}</td>
-                            </tr>
+
+
                             </tbody>
                         </table>
                     </div>
@@ -149,8 +147,10 @@
                                                 <td class="py-3 px-8 text-left font-bold">
                                                     {{ $winner['candidate'] ? $winner['candidate']->users->first_name . ' ' . $winner['candidate']->users->last_name : 'No winner' }}
                                                 </td>
-                                                <td class="py-3 px-6 text-left">{{ $winner['candidate'] ? $winner['candidate']->partylist : '-' }}</td>
-                                                <td class="py-3 px-6 text-left">-</td>
+                                                <td class="py-3 px-6 text-left">{{ $winner['candidate'] ? $winner['candidate']->partyLists->name : '-' }}</td>
+                                                <td class="py-3 px-6 text-left">
+                                                    {{ $abstainCounts[$winner['position_id']] ?? 0 }}
+                                                </td>
                                                 <td class="py-3 px-6 text-left">
                                                     <div
                                                         class="font-bold">{{ $winner['candidate'] ? $winner['candidate']->votes_count . ' votes' : '-' }}</div>
@@ -210,8 +210,10 @@
                                                             <td class="py-3 px-8 text-left font-bold">
                                                                 {{ $winner['candidate'] ? $winner['candidate']->users->first_name . ' ' . $winner['candidate']->users->last_name : 'No winner' }}
                                                             </td>
-                                                            <td class="py-3 px-6 text-left">{{ $winner['candidate'] ? $winner['candidate']->partylist : '-' }}</td>
-                                                            <td class="py-3 px-6 text-left">-</td>
+                                                            <td class="py-3 px-6 text-left">{{ $winner['candidate'] ? $winner['candidate']->partyLists->name : '-' }}</td>
+                                                            <td class="py-3 px-6 text-left">
+                                                                {{ $abstainCounts[$winner['position_id']] ?? 0 }}
+                                                            </td>
                                                             <td class="py-3 px-6 text-left">
                                                                 <div
                                                                     class="font-bold">{{ $winner['candidate'] ? $winner['candidate']->votes_count . ' votes' : '-' }}</div>
