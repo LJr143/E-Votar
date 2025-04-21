@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Route;
 // Admin Authentication Routes
 Route::group(['middleware' => ['superadmin.check', 'redirect.auth']], function () {
     Route::get('admin/login', [LoginController::class, 'login'])->name('admin.login');
-    Route::post('admin/login', [LoginController::class, 'authenticate'])->name('admin.login');
+    Route::post('admin/login', [LoginController::class, 'authenticate'])->name('admin.login.post');
 });
 
 // Admin Protected Routes
@@ -27,7 +27,7 @@ Route::middleware(['splash.screen', 'check.deactivated', 'set.selected.election'
     Route::get('program/major', [ViewController::class, 'programMajor'])->name('admin.program.major')->middleware('admin.auth');
     Route::get('council', [ViewController::class, 'council'])->name('admin.council')->middleware('admin.auth');
     Route::get('unregistered/admins', [ViewController::class, 'unregisteredAdmins'])->name('admin.unregistered.admin')->middleware('admin.auth');
-    Route::post('unregistered/admins', [ViewController::class, 'registerAdmins'])->name('admin.unregistered.admin')->middleware('admin.auth');
+    Route::post('unregistered/admins', [ViewController::class, 'registerAdmins'])->name('admin.unregistered.admin.post')->middleware('admin.auth');
     Route::get('election/party-list', [ViewController::class, 'partyList'])->name('admin.election.party.list')->middleware('admin.auth:view party list');
     Route::get('system/logs', [ViewController::class, 'systemLogs'])->name('admin.system.logs')->middleware('admin.auth:view system logs');
     Route::get('feedback', [ViewController::class, 'feedback'])->name('admin.feedback')->middleware('admin.auth:view feedback');

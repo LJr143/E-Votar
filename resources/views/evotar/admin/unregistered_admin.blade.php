@@ -46,7 +46,7 @@
             <!--form container-->
             <div class="px-2 min-h-screen overflow-hidden ml-0 w-full flex justify-center">
             <div>
-                    <form action="{{route('admin.unregistered.admin')}}" method="POST" class="">
+                    <form action="{{route('admin.unregistered.admin.post')}}" method="POST" class="">
                         @csrf
                         <div class="w-full sm:w-[600px] md:w-[800px] lg:w-[1000px] xl:w-[1200px] max-w-[1200px] rounded border-2 border-solid border-gray-300 shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] p-4">
                             <em class="text-[12px] text-black font-semibold">

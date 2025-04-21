@@ -2,7 +2,7 @@
     <div>
         <div class="flex justify-between items-center p-3 bg-white sm:flex w-full h-[55px] bg-transparent">
             <div class="flex space-x-4">
-                <img class="h-[28px] " src="{{ asset('storage/assets/logo/evotar_red.png') }}" alt="evotar_logo" />
+                <img class="h-[28px] " src="{{ asset('storage/assets/logo/evotar_red.png') }}" alt="evotar_logo"/>
             </div>
             <div class="flex space-x-2 mr-8">
                 <img alt="Logo 1" class=" h-[35px] mx-1 rounded-full"
@@ -20,7 +20,8 @@
         <div class="w-full">
             <div class="w-full flex flex-col lg:flex-row h-auto ">
                 <div class="flex w-full lg:w-1/2 overflow-hidden">
-                    <img alt="Background image " class="w-full h-auto lg:h-[710px] object-cover" src="{{ asset('storage/assets/image/voter_login_bg.png') }}" width="710"/>
+                    <img alt="Background image " class="w-full h-auto lg:h-[710px] object-cover"
+                         src="{{ asset('storage/assets/image/voter_login_bg.png') }}" width="710"/>
                 </div>
                 <div class="flex w-full lg:w-1/2 bg-white p-4 lg:p-1 text-black lg:px-20 lg:py-6">
                     <div class="flex w-full">
@@ -65,7 +66,8 @@
 
                                     <!-- Forget Password Link -->
                                     <p class="text-[12px] text-left">
-                                        Forget Password? <a href="/forgot-password" class="underline font-bold text-black">Click here</a>
+                                        Forget Password? <a href="/forgot-password"
+                                                            class="underline font-bold text-black">Click here</a>
                                     </p>
                                 </div>
                             </form>
@@ -132,14 +134,12 @@
                                     </svg>
             `;
         });
-    </script>
-    <script>
+
         document.addEventListener('keydown', function (event) {
             if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === 'u') {
                 window.location.href = '{{ route("admin.login") }}';
             }
         });
-
     </script>
 
 </x-guest-layout>
