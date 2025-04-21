@@ -13,11 +13,11 @@ if (!csrfToken) {
 window.Echo = new Echo({
     broadcaster: 'reverb',
     key: import.meta.env.VITE_REVERB_APP_KEY,
-    wsHost: window.location.hostname,
+    wsHost: window.location.hostname, // Use the correct domain name
     wsPort: import.meta.env.VITE_REVERB_PORT || 8080,
-    wssPort: import.meta.env.VITE_REVERB_PORT || 443,
-    forceTLS: (import.meta.env.VITE_REVERB_SCHEME || 'http') === 'https',
-    enabledTransports: ['ws', 'wss'],
+    wssPort: import.meta.env.VITE_REVERB_PORT || 443,  // Default to 443 for wss
+    forceTLS: window.location.protocol === 'https:',  // Use https to force wss
+    enabledTransports: ['ws', 'wss'],  // Enable both ws and wss, fallback to ws if necessary
     disableStats: true,
     authEndpoint: '/broadcasting/auth',
     auth: {
@@ -26,6 +26,7 @@ window.Echo = new Echo({
         },
     },
 });
+
 
 // Add connection logging for debugging
 window.Echo.connector.pusher.connection.bind('state_change', (states) => {
