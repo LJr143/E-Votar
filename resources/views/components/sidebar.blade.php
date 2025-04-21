@@ -594,7 +594,8 @@
 
                 @php
                     $election = session('selectedElection') ? \App\Models\Election::find(session('selectedElection')) : null;
-                     if ($election){
+                    $isActive = '#';
+                    if ($election){
                          $isActive = request()->routeIs('dashboard', ['slug' => $election->slug]);
                      }
                 @endphp
