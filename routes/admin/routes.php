@@ -11,7 +11,7 @@ Route::group(['middleware' => ['superadmin.check', 'redirect.auth']], function (
 });
 
 // Admin Protected Routes
-Route::middleware(['splash.screen', 'check.deactivated', 'set.selected.election','single.voter.session', 'track.ip.user'])->prefix('admin')->group(function () {
+Route::middleware(['splash.screen', 'check.deactivated', 'set.selected.election','single.voter.session', 'track.ip.user', 'facial.verified'])->prefix('admin')->group(function () {
     Route::get('register', [ViewController::class, 'view'])->name('admin.register');
     Route::post('register', [ViewController::class, 'register'])->name('admin.register.post');
     Route::get('dashboard', [ViewController::class, 'adminDashboard'])->name('admin.dashboard')->middleware('admin.auth');

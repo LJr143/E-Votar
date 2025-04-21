@@ -1,27 +1,14 @@
-<div class="flex items-center justify-between w-full z-50" x-data="{ sidebarOpen: false }">
-    <!-- Logo and Search Bar -->
+<div class="flex items-center justify-between w-full z-50 " x-data="{ sidebarOpen: false, isActive: false }">
     <div class="flex items-center w-3/5 relative">
         <button class="md:hidden focus:outline-none" @click="sidebarOpen = true">
             <i class="fas fa-bars text-gray-500"></i>
         </button>
-        {{--        <div class="flex relative w-full hidden md:block">--}}
-        {{--            <x-input type="text" placeholder="Search here"--}}
-        {{--                     class="w-full h-[25px] pl-2 text-gray-500 text-[12px] py-4 px-4 rounded" ></x-input>--}}
-        {{--            <svg class="absolute right-2 top-1/2 transform -translate-y-1/2" width="13" height="13" viewBox="0 0 15 15"--}}
-        {{--                 fill="none" xmlns="http://www.w3.org/2000/svg">--}}
-        {{--                <path--}}
-        {{--                    d="M6.25 0C2.795 0 0 2.795 0 6.25c0 3.455 2.795 6.25 6.25 6.25 1.482 0 2.84-.5 3.93-1.34l3.54 3.54c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41l-3.54-3.54C12.75 8.09 13.25 6.73 13.25 6.25 13.25 2.795 10.455 0 6.25 0zm0 11.25c-2.75 0-5-2.25-5-5s2.25-5 5-5 5 2.25 5 5-2.25 5-5 5z"--}}
-        {{--                    fill="#757575"/>--}}
-        {{--            </svg>--}}
-        {{--        </div>--}}
-
         <div class="flex-row justify-center items-center">
             <p class="text-[10px] text-center">University of Southeastern Philippines</p>
             <p class="text-[12px] font-semibold text-red-900">USeP COMMISSION ON ELECTIONS</p>
             <p class="text-[10px] text-center">Impartiality, Transparency, Integrity </p>
         </div>
     </div>
-    <!-- Icons and Profile -->
     <div class="flex items-center space-x-2">
         <img class="w-8 h-8 rounded-full hidden md:block" height="32" src="{{ asset('storage/assets/logo/usep_logo.jpg') }}" alt="usep_logo" width="32"/>
         <img class="w-8 h-8 rounded-full hidden md:block" height="32" src="{{ asset('storage/assets/logo/usg_logo.png') }}" alt="usg_logo" width="32"/>
@@ -31,11 +18,8 @@
         <x-dropdown align="right" width="58" contentClasses="bg-white" dropdownClasses="border border-gray-200">
             <x-slot name="trigger">
                 <button class="focus:outline-none flex items-center space-x-2">
-                    <!-- Profile Picture (Always Clickable) -->
                     <img alt="Profile Picture" class="w-8 h-8 rounded-full" height="32"
                          src="{{ asset('storage/' . (auth()->user()->profile_photo_path ?? 'profile-images/cat_meme.jpg')) }}" width="32"/>
-
-                    <!-- Name and Role (Visible Only on md and Larger Screens) -->
                     <div class="hidden md:block">
                         <p class="text-left text-gray-900 tracking-tight uppercase font-semibold text-[12px]">
                             {{ auth()->user()->first_name }} {{ auth()->user()->middle_initial }}. {{ auth()->user()->last_name }}
@@ -44,8 +28,6 @@
                             {{ auth()->user()->getRoleNames()->join(', ') }}
                         </p>
                     </div>
-
-                    <!-- Dropdown Indicator (Only on Larger Screens) -->
 
                     <span class="text-gray-900 font-semibold text-[12px] md:block hidden">
                         <svg width="12" height="6" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -85,16 +67,14 @@
 
     </div>
 
-    <!-- Sidebar -->
     @php
         $rolesExceptVoter = \Spatie\Permission\Models\Role::where('name', '!=', 'voter')->pluck('name')->toArray();
     @endphp
 
-
     <div class="fixed inset-0 z-50 flex items-center justify-start bg-black bg-opacity-50" x-cloak x-show="sidebarOpen" @click.away="sidebarOpen = false" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
         <div class="bg-white w-64 h-full overflow-y-auto p-4 shadow-lg md:hidden z-50">
             <div class="flex items-center justify-between mb-4">
-                <img alt="evotar_logo" class="w-40 h-8" height="32" src="{{ asset('storage/assets/logo/evotar_red_1.png') }}" alt="evotar_logo" width="32"/>
+                <img class="w-40 h-8" height="32" src="{{ asset('storage/assets/logo/evotar_red_1.png') }}" alt="evotar_logo" width="32"/>
                 <i class="fas fa-chevron-left text-gray-500 cursor-pointer" @click="sidebarOpen = false">
                 </i>
             </div>

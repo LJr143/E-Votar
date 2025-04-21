@@ -8,7 +8,7 @@
     <div class="px-4 py-6 flex">
         <div class="flex justify-center items-center text-center w-full  p-2">
             <img class="h-[25px] " src="{{ asset('storage/assets/logo/evotar_red_1.png') }}" alt="evotar_logo"/>
-            <i class="fa-solid fa-chevron-left  text-[12px] text-black"></i>
+{{--            <i class="fa-solid fa-chevron-left  text-[12px] text-black"></i>--}}
         </div>
     </div>
 
@@ -45,7 +45,7 @@
                 </li>
 
                 @can('view election')
-                    <li x-data="{ open: {{ request()->routeIs('admin.elections*') || request()->routeIs('admin.candidates*') || request()->routeIs('admin.council*') ||  request()->routeIs('admin.positions*') || request()->routeIs('admin.election.party.list*') ? 'true' : 'false' }} }"
+                    <li x-data="{ isActive: false,  open: {{ request()->routeIs('admin.elections*') || request()->routeIs('admin.candidates*') || request()->routeIs('admin.council*') ||  request()->routeIs('admin.positions*') || request()->routeIs('admin.election.party.list*') ? 'true' : 'false' }} }"
                         class="relative group mb-2">
                         <!-- Parent Button -->
                         <button @click="open = !open"
@@ -154,7 +154,7 @@
                 @endcan
 
                 @can('view vote tally')
-                    <li x-data="{ open: {{ request()->routeIs('admin.vote.tally') || request()->routeIs('admin.election.result') ? 'true' : 'false' }} }"
+                    <li x-data="{  isActive: false, open: {{ request()->routeIs('admin.vote.tally') || request()->routeIs('admin.election.result') ? 'true' : 'false' }} }"
                         class="relative group mb-2">
                         <!-- Parent Button -->
                         <button @click="open = !open"
@@ -220,7 +220,7 @@
                 @endcan
 
                 @can('view users')
-                    <li x-data="{ open: {{ request()->routeIs('admin.voters') || request()->routeIs('admin.system.user') ? 'true' : 'false' }} }"
+                    <li x-data="{  isActive: false, open: {{ request()->routeIs('admin.voters') || request()->routeIs('admin.system.user') ? 'true' : 'false' }} }"
                         class="relative group mb-2">
                         <!-- Parent Button -->
                         <button @click="open = !open"
@@ -286,7 +286,7 @@
                 @endcan
 
                 @canany(['view colleges', 'view programs', 'view majors'])
-                    <li x-data="{ open: {{ request()->routeIs('admin.college') || request()->routeIs('admin.program') || request()->routeIs('admin.program.major*') ? 'true' : 'false' }} }"
+                    <li x-data="{ isActive: false, open: {{ request()->routeIs('admin.college') || request()->routeIs('admin.program') || request()->routeIs('admin.program.major*') ? 'true' : 'false' }} }"
                         class="relative group mb-2">
                         <!-- Parent Button -->
                         <button @click="open = !open"
@@ -386,7 +386,7 @@
                 @endcanany
 
                 @can('view website management')
-                    <li x-data="{ open: {{ request()->routeIs('admin.announcement') || request()->routeIs('admin.feedback') ? 'true' : 'false' }} }"
+                    <li x-data="{ isActive: false, open: {{ request()->routeIs('admin.announcement') || request()->routeIs('admin.feedback') ? 'true' : 'false' }} }"
                         class="relative group mb-2">
                         <!-- Parent Button -->
                         <button @click="open = !open"
@@ -454,7 +454,7 @@
                 @endcan
 
                 @if(auth()->user()->hasRole('technical_officer'))
-                    <li class="group flex items-center space-x-2 w-full px-4 py-2 mb-2 rounded-md
+                    <li x-data="{isActive: false}" class="group flex items-center space-x-2 w-full px-4 py-2 mb-2 rounded-md
                         {{ request()->routeIs('technical-officer.active.user')  ? 'bg-black text-white' : 'hover:bg-black hover:text-white' }}">
                         <div class="flex items-center space-x-1 ">
                             <svg class="icon w-[15px] h-[15px] mr-2 text-[#757575] fill-[#757575]
@@ -476,7 +476,7 @@
                 @endif
 
                 @if(auth()->user()->hasRole('technical_officer'))
-                    <li class="group flex items-center space-x-2 w-full px-4 py-2 mb-2 rounded-md
+                    <li x-data="{isActive: false}" class="group flex items-center space-x-2 w-full px-4 py-2 mb-2 rounded-md
                 {{ request()->routeIs('technical-officer.ip.records')  ? 'bg-black text-white' : 'hover:bg-black hover:text-white' }}">
                         <div class="flex items-center space-x-1 ">
 
@@ -508,7 +508,7 @@
                 @endif
 
                 @if(auth()->user()->hasRole('technical_officer'))
-                    <li class="group flex items-center space-x-2 w-full px-4 py-2 mb-2 rounded-md
+                    <li x-data="{isActive: false}" class="group flex items-center space-x-2 w-full px-4 py-2 mb-2 rounded-md
                 {{ request()->routeIs('technical-officer.database.backup')  ? 'bg-black text-white' : 'hover:bg-black hover:text-white' }}">
                         <div class="flex items-center space-x-1 ">
 
@@ -530,7 +530,7 @@
                 @endif
 
                 @can('view system logs')
-                    <li x-data="{ open: {{ request()->routeIs('admin.system.logs') ? 'true' : 'false' }} }"
+                    <li x-data="{ isActive: false, open: {{ request()->routeIs('admin.system.logs') ? 'true' : 'false' }} }"
                         class="relative group mb-2">
                         <!-- Parent Button -->
                         <button @click="open = !open"

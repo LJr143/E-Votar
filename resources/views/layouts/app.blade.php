@@ -14,10 +14,8 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"  />
 
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Poppins:400,500,600&display=swap" rel="stylesheet"/>
-    <!-- Change this in your HTML head -->
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
           integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
@@ -50,7 +48,7 @@
     @livewire('livewire-ui-modal')
 </head>
 
-<body class="font-poppins antialiased bg-[#F7F7F9]">
+<body class="font-poppins antialiased mt-[-19px] bg-white">
 @livewire('privacy-agreement')
 @if(session('showSplash'))
     <div id="splash-screen" class="splash-screen">
@@ -72,13 +70,12 @@
             </h1>
         </div>
     </div>
-
 @endif
 
 
 <div class="min-h-screen mx-auto bg-[#F7F7F9]  {{ $mainClass }}"  id="main-content" style="display: none;">
 @if (isset($sidebar))
-        <sidebar class="h-screen w-[300px] lg:block hidden flex flex-col shadow z-10 sticky">
+        <sidebar class="h-screen w-[300px] lg:block  flex flex-col shadow z-10 sticky">
             {{ $sidebar }}
         </sidebar>
     @endif
@@ -131,31 +128,24 @@
             x-on:deactivated-user.window="pushNotification('success', 'User Deactivated', 'User has been deactivated successfully.');"></div>
         <div
             x-on:activated-user.window="pushNotification('success', 'User Activated', 'User has been activated successfully.');"></div>
-
-
         <div
             x-on:success-position-import.window="pushNotification('success',
             $event.detail.title || 'Position/s Import Success',
             $event.detail.message || 'Positions imported successfully.'
         );"
         ></div>
-
         <div
             x-on:fail-position-import.window="pushNotification('error',
             $event.detail.title || 'Position/s Import Fail',
             $event.detail.message || 'Positions Import failed.'
         );"
         ></div>
-
         <div
             x-on:party-list-imported.window="pushNotification('success',
             $event.detail.title || 'Party Lists Import Success',
             $event.detail.message || 'Party Lists imported successfully.'
         );"
         ></div>
-
-
-
 
         <!-- Page Heading -->
 
@@ -164,8 +154,8 @@
             <main class="relative flex-1 max-lg:h-dvh lg:overflow-y-auto  w-full">
                 <div class="border-b bg-[#F7F7F9] sticky top-0 z-50">
                     @if (isset($header))
-                        <header class="flex pt-2 w-full {{ $headerClass }} z-50">
-                            <div class="py-2 w-full justify-between items-center flex">
+                        <header class="flex  w-full {{ $headerClass }} z-50">
+                            <div class=" w-full justify-between items-center flex">
                                 {{ $header }}
                             </div>
                         </header>
@@ -184,17 +174,12 @@
 
 @livewireScripts
 @stack('modals')
-{{--@if(session('script'))--}}
-{{--    {!! session('script') !!}--}}
-{{--@endif--}}
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://unpkg.com/filepond@^4/dist/filepond.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.1/gsap.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/face-api.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-<!-- resources/views/layouts/app.blade.php -->
-{{--<script src="{{ asset('evotar/public/vendor/livewire/livewire.js') }}"></script>--}}
 
 
 <script>
@@ -210,7 +195,7 @@
             if (mainContent) {
                 mainContent.style.display = '';
             }
-        }, 2000); // Adjust delay as needed
+        }, 2000);
     });
 
     window.Notify = Notify;
@@ -235,10 +220,6 @@
         });
     }
 </script>
-
-
-
-
 
 </body>
 

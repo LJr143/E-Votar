@@ -7,11 +7,11 @@
 }
 body {
     font-family: 'Poppins', sans-serif;
-    font-weight: 500; /* Medium weight (better than 400) */
+    font-weight: 500;
     font-size: 12px;
     line-height: 1.6;
-    color: #333; /* Dark gray (softer than pure black) */
-    -webkit-font-smoothing: antialiased; /* Smoother text on Mac/Win */
+    color: #333;
+    -webkit-font-smoothing: antialiased;
 }
 
 .tick {
@@ -25,20 +25,17 @@ body {
     margin: 0 auto;
 }
 
-/* Styling for the tick container */
 .tick-container {
     display: flex;
     gap: 15px;
 }
 
-/* Group spacing and alignment */
 .tick-group {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-/* Value flip styling */
 .tick-value {
     font-size: clamp(14px, 2.2vw, 44px); /* Min:24px, Preferred:3vw, Max:36px */
     font-weight: bold;
@@ -51,14 +48,12 @@ body {
     text-align: center;
 }
 
-/* Label styling */
 .tick-label {
     font-size: 12px;
     color: #ffffff;
     margin-top: 10px;
 }
 
-/* Time's up message */
 .tick-onended-message p {
     font-size: 14px;
     color: #d9534f;
@@ -68,7 +63,6 @@ body {
     padding: 5px;
 }
 
-/* Responsive adjustments */
 @media (max-width: 1440px) {
     .tick {
         padding: 4px;
@@ -84,7 +78,6 @@ body {
     }
 }
 
-/* Responsive adjustments */
 @media (max-width: 1024px) {
     .tick {
         padding: 4px;
@@ -100,8 +93,6 @@ body {
     }
 }
 
-
-/* Responsive adjustments */
 @media (max-width: 768px) {
     .tick {
         padding: 6px;
@@ -117,7 +108,6 @@ body {
     }
 }
 
-/* Responsive adjustments */
 @media (max-width: 554px) {
     .tick {
         padding: 4px;
@@ -163,8 +153,6 @@ body {
     }
 }
 
-
-/* Splash Screen Styles */
 .splash-screen {
     display: flex;
     justify-content: center;
