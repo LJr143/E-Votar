@@ -15,9 +15,8 @@ class ElectionsTable extends Component
     use WithPagination;
 
 
-    protected $listeners = [
-        'echo:table-updates,table.updated' => 'refreshTable'
-    ];
+    protected $listeners = ['echo:table-updates,App\\Events\\TableUpdated' => '$refresh'];
+
 
     public $filter = 'all_elections';
     public $search = '';

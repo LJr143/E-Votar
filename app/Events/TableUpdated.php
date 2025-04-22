@@ -23,11 +23,6 @@ class TableUpdated implements ShouldBroadcastNow
         return new Channel('table-updates');
     }
 
-    public function broadcastAs()
-    {
-        return 'table.updated';
-    }
-
     public function broadcastWith(): array
     {
         return [
