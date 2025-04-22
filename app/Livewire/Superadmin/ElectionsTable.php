@@ -13,12 +13,8 @@ class ElectionsTable extends Component
 {
     use WithPagination;
 
-//    protected $listeners = [
-//        'election-created' => '$refresh',
-//        'election-deleted' => '$refresh'
-//    ];
 
-    protected $listeners = ['echo:table-updates,TableUpdated' => 'refreshData'];
+    protected $listeners = ['echo:table-updates,table.updated' => 'refreshData'];
 
     public $filter = 'all_elections';
     public $search = '';
