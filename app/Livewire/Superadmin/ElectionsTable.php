@@ -13,7 +13,12 @@ class ElectionsTable extends Component
 {
     use WithPagination;
 
-    protected $listeners = ['echo:table-updates,TableUpdated' => '$refresh'];
+//    protected $listeners = [
+//        'election-created' => '$refresh',
+//        'election-deleted' => '$refresh'
+//    ];
+
+    protected $listeners = ['echo:table-updates,TableUpdated' => 'refreshData'];
 
     public $filter = 'all_elections';
     public $search = '';
@@ -26,6 +31,11 @@ class ElectionsTable extends Component
 
     public $perPage = 10;
 
+
+    public function refreshData(): void
+    {
+       dd('reached');
+    }
 
     public function updatingSearch(): void
     {
