@@ -266,15 +266,6 @@
         }
 
     </script>
-    <script>
-        document.addEventListener('livewire:init', () => {
-            Livewire.on('table-updated', () => {
-                console.log('Livewire event received - forcing refresh');
-                // This ensures the table refreshes even if WebSocket fails
-                Livewire.dispatch('refresh-me');
-            });
-        });
-    </script>
 
 
 </div>

@@ -16,6 +16,7 @@ class TableUpdated implements ShouldBroadcastNow
     public function __construct($data = null)
     {
         $this->data = $data ?? ['message' => 'Table updated at ' . now()];
+        logger('event called');
     }
 
     public function broadcastOn()

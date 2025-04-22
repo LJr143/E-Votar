@@ -41,8 +41,8 @@ class DeleteElection extends Component
         if ($this->election->exists) {
             $this->election->delete();
 
-            $this->dispatch('table-updated');
-            event(new TableUpdated());
+            event(new TableUpdated('election-deleted'));
+            $this->dispatch('election-deleted');
 
         }
     }

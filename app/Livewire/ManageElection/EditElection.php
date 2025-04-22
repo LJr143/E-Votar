@@ -227,8 +227,8 @@ class EditElection extends Component
             ->whereNotIn('position_id', $this->selectedPositions)
             ->delete();
 
-        event(new TableUpdated());
 
+        event(new TableUpdated('election-updated'));
         $this->dispatch('election-updated');
     }
 
@@ -251,10 +251,6 @@ class EditElection extends Component
             $this->dispatch('imageUpdated', ['imageUrl' => $this->temporaryImageEditUrl]);
         }
     }
-
-
-
-
 
     public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory|\Illuminate\Foundation\Application|\Illuminate\View\View
     {

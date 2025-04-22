@@ -15,7 +15,9 @@ class ElectionsTable extends Component
     use WithPagination;
 
 
-    protected $listeners = ['echo:table-updates,App\\Events\\TableUpdated' => '$refresh'];
+    protected $listeners = [
+        'echo:table-updates,TableUpdated' => 'refreshComponent',
+    ];
 
 
     public $filter = 'all_elections';
@@ -30,10 +32,10 @@ class ElectionsTable extends Component
     public $perPage = 10;
 
 
-    public function refreshTable(): void
+    public function refreshComponent()
     {
+        Log::info('Livewire refresh triggered at: ' . now());
         $this->resetPage();
-        $this->dispatch('refresh-me');
     }
 
     public function updatingSearch(): void
