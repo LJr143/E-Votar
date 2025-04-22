@@ -208,7 +208,7 @@
                             </thead>
                             <tbody class="text-black text-[12px] font-light">
                             @foreach($voters as $voter)
-                                <tr class="border-b border-gray-100 rows">
+                                <tr class="border-b border-gray-100 rows" wire:key="voter-table-{{ $voter->id }}">
                                     <td class="py-3 px-6 text-left exclude-print">
                                         <input type="checkbox"
                                                class="form-checkbox rounded h-4 w-4 text-black row-checkbox">

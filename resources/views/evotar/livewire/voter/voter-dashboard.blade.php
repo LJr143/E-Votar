@@ -38,6 +38,7 @@
                         <img alt="Profile Picture" class="w-8 h-8 rounded-full" height="32"
                              src="{{ asset('storage/' . (auth()->user()->profile_photo_path ?? 'assets/profile/default.jpg')) }}" width="32"/>
                     </div>
+                    @if (!session('Admin-Voting-Access'))
                     <div class="mt-2">
                         <x-dropdown align="right" width="58" contentClasses="py-2 bg-white"
                                     dropdownClasses="border border-gray-200">
@@ -85,6 +86,7 @@
                             </x-slot>
                         </x-dropdown>
                     </div>
+                    @endif
                 </div>
             </div>
         </div>

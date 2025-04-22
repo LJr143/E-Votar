@@ -9,25 +9,21 @@ use Symfony\Component\HttpFoundation\Response;
 
 class VoterAuth
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param Closure(Request): (Response) $next
-     */
     public function handle(Request $request, Closure $next, $permission = null): Response
     {
-
-        if (!$this->isAuthenticated()) {
-            return $this->redirectToLogin();
-        }
-
-        if (!$this->isVoter()) {
-//            abort(403, 'Unauthorized action.');
-           return redirect()->route('voter.login')->withErrors(['error' => 'Please login to continue']);
+        // First check authentication
+        if (!Auth::check()) {
+            return $this->redirectToLogin($request, 'You must be logged in to access this page.');
         }
 
         $user = Auth::user();
 
+        // Allow access if either voter OR admin
+        if (!$this->isVoter($user) && !$this->isAdmin($user, $request)) {
+            return $this->redirectWithOrigin($request, 'Your account does not have voting access.');
+        }
+
+        // Check additional permissions if specified
         if ($permission && !$user->can($permission)) {
             abort(403, 'You do not have permission to access this resource.');
         }
@@ -35,35 +31,47 @@ class VoterAuth
         return $next($request);
     }
 
-
-    /**
-     * Check if the user is authenticated.
-     */
-    protected function isAuthenticated(): bool
+    protected function isVoter($user): bool
     {
-        return Auth::check();
+        return $user->hasRole('voter');
     }
 
-    /**
-     * Check if the user has the 'admin' role.
-     */
-    protected function isVoter(): bool
+    protected function isAdmin($user, Request $request): bool
     {
-        return Auth::user()->hasRole('voter');
-    }
-    public function isAdmin(): bool
-    {
-        return Auth::user()->hasAnyRole('superadmin', 'admin','technical_officer', 'watcher');
+        $isAdmin = $user->hasAnyRole(['superadmin', 'admin', 'technical_officer', 'watcher']);
+
+        if ($isAdmin && !session('Admin-Voting-Access')) {
+            session([
+                'Admin-Voting-Access' => true,
+                'Admin-Voting-ID' => $user->id,
+                'Admin-Voting-Name' => $user->first_name,
+                'Admin-Voting-Time' => now(),
+                'Admin-Voting-Origin' => url()->previous()
+            ]);
+        }
+
+        return $isAdmin;
     }
 
-
-    /**
-     * Redirect to the login route with an error message.
-     */
-    protected function redirectToLogin(): Response
+    protected function redirectToLogin(Request $request, string $message): Response
     {
-        return redirect()->route('voter.login')->withErrors([
-            'error' => 'You must be logged in to access this page.',
-        ]);
+        // Store intended URL before redirect
+        session()->put('url.intended', $request->fullUrl());
+
+        return redirect()->route('voter.login')
+            ->withErrors(['error' => $message]);
+    }
+
+    protected function redirectWithOrigin(Request $request, string $message): Response
+    {
+        // For admin trying to access voter area without voting mode
+        if ($this->isAdmin(Auth::user(), $request)) {
+            return redirect(session('Admin-Voting-Origin', route('admin.dashboard')))
+                ->withErrors(['error' => $message]);
+        }
+
+        // For regular voters
+        return redirect()->route('voter.dashboard')
+            ->withErrors(['error' => $message]);
     }
 }

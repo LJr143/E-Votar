@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Vote;
 use App\Models\VoterEncodeVote;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
@@ -26,7 +27,14 @@ class VoterElectionController extends Controller
         $elections = $this->getElectionsForVoter($voter->id);
 
         // Fetch elections the voter has voted in
-        $votedElections = Vote::where('user_id', $voter->id)
+        $votedElections = DB::table('votes')
+            ->where('user_id', $voter->id)
+            ->select('election_id')
+            ->union(
+                DB::table('abstain_votes')
+                    ->where('user_id', $voter->id)
+                    ->select('election_id')
+            )
             ->pluck('election_id')
             ->toArray();
 
