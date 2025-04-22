@@ -30,7 +30,7 @@ class ElectionsTable extends Component
 
     public function refreshData(): void
     {
-       dd('reached');
+       $this->resetPage();
     }
 
     public function updatingSearch(): void
