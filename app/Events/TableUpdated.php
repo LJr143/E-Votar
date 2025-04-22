@@ -1,12 +1,8 @@
 <?php
-
 namespace App\Events;
 
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
-use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -15,22 +11,30 @@ class TableUpdated implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    public $data;
 
-    /**
-     * Create a new event instance.
-     */
-    public function __construct()
+    public function __construct($data = null)
     {
-
+        $this->data = $data ?? ['message' => 'Table updated at ' . now()];
     }
 
-    /**
-     * Get the channels the event should broadcast on.
-     *
-     * @return Channel
-     */
-    public function broadcastOn()
+    public function broadcastOn(): Channel
     {
         return new Channel('table-updates');
+    }
+
+    // Optional: Customize the broadcast name
+    public function broadcastAs()
+    {
+        return 'table.updated';
+    }
+
+    // Optional: Fine-tune what gets broadcast
+    public function broadcastWith()
+    {
+        return [
+            'data' => $this->data,
+            'server_time' => now()->toDateTimeString()
+        ];
     }
 }
