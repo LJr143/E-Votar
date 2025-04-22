@@ -20,6 +20,8 @@ require __DIR__ . '/voter/routes.php';
 require __DIR__ . '/common/routes.php';
 require __DIR__ . '/comelec-website/routes.php';
 
+Broadcast::routes(['middleware' => ['web']]); // For general broadcasting
+Broadcast::routes(['middleware' => ['web', 'auth']]); // For private channels
 Route::group(['middleware' => ['check.first.creation.superadmin']], function () {
     Route::get('register/first', [ViewController::class, 'viewSuperadminRegister'])->name('admin.register.get.superadmin');
     Route::post('register/first', [ViewController::class, 'registerSuperadminRegister'])->name('admin.register.post.superadmin');
@@ -103,4 +105,4 @@ Route::post('/face/registration', [FaceRegistrationController::class, 'register'
 Route::get('/api/face/descriptors', [FaceAuthController::class, 'getDescriptors'])->name('api.face.get-descriptors');
 Route::post('/api/face/verification', [FaceAuthController::class, 'verify'])->name('api.face.verification');
 
-Broadcast::routes(['middleware' => ['web']]);
+
