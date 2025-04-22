@@ -1,6 +1,8 @@
 import Echo from 'laravel-echo';
+import Pusher from 'pusher-js';
 
-// No need for Pusher import!
+window.Pusher = Pusher;
+
 const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
 
 if (!csrfToken) {
@@ -13,8 +15,9 @@ window.Echo = new Echo({
     wsHost: import.meta.env.VITE_REVERB_HOST,
     wsPort: import.meta.env.VITE_REVERB_PORT,
     wssPort: import.meta.env.VITE_REVERB_PORT,
-    forceTLS: (import.meta.env.VITE_REVERB_SCHEME || 'https') === 'https',
+    forceTLS: true,
     enabledTransports: ['ws', 'wss'],
+    disableStats: true,
     authEndpoint: '/broadcasting/auth',
     auth: {
         headers: {
@@ -23,11 +26,11 @@ window.Echo = new Echo({
     },
 });
 
-// Debugging Reverb connection
-window.Echo.connector.reverb.on('connected', () => {
-    console.log('Reverb connected successfully!');
+// Debugging
+window.Echo.connector.pusher.connection.bind('state_change', (states) => {
+    console.log('Connection state:', states.current);
 });
 
-window.Echo.connector.reverb.on('error', (error) => {
-    console.error('Reverb connection error:', error);
+window.Echo.connector.pusher.connection.bind('error', (error) => {
+    console.error('WebSocket error:', error);
 });
