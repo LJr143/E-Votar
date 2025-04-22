@@ -9,6 +9,7 @@ use App\Http\Controllers\ViewController;
 use App\Http\Controllers\VoterElectionController;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use App\Models\Election;
@@ -19,6 +20,8 @@ require __DIR__ . '/voter/routes.php';
 require __DIR__ . '/common/routes.php';
 require __DIR__ . '/comelec-website/routes.php';
 
+Broadcast::routes(['middleware' => ['web']]);
+Broadcast::routes(['middleware' => ['web', 'auth']]);
 Route::group(['middleware' => ['check.first.creation.superadmin']], function () {
     Route::get('register/first', [ViewController::class, 'viewSuperadminRegister'])->name('admin.register.get.superadmin');
     Route::post('register/first', [ViewController::class, 'registerSuperadminRegister'])->name('admin.register.post.superadmin');
@@ -101,4 +104,5 @@ Route::post('/face/registration', [FaceRegistrationController::class, 'register'
 
 Route::get('/api/face/descriptors', [FaceAuthController::class, 'getDescriptors'])->name('api.face.get-descriptors');
 Route::post('/api/face/verification', [FaceAuthController::class, 'verify'])->name('api.face.verification');
+
 

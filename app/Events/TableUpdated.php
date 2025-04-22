@@ -16,21 +16,15 @@ class TableUpdated implements ShouldBroadcastNow
     public function __construct($data = null)
     {
         $this->data = $data ?? ['message' => 'Table updated at ' . now()];
+        logger('event called');
     }
 
-    public function broadcastOn(): Channel
+    public function broadcastOn()
     {
         return new Channel('table-updates');
     }
 
-    // Optional: Customize the broadcast name
-    public function broadcastAs()
-    {
-        return 'table.updated';
-    }
-
-    // Optional: Fine-tune what gets broadcast
-    public function broadcastWith()
+    public function broadcastWith(): array
     {
         return [
             'data' => $this->data,

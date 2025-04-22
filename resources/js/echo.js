@@ -15,7 +15,7 @@ window.Echo = new Echo({
     wsHost: import.meta.env.VITE_REVERB_HOST,
     wsPort: import.meta.env.VITE_REVERB_PORT,
     wssPort: import.meta.env.VITE_REVERB_PORT,
-    forceTLS: true,
+    forceTLS: import.meta.env.VITE_REVERB_SCHEME === 'https',
     enabledTransports: ['ws', 'wss'],
     disableStats: true,
     authEndpoint: '/broadcasting/auth',
@@ -34,3 +34,4 @@ window.Echo.connector.pusher.connection.bind('state_change', (states) => {
 window.Echo.connector.pusher.connection.bind('error', (error) => {
     console.error('WebSocket error:', error);
 });
+

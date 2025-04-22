@@ -252,7 +252,6 @@
                 tableData.push(rowData);
             });
 
-            // AutoTable settings
             doc.autoTable({
                 head: [tableHeaders],
                 body: tableData,
@@ -263,8 +262,7 @@
                 alternateRowStyles: { fillColor: [230, 230, 230] }
             });
 
-            // Open in new tab for preview
-            window.open(doc.output("bloburl"), "_blank"); // Opens PDF in new tab
+            window.open(doc.output("bloburl"), "_blank");
         }
 
     </script>

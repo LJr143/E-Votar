@@ -4,6 +4,7 @@ namespace App\Livewire\Superadmin;
 
 use App\Exports\ElectionsExport;
 use App\Models\Election;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Database\Eloquent\Builder;
@@ -13,12 +14,11 @@ class ElectionsTable extends Component
 {
     use WithPagination;
 
-//    protected $listeners = [
-//        'election-created' => '$refresh',
-//        'election-deleted' => '$refresh'
-//    ];
 
-    protected $listeners = ['echo:table-updates,TableUpdated' => 'refreshData'];
+    protected $listeners = [
+        'echo:table-updates,TableUpdated' => 'refreshComponent',
+    ];
+
 
     public $filter = 'all_elections';
     public $search = '';
@@ -32,8 +32,9 @@ class ElectionsTable extends Component
     public $perPage = 10;
 
 
-    public function refreshData(): void
+    public function refreshComponent()
     {
+        Log::info('Livewire refresh triggered at: ' . now());
         $this->resetPage();
     }
 
@@ -56,6 +57,7 @@ class ElectionsTable extends Component
 
     public function render()
     {
+        Log::info('ElectionsTable rendered at: '.now());
         $query = Election::query()
             ->with('election_type')
             ->orderBy('created_at', 'desc');
