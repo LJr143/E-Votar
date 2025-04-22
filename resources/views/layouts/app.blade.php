@@ -220,11 +220,6 @@
             customIcon: '',
         });
     }
-
-    window.Echo.channel('table-updates')
-        .listen('.table.updated', (data) => {
-            console.log('Update received:', data);
-        });
 </script>
 
 
