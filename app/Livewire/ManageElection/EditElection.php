@@ -227,7 +227,7 @@ class EditElection extends Component
             ->whereNotIn('position_id', $this->selectedPositions)
             ->delete();
 
-        event(new TableUpdated());
+        broadcast( new TableUpdated());
 
         $this->dispatch('election-updated');
     }
