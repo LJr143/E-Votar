@@ -3,21 +3,20 @@ import Pusher from 'pusher-js';
 
 window.Pusher = Pusher;
 
-// Get CSRF token safely
 const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
 
 if (!csrfToken) {
-    console.error('CSRF token not found!');
+    console.warn('CSRF token not found - WebSocket authentication may fail');
 }
 
 window.Echo = new Echo({
     broadcaster: 'reverb',
     key: import.meta.env.VITE_REVERB_APP_KEY,
-    wsHost: window.location.hostname,
-    wsPort: import.meta.env.VITE_REVERB_PORT || 6001,
-    wssPort: import.meta.env.VITE_REVERB_PORT || 443,
-    forceTLS: true,
-    enabledTransports: ['ws','wss'],
+    wsHost: import.meta.env.VITE_REVERB_HOST,
+    wsPort: import.meta.env.VITE_REVERB_PORT,
+    wssPort: import.meta.env.VITE_REVERB_PORT,
+    forceTLS: import.meta.env.VITE_REVERB_SCHEME === 'https',
+    enabledTransports: ['ws', 'wss'],
     disableStats: true,
     authEndpoint: '/broadcasting/auth',
     auth: {
@@ -27,15 +26,11 @@ window.Echo = new Echo({
     },
 });
 
-
-// Add connection logging for debugging
+// Debugging
 window.Echo.connector.pusher.connection.bind('state_change', (states) => {
-    console.log('Connection state changed:', states.current);
+    console.log('Connection state:', states.current);
 });
 
-console.log('Echo initialized with config:', {
-    key: import.meta.env.VITE_REVERB_APP_KEY,
-    host: window.location.hostname,
-    port: import.meta.env.VITE_REVERB_PORT,
-    scheme: import.meta.env.VITE_REVERB_SCHEME
+window.Echo.connector.pusher.connection.bind('error', (error) => {
+    console.error('WebSocket error:', error);
 });
