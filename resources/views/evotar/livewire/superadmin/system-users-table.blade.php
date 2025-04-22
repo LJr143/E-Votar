@@ -64,7 +64,7 @@
                                     </span>
                                     <x-input type="text" wire:model.live="search"
                                              class="text-[12px] bg-transparent border-0 focus:ring-0 focus:outline-none w-full h-8 px-2"
-                                             placeholder="Search elections..." aria-label="Search">
+                                             placeholder="Search user..." aria-label="Search">
                                     </x-input>
                                 </div>
                             </div>
@@ -111,7 +111,9 @@
                                     </td>
                                     <td class="py-3 px-6 text-left truncate max-w-[150px] whitespace-nowrap overflow-hidden">{{ $user->email }}</td>
                                     <td class="py-3 px-6 text-left">{{ $user->year_level  . ' Year' }}</td>
-                                    <td class="py-3 px-6 text-left truncate max-w-[150px] whitespace-nowrap overflow-hidden">{{ $user->college->name }}</td>
+                                    <td class="py-3 px-6 text-left truncate max-w-[150px] whitespace-nowrap overflow-hidden">
+                                        <span title="{{ $user->college->name }}">{{ $user->college->name }}</span>
+                                    </td>
                                     <td class="py-3 px-6 text-left">
                                         @php
                                             $programName = $user->program->name;
