@@ -18,6 +18,7 @@ window.Echo = new Echo({
     forceTLS: true,
     enabledTransports: ['ws', 'wss'],
     disableStats: true,
+    authEndpoint: '/broadcasting/auth',
     auth: {
         headers: {
             'X-CSRF-TOKEN': csrfToken,
