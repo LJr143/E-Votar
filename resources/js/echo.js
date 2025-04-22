@@ -35,11 +35,3 @@ window.Echo.connector.pusher.connection.bind('error', (error) => {
     console.error('WebSocket error:', error);
 });
 
-window.Echo.connector.reverb.connection.bind('state_change', (states) => {
-    console.log('Connection Reverb state:', states.current);
-});
-
-window.Echo.connector.reverb.connection.bind('error', (error) => {
-    console.error('WebSocket Reverb error:', error);
-});
-

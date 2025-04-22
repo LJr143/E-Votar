@@ -264,16 +264,8 @@
             });
 
             // Open in new tab for preview
-            window.open(doc.output("bloburl"), "_blank"); // Opens PDF in new tab
+            window.open(doc.output("bloburl"), "_blank");
         }
-
-
-        Echo.channel('table-updates')
-            .listen('table.updated', (e) => {
-                console.log('Data received:', e.data);
-                console.log('Server Time:', e.server_time);
-            });
-
 
     </script>
 
