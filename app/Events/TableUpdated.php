@@ -3,7 +3,6 @@ namespace App\Events;
 
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -17,6 +16,7 @@ class TableUpdated implements ShouldBroadcastNow
     public function __construct($data = null)
     {
         $this->data = $data ?? ['message' => 'Table updated at ' . now()];
+        dd('TableUpdated event fired!', $this->data);
     }
 
     public function broadcastOn(): Channel
