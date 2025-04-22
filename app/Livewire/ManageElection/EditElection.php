@@ -2,6 +2,7 @@
 
 namespace App\Livewire\ManageElection;
 
+use App\Events\TableUpdated;
 use App\Models\Campus;
 use App\Models\College;
 use App\Models\Election;
@@ -226,6 +227,7 @@ class EditElection extends Component
             ->whereNotIn('position_id', $this->selectedPositions)
             ->delete();
 
+        event(new TableUpdated());
 
         $this->dispatch('election-updated');
     }
