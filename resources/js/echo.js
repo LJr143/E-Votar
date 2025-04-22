@@ -17,7 +17,7 @@ window.Echo = new Echo({
     wsPort: import.meta.env.VITE_REVERB_PORT || 8080,
     wssPort: import.meta.env.VITE_REVERB_PORT || 443,  // Default to 443 for wss
     forceTLS: window.location.protocol === 'https:',  // Use https to force wss
-    enabledTransports: ['ws', 'wss'],  // Enable both ws and wss, fallback to ws if necessary
+    enabledTransports: ['ws'],  // Enable both ws and wss, fallback to ws if necessary
     disableStats: true,
     authEndpoint: '/broadcasting/auth',
     auth: {
