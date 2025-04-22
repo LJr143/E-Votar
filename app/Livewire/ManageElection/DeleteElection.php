@@ -2,6 +2,7 @@
 
 namespace App\Livewire\ManageElection;
 
+use App\Events\TableUpdated;
 use App\Models\Election;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
@@ -39,6 +40,7 @@ class DeleteElection extends Component
 
         if ($this->election->exists) {
             $this->election->delete();
+            event(new TableUpdated());
             $this->dispatch('election-deleted');
 
         }
