@@ -10,13 +10,12 @@ if (!csrfToken) {
 }
 
 window.Echo = new Echo({
-    broadcaster: 'pusher',
-    key: import.meta.env.VITE_PUSHER_APP_KEY,
-    cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER ?? 'mt1',
-    wsHost: import.meta.env.VITE_PUSHER_HOST,
-    wsPort: import.meta.env.VITE_PUSHER_PORT ?? 80,
-    wssPort: import.meta.env.VITE_PUSHER_PORT ?? 443,
-    forceTLS: import.meta.env.VITE_PUSHER_SCHEME === 'https',
+    broadcaster: 'reverb',
+    key: import.meta.env.VITE_REVERB_APP_KEY,
+    wsHost: import.meta.env.VITE_REVERB_HOST,
+    wsPort: import.meta.env.VITE_REVERB_PORT,
+    wssPort: import.meta.env.VITE_REVERB_PORT,
+    forceTLS: import.meta.env.VITE_REVERB_SCHEME === 'https',
     enabledTransports: ['ws', 'wss'],
     disableStats: true,
     authEndpoint: '/broadcasting/auth',
@@ -27,7 +26,6 @@ window.Echo = new Echo({
     },
 });
 
-
 // Debugging
 window.Echo.connector.pusher.connection.bind('state_change', (states) => {
     console.log('Connection state:', states.current);
@@ -36,3 +34,12 @@ window.Echo.connector.pusher.connection.bind('state_change', (states) => {
 window.Echo.connector.pusher.connection.bind('error', (error) => {
     console.error('WebSocket error:', error);
 });
+
+window.Echo.connector.reverb.connection.bind('state_change', (states) => {
+    console.log('Connection Reverb state:', states.current);
+});
+
+window.Echo.connector.reverb.connection.bind('error', (error) => {
+    console.error('WebSocket Reverb error:', error);
+});
+
