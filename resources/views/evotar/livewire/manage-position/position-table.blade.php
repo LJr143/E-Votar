@@ -165,7 +165,7 @@
                                     </span>
                                     <x-input type="text" wire:model.live="search"
                                              class="text-[12px] bg-transparent border-0 focus:ring-0 focus:outline-none w-full h-8 px-2"
-                                             placeholder="Search elections..." aria-label="Search">
+                                             placeholder="Search position..." aria-label="Search">
                                     </x-input>
                                 </div>
                             </div>
@@ -189,7 +189,7 @@
                             @foreach($positions as $position)
                                 <tr class="border-b border-gray-100">
                                     <td class="py-3 px-6 text-left">{{ str_pad($position->id, 7, '0', STR_PAD_LEFT) }}</td>
-                                    <td class="py-3 px-6 text-left">{{ $position->name }}</td>
+                                    <td class="py-3 px-6 text-left font-bold">{{ $position->name }}</td>
                                     <td class="py-3 px-6 text-center flex justify-center space-x-2 items-center exclude-print">
                                         <livewire:manage-position.edit-position :positionId="$position->id" :key="'edit-position-'.$position->id" />
                                         <livewire:manage-position.delete-position :positionId="$position->id" :key="'delete-position-'.$position->id" />
