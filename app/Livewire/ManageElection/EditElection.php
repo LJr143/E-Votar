@@ -2,6 +2,7 @@
 
 namespace App\Livewire\ManageElection;
 
+use App\Events\TableUpdated;
 use App\Models\Campus;
 use App\Models\College;
 use App\Models\Election;
