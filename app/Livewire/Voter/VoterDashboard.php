@@ -1,6 +1,7 @@
 <?php
 namespace App\Livewire\Voter;
 
+use App\Models\AbstainVote;
 use App\Models\Election;
 use App\Models\FeedbackToken;
 use App\Models\Vote;
@@ -25,8 +26,11 @@ class VoterDashboard extends Component
         $this->feedbackToken = FeedbackToken::where('user_id', $this->voter->id)->where('election_id', $this->election->id)->first();
 
         $this->hasVoted = Vote::where('user_id', $this->voter->id)
-            ->where('election_id', $this->election->id)
-            ->exists();
+                ->where('election_id', $this->election->id)
+                ->exists() ||
+            AbstainVote::where('user_id', $this->voter->id)
+                ->where('election_id', $this->election->id)
+                ->exists();
 
         $this->hasEnded = $this->election->date_ended <= now();
         $this->encodedVotes = VoterEncodeVote::where([

@@ -31,6 +31,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'check.website.selected.election' => \App\Http\Middleware\CheckWebSelectedElection::class,
             'check.deactivated' => \App\Http\Middleware\DeactivatedAccountChecker::class,
             'election.status' => \App\Http\Middleware\CheckElectionStatus::class,
+            'clear.admin.voting' => \App\Http\Middleware\ClearAdminVotingSession::class,
             \App\Http\Middleware\CheckPrivacyAgreement::class,
             \App\Http\Middleware\LogUserActivity::class,
         ]);

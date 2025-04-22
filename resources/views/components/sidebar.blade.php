@@ -608,27 +608,41 @@
                         ">
                     <div class="flex items-center space-x-1 w-full">
 
-                        <!-- Link Text with Admin Indicator -->
                         <div class="flex justify-between items-center w-full">
                             @if($election)
-                                <a href="{{ route('dashboard', ['slug' => $election->slug]) }}"
-                                   class="text-xs font-medium transition-colors duration-200
-                          {{ $isActive ? 'text-white' : 'text-red-700 group-hover:text-white' }}">
-                                    Vote Now
-                                </a>
+                                <button onclick="navigateToVote('{{ route('dashboard', ['slug' => $election->slug]) }}')"
+                                        class="text-xs font-medium transition-colors duration-200 cursor-pointer
+                                   {{ $isActive ? 'text-white' : 'text-red-700 group-hover:text-white' }}">
+                                                            Vote Now
+                                                        </button>
 
-
-                                <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full
-                          {{ $isActive ? 'bg-red-500 text-white' : 'bg-red-100 text-red-700' }}">
-                        Admin Access
-                    </span>
-
-                            @else
-                                <span class="text-xs font-normal text-gray-400 cursor-not-allowed">
-                                            Vote Now (No Election)
-                                        </span>
-                            @endif
+                                                        <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full
+                                   {{ $isActive ? 'bg-red-500 text-white' : 'bg-red-100 text-red-700' }}">
+                                    Admin Access
+                                </span>
+                                                    @else
+                                                        <span class="text-xs font-normal text-gray-400 cursor-not-allowed">
+                                    Vote Now (No Election)
+                                </span>
+                                                    @endif
                         </div>
+
+                        <script>
+                            function navigateToVote(url) {
+                                // Prevent middle-click/right-click behavior
+                                if (event.button !== 0) return;
+
+                                // Normal left click - navigate in current window
+                                window.location.href = url;
+                            }
+
+                            // Additional protection against new tab opening
+                            document.addEventListener('auxclick', function(e) {
+                                if (e.button === 1) { // Middle mouse button
+                                    e.preventDefault();
+                                }
+                            });
+                        </script>
                     </div>
                 </li>
 
