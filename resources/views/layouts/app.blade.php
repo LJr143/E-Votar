@@ -73,7 +73,7 @@
 
 <div class="min-h-screen mx-auto bg-[#F7F7F9]  {{ $mainClass }}"  id="main-content" style="display: none;">
 @if (isset($sidebar))
-        <sidebar class="h-screen w-[300px] lg:block  flex flex-col shadow z-10 sticky">
+        <sidebar class="h-screen w-[300px] lg:block hidden lg:block flex flex-col shadow z-10 sticky">
             {{ $sidebar }}
         </sidebar>
     @endif
@@ -152,7 +152,7 @@
             <main class="relative flex-1 max-lg:h-dvh lg:overflow-y-auto  w-full">
                 <div class="border-b bg-[#F7F7F9] sticky top-0 z-50">
                     @if (isset($header))
-                        <header class="flex  w-full {{ $headerClass }} z-50">
+                        <header class="flex w-full {{ $headerClass }} py-2 px-1 z-50">
                             <div class=" w-full justify-between items-center flex">
                                 {{ $header }}
                             </div>
