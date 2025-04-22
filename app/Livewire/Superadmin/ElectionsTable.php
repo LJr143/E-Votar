@@ -18,7 +18,7 @@ class ElectionsTable extends Component
 //        'election-deleted' => '$refresh'
 //    ];
 
-    protected $listeners = ['echo:table-updates,TableUpdated' => 'refreshData'];
+//    protected $listeners = ['echo:table-updates,TableUpdated' => 'refreshData'];
 
     public $filter = 'all_elections';
     public $search = '';
