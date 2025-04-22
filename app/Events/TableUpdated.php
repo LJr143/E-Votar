@@ -4,10 +4,11 @@ namespace App\Events;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class TableUpdated implements ShouldBroadcast
+class TableUpdated implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -24,13 +25,13 @@ class TableUpdated implements ShouldBroadcast
     }
 
     // Optional: Customize the broadcast name
-    public function broadcastAs()
+    public function broadcastAs(): string
     {
         return 'table.updated';
     }
 
     // Optional: Fine-tune what gets broadcast
-    public function broadcastWith()
+    public function broadcastWith(): array
     {
         return [
             'data' => $this->data,
