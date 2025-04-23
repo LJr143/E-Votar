@@ -16,110 +16,115 @@
         </div>
     </div>
 
-    <div class=" z-50 circle red-circle w-[200px] h-[200px]  sm:w-[300px] sm:h-[300px] md:w-[400px] md:h-[400px] bg-red-900 absolute rounded-full z-50 left-[50px] sm:left-[150px] md:left-[300px] top-[80px]"
-         style="background: linear-gradient( #ba0404, #882222);">
+    <div class="w-full lg:max-w-[900px] mx-auto">
+        <div class="lg:flex hidden z-50 circle red-circle w-[200px] h-[200px]  sm:w-[300px] sm:h-[300px] md:w-[400px] md:h-[400px] bg-red-900 absolute rounded-full z-50 left-[50px] sm:left-[150px] md:left-[300px] top-[80px]"
+             style="background: linear-gradient( #ba0404, #882222);">
 
-    </div>
-
-    <div
-        class="circle yellow-circle w-[200px] h-[200px] sm:w-[300px] sm:h-[300px] md:w-[400px] md:h-[400px]  bg-yellow-900 absolute rounded-full z-50 right-[50px] sm:right-[150px] md:right-[250px] bottom-[40px] sm:bottom-[60px]"
-        style="background: linear-gradient(#9e2323, #ffc800);">
-    </div>
-
-
-    <x-authentication-card>
-        @session('status')
-        <div class="mb-4 font-medium text-sm text-green-600">
-            {{ $value }}
         </div>
-        @endsession
 
-        <div class="w-full shadow-lg sm:rounded-lg overflow-hidden flex flex-col md:flex-row bg-white sm:bg-transparent">
-            <div class="w-full h-full px-6 py-4">
-                <form method="POST" class="mt-2">
-                    @csrf
-                    <div class="w-full">
-                        <p class="font-medium text-[12px] text-gray-700 sm:text-white mb-1">WELCOME BACK!</p>
-                        <div class="w-full text-center mb-8 text-gray-700 sm:text-white">
-                            <p class="font-bold text-[18px] text-gray-700 sm:text-white tracking-tighter">LOGIN TO CONTINUE</p>
-                            <p class="font-light text-[11px] text-gray-700 sm:text-white">Integrity, Impartiality and Transparency</p>
+        <div
+            class="lg:flex hidden circle yellow-circle w-[200px] h-[200px] sm:w-[300px] sm:h-[300px] md:w-[400px] md:h-[400px]  bg-yellow-900 absolute rounded-full z-50 right-[50px] sm:right-[150px] md:right-[250px] bottom-[40px] sm:bottom-[60px]"
+            style="background: linear-gradient(#9e2323, #ffc800);">
+        </div>
+
+
+        <x-authentication-card>
+            @session('status')
+            <div class="mb-4 font-medium text-sm text-green-600">
+                {{ $value }}
+            </div>
+            @endsession
+
+            <div class="w-full h-full shadow-lg sm:rounded-lg overflow-hidden flex flex-col md:flex-row bg-white sm:bg-transparent">
+                <div class="w-full h-full px-6 py-4">
+                    <form method="POST" class="mt-2">
+                        @csrf
+                        <div class="w-full">
+                            <p class="font-medium text-[12px] text-gray-700 lg:text-white mb-1">WELCOME BACK!</p>
+                            <div class="w-full text-center mb-4 text-gray-700 lg:text-white">
+                                <p class="font-bold text-[18px] text-gray-700 lg:text-white tracking-tighter">LOGIN TO CONTINUE</p>
+                                <p class="font-light text-[11px] text-gray-700 lg:text-white">Integrity, Impartiality and Transparency</p>
+                            </div>
                         </div>
-                    </div>
-                    <div>
-                        <x-label class="text-gray-700 sm:text-white" for="username" value="{{ __('Username') }}"/>
-                        <x-input id="username" class="block mt-1 w-full h-[30px] border-[1px] p-2 text-[12px]"
-                                 type="username" name="username" :value="old('username')" required autofocus
-                                 autocomplete="username" placeholder="Enter username"/>
-                    </div>
 
-                    <div class="mt-4">
-                        <x-label class="text-gray-700 sm:text-white" for="password" value="{{ __('Password') }}"/>
-                        <div class="relative">
-                            <x-input id="password" class="block mt-1 w-full h-[30px] pr-10 text-[12px]" type="password"
-                                     name="password" required autocomplete="current-password"
-                                     placeholder="Enter password"/>
-                            <button type="button" id="togglePassword"
-                                    class="absolute inset-y-0 right-0 flex items-center px-2 focus:outline-none">
-                                <svg width="31" height="20" viewBox="0 0 31 20" fill="none"
-                                     xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                                    <g clip-path="url(#clip0_1607_9295)">
-                                        <g clip-path="url(#clip1_1607_9295)">
-                                            <path d="M31 0H0V20H31V0Z" fill="url(#pattern0_1607_9295)"/>
+                        <x-validation-errors class="mb-4"/>
+                        <div>
+                            <x-label class="text-gray-700 lg:text-white" for="username" value="{{ __('Username') }}"/>
+                            <x-input id="username" class="block mt-1 w-full h-8 p-2 px-4 py-5 text-[12px] border border-gray-300 rounded-md focus:ring-black focus:border-black"
+                                     type="username" name="username" :value="old('username')" required autofocus
+                                     autocomplete="username" placeholder="Enter username"/>
+                        </div>
+
+                        <div class="mt-4">
+                            <x-label class="text-gray-700 lg:text-white" for="password" value="{{ __('Password') }}"/>
+                            <div class="relative">
+                                <x-input id="password" class="block mt-1 w-full h-8 p-2 px-4 py-5 text-[12px] border border-gray-300 rounded-md focus:ring-black focus:border-black" type="password"
+                                         name="password" required autocomplete="current-password"
+                                         placeholder="Enter password"/>
+                                <button type="button" id="togglePassword"
+                                        class="absolute inset-y-0 right-0 flex items-center px-2 focus:outline-none">
+                                    <svg width="31" height="20" viewBox="0 0 31 20" fill="none"
+                                         xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                        <g clip-path="url(#clip0_1607_9295)">
+                                            <g clip-path="url(#clip1_1607_9295)">
+                                                <path d="M31 0H0V20H31V0Z" fill="url(#pattern0_1607_9295)"/>
+                                            </g>
                                         </g>
-                                    </g>
-                                    <defs>
-                                        <pattern id="pattern0_1607_9295" patternContentUnits="objectBoundingBox"
-                                                 width="1" height="1">
-                                            <use xlink:href="#image0_1607_9295"
-                                                 transform="matrix(0.00645161 0 0 0.01 0.177419 0)"/>
-                                        </pattern>
-                                        <clipPath id="clip0_1607_9295">
-                                            <rect width="31" height="20" fill="white"/>
-                                        </clipPath>
-                                        <clipPath id="clip1_1607_9295">
-                                            <rect width="31" height="20" fill="white"/>
-                                        </clipPath>
-                                        <image id="image0_1607_9295" width="100" height="100"
-                                               xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAACXBIWXMAAAsTAAALEwEAmpwYAAAFoklEQVR4nO2ca4hVVRSAv3CaySx1mrSHTon0MKIwg8xKJO05jUVl9PjR60fQg4weaIVlo1D0+CGIJdSPpIcNMpI9fiRRkARZRhL2MrWwd1MzOpY9dHZsWTPIbc4+59zZ+55976wPFgz3Dmevvdc5e6291joXFEVRFEVRFEVRFEVRFEVRFEVRFEVRqo0RwDhgInA6cBYwDZginx0NHFy0krXIBOBq4DGgHfgQ6ARMRvkF+ABYCTwKzAGai55UtRngTmAN8FOOhc8rPwCrgVvVQP/nZGAxsDGgAVzSC2wAFgInMEQ5CLgKWCsLYiKSj4BbxE/VPGOBx4EdESy8SZHfgUVAEzXIGHHMf0Sw0Can9ABLgKOoka1pwSAN0Qt8DrwIPALcCMwAjgPGA43AMKBO/rZR1PHAucDN4p9eBr7yYJh5QD1VyqXAljIn/4lsFxcCoz3qdDhwiTytm8rU7QvRq6q2p9VlTHQ9MFdC30phn7J75AbIq+9KeSKj5iLgxxyT6gaWAZOLVhw4A3gW2JVD/+3ALCLkQHF8WUPY38S3jCI+msTvZI0E9wJPiA+LArsvv5tR+Z3Ag8ChxE8j0JYjIFkbwxZmT7ZfZlT4tSpNU4wDVmSc42bgpKIUnSF3fJqSNtycTvVzAfBNhvl2Sfa54sboyaCcvbMOoXYYCSzPMO9dlXT2LcDuDNHTFdQu12a4Ia3vOS+0Ivb0+1eGLWpSYD0OA2ZK+tw63qdE2uSzmRVwsKcC21LWwt6454RMk3dliDTsYoVgAvAQ8LGEmlnC0Q0SXh8b8BD8XooetqB2ou+BbUn025SBV8l5xDeT5dpZjOAyzqpAB1Cbr3s9ZXybQjrC14ANUjp1DfhSgINRI/DMIA0xkGGWec6PIQnHjpSx3/d1wy5JGegFybb6ZFqGJ3IwYsPXqZ51rpOn0DWuPdEPitaUdMg78gT55PIMUZwP+Ru4JsCT8rZjTLuWl5V78fGSc0q6+EaJy31yk+ctKssWZmsmPrFBzWeOMX8tt9jVkRI5NAeon+ypoDH6ZI+M7ZOJKRHpK3kveHGox85Rl+guwBh90hMgNJ2dst1bd5CJESkO9UnPig+T4pQpWNYHCE5cAdHWrN2VDzsu8mmAmvLtERjDiNzmeW4N0g+QNJ4tRTgZ7dj7rAM827PC9g75OQJDmP0cru9k6HTH1tWVluJZ7FDWHtJ8MzcCI5gSuSvAPJ9zjGc7aRJLl0n1je5AOapyOz9MQLE6hch5Ja3tjqS1vc+hpE3q+WZKBItvEuS0APNtc4x3d+k/H+BoJOsMcAC0zI9g4U2C2IY434xyHLQ3iw36Od+hnE1fh+CNCBbeJMibgea80DGmreH0057wT/8ARwZSLq24YwoUm3wMgS1j/Jswpm137c/nJ5UjraFCUF/hnJXJKXsDJE37SMoI7+wbs8Wh2KyAvVwmchkbaO4u92A7P3na4cx9pxL6OCaCBTcpEqrHuM7h3K0t9uVUBvryecIxJoIFNynireQ6ACscpd7EHtYrAyrUEOGrbGY/6RXfGoo5jlTKvhbP0i9sB/twwrI9goU3CfJd4LkPT3jL+FWkRWZrSdedrYeE5q0IFt442plC01LSyL1FfGt/GNoqL+lX6iXHBREsvKnwYbiUJlnz1hhelTszgoU3CWJ1G3LY3M3XESy+KZFtpXmlocT9ERjAlMgDDGFGZugXNhWU7gBdjVXH/BpPu1cd9ZFUDjfFEOnEwinAnwUaY3egKmFVc0NB6RQ75vVFTz5W5qnfiI87KlS8sk/GvUVPtlpozfnbinmlU3JJSg6ay/wRmzTpkFctlEG8sL/OgyHWSflU8cRUYCnwfc66xlL5pR8lIJOA6+RHzpZLd0y7/L1Ivgv9rryiKIqiKIqiKIqiKIqiKIqiKIqiKIqiKIqiKIpC/PwH3c0kna2Vu5QAAAAASUVORK5CYII="/>
-                                    </defs>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="block mt-4">
-                            <label for="remember_me" class="flex items-center text-gray-700 sm:text-white">
-                                <x-checkbox id="remember_me" name="remember"/>
-                                <span class="ms-2 text-[11px] text-gray-700 sm:text-white">{{ __('Remember me') }}</span>
-                            </label>
+                                        <defs>
+                                            <pattern id="pattern0_1607_9295" patternContentUnits="objectBoundingBox"
+                                                     width="1" height="1">
+                                                <use xlink:href="#image0_1607_9295"
+                                                     transform="matrix(0.00645161 0 0 0.01 0.177419 0)"/>
+                                            </pattern>
+                                            <clipPath id="clip0_1607_9295">
+                                                <rect width="31" height="20" fill="white"/>
+                                            </clipPath>
+                                            <clipPath id="clip1_1607_9295">
+                                                <rect width="31" height="20" fill="white"/>
+                                            </clipPath>
+                                            <image id="image0_1607_9295" width="100" height="100"
+                                                   xlink:href="data:image/png;base64,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"/>
+                                        </defs>
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
 
-                        <div class="flex justify-end items-center mt-4">
-                            @if (Route::has('password.request'))
-                                <a class="underline text-[11px] text-gray-700 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                   href="{{ route('password.request') }}">
-                                    {{ __('Forgot your password?') }}
-                                </a>
-                            @endif
-                        </div>
-                    </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="block mt-4">
+                                <label for="remember_me" class="flex items-center text-gray-700 lg:text-white">
+                                    <x-checkbox id="remember_me" name="remember"/>
+                                    <span class="ms-2 text-[11px] text-gray-700 lg:text-white">{{ __('Remember me') }}</span>
+                                </label>
+                            </div>
 
-                    <div class="w-full flex items-center justify-center mt-7">
-                        <x-button class="w-full flex justify-center items-center font-bold">
-                            <p class="font-bold">
-                                {{ __('Log in') }}
-                            </p>
-                        </x-button>
-                    </div>
-                </form>
+                            <div class="flex justify-end items-center mt-4">
+                                @if (Route::has('password.request'))
+                                    <a class="underline text-[11px] text-gray-700 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                       href="{{ route('password.request') }}">
+                                        {{ __('Forgot your password?') }}
+                                    </a>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="w-full flex items-center justify-center mt-7">
+                            <x-button class="w-full flex justify-center items-center font-bold h-8 p-2 px-4 py-5 text-[12px] border border-gray-300 rounded-md focus:ring-black focus:border-black">
+                                <p class="font-bold">
+                                    {{ __('Log in') }}
+                                </p>
+                            </x-button>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="w-full h-full order-first md:order-last">
+                    <img class="w-full h-full object-cover" src="{{ asset('storage/assets/image/login_bg.png') }}" alt="">
+                </div>
             </div>
-            <div class="w-full h-48 md:h-full order-first md:order-last">
-                <img class="w-full h-full object-cover" src="{{ asset('storage/assets/image/login_bg.png') }}" alt="">
-            </div>
-        </div>
-    </x-authentication-card>
-    <x-validation-errors class="mb-4"/>
+        </x-authentication-card>
+    </div>
+
 
     <script>
         document.getElementById('togglePassword').addEventListener('click', function () {
@@ -183,5 +188,4 @@
     </script>
 
 </x-guest-layout>
-
 
