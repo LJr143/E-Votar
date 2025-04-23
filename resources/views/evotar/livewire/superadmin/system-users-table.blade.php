@@ -29,7 +29,6 @@
         <div id="all_elections" class="w-full">
             <div class="bg-white shadow-md rounded p-6">
                 <div class="sm:p-5 rounded-md md:max-w-[800px] min-[90%]:max-w-[100%] lg:max-w-[900px] xl:w-[100%] xl:min-w-[100%] 2xl:max-w-[1190px]">
-
                     <div class="flex flex-col md:flex-row w-full items-center justify-between">
                         <div class="flex items-center justify-between flex-wrap md:flex-nowrap gap-2">
                             <button
@@ -154,7 +153,6 @@
                                 </p>
                             </div>
                         @endif
-
                     </div>
                     <div class="mt-4" wire:key="pagination-table">
                         {{ $users->links('evotar.components.pagination.tailwind-pagination') }}
