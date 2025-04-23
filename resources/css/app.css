@@ -18,7 +18,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 10px;
+    padding: 2px;
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     width: fit-content;
@@ -125,7 +125,7 @@ body {
 
 @media (max-width: 375px) {
     .tick {
-        padding: 4px;
+        padding: 2px;
     }
 
     .tick-value {
@@ -136,21 +136,33 @@ body {
     .tick-label {
         font-size: 11px;
     }
+
+    .tick-container {
+        display: flex;
+        gap: 10px;
+    }
 }
 
 @media (max-width: 320px) {
     .tick {
-        padding: 3px;
+        padding: 1px;
     }
 
     .tick-value {
-        font-size: 17px;
+        font-size: 12px;
         padding: 1px 1px;
     }
 
     .tick-label {
-        font-size: 10px;
+        font-size: 11px;
     }
+
+    .tick-container {
+        display: flex;
+        gap: 1px;
+    }
+
+
 }
 
 .splash-screen {
