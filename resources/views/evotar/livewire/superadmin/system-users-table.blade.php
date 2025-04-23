@@ -109,7 +109,9 @@
                                             @endif
                                         @endforeach
                                     </td>
-                                    <td class="py-3 px-6 text-left truncate max-w-[150px] whitespace-nowrap overflow-hidden">{{ $user->email }}</td>
+                                    <td class="py-3 px-6 text-left truncate max-w-[150px] whitespace-nowrap overflow-hidden">
+                                        <span title="{{ $user->email }}">{{ $user->email }}</span>
+                                    </td>
                                     <td class="py-3 px-6 text-left">{{ $user->year_level  . ' Year' }}</td>
                                     <td class="py-3 px-6 text-left truncate max-w-[150px] whitespace-nowrap overflow-hidden">
                                         <span title="{{ $user->college->name }}">{{ $user->college->name }}</span>
