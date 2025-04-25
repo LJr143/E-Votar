@@ -29,7 +29,6 @@
         <div id="all_elections" class="w-full">
             <div class="bg-white shadow-md rounded p-6">
                 <div class="sm:p-5 rounded-md md:max-w-[800px] min-[90%]:max-w-[100%] lg:max-w-[900px] xl:w-[100%] xl:min-w-[100%] 2xl:max-w-[1190px]">
-
                     <div class="flex flex-col md:flex-row w-full items-center justify-between">
                         <div class="flex items-center justify-between flex-wrap md:flex-nowrap gap-2">
                             <button
@@ -64,7 +63,7 @@
                                     </span>
                                     <x-input type="text" wire:model.live="search"
                                              class="text-[12px] bg-transparent border-0 focus:ring-0 focus:outline-none w-full h-8 px-2"
-                                             placeholder="Search elections..." aria-label="Search">
+                                             placeholder="Search user..." aria-label="Search">
                                     </x-input>
                                 </div>
                             </div>
@@ -109,9 +108,13 @@
                                             @endif
                                         @endforeach
                                     </td>
-                                    <td class="py-3 px-6 text-left truncate max-w-[150px] whitespace-nowrap overflow-hidden">{{ $user->email }}</td>
+                                    <td class="py-3 px-6 text-left truncate max-w-[150px] whitespace-nowrap overflow-hidden">
+                                        <span title="{{ $user->email }}">{{ $user->email }}</span>
+                                    </td>
                                     <td class="py-3 px-6 text-left">{{ $user->year_level  . ' Year' }}</td>
-                                    <td class="py-3 px-6 text-left truncate max-w-[150px] whitespace-nowrap overflow-hidden">{{ $user->college->name }}</td>
+                                    <td class="py-3 px-6 text-left truncate max-w-[150px] whitespace-nowrap overflow-hidden">
+                                        <span title="{{ $user->college->name }}">{{ $user->college->name }}</span>
+                                    </td>
                                     <td class="py-3 px-6 text-left">
                                         @php
                                             $programName = $user->program->name;
@@ -150,7 +153,6 @@
                                 </p>
                             </div>
                         @endif
-
                     </div>
                     <div class="mt-4" wire:key="pagination-table">
                         {{ $users->links('evotar.components.pagination.tailwind-pagination') }}
