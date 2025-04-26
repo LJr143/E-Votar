@@ -306,6 +306,57 @@
                     }
                 }
 
+                const openIDB = () => {
+                    return new Promise((resolve, reject) => {
+                        const request = indexedDB.open('FaceModelsDB', 1);
+
+                        request.onupgradeneeded = (event) => {
+                            const db = event.target.result;
+                            if (!db.objectStoreNames.contains('models')) {
+                                db.createObjectStore('models', { keyPath: 'name' });
+                            }
+                        };
+
+                        request.onsuccess = () => resolve(request.result);
+                        request.onerror = () => reject(request.error);
+                    });
+                };
+
+                const getCachedModel = async (modelName) => {
+                    try {
+                        const db = await openIDB();
+                        const transaction = db.transaction('models', 'readonly');
+                        const store = transaction.objectStore('models');
+                        const request = store.get(modelName);
+
+                        return new Promise((resolve, reject) => {
+                            request.onsuccess = () => resolve(request.result?.weights);
+                            request.onerror = () => reject(null);
+                        });
+                    } catch (error) {
+                        console.error('IndexedDB get error:', error);
+                        return null;
+                    }
+                };
+
+                const cacheModel = async (modelName, model) => {
+                    try {
+                        const db = await openIDB();
+                        const transaction = db.transaction('models', 'readwrite');
+                        const store = transaction.objectStore('models');
+
+                        // Extract weights (simplified - may need adjustment for face-api.js)
+                        const weights = {
+                            name: modelName,
+                            weights: model.modelUrl ? model : model.getWeights()
+                        };
+
+                        store.put(weights);
+                    } catch (error) {
+                        console.error('IndexedDB cache error:', error);
+                    }
+                };
+
                 // Cache DOM elements
                 const video = document.getElementById('video-feed');
                 const statusMessage = document.getElementById('status-message');
@@ -414,18 +465,35 @@
                         const localModelPath = '{{ asset("storage/models") }}';
                         const cdnModelPath = 'https://justadudewhohacks.github.io/face-api.js/models';
 
-                        // Load models with timeout
-                        await Promise.race([
-                            Promise.all([
-                                faceapi.nets.ssdMobilenetv1.loadFromUri(localModelPath),
-                                    // .catch(() =>faceapi.nets.ssdMobilenetv1.loadFromUri(cdnModelPath)),
-                                faceapi.nets.faceLandmark68Net.loadFromUri(localModelPath),
-                                    // .catch(() =>faceapi.nets.faceLandmark68Net.loadFromUri(cdnModelPath)),
-                                faceapi.nets.faceRecognitionNet.loadFromUri(localModelPath),
-                                    // .catch(() =>faceapi.nets.faceRecognitionNet.loadFromUri(cdnModelPath)),
-                            ]),
-                            new Promise((_, reject) => setTimeout(() => reject(new Error('Model loading timeout')), 30000))
+                        const cachedModels = await Promise.all([
+                            getCachedModel('ssdMobilenetv1'),
+                            getCachedModel('faceLandmark68Net'),
+                            getCachedModel('faceRecognitionNet')
                         ]);
+                        if (cachedModels.every(model => model !== null)) {
+                            // Load from cache
+                            await Promise.all([
+                                faceapi.nets.ssdMobilenetv1.loadFromDisk(cachedModels[0]),
+                                faceapi.nets.faceLandmark68Net.loadFromDisk(cachedModels[1]),
+                                faceapi.nets.faceRecognitionNet.loadFromDisk(cachedModels[2])
+                            ]);
+                            statusMessage.textContent = "Models loaded from cache!";
+                        } else {
+                            // Fallback to network load
+                            statusMessage.textContent = "Downloading models...";
+                            await Promise.all([
+                                faceapi.nets.ssdMobilenetv1.loadFromUri('/storage/models'),
+                                faceapi.nets.faceLandmark68Net.loadFromUri('/storage/models'),
+                                faceapi.nets.faceRecognitionNet.loadFromUri('/storage/models')
+                            ]);
+
+                            // Cache the newly loaded models
+                            await Promise.all([
+                                cacheModel('ssdMobilenetv1', faceapi.nets.ssdMobilenetv1),
+                                cacheModel('faceLandmark68Net', faceapi.nets.faceLandmark68Net),
+                                cacheModel('faceRecognitionNet', faceapi.nets.faceRecognitionNet)
+                            ]);
+                        }
 
                         modelsLoaded = true;
                         modelStatus.querySelector('.status-indicator').className = 'status-indicator status-ready';
@@ -437,8 +505,9 @@
                         modelStatus.querySelector('span:last-child').textContent = 'Model load failed';
                         statusMessage.textContent = "Failed to load face detection models!";
 
-                        // Retry after 5 seconds
-                        setTimeout(loadModels, 5000);
+                        // Retry with exponential backoff
+                        setTimeout(loadModels, Math.min(5000 * Math.pow(2, retryCount), 30000));
+                        retryCount++;
                     }
                 }
 
