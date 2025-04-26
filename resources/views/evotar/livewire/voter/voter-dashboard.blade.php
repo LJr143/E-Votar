@@ -375,7 +375,7 @@
         </div>
 
         @if(!$hasEnded && !$hasVoted)
-            <div class="mb-6 bg-black text-white p-4 rounded-lg shadow-md text-center min-h-[100px] sm:min-h-[160px] ">
+            <div class="mb-6 bg-black text-white p-4 rounded-lg shadow-md text-center min-h-[100px] sm:min-h-[160px]" wire:ignore>
                 <div class="flex justify-between items-center">
                     <div class="flex items-center space-x-2 mb-4">
                         <i class="fas fa-stopwatch text-white text-sm"></i>
