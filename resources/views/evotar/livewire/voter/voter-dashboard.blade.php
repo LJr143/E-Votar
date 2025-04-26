@@ -537,7 +537,7 @@
 
         <div class=" min-h-screen w-full flex justify-center items-center">
             <img src="{{ asset('storage/' . $election->image_path) }}"
-                 alt="" class="object-contain max-h-screen w-full mix-blend-multiply" style="mix-blend-mode: multiply;">
+                 alt="" class="object-cover max-h-screen w-full mix-blend-multiply" style="mix-blend-mode: multiply;">
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
