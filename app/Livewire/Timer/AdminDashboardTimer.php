@@ -41,6 +41,7 @@ class AdminDashboardTimer extends Component
                 'is_active' => false
             ]);
 
+            event(new ElectionStatus());
             $this->dispatch('timer-paused');
         }
     }
