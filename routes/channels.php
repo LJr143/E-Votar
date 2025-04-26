@@ -13,3 +13,6 @@ Broadcast::channel('user-logged-in', function ($user) {
 Broadcast::channel('table-updates', function ($user) {
     return true;
 });
+Broadcast::channel('election-status', function ($user) {
+    return true;
+});
