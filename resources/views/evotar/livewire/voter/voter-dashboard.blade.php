@@ -365,7 +365,7 @@
         </div>
 
 
-        <div class="w-full lg:hidden px-4 mb-6 flex justify-center items-center"
+        <div wire:ignore class="w-full lg:hidden px-4 mb-6 flex justify-center items-center"
              style="background-image: url('{{ asset('storage/assets/image/bg-voter-side.png') }}');">
 
             <div>
@@ -383,7 +383,7 @@
                     </div>
 
                 </div>
-                <div class="tick" data-did-init="handleTickInit" data-credits="false" wire:ignore>
+                <div class="tick" data-did-init="handleTickInit" data-credits="false">
                     <div
                         data-repeat="true"
                         data-layout="horizontal fit"
