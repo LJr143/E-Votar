@@ -132,7 +132,7 @@ class VotingProcess extends Component
         $votesByPosition = [];
 
         foreach ($this->selectedCandidates as $key => $candidateId) {
-            // Skip abstain values
+
             if ($candidateId === 'abstain') {
                 continue;
             }
@@ -148,7 +148,7 @@ class VotingProcess extends Component
 
         foreach ($votesByPosition as $positionId => $candidateIds) {
             if (count($candidateIds) !== count(array_unique($candidateIds))) {
-                return true; // Duplicate found
+                return true;
             }
         }
 

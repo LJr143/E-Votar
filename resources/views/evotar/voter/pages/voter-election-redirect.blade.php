@@ -215,7 +215,7 @@
                     }
                 </style>
                 <!-- Welcome Section -->
-                <div class="rounded-lg shadow-sm overflow-hidden mb-8 mt-4" x-data="{ typed: '' }" x-init="
+                <div class="rounded-lg shadow-sm overflow-hidden mb-4 mt-4" x-data="{ typed: '' }" x-init="
                     const text = 'Hi! {{ $voter->first_name }}, Welcome!';
                     let i = 0;
                     const interval = setInterval(() => {
@@ -325,6 +325,23 @@
                     </div>
                 </div>
 
+                @if(!$isVerified)
+                    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <svg class="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-yellow-700">
+                                    <strong>Verification Required:</strong> You must complete your yearly voter verification before participating in any elections this year. Please contact your election administrator to verify your account.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
 
                 <div class="w-full sm:hidden px-4 mb-6 flex justify-center items-center"
                      style="background-image: url('{{ asset('storage/assets/image/bg-voter-side.png') }}');">
@@ -349,14 +366,35 @@
                             @php
                                 $hasVoted = in_array($election->id, $votedElections);
                                 $hasEnded = $election->date_ended <= now();
+                                $canVote = $isVerified && !$hasVoted && !$hasEnded;
                             @endphp
 
                                 <!-- Election Card - Entire card is clickable -->
-                            <a href="{{ route('dashboard', ['slug' => $election->slug]) }}"
-                               class="block rounded-lg shadow-sm overflow-hidden border transition-transform hover:scale-[1.02] hover:shadow-md w-64 flex-shrink-0
-      {{ $hasVoted ? 'bg-green-50 border-green-400' : 'bg-white border-gray-100' }}">
+                            <div class="relative rounded-lg shadow-sm overflow-hidden border transition-transform w-64 flex-shrink-0
+                                    {{ $hasVoted ? 'bg-green-50 border-green-400' : 'bg-white border-gray-100' }}
+                                    {{ !$canVote ? 'opacity-80' : 'hover:scale-[1.02] hover:shadow-md' }}">
+
+                                @if(!$canVote)
+                                    <div class="absolute inset-0 bg-gray-100 bg-opacity-50 z-10"></div>
+                                @endif
+
+                                @if($canVote)
+                                    <a href="{{ route('dashboard', ['slug' => $election->slug]) }}">
+                                        @endif
                                 <div class="h-28 bg-gray-200 relative">
                                     <img alt="{{ $election->name }}" class="h-full w-full object-cover" src="{{ asset('storage/assets/profile/cat_meme.jpg') }}"/>
+
+                                    @if(!$isVerified && !$hasVoted && !$hasEnded)
+                                        <!-- Not Verified Overlay -->
+                                        <div class="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center">
+                                            <div class="bg-white rounded-full h-12 w-12 flex items-center justify-center mb-1">
+                                                <svg class="h-8 w-8 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                                </svg>
+                                            </div>
+                                            <span class="text-white font-bold text-[12px] text-center">Verification Required</span>
+                                        </div>
+                                    @endif
 
                                     @if($hasVoted)
                                         <!-- Voted overlay -->
@@ -402,7 +440,10 @@
                                         <span class="text-xs">End Date: {{ \Carbon\Carbon::parse($election->date_ended)->format('M d, Y \a\t h:i A') }}</span>
                                     </div>
                                 </div>
-                            </a>
+                                        @if($canVote)
+                                    </a>
+                                    @endif
+                            </div>
                         @endforeach
                     </div>
                 </div>

@@ -47,7 +47,7 @@ class UserFactory extends Factory
             'password' => Hash::make('password123'), // Default password
             'remember_token' => Str::random(10),
             'profile_photo_path' => null,
-            'account_status' => 'Active',
+            'account_status' => 'Pending Verification',
             'face_descriptor' => null,
             'created_at' => now(),
             'updated_at' => now(),

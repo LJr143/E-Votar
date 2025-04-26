@@ -24,10 +24,5 @@
             {{ $slot }}
         </div>
         @livewireScripts
-        <script>
-            window.addEventListener("beforeunload", function () {
-                navigator.sendBeacon("{{ route('logout') }}");
-            });
-        </script>
     </body>
 </html>

@@ -367,6 +367,10 @@ class ViewController extends Controller
     }
 
 
+    public function verifyAcademicDetails()
+    {
+        return view('evotar.admin.verify-academic-details');
+    }
 
 
     /**

@@ -19,6 +19,10 @@ class VoterDashboard extends Component
     public $encodedVotes;
     public $feedbackToken;
 
+    protected $listeners = [
+        'echo:election-status,ElectionStatus' => '$refresh',
+    ];
+
     public function mount($slug)
     {
         $this->voter = auth()->user();

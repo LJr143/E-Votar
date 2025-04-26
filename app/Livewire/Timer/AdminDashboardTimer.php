@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Timer;
 
+use App\Events\ElectionStatus;
 use Livewire\Component;
 use App\Models\Election;
 use Carbon\Carbon;
@@ -23,7 +24,7 @@ class AdminDashboardTimer extends Component
         if ($this->selectedElection) {
             $this->election = Election::find($this->selectedElection);
             $this->originalEndTime = $this->election->end_time;
-            $this->remainingTime = $election->remaining_time ??
+            $this->remainingTime = $this->election->remaining_time ??
                 Carbon::parse($this->election->end_time)->diffInSeconds(Carbon::now());
         }
     }
@@ -58,6 +59,7 @@ class AdminDashboardTimer extends Component
                 'status' => 'active'
             ]);
 
+            event(new ElectionStatus());
             $this->dispatch('timer-resumed', endTime: $newEndTime->toDateTimeString());
         }
     }
@@ -73,6 +75,7 @@ class AdminDashboardTimer extends Component
                 'status' => 'completed',
             ]);
 
+            event(new ElectionStatus());
             // Dispatch an event with refresh instruction
             $this->dispatch('timer-stopped', shouldRefresh: true);
 
@@ -83,6 +86,12 @@ class AdminDashboardTimer extends Component
 
     public function render()
     {
+        if ($this->selectedElection) {
+            $this->election = Election::find($this->selectedElection);
+
+            $this->isPaused = $this->election->status === 'paused';
+            $this->isStopped = $this->election->status === 'completed';
+        }
         return view('evotar.livewire.timer.admin-dashboard-timer');
     }
 }

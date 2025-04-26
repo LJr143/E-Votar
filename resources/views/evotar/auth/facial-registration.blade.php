@@ -42,20 +42,6 @@
                 min-height: 60px;
             }
 
-            #capture-button {
-                display: block;
-                margin: 20px auto;
-                padding: 12px 30px;
-                font-size: 18px;
-                cursor: pointer;
-                background-color: gray;
-                border: none;
-                color: white;
-                border-radius: 5px;
-                pointer-events: none;
-                transition: background-color 0.3s;
-            }
-
             #instructions {
                 text-align: center;
                 margin: 15px 0;
@@ -104,39 +90,142 @@
                 transition: stroke-dasharray 0.3s;
             }
 
-            /* Liveliness check styles */
-            .liveliness-checks {
+            /* Countdown styles */
+            #countdown-overlay {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.7);
                 display: flex;
                 justify-content: center;
-                gap: 15px;
-                margin: 15px 0;
+                align-items: center;
+                z-index: 30;
+                pointer-events: none;
+                opacity: 0;
+                transition: opacity 0.3s;
             }
 
-            .liveliness-check {
+            #countdown-text {
+                font-size: 80px;
+                color: white;
+                font-weight: bold;
+            }
+
+            /* Loading overlay styles */
+            #loading-overlay {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.7);
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                z-index: 40;
+                pointer-events: none;
+                opacity: 0;
+                transition: opacity 0.3s;
+            }
+
+            #loading-spinner {
+                border: 5px solid #f3f3f3;
+                border-top: 5px solid #3498db;
+                border-radius: 50%;
+                width: 50px;
+                height: 50px;
+                animation: spin 1s linear infinite;
+                margin-bottom: 15px;
+            }
+
+            #loading-text {
+                color: white;
+                font-size: 18px;
+                font-weight: bold;
+            }
+
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+
+            /* Quality indicators */
+            .quality-indicators {
+                display: flex;
+                justify-content: center;
+                gap: 20px;
+                margin: 10px 0;
+            }
+
+            .quality-indicator {
                 display: flex;
                 flex-direction: column;
                 align-items: center;
             }
 
-            .liveliness-check .icon {
-                width: 30px;
-                height: 30px;
-                border-radius: 50%;
-                background-color: #ccc;
-                display: flex;
-                align-items: center;
-                justify-content: center;
+            .quality-indicator .label {
+                font-size: 12px;
+                color: #666;
                 margin-bottom: 5px;
             }
 
-            .liveliness-check .label {
-                font-size: 12px;
-                color: #666;
+            .quality-indicator .value {
+                font-size: 14px;
+                font-weight: bold;
             }
 
-            .liveliness-check.completed .icon {
+            .quality-indicator .good {
+                color: #4CAF50;
+            }
+
+            .quality-indicator .warning {
+                color: #FFC107;
+            }
+
+            .quality-indicator .bad {
+                color: #F44336;
+            }
+
+            /* Status indicators */
+            .status-container {
+                display: flex;
+                justify-content: center;
+                margin: 15px 0;
+                gap: 15px;
+            }
+
+            .status-item {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+            }
+
+            .status-indicator {
+                width: 12px;
+                height: 12px;
+                border-radius: 50%;
+            }
+
+            .status-loading {
+                background-color: #FFC107;
+                animation: pulse 1.5s infinite;
+            }
+
+            .status-ready {
                 background-color: #4CAF50;
-                color: white;
+            }
+
+            .status-error {
+                background-color: #F44336;
+            }
+
+            @keyframes pulse {
+                0% { opacity: 1; }
+                50% { opacity: 0.5; }
+                100% { opacity: 1; }
             }
         </style>
 
@@ -149,174 +238,147 @@
                     <circle class="progress-circle-fg" cx="50" cy="50" r="45" />
                 </svg>
             </div>
+            <div id="countdown-overlay">
+                <div id="countdown-text"></div>
+            </div>
+            <div id="loading-overlay">
+                <div id="loading-spinner"></div>
+                <div id="loading-text">Processing your registration...</div>
+            </div>
         </div>
 
         <div id="instructions">Please position your face in the circle and look straight at the camera</div>
 
-        <div class="liveliness-checks">
-            <div class="liveliness-check" id="blink1-check">
-                <div class="icon">1</div>
-                <div class="label">Blink Once</div>
+        <div class="quality-indicators">
+            <div class="quality-indicator">
+                <div class="label">Brightness</div>
+                <div class="value" id="brightness-value">--</div>
             </div>
-            <div class="liveliness-check" id="blink2-check">
-                <div class="icon">2</div>
-                <div class="label">Blink Twice</div>
+            <div class="quality-indicator">
+                <div class="label">Contrast</div>
+                <div class="value" id="contrast-value">--</div>
             </div>
-            <div class="liveliness-check" id="smile-check">
-                <div class="icon">☺</div>
-                <div class="label">Smile</div>
+            <div class="quality-indicator">
+                <div class="label">Sharpness</div>
+                <div class="value" id="sharpness-value">--</div>
+            </div>
+        </div>
+
+        <div class="status-container">
+            <div class="status-item" id="camera-status">
+                <div class="status-indicator status-loading"></div>
+                <span>Camera</span>
+            </div>
+            <div class="status-item" id="model-status">
+                <div class="status-indicator status-loading"></div>
+                <span>AI Models</span>
+            </div>
+            <div class="status-item" id="system-status">
+                <div class="status-indicator status-loading"></div>
+                <span>System</span>
             </div>
         </div>
 
         <div class="validation-message" id="validation-message"></div>
         <p id="status-message">Initializing camera...</p>
-        <button id="capture-button" data-user-id="{{ $user->id }}">Start Registration</button>
         <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
 
         <script>
             (async () => {
+                // Get DOM elements
                 const video = document.getElementById('video-feed');
-                const captureButton = document.getElementById('capture-button');
                 const statusMessage = document.getElementById('status-message');
                 const instructions = document.getElementById('instructions');
                 const validationMessage = document.getElementById('validation-message');
                 const progressCircle = document.querySelector('.progress-circle-fg');
+                const countdownOverlay = document.getElementById('countdown-overlay');
+                const countdownText = document.getElementById('countdown-text');
+                const loadingOverlay = document.getElementById('loading-overlay');
+                const loadingText = document.getElementById('loading-text');
+                const brightnessValue = document.getElementById('brightness-value');
+                const contrastValue = document.getElementById('contrast-value');
+                const sharpnessValue = document.getElementById('sharpness-value');
 
-                // Liveliness check elements
-                const blink1Check = document.getElementById('blink1-check');
-                const blink2Check = document.getElementById('blink2-check');
-                const smileCheck = document.getElementById('smile-check');
-
-                // Get the return URL from the query parameter
+                // Get the return URL from query parameters
                 const urlParams = new URLSearchParams(window.location.search);
-                const returnUrl = urlParams.get('return_url') || '/admin/login';
+                const returnUrl = urlParams.get('return_url') || '/admin/dashboard'; // Default fallback URL
+                let totalScore = 0;
 
                 // Registration state
                 let registrationState = {
                     currentStep: 0, // 0: ready, 1: positioning, 2: blink once, 3: blink twice, 4: smile, 5: complete
                     captures: [],
                     validationAttempts: 0,
-                    maxValidationAttempts: 3,
                     blinkCount: 0,
                     lastBlinkTime: 0,
-                    smileDetected: false
+                    maxValidationAttempts: 3,
+                    faceDetected: false,
+                    countdownActive: false,
+                    detectionActive: true,
+                    qualityMetrics: {
+                        brightness: 0,
+                        contrast: 0,
+                        sharpness: 0
+                    },
+                    systemReady: false,
+                    cameraReady: false,
+                    modelsLoaded: false,
+                    previousLandmarks: null
                 };
 
-                // Start webcam
-                try {
-                    const stream = await navigator.mediaDevices.getUserMedia({
-                        video: {
-                            width: 400,
-                            height: 400,
-                            facingMode: 'user'
-                        }
-                    });
-                    video.srcObject = stream;
-                    statusMessage.textContent = "Camera ready. Click Start Registration.";
-                    captureButton.style.backgroundColor = "#4CAF50";
-                    captureButton.style.pointerEvents = "auto";
-                    captureButton.textContent = "Start Registration";
-                } catch (error) {
-                    statusMessage.textContent = "Camera access denied! Please enable camera permissions.";
-                    console.error("Camera error:", error);
-                    return;
+                // Quality thresholds
+                const qualityThresholds = {
+                    minBrightness: 0.2,    // 20%
+                    maxBrightness: 0.8,    // 80%
+                    minContrast: 0.15,    // 15%
+                    minSharpness: 0.03,    // 3%
+                    minFaceWidth: 100,
+                    minFaceHeight: 100
+                };
+
+                // Initialize camera and models
+                await initializeCamera();
+                await loadModels();
+
+                // Start detection loop
+                setInterval(detectFace, 500);
+
+                // Helper functions
+                function updateProgress(percent) {
+                    const circumference = 2 * Math.PI * 45;
+                    const offset = circumference - (percent / 100) * circumference;
+                    progressCircle.style.strokeDasharray = `${circumference} ${circumference}`;
+                    progressCircle.style.strokeDashoffset = offset;
                 }
 
-                const modelPath = 'https://justadudewhohacks.github.io/face-api.js/models';
+                async function showCountdown() {
+                    if (registrationState.countdownActive) return;
 
-                // Load face-api models
-                try {
-                    await Promise.all([
-                        faceapi.nets.ssdMobilenetv1.loadFromUri(modelPath),
-                        faceapi.nets.faceLandmark68Net.loadFromUri(modelPath),
-                        faceapi.nets.faceRecognitionNet.loadFromUri(modelPath),
-                        faceapi.nets.faceExpressionNet.loadFromUri(modelPath),
-                    ]);
-                } catch (error) {
-                    statusMessage.textContent = "Failed to load face detection models!";
-                    console.error("Model loading error:", error);
-                    return;
-                }
+                    registrationState.countdownActive = true;
+                    countdownOverlay.style.opacity = 1;
 
-                // Calculate image quality metrics
-                function calculateQuality(imageData) {
-                    let brightness = 0;
-                    let contrast = 0;
-                    const data = imageData.data;
-                    const pixels = data.length / 4;
-
-                    // Calculate brightness (average luminance)
-                    for (let i = 0; i < data.length; i += 4) {
-                        brightness += (data[i] + data[i + 1] + data[i + 2]) / 3;
+                    for (let i = 3; i > 0; i--) {
+                        countdownText.textContent = i;
+                        await new Promise(resolve => setTimeout(resolve, 1000));
                     }
-                    brightness /= pixels;
 
-                    // Calculate contrast (standard deviation of luminance)
-                    for (let i = 0; i < data.length; i += 4) {
-                        const luminance = (data[i] + data[i + 1] + data[i + 2]) / 3;
-                        contrast += Math.pow(luminance - brightness, 2);
+                    countdownOverlay.style.opacity = 0;
+                    registrationState.countdownActive = false;
+
+                    if (registrationState.currentStep === 0) {
+                        await processRegistration();
                     }
-                    contrast = Math.sqrt(contrast / pixels);
-
-                    // Normalize values (0-1)
-                    brightness = brightness / 255;
-                    contrast = contrast / 255;
-
-                    // Combined quality score (0-100)
-                    return Math.min(100, Math.max(0, (brightness * 40 + contrast * 60) * 100));
                 }
 
-                // Check for glasses or other obstructions
-                function checkForObstructions(landmarks) {
-                    const leftEye = landmarks.getLeftEye();
-                    const rightEye = landmarks.getRightEye();
-
-                    // Calculate eye openness (simple ratio of height to width)
-                    const leftEyeOpenness = (leftEye[1].y - leftEye[5].y) / (leftEye[3].x - leftEye[0].x);
-                    const rightEyeOpenness = (rightEye[1].y - rightEye[5].y) / (rightEye[3].x - rightEye[0].x);
-
-                    return {
-                        // hasObstruction: leftEyeOpenness < 0.2 || rightEyeOpenness < 0.2,
-                        // message: (leftEyeOpenness < 0.2 || rightEyeOpenness < 0.2) ? "Please remove glasses or other face coverings" : ""
-                    };
+                function showLoading(message) {
+                    loadingText.textContent = message;
+                    loadingOverlay.style.opacity = 1;
+                    registrationState.detectionActive = false;
                 }
 
-                // Validate frontal face position
-                function validateFrontalFace(landmarks) {
-                    const jawline = landmarks.getJawOutline();
-                    const nose = landmarks.getNose();
-                    const leftEye = landmarks.getLeftEye();
-                    const rightEye = landmarks.getRightEye();
-                    const mouth = landmarks.getMouth();
-
-                    // Calculate center points
-                    const faceCenter = {
-                        x: (jawline[0].x + jawline[16].x) / 2,
-                        y: (jawline[0].y + jawline[16].y) / 2
-                    };
-
-                    const eyesCenter = {
-                        x: (leftEye[0].x + rightEye[3].x) / 2,
-                        y: (leftEye[0].y + rightEye[3].y) / 2
-                    };
-
-                    const noseTip = nose[6];
-                    const mouthCenter = {
-                        x: (mouth[0].x + mouth[6].x) / 2,
-                        y: (mouth[0].y + mouth[6].y) / 2
-                    };
-
-                    // Calculate ratios for position detection
-                    const horizontalRatio = (eyesCenter.x - faceCenter.x) / (jawline[16].x - jawline[0].x);
-                    const verticalRatio = (noseTip.y - eyesCenter.y) / (mouthCenter.y - eyesCenter.y);
-
-                    // Determine if face is frontal
-                    const isFrontal = Math.abs(horizontalRatio) < 0.1 && verticalRatio > 0.4 && verticalRatio < 0.8;
-
-                    return {
-                        isValid: isFrontal,
-                        message: isFrontal ? "" : "Please look straight at the camera"
-                    };
+                function hideLoading() {
+                    loadingOverlay.style.opacity = 0;
+                    registrationState.detectionActive = true;
                 }
 
                 // Check for blinking
@@ -349,17 +411,159 @@
                     return expressions.happy > 0.8;
                 }
 
-                // Update circular progress
-                function updateProgress(percent) {
-                    const circumference = 2 * Math.PI * 45;
-                    const offset = circumference - (percent / 100) * circumference;
-                    progressCircle.style.strokeDasharray = `${circumference} ${circumference}`;
-                    progressCircle.style.strokeDashoffset = offset;
+                // Calculate image quality metrics
+                function calculateQuality(imageData) {
+                    let brightness = 0;
+                    let contrast = 0;
+                    const data = imageData.data;
+                    const pixels = data.length / 4;
+                    const sampleStep = 4; // Sample every 4th pixel for performance
+
+                    // Calculate brightness (sampled)
+                    let sampledPixels = 0;
+                    for (let i = 0; i < data.length; i += 4 * sampleStep) {
+                        brightness += (data[i] + data[i + 1] + data[i + 2]) / 3;
+                        sampledPixels++;
+                    }
+                    brightness /= sampledPixels;
+
+                    // Calculate contrast (sampled)
+                    for (let i = 0; i < data.length; i += 4 * sampleStep) {
+                        const luminance = (data[i] + data[i + 1] + data[i + 2]) / 3;
+                        contrast += Math.pow(luminance - brightness, 2);
+                    }
+                    contrast = Math.sqrt(contrast / sampledPixels);
+
+                    // Calculate sharpness using Sobel operator
+                    const sharpness = calculateSharpness(imageData);
+                    const normBrightness = brightness / 255;
+                    const normContrast = contrast / 255;
+                    totalScore = (normBrightness + normContrast + sharpness) / 3;
+
+                    return {
+                        brightness: brightness / 255,
+                        contrast: contrast / 255,
+                        sharpness: sharpness
+                    };
+                }
+
+                // Improved sharpness calculation using Sobel operator
+                function calculateSharpness(imageData, sampleStep = 2) {
+                    const width = imageData.width;
+                    const height = imageData.height;
+                    const data = imageData.data;
+
+                    // Convert to grayscale
+                    const grayscale = new Array(width * height);
+                    for (let y = 0; y < height; y++) {
+                        for (let x = 0; x < width; x++) {
+                            const idx = (y * width + x) * 4;
+                            grayscale[y * width + x] = 0.299 * data[idx] + 0.587 * data[idx + 1] + 0.114 * data[idx + 2];
+                        }
+                    }
+
+                    let edgeStrength = 0;
+                    let edgeCount = 0;
+
+                    // Apply Sobel operator (simplified for performance)
+                    for (let y = 1; y < height - 1; y += sampleStep) {
+                        for (let x = 1; x < width - 1; x += sampleStep) {
+                            const idx = y * width + x;
+
+                            // Horizontal gradient
+                            const gx = -grayscale[idx - width - 1] - 2 * grayscale[idx - 1] - grayscale[idx + width - 1] +
+                                grayscale[idx - width + 1] + 2 * grayscale[idx + 1] + grayscale[idx + width + 1];
+
+                            // Vertical gradient
+                            const gy = -grayscale[idx - width - 1] - 2 * grayscale[idx - width] - grayscale[idx - width + 1] +
+                                grayscale[idx + width - 1] + 2 * grayscale[idx + width] + grayscale[idx + width + 1];
+
+                            edgeStrength += Math.sqrt(gx * gx + gy * gy);
+                            edgeCount++;
+                        }
+                    }
+
+                    // Normalize sharpness (empirically determined scaling)
+                    const sharpness = edgeStrength / (edgeCount * 1000);
+                    return Math.min(1, Math.max(0, sharpness));
+                }
+
+                // Update quality indicators
+                function updateQualityIndicators(quality) {
+                    brightnessValue.textContent = (quality.brightness * 100).toFixed(0) + '%';
+                    brightnessValue.className = quality.brightness >= qualityThresholds.minBrightness &&
+                    quality.brightness <= qualityThresholds.maxBrightness
+                        ? 'value good'
+                        : 'value bad';
+
+                    contrastValue.textContent = (quality.contrast * 100).toFixed(0) + '%';
+                    contrastValue.className = quality.contrast >= qualityThresholds.minContrast
+                        ? 'value good'
+                        : 'value bad';
+
+                    sharpnessValue.textContent = (quality.sharpness * 100).toFixed(0) + '%';
+                    sharpnessValue.className = quality.sharpness >= qualityThresholds.minSharpness
+                        ? 'value good'
+                        : 'value bad';
+                }
+
+                // Check quality requirements
+                function checkQualityRequirements(quality) {
+                    return (
+                        quality.brightness >= qualityThresholds.minBrightness &&
+                        quality.brightness <= qualityThresholds.maxBrightness &&
+                        quality.contrast >= qualityThresholds.minContrast &&
+                        quality.sharpness >= qualityThresholds.minSharpness
+                    );
+                }
+
+                // Capture face image
+                async function captureFace() {
+                    try {
+                        const detections = await faceapi.detectSingleFace(video)
+                            .withFaceLandmarks()
+                            .withFaceDescriptor();
+
+                        if (!detections) {
+                            return { success: false, message: "Face not detected" };
+                        }
+
+                        // Create canvas and get image data
+                        const canvas = document.createElement('canvas');
+                        canvas.width = video.videoWidth;
+                        canvas.height = video.videoHeight;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                        // Get base64 image with proper format
+                        let imageData = canvas.toDataURL("image/jpeg", 0.9);
+
+                        // Verify the image data
+                        if (!imageData || imageData.length < 100) { // Simple length check
+                            throw new Error("Invalid image data captured");
+                        }
+
+                        // Store capture with quality score
+                        registrationState.captures.push({
+                            image: imageData,
+                            quality: totalScore,
+                            descriptor: Array.from(detections.descriptor)
+                        });
+
+                        return { success: true };
+                    } catch (error) {
+                        console.error("Capture error:", error);
+                        return {
+                            success: false,
+                            message: error.message || "Error capturing image"
+                        };
+                    }
                 }
 
                 // Main detection function
-                let previousLandmarks = null;
                 async function detectFace() {
+                    if (!registrationState.detectionActive) return;
+
                     try {
                         const detections = await faceapi.detectSingleFace(video)
                             .withFaceLandmarks()
@@ -379,7 +583,7 @@
                             const ctx = canvas.getContext('2d');
                             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-                            // Get face region for quality check
+                            // Get face region
                             const faceImage = ctx.getImageData(
                                 Math.max(0, box.x - 20),
                                 Math.max(0, box.y - 20),
@@ -387,49 +591,43 @@
                                 Math.min(canvas.height - box.y, box.height + 40)
                             );
 
-                            // Calculate quality
-                            const qualityScore = calculateQuality(faceImage);
-
-                            // Check for obstructions
-                            const obstructionCheck = checkForObstructions(landmarks);
-                            if (obstructionCheck.hasObstruction) {
-                                validationMessage.textContent = obstructionCheck.message;
-                                validationMessage.style.color = "#ff5722";
-                                return null;
-                            }
-
-                            // Validate face position
-                            const positionCheck = validateFrontalFace(landmarks);
-                            validationMessage.textContent = positionCheck.message;
-                            validationMessage.style.color = positionCheck.isValid ? "#4CAF50" : "#ff5722";
+                            // Calculate quality metrics
+                            const quality = calculateQuality(faceImage);
+                            updateQualityIndicators(quality);
 
                             // Check face size and quality
-                            if (faceWidth < 100 || faceHeight < 100) {
+                            if (faceWidth < qualityThresholds.minFaceWidth || faceHeight < qualityThresholds.minFaceHeight) {
                                 statusMessage.textContent = "Please move closer to the camera";
-                                return null;
+                                registrationState.faceDetected = false;
+                                return;
                             }
-                            else if (qualityScore < 40) {
-                                statusMessage.textContent = "Poor image quality. Please improve lighting.";
-                                return null;
+                            else if (!checkQualityRequirements(quality)) {
+                                statusMessage.textContent = "Poor image quality. Please adjust lighting.";
+                                registrationState.faceDetected = false;
+                                return;
                             }
 
-                            // Check for blinking (liveliness detection)
+                            // If we get here, face is properly detected
+                            if (!registrationState.faceDetected && registrationState.currentStep === 0) {
+                                registrationState.faceDetected = true;
+                                showCountdown();
+                            }
+
+                            // Check for blinking
                             if (registrationState.currentStep >= 2 && registrationState.currentStep <= 3) {
-                                const blinkDetected = checkBlinking(landmarks, previousLandmarks);
+                                const blinkDetected = checkBlinking(landmarks, registrationState.previousLandmarks);
                                 if (blinkDetected) {
                                     const now = Date.now();
-                                    if (now - registrationState.lastBlinkTime > 500) { // Debounce blinks
+                                    if (now - registrationState.lastBlinkTime > 500) {
                                         registrationState.blinkCount++;
                                         registrationState.lastBlinkTime = now;
 
                                         if (registrationState.currentStep === 2 && registrationState.blinkCount >= 1) {
-                                            blink1Check.classList.add('completed');
                                             registrationState.currentStep = 3;
                                             registrationState.blinkCount = 0;
                                             instructions.textContent = "Great! Now blink twice";
                                         }
                                         else if (registrationState.currentStep === 3 && registrationState.blinkCount >= 2) {
-                                            blink2Check.classList.add('completed');
                                             registrationState.currentStep = 4;
                                             instructions.textContent = "Perfect! Now please smile";
                                         }
@@ -437,11 +635,10 @@
                                 }
                             }
 
-                            // Check for smiling (liveliness detection)
+                            // Check for smiling
                             if (registrationState.currentStep === 4 && !registrationState.smileDetected) {
                                 const smiling = checkSmiling(expressions);
                                 if (smiling) {
-                                    smileCheck.classList.add('completed');
                                     registrationState.smileDetected = true;
                                     instructions.textContent = "Thank you! Capturing your face now";
                                     setTimeout(() => {
@@ -451,79 +648,26 @@
                                 }
                             }
 
-                            previousLandmarks = landmarks;
-
-                            return {
-                                detections,
-                                qualityScore,
-                                isValid: positionCheck.isValid && !obstructionCheck.hasObstruction
-                            };
+                            registrationState.previousLandmarks = landmarks;
                         } else {
                             statusMessage.textContent = "Face not detected. Please position your face in the circle.";
                             validationMessage.textContent = "";
-                            return null;
+                            registrationState.faceDetected = false;
                         }
                     } catch (error) {
                         console.error("Detection error:", error);
                         statusMessage.textContent = "Error detecting face. Please try again.";
                         validationMessage.textContent = "";
-                        return null;
+                        registrationState.faceDetected = false;
                     }
-                }
-
-                // Capture face image
-                async function captureFace() {
-                    const result = await detectFace();
-                    if (!result || !result.isValid || result.qualityScore < 40) {
-                        return {
-                            success: false,
-                            message: "Please adjust your position and try again"
-                        };
-                    }
-
-                    // Create canvas for capture
-                    const canvas = document.createElement('canvas');
-                    canvas.width = video.videoWidth;
-                    canvas.height = video.videoHeight;
-                    const ctx = canvas.getContext('2d');
-
-                    // Draw circular mask
-                    ctx.beginPath();
-                    ctx.arc(
-                        canvas.width/2,
-                        canvas.height/2,
-                        Math.min(canvas.width, canvas.height)/2,
-                        0,
-                        Math.PI*2
-                    );
-                    ctx.closePath();
-                    ctx.clip();
-
-                    // Draw the video frame
-                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-                    // Store capture
-                    registrationState.captures.push({
-                        image: canvas.toDataURL("image/jpeg", 0.9),
-                        quality: result.qualityScore,
-                        descriptor: Array.from(result.detections.descriptor)
-                    });
-
-                    return { success: true };
                 }
 
                 // Process registration steps
                 async function processRegistration() {
                     if (registrationState.currentStep === 0) {
-                        // Start registration
                         registrationState.currentStep = 1;
-                        captureButton.textContent = "Capturing...";
-                        captureButton.style.backgroundColor = "orange";
-                        captureButton.style.pointerEvents = "none";
                         updateProgress(0);
                         instructions.textContent = "Please position your face in the circle";
-
-                        // Wait for user to position face
                         await new Promise(resolve => setTimeout(resolve, 2000));
                         registrationState.currentStep = 2;
                         instructions.textContent = "Please blink once";
@@ -531,50 +675,25 @@
                     }
 
                     if (registrationState.currentStep === 5) {
-                        // Capture current image
-                        const { success, message } = await captureFace();
-
-                        if (!success) {
-                            registrationState.validationAttempts++;
-
-                            if (registrationState.validationAttempts >= registrationState.maxValidationAttempts) {
-                                statusMessage.textContent = "Could not capture valid image after multiple attempts";
-                                captureButton.textContent = "Try Again";
-                                captureButton.style.backgroundColor = "red";
-                                captureButton.style.pointerEvents = "auto";
-                                return;
-                            }
-
-                            // Wait before retrying
-                            await new Promise(resolve => setTimeout(resolve, 1000));
-                            return await processRegistration();
+                        const { success } = await captureFace();
+                        if (success) {
+                            updateProgress(100);
+                            await completeRegistration();
                         }
-
-                        // Reset validation attempts after successful capture
-                        registrationState.validationAttempts = 0;
-
-                        // Update progress
-                        updateProgress(100);
-
-                        // Registration complete
-                        await completeRegistration();
                     }
                 }
 
                 // Complete registration process
                 async function completeRegistration() {
                     try {
-                        captureButton.disabled = true;
-                        captureButton.textContent = "Processing...";
-                        statusMessage.textContent = "Finalizing registration...";
-                        validationMessage.textContent = "";
+                        showLoading("Processing your registration...");
 
-                        // Prepare the data to send
+                        // Prepare the data to send - matching backend expectations
                         const registrationData = {
-                            user_id: captureButton.getAttribute("data-user-id"),
+                            user_id: "{{ $user->id }}",
                             captures: registrationState.captures.map(capture => ({
-                                image: capture.image.split(',')[1], // Send only the base64 data
-                                quality: capture.quality,
+                                image: capture.image,
+                                quality: capture.quality || 0.8, // Default quality if not set
                                 descriptor: capture.descriptor
                             }))
                         };
@@ -590,44 +709,93 @@
                             body: JSON.stringify(registrationData)
                         });
 
-                        if (!response.ok) {
-                            throw new Error("Server responded with error");
-                        }
-
                         const data = await response.json();
 
-                        if (data.success) {
-                            statusMessage.textContent = "Registration successful!";
-                            instructions.textContent = "Thank you for completing face registration";
-                            captureButton.style.display = "none";
-
-                            alert('Registration successful!');
-                            window.location.href = returnUrl;
-                        } else {
-                            throw new Error(data.message || "Registration failed");
+                        if (!response.ok || !data.success) {
+                            throw new Error(data.message || "Server responded with error");
                         }
+
+                        statusMessage.textContent = "Registration successful!";
+                        instructions.textContent = "Thank you for completing face registration";
+
+                        // Show success message before redirect
+                        loadingText.textContent = "Registration successful!";
+                        await new Promise(resolve => setTimeout(resolve, 2000));
+
+                        window.location.href = returnUrl;
                     } catch (error) {
                         console.error("Registration error:", error);
                         statusMessage.textContent = "Registration failed: " + error.message;
-                        captureButton.textContent = "Try Again";
-                        captureButton.style.backgroundColor = "red";
-                        captureButton.style.pointerEvents = "auto";
-                        captureButton.disabled = false;
+                        hideLoading();
                     }
                 }
 
-                // Start detection loop
-                setInterval(detectFace, 500);
+                // Initialize camera
+                async function initializeCamera() {
+                    try {
+                        statusMessage.textContent = "Initializing camera...";
 
-                // Start registration when button clicked
-                captureButton.addEventListener("click", async () => {
-                    if (registrationState.currentStep === 0) {
-                        await processRegistration();
-                    } else {
-                        // Retry current step
-                        await processRegistration();
+                        const stream = await navigator.mediaDevices.getUserMedia({
+                            video: {
+                                width: { ideal: 400 },
+                                height: { ideal: 400 },
+                                facingMode: 'user',
+                                frameRate: { ideal: 15 }
+                            }
+                        });
+
+                        video.srcObject = stream;
+
+                        await new Promise((resolve, reject) => {
+                            video.onloadedmetadata = resolve;
+                            video.onerror = reject;
+                            setTimeout(() => reject(new Error("Camera initialization timeout")), 10000);
+                        });
+
+                        registrationState.cameraReady = true;
+                        updateSystemStatus();
+                    } catch (error) {
+                        console.error("Camera error:", error);
+                        statusMessage.textContent = "Camera access denied! Please enable camera permissions.";
                     }
-                });
+                }
+
+                // Load models
+                async function loadModels() {
+                    try {
+                        statusMessage.textContent = "Loading AI models...";
+
+                        const localModelPath = '{{ asset("storage/models") }}';
+                        const cdnModelPath = 'https://justadudewhohacks.github.io/face-api.js/models';
+
+                        await Promise.all([
+                            faceapi.nets.ssdMobilenetv1.loadFromUri(localModelPath).catch(() =>
+                                faceapi.nets.ssdMobilenetv1.loadFromUri(cdnModelPath)),
+                            faceapi.nets.faceLandmark68Net.loadFromUri(localModelPath).catch(() =>
+                                faceapi.nets.faceLandmark68Net.loadFromUri(cdnModelPath)),
+                            faceapi.nets.faceRecognitionNet.loadFromUri(localModelPath).catch(() =>
+                                faceapi.nets.faceRecognitionNet.loadFromUri(cdnModelPath)),
+                            faceapi.nets.faceExpressionNet.loadFromUri(localModelPath).catch(() =>
+                                faceapi.nets.faceExpressionNet.loadFromUri(cdnModelPath))
+                        ]);
+
+                        registrationState.modelsLoaded = true;
+                        updateSystemStatus();
+                    } catch (error) {
+                        console.error("Model loading error:", error);
+                        statusMessage.textContent = "Failed to load face detection models!";
+                        setTimeout(loadModels, 5000);
+                    }
+                }
+
+                // Update system status
+                function updateSystemStatus() {
+                    if (registrationState.cameraReady && registrationState.modelsLoaded) {
+                        registrationState.systemReady = true;
+                        statusMessage.textContent = "System ready. Position your face in the circle.";
+                        instructions.textContent = "Please position your face in the circle and look straight at the camera";
+                    }
+                }
             })();
         </script>
     </x-slot>

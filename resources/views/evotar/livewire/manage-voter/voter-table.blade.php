@@ -242,7 +242,7 @@
                                     </td>
                                     <td class="py-3 px-6 text-center flex justify-center items-center exclude-print" wire:key="voter-action-column-{{ $voter->id }}">
                                         <div class="inline-flex" wire:key="voter-action-column-{{ $voter->id }}">
-                                        @can('edit voter')
+                                             @can('edit voter')
                                                 <livewire:manage-voter.edit-voter :userId="$voter->id"
                                                                                   wire:key="edit-election-{{ $voter->id }}"/>
                                             @endcan
@@ -250,6 +250,8 @@
                                                 <livewire:manage-voter.delete-voter :userId="$voter->id"
                                                                                     wire:key="delete-election-{{ $voter->id }}"/>
                                             @endcan
+
+                                            <livewire:confirm-academic-details :voterId="$voter->id" :key="'verify-'.$voter->id" />
                                         </div>
                                     </td>
                                 </tr>
