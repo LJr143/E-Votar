@@ -7,6 +7,8 @@ use App\Http\Controllers\FaceRegistrationController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ViewController;
 use App\Http\Controllers\VoterElectionController;
+use App\Livewire\ConfirmAcademicDetails;
+use App\Livewire\VoterVerification;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Broadcast;
@@ -31,11 +33,9 @@ Route::get('login', function () {
    return redirect(route('voter.login'));
 });
 
-
 Route::get('/reset-password/{token}', function ($token) {
     return view('auth.reset-password', ['token' => $token]);
 })->middleware('guest')->name('password.reset');
-
 
 Route::get('/campuses', [CampusController::class, 'index'])->name('campuses');
 Route::get('/colleges/{campusId}', [CampusController::class, 'getColleges']);
@@ -104,5 +104,6 @@ Route::post('/face/registration', [FaceRegistrationController::class, 'register'
 
 Route::get('/api/face/descriptors', [FaceAuthController::class, 'getDescriptors'])->name('api.face.get-descriptors');
 Route::post('/api/face/verification', [FaceAuthController::class, 'verify'])->name('api.face.verification');
+
 
 

@@ -40,7 +40,7 @@
                             id="vote_image"
                             accept="image/png,image/jpeg"
                             required
-                            class="block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 text-sm focus:ring-blue-500 focus:border-blue-500"
+                            class="block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 text-sm focus:ring-red-500 focus:border-red-500"
                         >
                         <p class="text-xs text-gray-500 mt-1">Upload the image you downloaded after casting your vote (PNG or JPEG).</p>
                     </div>
@@ -49,7 +49,7 @@
                     <div>
                         <button
                             type="submit"
-                            class="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-700 transition"
+                            class="w-full bg-red-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-red-700 transition"
                         >
                             🔍 Verify Vote
                         </button>
@@ -86,7 +86,7 @@
                         <!-- Votes Table -->
                         <div class="overflow-x-auto mt-4">
                             <table class="w-full table-auto border border-gray-300 text-sm">
-                                <thead class="bg-blue-50 text-gray-700">
+                                <thead class="bg-black text-white">
                                 <tr>
                                     <th class="px-2 py-2 border">Position</th>
                                     <th class="px-2 py-2 border">Candidate</th>
@@ -97,7 +97,7 @@
                                 </thead>
                                 <tbody>
                                 @foreach ($voteData['votes'] ?? [] as $vote)
-                                    <tr class="border-t text-gray-700">
+                                    <tr class="border-t text-white">
                                         <td class="px-2 py-2 border">{{ $vote['position_name'] ?? '—' }}</td>
                                         <td class="px-2 py-2 border">{{ $vote['candidate_name'] ?? '—' }}</td>
                                         <td class="px-2 py-2 border">{{ $vote['party_list'] ?? 'Independent' }}</td>

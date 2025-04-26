@@ -32,6 +32,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'check.deactivated' => \App\Http\Middleware\DeactivatedAccountChecker::class,
             'election.status' => \App\Http\Middleware\CheckElectionStatus::class,
             'clear.admin.voting' => \App\Http\Middleware\ClearAdminVotingSession::class,
+            'verified.voter' => \App\Http\Middleware\CheckVoterVerification::class,
             \App\Http\Middleware\CheckPrivacyAgreement::class,
             \App\Http\Middleware\LogUserActivity::class,
         ]);
@@ -43,4 +44,5 @@ return Application::configure(basePath: dirname(__DIR__))
         $schedule->command('backups:run')->everyMinute();
         $schedule->command('elections:update-status')->everyMinute();
         $schedule->command('publish-announcement')->everyMinute();
+        $schedule->command('verification:reset')->yearlyOn(1, 1, '00:00');
     })->create();

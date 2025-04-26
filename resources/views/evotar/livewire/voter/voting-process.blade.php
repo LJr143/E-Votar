@@ -65,7 +65,7 @@
                          ]);
                          let selectedIndex = candidates.findIndex(c => c.id == selectedId);
                          activeIndex = selectedIndex >= 0 ? selectedIndex : 0;"
-                         class="relative flex flex-col items-center justify-center p-4 min-h-[250px] overflow-hidden">
+                         class="relative flex flex-col items-center justify-center p-4 min-h-[250px] overflow-hidden" wire:ignore>
 
                         <!-- Navigation Buttons -->
                         <button @click="prev"
@@ -213,13 +213,59 @@
 
     <!-- Duplicate Error Modal -->
     <div x-show="$wire.showDuplicateErrorModal"
-         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" x-cloak>
-        <div class="bg-white p-6 rounded-lg w-1/3">
-            <h2 class="text-xl font-bold mb-4">Duplicate Votes Detected</h2>
-            <p class="text-red-600 mb-4" x-text="$wire.duplicateError"></p>
-            <div class="flex justify-end">
-                <button @click="$wire.showDuplicateErrorModal = false" class="px-4 py-2 bg-gray-500 text-white rounded">
-                    Close
+         x-transition:enter="ease-out duration-300"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="ease-in duration-200"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
+         x-cloak>
+        <div class="bg-white rounded-xl shadow-2xl overflow-hidden w-full max-w-[550px] mx-4"
+             x-transition:enter="ease-out duration-300"
+             x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+             x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+             x-transition:leave="ease-in duration-200"
+             x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+             x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
+            <!-- Header -->
+            <div class="bg-red-50 px-6 py-4 border-b border-red-100 flex items-start">
+                <div class="flex-shrink-0 h-10 w-10 rounded-full bg-red-100 flex items-center justify-center">
+                    <svg class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                </div>
+                <div class="ml-4">
+                    <h3 class="text-lg font-bold text-red-800">Duplicate Votes Detected</h3>
+                    <p class="text-sm text-red-600 mt-1" x-text="$wire.duplicateError"></p>
+                </div>
+            </div>
+
+            <!-- Body -->
+            <div class="px-6 py-4">
+                <div class="flex items-center bg-red-50/50 rounded-lg p-4 border border-red-100">
+                    <svg class="h-5 w-5 text-red-500 mr-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <p class="text-sm text-red-700">
+                        Please review your selections. You cannot vote for the same candidate in multiple positions.
+                    </p>
+                </div>
+
+                <div class="mt-4 text-sm text-gray-600">
+                    <p>To fix this:</p>
+                    <ul class="list-disc pl-5 space-y-1 mt-2">
+                        <li>Select different candidates for each position</li>
+                        <li>Or choose "Abstain" if you don't want to vote</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="bg-gray-50 px-6 py-4 flex justify-end space-x-3">
+                <button @click="$wire.showDuplicateErrorModal = false;"
+                        class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors">
+                    Review Votes
                 </button>
             </div>
         </div>

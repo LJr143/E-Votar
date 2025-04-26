@@ -54,6 +54,10 @@ class User extends Authenticatable
         'google_id',
         'account_status',
         'profile_photo_path',
+        'is_verified',
+        'verified_at',
+        'verified_by',
+        'verification_expires_at',
     ];
 
     /**
@@ -87,6 +91,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'verification_expires_at' => 'datetime',
         ];
     }
 
@@ -139,6 +144,13 @@ class User extends Authenticatable
     public function sendPasswordResetNotification($token): void
     {
         $this->notify(new CustomResetPassword($token));
+    }
+
+    public function isVerifiedForCurrentYear(): bool
+    {
+        return $this->is_verified &&
+            ($this->verification_expires_at === null ||
+                $this->verification_expires_at == now()->year);
     }
 
 }

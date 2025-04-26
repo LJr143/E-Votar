@@ -26,6 +26,11 @@ class VoterElectionController extends Controller
         $voter = auth()->user();
         $elections = $this->getElectionsForVoter($voter->id);
 
+        // Check if voter is verified for current year
+        $isVerified = $voter->is_verified &&
+            $voter->verification_expires_at &&
+            $voter->verification_expires_at->year - 1 == now()->year;
+
         // Fetch elections the voter has voted in
         $votedElections = DB::table('votes')
             ->where('user_id', $voter->id)
@@ -41,7 +46,8 @@ class VoterElectionController extends Controller
         return view('evotar.voter.pages.voter-election-redirect', [
             'elections' => $elections,
             'voter' => $voter,
-            'votedElections' => $votedElections
+            'votedElections' => $votedElections,
+            'isVerified' => $isVerified
         ]);
     }
 
@@ -164,6 +170,18 @@ class VoterElectionController extends Controller
 
             if (json_last_error() !== JSON_ERROR_NONE) {
                 throw new \Exception('Failed to decode JSON: ' . json_last_error_msg());
+            }
+
+            $currentUser = auth()->user();
+            if (!$currentUser) {
+                throw new \Exception('User not authenticated.');
+            }
+
+            if ($currentUser->id !== $voteData['voter_id']) {
+                // Delete the temporary file
+                Storage::disk('public')->delete($imagePath);
+
+                return redirect()->route('verify.vote.page')->with('error', 'You cannot access the image receipt of other voters.');
             }
 
             // Delete the temporary file
