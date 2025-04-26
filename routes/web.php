@@ -105,9 +105,5 @@ Route::post('/face/registration', [FaceRegistrationController::class, 'register'
 Route::get('/api/face/descriptors', [FaceAuthController::class, 'getDescriptors'])->name('api.face.get-descriptors');
 Route::post('/api/face/verification', [FaceAuthController::class, 'verify'])->name('api.face.verification');
 
-// Document upload (step 2)
-Route::get('/verify/voter', VoterVerification::class)
-    ->name('voter.verification')
-    ->middleware('auth');
 
 
