@@ -24,11 +24,12 @@
     <div class="flex flex-col md:flex-row w-full gap-4">
         <div class="w-full">
             <div class="bg-white shadow-md rounded p-6">
-                <div class="sm:p-5 rounded-md md:max-w-[800px] min-[90%]:max-w-[100%] lg:max-w-[900px] xl:w-[100%] xl:min-w-[100%] 2xl:max-w-[1190px]">
+                <div
+                    class="sm:p-5 rounded-md md:max-w-[800px] min-[90%]:max-w-[100%] lg:max-w-[900px] xl:w-[100%] xl:min-w-[100%] 2xl:max-w-[1190px]">
                     <div class="flex flex-col lg:flex-row w-full items-center gap-2 justify-between">
                         <div class="flex items-center w-full lg:w-auto justify-between flex-wrap md:flex-nowrap gap-2">
                             <button
-                                class="bg-white border border-gray-300 rounded h-8 px-3 py-2 flex items-center justify-center w-full xs:w-auto whitespace-nowrap text-center space-x-1 hover:drop-shadow hover:bg-gray-200 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"
+                                class="bg-white border border-gray-300 rounded h-8 px-3 py-2 flex items-center justify-center w-full lg:w-auto whitespace-nowrap text-center space-x-1 hover:drop-shadow hover:bg-gray-200 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"
                                 wire:click="exportPositions"
                                 wire:loading.attr="disabled">
                                 <svg wire:loading.remove wire:target="exportPositions" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"
@@ -46,7 +47,7 @@
                                 <span wire:loading wire:target="exportPositions">Exporting...</span>
                             </button>
                             <button
-                                class="bg-white border border-gray-300 rounded h-8 px-3 py-2 flex items-center justify-center w-full xs:w-auto text-center  space-x-1 hover:drop-shadow hover:bg-gray-200 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"
+                                class="bg-white border border-gray-300 rounded h-8 px-3 py-2 flex items-center justify-center w-full lg:w-auto text-center  space-x-1 hover:drop-shadow hover:bg-gray-200 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"
                                 wire:click="$toggle('importing')"
                                 wire:loading.attr="disabled">
                                 <svg wire:loading.remove wire:target="import" width="12" height="18" viewBox="0 0 16 19" fill="none"
@@ -133,7 +134,7 @@
                                 </div>
                             @endif
                             <button
-                                class="bg-green-600 border text-white border-gray-300 rounded h-8 px-3 py-2 flex items-center justify-center w-full xs:w-auto whitespace-nowrap text-center mb-2 sm:mb-0 space-x-1 hover:drop-shadow hover:bg-gray-200 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"
+                                class="bg-green-600 border text-white border-gray-300 rounded h-8 px-3 py-2 flex items-center justify-center w-full lg:w-auto whitespace-nowrap text-center mb-2 sm:mb-0 space-x-1 hover:drop-shadow hover:bg-gray-200 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"
                                 wire:click="downloadExcelFormat"
                                 wire:loading.attr="disabled">
                                 <svg wire:loading.remove wire:target="downloadExcelFormat" width="12" height="18" viewBox="0 0 16 19" fill="none"

@@ -26,23 +26,22 @@
             <div class="bg-white shadow-md rounded p-6">
                 <div
                     class="sm:p-5 rounded-md md:max-w-[800px] min-[90%]:max-w-[100%] lg:max-w-[900px] xl:w-[100%] xl:min-w-[100%] 2xl:max-w-[1190px]">
-                    <div class="flex flex-col md:flex-row w-full items-center justify-between">
+                    <div class="flex flex-col lg:flex-row w-full items-center gap-2 justify-between">
 
-                        <div class="flex items-center justify-between flex-wrap md:flex-nowrap gap-2">
-                            <div class="flex space-x-2 items-center mb-4 sm:mb-0">
+                        <div class="flex items-center w-full lg:w-auto justify-between flex-wrap md:flex-nowrap gap-2">
                                 <button
-                                    class="bg-white border border-gray-300 rounded h-8 px-3 py-2 flex items-center space-x-1 hover:drop-shadow hover:bg-gray-200 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"
+                                    class="bg-white border border-gray-300 rounded h-8 px-3 py-2 flex items-center justify-center w-full lg:w-auto space-x-1 hover:drop-shadow hover:bg-gray-200 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"
                                     onclick="printElections()">
                                     <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"
                                          width="20px" fill="#000000">
                                         <path
                                             d="M648-624v-120H312v120h-72v-192h480v192h-72Zm-480 72h625-625Zm539.79 96q15.21 0 25.71-10.29t10.5-25.5q0-15.21-10.29-25.71t-25.5-10.5q-15.21 0-25.71 10.29t-10.5 25.5q0 15.21 10.29 25.71t25.5 10.5ZM648-216v-144H312v144h336Zm72 72H240v-144H96v-240q0-40 28-68t68-28h576q40 0 68 28t28 68v240H720v144Zm73-216v-153.67Q793-530 781-541t-28-11H206q-16.15 0-27.07 11.04Q168-529.92 168-513.6V-360h72v-72h480v72h73Z"/>
                                     </svg>
-                                    <span class="text-[12px]">Print</span>
+                                    <span class="text-[12px]">Print Election</span>
                                 </button>
 
                                 <button
-                                    class="bg-white border border-gray-300 rounded h-8 px-3 py-2 flex items-center space-x-1 hover:drop-shadow hover:bg-gray-200 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"
+                                    class="bg-white border border-gray-300 rounded h-8 px-3 py-2 flex items-center justify-center w-full lg:w-auto space-x-1 hover:drop-shadow hover:bg-gray-200 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"
                                     wire:click="exportElection"
                                     wire:loading.attr="disabled">
                                     <svg wire:loading.remove wire:target="exportElection" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"
@@ -59,12 +58,11 @@
                                     </svg>
                                     <span wire:loading wire:target="exportElection">Exporting...</span>
                                 </button>
-                            </div>
                         </div>
 
-                        <div class="flex items-center gap-2">
+                        <div class="flex items-center gap-2 w-full lg:w-auto">
                             <!-- Search Bar -->
-                            <div class="w-full md:w-[250px]">
+                            <div class="w-full lg:w-[250px]">
                                 <div class="flex items-center border bg-white text-black border-gray-300 rounded-md h-8 px-3">
                                     <span class="flex items-center">
                                         <svg width="12" height="12" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -73,7 +71,7 @@
                                     </span>
                                     <x-input type="text" wire:model.live="search"
                                              class="text-[12px] bg-transparent border-0 focus:ring-0 focus:outline-none w-full h-8 px-2"
-                                             placeholder="Search elections..." aria-label="Search">
+                                             placeholder="Search election..." aria-label="Search">
                                     </x-input>
                                 </div>
                             </div>
@@ -103,7 +101,7 @@
                                     });
                                 }
                             }" wire:key="election_table">
-                        <table class="min-w-full" id="electionsTable">
+                        <table class="min-w-full whitespace-nowrap" id="electionsTable">
                             <thead>
                             <tr class="w-full bg-gray-100 text-black uppercase text-[11px] leading-normal">
                                 <th class="py-3 px-6 text-center rounded-tl-lg border-b border-gray-300 exclude-print">
@@ -113,7 +111,7 @@
                                 </th>
                                 <th class="py-3 px-6 text-center border-b border-gray-300">Election ID</th>
                                 <th class="py-3 px-6 text-center border-b border-gray-300">Election Name</th>
-                                <th class="py-3 px-6 text-center border-b border-gray-300">Type of Election</th>
+                                <th class="py-3 px-6 text-left border-b border-gray-300">Type of Election</th>
                                 <th class="py-3 px-6 text-center border-b border-gray-300">Start Date</th>
                                 <th class="py-3 px-6 text-center border-b border-gray-300">End Date</th>
                                 <th class="py-3 px-6 text-center border-b border-gray-300">Current Status</th>
@@ -131,7 +129,7 @@
                                     </td>
                                     <td class="py-3 px-6 text-center">{{ str_pad($election->id, 7, '0', STR_PAD_LEFT) }}</td>
                                     <td class="py-3 px-6 text-center font-bold">{{ $election->name }}</td>
-                                    <td class="py-3 px-6 text-center">{{ $election->election_type->name }}</td>
+                                    <td class="py-3 px-6 text-left">{{ $election->election_type->name }}</td>
                                     <td class="py-3 px-6 text-center">{{ $election->date_started }}</td>
                                     <td class="py-3 px-6 text-center">{{ $election->date_ended }}</td>
                                     <td class="py-4 px-6 text-white text-center">
@@ -139,10 +137,13 @@
                                                @elseif($election->status == 'completed')  bg-black   @endif w-[100px] py-2 px-2 rounded">{{ ucfirst($election->status) }}</p>
                                     </td>
                                     <td class="py-3 px-6 text-center flex justify-center space-x-2 items-center exclude-print">
-                                        @can('view election')
-                                            <livewire:manage-election.view-election :election_id="$election->id"
+                                         @can('view election')
+                                             <div class="hidden">
+                                                <livewire:manage-election.view-election :election_id="$election->id"
                                                                                     wire:key="view-{{$election->id}}"/>
+                                             </div>
                                         @endcan
+
                                         @can('edit election')
                                             <div class="text-left">
                                                 <livewire:manage-election.edit-election :election_id="$election->id"
@@ -174,11 +175,10 @@
                                 </p>
                             </div>
                         @endif
-                        <div class="mt-4">
-                            {{ $elections->links('evotar.components.pagination.tailwind-pagination') }}
-                        </div>
                     </div>
-
+                    <div class="mt-4">
+                        {{ $elections->links('evotar.components.pagination.tailwind-pagination') }}
+                    </div>
                 </div>
             </div>
         </div>

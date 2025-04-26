@@ -1,13 +1,13 @@
-<div class="container mx-auto mt-4 mb-4">
+<div class="mt-4 mb-4">
     <div class="flex flex-col md:flex-row w-full gap-4">
         <div class="w-full">
             <div class="bg-white shadow-md rounded p-6">
                 <div
                     class="sm:p-5 rounded-md md:max-w-[800px] min-[90%]:max-w-[100%] lg:max-w-[900px] xl:w-[100%] xl:min-w-[100%] 2xl:max-w-[1190px]">
-                    <div class="flex flex-col md:flex-row w-full items-center justify-between">
-                        <div class="flex items-center justify-between flex-wrap md:flex-nowrap gap-2">
+                    <div class="flex flex-col lg:flex-row w-full items-center gap-2 justify-between">
+                        <div class="flex items-center w-full lg:w-auto justify-between flex-wrap md:flex-nowrap gap-2">
                             <button
-                                class="bg-white border border-gray-300 rounded h-8 px-3 py-2 flex items-center justify-center w-full sm:w-auto text-center space-x-1 hover:drop-shadow hover:bg-gray-200 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"
+                                class="bg-white border border-gray-300 rounded h-8 px-3 py-2 flex items-center justify-center w-full lg:w-auto whitespace-nowrap text-center space-x-1 hover:drop-shadow hover:bg-gray-200 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"
                                 wire:click="exportVoterLists"
                                 wire:loading.attr="disabled">
                                 <svg wire:loading.remove wire:target="exportVoterLists"
@@ -27,7 +27,7 @@
                                 <span wire:loading wire:target="exportVoterLists">Exporting...</span>
                             </button>
                             <button
-                                class="bg-white border border-gray-300 rounded h-8 px-3 py-2 flex items-center justify-center w-full sm:w-auto text-center space-x-1 hover:drop-shadow hover:bg-gray-200 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"
+                                class="bg-white border border-gray-300 rounded h-8 px-3 py-2 flex items-center justify-center w-full lg:w-auto text-center space-x-1 hover:drop-shadow hover:bg-gray-200 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"
                                 wire:click="$toggle('importing')"
                                 wire:loading.attr="disabled">
                                 <svg wire:loading.remove wire:target="import" width="12" height="18" viewBox="0 0 16 19"
@@ -116,7 +116,7 @@
                                 </div>
                             @endif
                             <button
-                                class="bg-green-600 border text-white border-gray-300 rounded h-8 px-3 py-2 flex items-center justify-center w-full sm:w-auto text-center mb-2 sm:mb-0 space-x-1 hover:drop-shadow hover:bg-gray-200 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"
+                                class="bg-green-600 border text-white border-gray-300 rounded h-8 px-3 py-2 flex items-center justify-center w-full lg:w-auto whitespace-nowrap text-center mb-2 sm:mb-0 space-x-1 hover:drop-shadow hover:bg-gray-200 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"
                                 wire:click="downloadExcelFormat"
                                 wire:loading.attr="disabled">
                                 <svg wire:loading.remove wire:target="downloadExcelFormat" width="12" height="18"
@@ -138,8 +138,8 @@
                                 <span wire:loading wire:target="downloadExcelFormat">Downloading...</span>
                             </button>
                         </div>
-                        <div class="flex items-center gap-2">
-                            <div class="w-full md:w-[250px]">
+                        <div class="flex items-center gap-2 w-full lg:w-auto">
+                            <div class="w-full lg:w-[250px]">
                                 <!-- Search Input -->
                                 <div class="flex items-center border bg-white text-black border-gray-300 rounded-md h-8 px-3">
                                     <span class="flex items-center">
@@ -149,7 +149,7 @@
                                     </span>
                                     <x-input type="text" wire:model.live="search"
                                              class="text-[12px] bg-transparent border-0 focus:ring-0 focus:outline-none w-full h-8 px-2"
-                                             placeholder="Search elections..." aria-label="Search">
+                                             placeholder="Search voter..." aria-label="Search">
                                     </x-input>
                                 </div>
                             </div>
@@ -159,7 +159,7 @@
                             <div class="flex flex-col sm:flex-row sm:justify-center w-full md:w-auto">
                                 @can('create voter')
                                     <a href="{{ route('votar.registration') }}"
-                                       class="w-[120px] h-8 rounded bg-gradient-to-b from-gray-800 to-black text-white text-[12px] flex items-center justify-center gap-2 hover:drop-shadow hover:bg-gray-700 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110">
+                                       class="w-full lg:w-[120px] whitespace-nowrap h-8 px-2 rounded bg-gradient-to-b from-gray-800 to-black text-white text-[12px] flex items-center justify-center gap-2 hover:drop-shadow hover:bg-gray-700 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110">
                                         Voter Registration
                                     </a>
                                 @endcan
@@ -184,7 +184,7 @@
                                     });
                                 }
                             }" wire:key="voter-table">
-                        <table class="min-w-full w-full" id="votersTable">
+                        <table class="min-w-full w-full whitespace-nowrap" id="votersTable">
                             <thead class="text-left">
                             <tr class="w-full bg-gray-100 text-black uppercase text-[11px] leading-normal">
                                 <th class="py-3 px-6 text-center rounded-tl-lg border-b border-gray-300 exclude-print">
@@ -200,7 +200,7 @@
                                 <th class="py-3 px-6 border-b text-left border-gray-300">Program</th>
                                 <th class="py-3 px-6 border-b text-left border-gray-300">Major</th>
                                 <th class="py-3 px-6 border-b text-left border-gray-300">Year</th>
-                                <th class="py-3 px-6 border-b text-left border-gray-300">Account Status</th>
+                                <th class="py-3 px-6 border-b text-center border-gray-300">Account Status</th>
                                 <th class="py-3 px-6 rounded-tr-lg border-b text-center border-gray-300 exclude-print">
                                     Actions
                                 </th>
@@ -216,9 +216,11 @@
                                     <td class="py-3 px-6 text-left">{{ $voter->id }}</td>
                                     <td class="py-3 px-6 text-left font-bold">{{ $voter->first_name }} {{ $voter->last_name ?? ' error'}}</td>
                                     <td class="py-3 px-6 text-left">{{ $voter->student_id }}</td>
-                                    <td class="py-3 px-6 text-left">{{ $voter->email }}</td>
+                                    <td class="py-3 px-6 text-left truncate max-w-[150px] whitespace-nowrap overflow-hidden">
+                                        <span title="{{ $voter->email }}">{{ $voter->email }}</span>
+                                    </td>
                                     {{--                                    <td class="px-4 py-1 text-[12px]">{{ $voter->college->name }}</td>--}}
-                                    <td class="py-3 px-6 text-left">
+                                    <td class="py-3 px-6 text-left ">
                                         @php
                                             // Convert program names
                                             $program = ($voter->program->name ?? 'error');
@@ -236,7 +238,7 @@
                                     <td class="py-3 px-6 text-left">{{ $voter->year_level }}</td>
                                     <td class="py-3 px-6 text-center">
                                         <span
-                                            class="inline-block w-24 px-2 py-1 text-center rounded @if($voter->account_status == 'Active') bg-green-500 text-white @elseif($voter->account_status == 'Deactivated') bg-red-500 text-white @else bg-yellow-500 text-white @endif">
+                                            class="inline-block w-auto px-2 py-1 text-center whitespace-nowrap rounded @if($voter->account_status == 'Active') bg-green-500 text-white @elseif($voter->account_status == 'Deactivated') bg-red-500 text-white @else bg-yellow-500 text-white @endif">
                                             {{ $voter->account_status }}
                                         </span>
                                     </td>
@@ -272,9 +274,9 @@
                                 </p>
                             </div>
                         @endif
-                        <div class="mt-4" wire:key="voter-pagination">
-                            {{ $voters->links('evotar.components.pagination.tailwind-pagination') }}
-                        </div>
+                    </div>
+                    <div class="mt-4" wire:key="voter-pagination">
+                        {{ $voters->links('evotar.components.pagination.tailwind-pagination') }}
                     </div>
                 </div>
             </div>
