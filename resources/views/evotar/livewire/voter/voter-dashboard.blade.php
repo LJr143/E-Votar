@@ -365,7 +365,7 @@
         </div>
 
 
-        <div class="w-full lg:hidden px-4 mb-6 flex justify-center items-center"
+        <div wire:ignore class="w-full lg:hidden px-4 mb-6 flex justify-center items-center"
              style="background-image: url('{{ asset('storage/assets/image/bg-voter-side.png') }}');">
 
             <div>
@@ -375,7 +375,7 @@
         </div>
 
         @if(!$hasEnded && !$hasVoted)
-            <div class="mb-6 bg-black text-white p-4 rounded-lg shadow-md text-center min-h-[100px] sm:min-h-[160px] ">
+            <div class="mb-6 bg-black text-white p-4 rounded-lg shadow-md text-center min-h-[100px] sm:min-h-[160px]">
                 <div class="flex justify-between items-center">
                     <div class="flex items-center space-x-2 mb-4">
                         <i class="fas fa-stopwatch text-white text-sm"></i>
@@ -537,7 +537,7 @@
 
         <div class=" min-h-screen w-full flex justify-center items-center">
             <img src="{{ asset('storage/' . $election->image_path) }}"
-                 alt="" class="object-contain max-h-screen w-full mix-blend-multiply" style="mix-blend-mode: multiply;">
+                 alt="" class="object-cover max-h-screen w-full mix-blend-multiply" style="mix-blend-mode: multiply;">
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
