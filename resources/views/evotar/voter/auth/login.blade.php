@@ -18,12 +18,13 @@
         </div>
 
         <div class="w-full">
-            <div class="w-full flex flex-col lg:flex-row h-auto ">
+            <div class="w-full flex flex-col lg:flex-row h-full ">
                 <div class="flex w-full lg:w-1/2 overflow-hidden">
-                    <img alt="Background image " class="w-full h-auto lg:h-[710px] object-cover"
+                    <img alt="Background image " class="w-full h-auto lg:max-h-screen object-cover"
                          src="{{ asset('storage/assets/image/voter_login_bg.png') }}" width="710"/>
                 </div>
-                <div class="flex w-full lg:w-1/2 bg-white p-4 lg:p-1 text-black lg:px-20 lg:py-6">
+                <div class="flex w-full lg:w-1/2 bg-white p-4 lg:p-1 text-black lg:px-20 lg:py-6 h-auto lg:max-h-screen">
+
                     <div class="flex w-full">
                         <div class="w-full">
                             <div class="text-left">
@@ -35,30 +36,35 @@
                             <h2 class="text-[30px] font-bold mb-1">Welcome Back!</h2>
                             <p class="text-[12px] mb-5">The E-Votar system makes voting a less stressful and fast!</p>
 
-                            <form method="POST" class="space-y-2">
+                            <x-validation-errors class="mb-4 w-full lg:w-[60%]"/>
+
+
+                            <form method="POST" class="space-y-2 ">
                                 @csrf
+
                                 <div class="flex flex-col">
                                     <label for="username" class="text-gray-600 text-[12px] mb-1">Username</label>
                                     <input type="text" id="username" name="username"
-                                           class="w-full lg:w-[400px] px-4 py-5 text-[12px] border border-gray-300 rounded-md focus:ring-black focus:border-black h-8"
+                                           class="w-full lg:w-[60%] px-4 py-5 text-[12px] border border-gray-300 rounded-md focus:ring-black focus:border-black h-8"
                                            placeholder="Enter your username" required>
                                 </div>
 
                                 <div class="flex flex-col">
                                     <label for="password" class="text-gray-600 text-[12px] mb-1">Password</label>
                                     <input type="password" id="password" name="password"
-                                           class="w-full lg:w-[400px] mb-8 px-4 py-5 text-[12px] border border-gray-300 rounded-md focus:ring-black focus:border-black h-8"
+                                           class="w-full lg:w-[60%] mb-8 px-4 py-5 text-[12px] border border-gray-300 rounded-md focus:ring-black focus:border-black h-8"
                                            placeholder="Enter your password" required>
                                 </div>
 
+
                                 <div class="flex flex-col space-y-3">
                                     <button type="submit"
-                                            class="w-full lg:w-[400px] rounded text-[14px] bg-black font-semibold text-white py-3 hover:bg-gray-800 transition">
+                                            class="w-full lg:w-[60%] rounded text-[14px] bg-black font-semibold text-white py-3 hover:bg-gray-800 transition">
                                         Login
                                     </button>
 
                                     <button type="button" onclick="window.location.href='{{ route('login.google') }}'"
-                                            class="w-full lg:w-[400px] text-[14px] flex items-center font-semibold justify-center border border-gray-300 py-3 rounded hover:bg-gray-100 transition">
+                                            class="w-full lg:w-[60%] text-[14px] flex items-center font-semibold justify-center border border-gray-300 py-3 rounded hover:bg-gray-100 transition">
                                         <img src="{{ asset('storage/assets/icon/google.png') }}" alt="Google Logo"
                                              class="w-5 h-5 mr-2">
                                         Login with Google
@@ -80,7 +86,7 @@
     </div>
 
 
-    <x-validation-errors class="mb-4"/>
+
 
 
     <script>

@@ -8,7 +8,7 @@
             <x-header></x-header>
         </div>
     </x-slot>
-    <x-slot name="main">
+    <x-slot name="main" >
         <div class="bg-transparent py-0 min-h-screen px-6 mt-2">
             <div class="mx-auto ">
                 <div class="flex flex-row justify-between items-start mb-4">

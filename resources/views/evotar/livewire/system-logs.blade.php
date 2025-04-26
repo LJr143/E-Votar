@@ -1,12 +1,13 @@
 
+
 <div>
     <div class="flex w-full gap-4 min">
         <div id="all_elections" class="w-full">
             <div class="bg-white shadow-md rounded p-6">
                 <div class="text-[12px] bg-white mt-0 p-5 rounded-md md:max-w-[800px] min-[90%]:max-w-[100%] lg:max-w-[900px] xl:w-[100%] xl:min-w-[100%] 2xl:max-w-[1190px]">
 
-                    <div class="flex flex-col md:flex-row justify-between items-center mb-2">
-                        <div class="flex space-x-2">
+                    <div class="flex flex-col md:flex-row justify-between items-center md:gap-2 mb-2">
+                        <div class="flex space-x-2 mb-2 md:mb-0">
                             @if(count($selectedLogs) > 0)
                                 <button wire:click="exportSelected" class="bg-white border border-gray-300 rounded h-8 px-3 py-2 flex items-center space-x-1 hover:drop-shadow hover:bg-gray-200 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110">
                                     <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#000000">
@@ -22,17 +23,25 @@
                                 </button>
                             @endif
                         </div>
-                        <div class="flex flex-col sm:flex-row sm:justify-center gap-3 md:gap-3 w-full md:w-auto mt-2 relative z-50">
-                            <div class="relative w-full sm:w-[250px] mb-4">
-                                <input type="text" wire:model.live.debounce.300ms="search" placeholder="Search..." aria-label="Search"
-                                       class="w-full rounded-md text-[10px] border bg-white text-black border-gray-300 h-8 pl-8 pr-4 focus:ring-1 focus:ring-black focus:border-black">
-                                <span class="absolute left-3 top-1/2 transform -translate-y-1/2">
-                                    <svg width="12" height="12" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M9.68208 10.7458C8.66576 11.5361 7.38866 12.0067 6.00167 12.0067C2.68704 12.0067 0 9.31891 0 6.00335C0 2.68779 2.68704 0 6.00167 0C9.31631 0 12.0033 2.68779 12.0033 6.00335C12.0033 7.39059 11.533 8.66794 10.743 9.6845L13.7799 12.7186C14.0731 13.0115 14.0734 13.4867 13.7806 13.7799C13.4878 14.0731 13.0128 14.0734 12.7196 13.7805L9.68208 10.7458ZM10.5029 6.00335C10.5029 8.49002 8.48765 10.5059 6.00167 10.5059C3.5157 10.5059 1.50042 8.49002 1.50042 6.00335C1.50042 3.51668 3.5157 1.50084 6.00167 1.50084C8.48765 1.50084 10.5029 3.51668 10.5029 6.00335Z" fill="#000000"/>
-                                    </svg>
-                                </span>
+
+                        <div class="flex items-center gap-2 w-full lg:w-auto">
+                            <div class="w-full lg:w-[250px]">
+                                <!-- Search Input -->
+                                <div class="flex items-center border bg-white text-black border-gray-300 rounded-md h-8 px-3">
+                                    <span class="flex items-center">
+                                        <svg width="12" height="12" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M9.68208 10.7458C8.66576 11.5361 7.38866 12.0067 6.00167 12.0067C2.68704 12.0067 0 9.31891 0 6.00335C0 2.68779 2.68704 0 6.00167 0C9.31631 0 12.0033 2.68779 12.0033 6.00335C12.0033 7.39059 11.533 8.66794 10.743 9.6845L13.7799 12.7186C14.0731 13.0115 14.0734 13.4867 13.7806 13.7799C13.4878 14.0731 13.0128 14.0734 12.7196 13.7805L9.68208 10.7458ZM10.5029 6.00335C10.5029 8.49002 8.48765 10.5059 6.00167 10.5059C3.5157 10.5059 1.50042 8.49002 1.50042 6.00335C1.50042 3.51668 3.5157 1.50084 6.00167 1.50084C8.48765 1.50084 10.5029 3.51668 10.5029 6.00335Z" fill="#000000"/>
+                                        </svg>
+                                    </span>
+                                    <x-input type="text"  wire:model.live.debounce.300ms="search"
+                                             class="text-[12px] bg-transparent border-0 focus:ring-0 focus:outline-none w-full h-8 px-2"
+                                             placeholder="Search..." aria-label="Search">
+                                    </x-input>
+                                </div>
                             </div>
                         </div>
+
+
                     </div>
 
                     <div class="overflow-x-auto mt-4 min-h-[350px]">

@@ -25,11 +25,10 @@
             </nav>
         </div>
     </div>
-    <div class="flex w-full gap-4 min">
+    <div class="flex flex-col md:flex-row w-full gap-4">
         <div id="all_elections" class="w-full">
             <div class="bg-white shadow-md rounded p-6">
-                <div
-                    class="text-[12px] bg-white mt-0 p-5 rounded-md md:max-w-[800px] min-[90%]:max-w-[100%] lg:max-w-[900px] xl:w-[100%] xl:min-w-[100%] 2xl:max-w-[1190px]">
+                <div class="sm:p-5 rounded-md md:max-w-[800px] min-[90%]:max-w-[100%] lg:max-w-[900px] xl:w-[100%] xl:min-w-[100%] 2xl:max-w-[1190px]">
                     <div class="flex flex-col md:flex-row w-full items-center justify-between">
                         <div class="flex items-center justify-between flex-wrap md:flex-nowrap gap-2">
                             <button
@@ -64,7 +63,7 @@
                                     </span>
                                     <x-input type="text" wire:model.live="search"
                                              class="text-[12px] bg-transparent border-0 focus:ring-0 focus:outline-none w-full h-8 px-2"
-                                             placeholder="Search elections..." aria-label="Search">
+                                             placeholder="Search user..." aria-label="Search">
                                     </x-input>
                                 </div>
                             </div>
@@ -74,45 +73,49 @@
                         </div>
                     </div>
 
-                    <div class="mt-4 min-h-[300px]">
-                        <div class="overflow-x-auto">
-                            <table class="min-w-full table-auto">
-                                <thead class="bg-gray-50 text-left">
-                            <tr>
-                                <th class="font-bold text-[10px] text-left px-4 py-3"><input type="checkbox" class="rounded"></th>
-                                <th class="font-bold text-[10px] text-left px-4 py-3">User Id</th>
-                                <th class="font-bold text-[10px] text-left px-4 py-3">Full Name</th>
-                                <th class="font-bold text-[10px] text-left px-4 py-3">Access Role</th>
-                                <th class="font-bold text-[10px] text-left px-4 py-3">Email</th>
-                                <th class="font-bold text-[10px] text-left px-4 py-3">Year Level</th>
-                                <th class="font-bold text-[10px] text-left px-4 py-3">College</th>
-                                <th class="font-bold text-[10px] text-left px-4 py-3">Program</th>
-                                <th class="font-bold text-[10px] text-left px-4 py-3"></th>
+                    <div class="mt-6 min-h-[300px] overflow-x-auto">
+
+                        <table class="min-w-full table-auto  whitespace-nowrap">
+                            <thead>
+                            <tr class="w-full bg-gray-100 text-black uppercase text-[11px] leading-normal">
+                                <th class="py-3 px-6 text-left rounded-tl-lg border-b border-gray-300"><input type="checkbox" class="rounded"></th>
+                                <th class="py-3 px-6 text-left border-b border-gray-300">User Id</th>
+                                <th class="py-3 px-6 text-left border-b border-gray-300">Full Name</th>
+                                <th class="py-3 px-6 text-left border-b border-gray-300">Access Role</th>
+                                <th class="py-3 px-6 text-left border-b border-gray-300">Email</th>
+                                <th class="py-3 px-6 text-left border-b border-gray-300">Year Level</th>
+                                <th class="py-3 px-6 text-left border-b border-gray-300">College</th>
+                                <th class="py-3 px-6 text-left border-b border-gray-300">Program</th>
+                                <th class="py-3 px-6 text-center rounded-tr-lg border-b border-gray-300">Actions</th>
                             </tr>
                             </thead>
                             <tr></tr>
-                            <tbody>
+                            <tbody class="text-black text-[12px] font-light">
                             @foreach($users as $user)
-                                <tr class="font-light text-[10px]" wire:key="tr-system-user-{{ $user->id }}">
-                                    <td class="px-4 py-1"><input type="checkbox" class="rounded"></td>
-                                    <td class="px-4 py-1">{{ $user->id }}</td>
-                                    <td class="px-4 py-1">
+                                <tr class="border-b border-gray-100" wire:key="tr-system-user-{{ $user->id }}">
+                                    <td class="py-3 px-6 text-left"><input type="checkbox" class="rounded"></td>
+                                    <td class="py-3 px-6 text-left">{{ $user->id }}</td>
+                                    <td class="py-3 px-6 text-left font-bold">
                                         {{ $user->first_name }}
                                         {{ $user->middle_initial ? $user->middle_initial . '. ' : '' }}
                                         {{ $user->last_name }}
                                         {{ optional($user->extension)->name ?? '' }}
                                     </td>
 
-                                    <td class="px-4 py-1 capitalize">
+                                    <td class="py-3 px-6 text-left capitalize">
                                         @foreach ($user->roles as $role)
                                             {{ $role->name }}@if (!$loop->last)
                                             @endif
                                         @endforeach
                                     </td>
-                                    <td class="px-4 py-1">{{ $user->email }}</td>
-                                    <td class="px-4 py-1 ">{{ $user->year_level  . ' Year' }}</td>
-                                    <td class="px-4 py-1 ">{{ $user->college->name }}</td>
-                                    <td class="px-4 py-1">
+                                    <td class="py-3 px-6 text-left truncate max-w-[150px] whitespace-nowrap overflow-hidden">
+                                        <span title="{{ $user->email }}">{{ $user->email }}</span>
+                                    </td>
+                                    <td class="py-3 px-6 text-left">{{ $user->year_level  . ' Year' }}</td>
+                                    <td class="py-3 px-6 text-left truncate max-w-[150px] whitespace-nowrap overflow-hidden">
+                                        <span title="{{ $user->college->name }}">{{ $user->college->name }}</span>
+                                    </td>
+                                    <td class="py-3 px-6 text-left">
                                         @php
                                             $programName = $user->program->name;
                                             $programName = str_starts_with($programName, 'Bachelor of Science') ? 'BS ' . substr($programName, strlen('Bachelor of Science')) : $programName;
@@ -121,42 +124,42 @@
                                                 {{ strlen($programName) > 15 ? substr($programName, 0, 15) . '...' : $programName }}
                                             </span>
                                     </td>
-                                    <td class="px-4 py-1 text-center flex " wire:key="table-td-system-user-{{ $user->id }}">
+                                    <td class="py-3 px-6 text-center flex justify-center space-x-2 items-center" wire:key="table-td-system-user-{{ $user->id }}">
                                         @can('edit users')
-                                        <livewire:manage-system-user.edit-user :user_id="$user->id"
-                                                                               wire:key="edit-system-user-{{ $user->id }}" />
+                                            <livewire:manage-system-user.edit-user :user_id="$user->id"
+                                                                                   wire:key="edit-system-user-{{ $user->id }}" />
                                         @endcan
                                         @can('delete users')
-                                        <livewire:manage-system-user.delete-user :user_id="$user->id"
-                                                                                 wire:key="delete-system-user-{{ $user->id }}"/>
+                                            <livewire:manage-system-user.delete-user :user_id="$user->id"
+                                                                                     wire:key="delete-system-user-{{ $user->id }}"/>
                                     @endcan
                                 </tr>
                             @endforeach
                             </tbody>
                         </table>
-                            <!-- Empty State -->
-                            @if ($users->isEmpty())
-                                <div class="border border-gray-200 rounded-md p-8 text-center">
-                                    <div class="flex justify-center mb-4">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-500 opacity-20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                                    </div>
-                                    <h3 class="text-[14px] font-medium mb-2">No system admins found</h3>
-                                    <p class="text-[12px] text-gray-500">
-                                        @if($search)
-                                            No system admins match your search criteria.
-                                        @else
-                                            No system admins found.
-                                        @endif
-                                    </p>
+                        <!-- Empty State -->
+                        @if ($users->isEmpty())
+                            <div class="border border-gray-200 rounded-md p-8 text-center">
+                                <div class="flex justify-center mb-4">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-500 opacity-20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                                 </div>
-                            @endif
-                            <div class="mt-4" wire:key="pagination-table">
-                                {{ $users->links('evotar.components.pagination.tailwind-pagination') }}
+                                <h3 class="text-[14px] font-medium mb-2">No system admins found</h3>
+                                <p class="text-[12px] text-gray-500">
+                                    @if($search)
+                                        No system admins match your search criteria.
+                                    @else
+                                        No system admins found.
+                                    @endif
+                                </p>
                             </div>
+                        @endif
+                    </div>
+                    <div class="mt-4" wire:key="pagination-table">
+                        {{ $users->links('evotar.components.pagination.tailwind-pagination') }}
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-</div>
+
