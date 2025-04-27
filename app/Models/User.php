@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Notifications\CustomResetPassword;
+use App\Traits\EncryptsData;
 use App\Traits\LogsActivity;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -24,6 +25,18 @@ class User extends Authenticatable
     use TwoFactorAuthenticatable;
     use HasRoles;
     use LogsActivity;
+
+    use EncryptsData;
+
+    public array $encryptedFields = [
+        'first_name',
+        'middle_initial',
+        'last_name',
+        'extension',
+        'email',
+        'phone_number',
+        'student_id',
+    ];
 
     public mixed $faceData;
 

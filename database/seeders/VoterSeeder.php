@@ -15,7 +15,7 @@ class VoterSeeder extends Seeder
     public function run(): void
     {
         $voterRole = Role::where('name', 'voter')->first();
-        User::factory(162)->create()->each(function ($user) use ($voterRole) {
+        User::factory(10)->create()->each(function ($user) use ($voterRole) {
             $user->assignRole($voterRole);
         });
     }
