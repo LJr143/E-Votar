@@ -181,8 +181,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.1/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-
-
 <script>
     window.addEventListener('load', function () {
         setTimeout(function () {
@@ -221,7 +219,35 @@
         });
     }
 </script>
-
+<script>
+    // Register service worker
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js')
+                .then(registration => {
+                    console.log('ServiceWorker registration successful');
+                })
+                .catch(err => {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+        });
+    }
+</script>
+<script>
+    (async () => {
+        const modelPath = '{{ asset("storage/models") }}';
+        try {
+            await Promise.all([
+                faceapi.nets.ssdMobilenetv1.loadFromUri(modelPath),
+                faceapi.nets.faceLandmark68Net.loadFromUri(modelPath),
+                faceapi.nets.faceRecognitionNet.loadFromUri(modelPath)
+            ]);
+            sessionStorage.setItem('faceModelsLoaded', 'true');
+        } catch (error) {
+            console.error("Preloading models failed:", error);
+        }
+    })();
+</script>
 
 </body>
 

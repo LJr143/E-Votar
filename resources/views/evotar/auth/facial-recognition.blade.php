@@ -92,9 +92,14 @@
 
             /* Quality indicators */
             .quality-indicators {
-                display: flex;
-                justify-content: space-between;
+                justify-content: center;
+                align-content: center;
+                align-items: center;
                 margin: 10px 0;
+            }
+            .quality-container {
+                display: flex;
+                max-width: 500px;
             }
 
             .quality-item {
@@ -254,28 +259,30 @@
         </div>
 
         <div class="quality-indicators" style="display: none;">
-            <div class="quality-item">
-                <div>Brightness</div>
-                <div id="brightness-value" class="quality-value">--</div>
+            <div class="quality-container">
+                <div class="quality-item">
+                    <div>Brightness</div>
+                    <div id="brightness-value" class="quality-value">--</div>
+                </div>
+                <div class="quality-item">
+                    <div>Contrast</div>
+                    <div id="contrast-value" class="quality-value">--</div>
+                </div>
+                <div class="quality-item">
+                    <div>Sharpness</div>
+                    <div id="sharpness-value" class="quality-value">--</div>
+                </div>
             </div>
-            <div class="quality-item">
-                <div>Contrast</div>
-                <div id="contrast-value" class="quality-value">--</div>
-            </div>
-            <div class="quality-item">
-                <div>Sharpness</div>
-                <div id="sharpness-value" class="quality-value">--</div>
-            </div>
-            <div class="quality-item">
-                <div>Similarity</div>
-                <div id="similarity-value" class="quality-value">--</div>
-            </div>
+{{--            <div class="quality-item">--}}
+{{--                <div>Similarity</div>--}}
+{{--                <div id="similarity-value" class="quality-value">--</div>--}}
+{{--            </div>--}}
         </div>
 
-        <div id="match-counter" class="match-counter" style="display: none;">
-            Successful matches: <span id="match-count">0</span>/<span id="required-matches">3</span> |
-            Failed attempts: <span id="fail-count">0</span>/<span id="max-fail-attempts">20</span>
-        </div>
+{{--        <div id="match-counter" class="match-counter" style="display: none;">--}}
+{{--            Successful matches: <span id="match-count">0</span>/<span id="required-matches">3</span> |--}}
+{{--            Failed attempts: <span id="fail-count">0</span>/<span id="max-fail-attempts">20</span>--}}
+{{--        </div>--}}
 
         <div id="verification-result" class="verification-result"></div>
         <p id="status-message">Initializing system components...</p>
@@ -313,7 +320,7 @@
                 const similarityValue = document.getElementById('similarity-value');
                 const progressCircle = document.querySelector('.progress-circle-fg');
                 const qualityIndicators = document.querySelector('.quality-indicators');
-                const matchCounter = document.getElementById('match-counter');
+                // const matchCounter = document.getElementById('match-counter');
 
                 // Status indicators
                 const cameraStatus = document.getElementById('camera-status');
@@ -353,7 +360,7 @@
                         statusMessage.textContent = "System ready. Starting verification...";
                         instructions.textContent = "Please position your face in the circle and look straight at the camera";
                         qualityIndicators.style.display = 'flex';
-                        matchCounter.style.display = 'block';
+                        // matchCounter.style.display = 'block';
                         startVerificationProcess();
                     } else {
                         systemStatus.querySelector('.status-indicator').className = 'status-indicator status-loading';
@@ -410,12 +417,12 @@
                         // Load models with timeout
                         await Promise.race([
                             Promise.all([
-                                faceapi.nets.ssdMobilenetv1.loadFromUri(localModelPath).catch(() =>
-                                    faceapi.nets.ssdMobilenetv1.loadFromUri(cdnModelPath)),
-                                faceapi.nets.faceLandmark68Net.loadFromUri(localModelPath).catch(() =>
-                                    faceapi.nets.faceLandmark68Net.loadFromUri(cdnModelPath)),
-                                faceapi.nets.faceRecognitionNet.loadFromUri(localModelPath).catch(() =>
-                                    faceapi.nets.faceRecognitionNet.loadFromUri(cdnModelPath)),
+                                faceapi.nets.ssdMobilenetv1.loadFromUri(localModelPath),
+                                    // .catch(() =>faceapi.nets.ssdMobilenetv1.loadFromUri(cdnModelPath)),
+                                faceapi.nets.faceLandmark68Net.loadFromUri(localModelPath),
+                                    // .catch(() =>faceapi.nets.faceLandmark68Net.loadFromUri(cdnModelPath)),
+                                faceapi.nets.faceRecognitionNet.loadFromUri(localModelPath),
+                                    // .catch(() =>faceapi.nets.faceRecognitionNet.loadFromUri(cdnModelPath)),
                             ]),
                             new Promise((_, reject) => setTimeout(() => reject(new Error('Model loading timeout')), 30000))
                         ]);
@@ -691,7 +698,8 @@
                             if (match.label !== "unknown" && allConditionsMet) {
                                 matchCount++;
                                 failCount = 0;
-                                updateElement(statusMessage, `Strong match found (${match.label}) - ${(similarity * 100).toFixed(1)}% similarity`);
+                                // updateElement(statusMessage, `Strong match found (${match.label}) - ${(similarity * 100).toFixed(1)}% similarity`);
+                                updateElement(statusMessage, `Recognizing - ${(similarity * 100).toFixed(1)}% similarity`);
                                 updateElement(validationMessage, "");
 
                                 updateElement(matchCountElement, matchCount);

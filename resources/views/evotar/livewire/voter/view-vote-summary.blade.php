@@ -48,6 +48,7 @@
             <!-- Election Details-->
             @if ($currentStep === 1)
                 <form wire:submit.prevent="proceedToVoters">
+                    @csrf
                     <div>
                         <div class="flex space-x-4">
                             <div class="flex-col">
@@ -187,6 +188,7 @@
 
             @elseif ($currentStep === 2)
                 <form wire:submit.prevent="submit">
+                    @csrf
                     <!-- Election Voters-->
                     <div>
                         <div>

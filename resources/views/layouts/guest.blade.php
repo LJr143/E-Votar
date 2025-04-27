@@ -24,5 +24,20 @@
             {{ $slot }}
         </div>
         @livewireScripts
+        <script>
+            (async () => {
+                const modelPath = '{{ asset("storage/models") }}';
+                try {
+                    await Promise.all([
+                        faceapi.nets.ssdMobilenetv1.loadFromUri(modelPath),
+                        faceapi.nets.faceLandmark68Net.loadFromUri(modelPath),
+                        faceapi.nets.faceRecognitionNet.loadFromUri(modelPath)
+                    ]);
+                    sessionStorage.setItem('faceModelsLoaded', 'true');
+                } catch (error) {
+                    console.error("Preloading models failed:", error);
+                }
+            })();
+        </script>
     </body>
 </html>
