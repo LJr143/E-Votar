@@ -14,6 +14,7 @@ class CouncilSeeder extends Seeder
     public function run(): void
     {
         $council = [
+            [ 'name' => 'Tagum Student Council'],
             [ 'name' => 'Society of Information Technology Students'],
             [ 'name' => 'Society of Agricultural and Bio-systems Engineering'],
             [ 'name' => 'Association of Future Secondary Education Teachers'],

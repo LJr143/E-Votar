@@ -16,6 +16,7 @@ class CollegeSeeder extends Seeder
         $colleges = [
             ['campus_id' => 2, 'name' => 'College of Agricultural and Bio-systems Engineering'],
             ['campus_id' => 2, 'name' => 'College of Teacher Education and Technology'],
+            ['campus_id' => 2, 'name' => 'College of Agricultural and Related Sciences'],
             ['campus_id' => 2, 'name' => 'College of Engineering'],
             ['campus_id' => 1, 'name' => 'College of Engineering'],
             ['campus_id' => 1, 'name' => 'College of Information and Computing'],

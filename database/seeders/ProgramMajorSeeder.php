@@ -20,6 +20,10 @@ class ProgramMajorSeeder extends Seeder
             ['program_id' => 5, 'name' => 'Math'],
             ['program_id' => 3, 'name' => 'Agricultural Crop Production'],
             ['program_id' => 3, 'name' => 'Animal Production'],
+            ['program_id' => 2, 'name' => 'AB Land and Water Resource Engineering'],
+            ['program_id' => 2, 'name' => 'AB Machinery and Power Engineering'],
+            ['program_id' => 2, 'name' => 'AB Process Engineering'],
+            ['program_id' => 2, 'name' => 'AB Structures and Environment Engineering'],
         ];
         DB::table('program_majors')->insert($program_majors);
     }

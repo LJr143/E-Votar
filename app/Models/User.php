@@ -163,7 +163,7 @@ class User extends Authenticatable
     {
         return $this->is_verified &&
             ($this->verification_expires_at === null ||
-                $this->verification_expires_at == now()->year);
+                $this->verification_expires_at->year - 1 == now()->year);
     }
 
 }

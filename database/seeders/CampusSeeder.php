@@ -14,7 +14,7 @@ class CampusSeeder extends Seeder
     public function run(): void
     {
         $campuses = [
-            ['name' => 'Obrero-Main Campus'],
+            ['name' => 'Obrero Campus'],
             ['name' => 'Tagum Unit'],
             ['name' => 'Mabini Unit'],
             ['name' => 'Mintal Campus'],
