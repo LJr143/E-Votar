@@ -54,6 +54,26 @@
 
         </div>
 
+        <div id="custom-alert" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full text-center">
+                <h2 class="text-xl font-semibold text-gray-800 mb-2">Election Countdown Ended!</h2>
+                <p class="text-gray-600 mb-4">The election period has officially ended.</p>
+                <button onclick="closeCustomAlert()" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition">
+                    OK
+                </button>
+            </div>
+        </div>
+
+        <div id="stopped-alert" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full text-center">
+                <h2 class="text-xl font-semibold text-gray-800 mb-2">Election Stopped</h2>
+                <p class="text-gray-600 mb-4">The election has been stopped. The page will refresh soon.</p>
+                <button onclick="closeStoppedAlert()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">
+                    OK
+                </button>
+            </div>
+        </div>
+
     </div>
     <script>
         console.log('window.Tick before fetch:', window.Tick);
@@ -66,14 +86,14 @@
                     return response.json();
                 })
                 .then(data => {
-                    console.log('End time:', data.end_time); // Confirm this logs correctly
+                    console.log('End time:', data.end_time);
                     if (data.end_time) {
                         var counter = Tick.count.down(data.end_time);
                         counter.onupdate = function (value) {
                             tick.value = value;
                         };
                         counter.onended = function () {
-                            alert('Election countdown ended!');
+                            showCustomAlert();
                         };
                     } else {
                         console.error('No end time found');
@@ -87,15 +107,35 @@
         document.addEventListener('DOMContentLoaded', function() {
             Livewire.on('timer-stopped', (data) => {
                 if (data.shouldRefresh) {
-                    // Show a message before refreshing
-                    alert('Election has been stopped. The page will refresh.');
-
-                    // Refresh the page after a short delay
+                    showStoppedAlert();
                     setTimeout(() => {
                         window.location.reload();
-                    }, 1000);
+                    }, 500);
                 }
             });
+
         });
+
+        function showStoppedAlert() {
+            document.getElementById('stopped-alert').classList.remove('hidden');
+        }
+
+        function closeStoppedAlert() {
+            document.getElementById('stopped-alert').classList.add('hidden');
+            // Refresh the page after closing the alert
+            setTimeout(function() {
+                window.location.reload();
+            }, 1000); // Adjust delay before refreshing if necessary
+        }
+
+
+        function showCustomAlert() {
+            document.getElementById('custom-alert').classList.remove('hidden');
+        }
+
+        function closeCustomAlert() {
+            document.getElementById('custom-alert').classList.add('hidden');
+        }
+
     </script>
 </div>

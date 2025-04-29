@@ -1,8 +1,10 @@
 <?php
 namespace App\Livewire\ManageVoter;
 
+use AllowDynamicProperties;
 use App\Exports\PartyListExport;
 use App\Exports\VoterExport;
+use App\Imports\ImportVerification;
 use App\Imports\VotersImport;
 use App\Models\Campus;
 use App\Models\College;
@@ -13,7 +15,7 @@ use Exception;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
-use Log;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\Cell\DataValidation;
 
@@ -26,10 +28,14 @@ class VoterTable extends Component
     public string $search = '';
     public $perPage = 10;
 
+    public $importFileVerification;
     public $importFile;
     public $importing = false;
+    public $importingVerification = false;
     public $importErrors = [];
     public $importError = '';
+    public $importErrorsVerification = [];
+    public $importErrorVerification = '';
 
     public function updatingSearch(): void
     {
@@ -49,9 +55,8 @@ class VoterTable extends Component
 
     public function resetImport(): void
     {
-        $this->reset(['importing', 'importError', 'importErrors', 'importFile']);
+        $this->reset(['importing','importingVerification', 'importError', 'importErrors', 'importFile']);
     }
-
 
     public function fetchUsers()
     {
@@ -73,6 +78,7 @@ class VoterTable extends Component
         }
 
     }
+
     public function downloadExcelFormat(): \Symfony\Component\HttpFoundation\BinaryFileResponse
     {
         // Path to your template file
@@ -269,6 +275,83 @@ class VoterTable extends Component
         } finally {
             $this->importing = false;
         }
+    }
+
+    public function importVerificationUsers(): void
+    {
+        $this->validate([
+            'importFileVerification' => 'required|file|mimes:xlsx,xls,csv'
+        ]);
+
+        $this->importingVerification = true;
+        $this->importErrorVerification = '';
+        $this->importErrorsVerification = [];
+
+        try {
+            if (!$this->importFileVerification || !$this->importFileVerification->getRealPath()) {
+                throw new \Exception('No valid import file found.');
+            }
+
+            $import = new ImportVerification();
+
+            // Use import() with onFailure callback
+            Excel::import(
+                $import,
+                $this->importFileVerification->getRealPath(),
+                null,
+                \Maatwebsite\Excel\Excel::XLSX,
+                [
+                    'onFailure' => function($failures) {
+                        $this->importErrorsVerification = collect($failures)->map(function ($failure) {
+                            return [
+                                'row' => $failure->row(),
+                                'field' => $failure->attribute(),
+                                'errors' => $failure->errors()
+                            ];
+                        })->toArray();
+                    }
+                ]
+            );
+
+            $successCount = $import->getRowCount();
+            $failureCount = count($this->importErrorsVerification);
+
+            if ($failureCount > 0) {
+                $this->importErrorVerification = "Imported {$successCount} users. {$failureCount} records had errors.";
+                $this->dispatch('fail-voter-import', [
+                    'title' => 'Partial Import',
+                    'message' => $this->importErrorVerification
+                ]);
+            } else {
+                $this->dispatch('success-voter-import', [
+                    'title' => 'Import Complete',
+                    'message' => "Successfully imported {$successCount} voters."
+                ]);
+                $this->reset('importFileVerification');
+                $this->dispatch('voter-verified');
+            }
+
+        } catch (\Exception $e) {
+            $errorMessage = $this->getErrorMessage($e);
+            $this->importErrorVerification = $errorMessage;
+            $this->dispatch('fail-voter-import', [
+                'title' => 'Import Failed',
+                'message' => $errorMessage
+            ]);
+            logger()->error('Voter import error: ' . $e->getMessage());
+        } finally {
+            $this->importingVerification = false;
+        }
+    }
+
+    protected function getErrorMessage(\Exception $e): string
+    {
+        return match (true) {
+            str_contains($e->getMessage(), 'duplicate') => 'Duplicate values found in import file',
+            str_contains($e->getMessage(), 'required') => 'Missing required fields in import file',
+            str_contains($e->getMessage(), 'not found') => 'Reference data not found (campus, college, etc.)',
+            default => 'Error importing voters. Please check the file format and data.'
+        };
     }
 
     public function exportVoterLists()

@@ -41,8 +41,12 @@ class AddSystemUser extends Component
     {
         $this->users = User::query()
             ->where(function ($query) {
-                $query->where('first_name', 'like', '%' . $this->search . '%')
-                    ->orWhere('last_name', 'like', '%' . $this->search . '%');
+                $query->when($this->search, function ($query) {
+                    $matchingUserIds = User::searchEncrypted($this->search, ['first_name', 'last_name'])
+                        ->pluck('id');
+
+                    $query->whereIn('id', $matchingUserIds);
+                });
             })
             ->whereDoesntHave('roles', fn($query) => $query->whereIn('name', ['superadmin', 'admin', 'watcher', 'technical-officer']))
             ->take(5)

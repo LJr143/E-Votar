@@ -610,7 +610,7 @@
 
                         <div class="flex justify-between items-center w-full">
                             @if($election)
-                                <button onclick="navigateToVote('{{ route('dashboard', ['slug' => $election->slug]) }}')"
+                                <button onclick="navigateToVote('{{ route('voter.election.redirect') }}')"
                                         class="text-xs font-medium transition-colors duration-200 cursor-pointer
                                    {{ $isActive ? 'text-white' : 'text-red-700 group-hover:text-white' }}">
                                                             Vote Now

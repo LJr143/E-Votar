@@ -117,6 +117,97 @@
                             @endif
                             <button
                                 class="bg-green-600 border text-white border-gray-300 rounded h-8 px-3 py-2 flex items-center justify-center w-full lg:w-auto whitespace-nowrap text-center mb-2 sm:mb-0 space-x-1 hover:drop-shadow hover:bg-gray-200 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"
+                                class="bg-white border border-gray-300 rounded h-8 px-3 py-2 flex items-center justify-center w-full sm:w-auto text-center space-x-1 hover:drop-shadow hover:bg-gray-200 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"
+                                wire:click="$toggle('importingVerification')"
+                                wire:loading.attr="disabled">
+                                <svg wire:loading.remove wire:target="importVerificationUsers" width="12" height="18" viewBox="0 0 16 19"
+                                     fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M9.42969 1.60984V4.87942C9.42969 5.32273 9.42969 5.54439 9.5185 5.71372C9.59662 5.86266 9.72128 5.98375 9.8746 6.05964C10.0489 6.14592 10.2771 6.14592 10.7334 6.14592H14.0992M5.35547 11.6868L7.8 14.0615M7.8 14.0615L10.2445 11.6868M7.8 14.0615L7.8 9.31211M9.42969 1.39648H5.1925C3.82343 1.39648 3.1389 1.39648 2.61599 1.65531C2.15602 1.88298 1.78205 2.24626 1.54769 2.69309C1.28125 3.20106 1.28125 3.86604 1.28125 5.19599V13.4282C1.28125 14.7582 1.28125 15.4232 1.54769 15.9311C1.78205 16.378 2.15602 16.7412 2.61599 16.9689C3.1389 17.2277 3.82343 17.2277 5.1925 17.2277H10.4075C11.7766 17.2277 12.4611 17.2277 12.984 16.9689C13.444 16.7412 13.8179 16.378 14.0523 15.9311C14.3187 15.4232 14.3187 14.7582 14.3187 13.4282V6.14586L9.42969 1.39648Z"
+                                        stroke="#000000" stroke-width="1.8625" stroke-linecap="round"
+                                        stroke-linejoin="round"/>
+                                </svg>
+                                <span wire:loading.remove wire:target="importVerificationUsers" class="text-[12px]">Import Verification</span>
+                                <svg wire:loading wire:target="importVerificationUsers" class="animate-spin h-5 w-5 mr-3"
+                                     viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                            stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor"
+                                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                <span wire:loading wire:target="importVerificationUsers">Importing...</span>
+                            </button>
+                            <!-- Import Modal -->
+                            @if($importingVerification)
+                                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                                    <div class="bg-white p-6 rounded shadow-md max-w-md w-full mx-4 sm:mx-6 md:mx-8 lg:mx-10 xl:mx-12">
+                                        <h3 class="text-lg font-medium text-center mb-4">Import Verification</h3>
+
+                                        @if($importErrorVerification || count($importErrorsVerification))
+                                            <div class="mb-4 p-3 bg-red-100 text-red-700 rounded text-sm">
+                                                @if($importErrorVerification)
+                                                    <p class="font-semibold">{{ $importErrorVerification }}</p>
+                                                @endif
+
+                                                @if(count($importErrorsVerification))
+                                                    <div class="mt-2 max-h-60 overflow-y-auto">
+                                                        <ul class="list-disc pl-5">
+                                                            @foreach($importErrorsVerification as $error)
+                                                                <li class="mt-1">
+                                                                    <span class="font-medium">Row {{ $error['row'] }}</span>
+                                                                    ({{ $error['field'] }}):
+                                                                    {{ implode(', ', $error['errors']) }}
+                                                                </li>
+                                                            @endforeach
+                                                        </ul>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        @endif
+
+                                        @unless($importErrorVerification || count($importErrorsVerification))
+                                            <div class="mb-6 relative">
+                                                <!-- File input with spinner to the right -->
+                                                <div class="flex items-center">
+                                                    <input type="file" wire:model="importFileVerification"
+                                                           class="w-full p-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+
+                                                    <!-- Spinner shown while file is uploading -->
+                                                    <div wire:loading wire:target="importFileVerification" class="flex items-center ml-2">
+                                                        <svg class="animate-spin h-4 w-4 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                             viewBox="0 0 24 24">
+                                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                                                    stroke-width="4"></circle>
+                                                            <path class="opacity-75" fill="currentColor"
+                                                                  d="M4 12a8 8 0 018-8v4l3.5-3.5L12 0v4a8 8 0 00-8 8z"/>
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endunless
+
+                                        <div class="flex justify-end space-x-3">
+                                            <button wire:click="resetImport()"
+                                                    class="bg-white text-black text-[12px] border border-gray-300 h-7 px-4 py-1 rounded shadow-md hover:bg-gray-200 justify-center text-center hover:drop-shadow hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110">
+                                                {{ $importErrorVerification || count($importErrorsVerification) ? 'Close' : 'Cancel' }}
+                                            </button>
+
+                                            @unless($importErrorVerification || count($importErrorsVerification))
+                                                <button wire:click="importVerificationUsers"
+                                                        wire:loading.attr="disabled"
+                                                        class="bg-black text-white px-6 py-1 h-7 rounded shadow-md hover:bg-gray-700 text-[12px] justify-center text-center hover:drop-shadow hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110">
+                                                    <span wire:loading.remove wire:target="importVerificationUsers">Import</span>
+                                                    <span wire:loading wire:target="importVerificationUsers">Importing...</span>
+                                                </button>
+                                            @endunless
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+                            <button
+                                class="bg-green-600 border text-white border-gray-300 rounded h-8 px-3 py-2 flex items-center justify-center w-full sm:w-auto text-center mb-2 sm:mb-0 space-x-1 hover:drop-shadow hover:bg-gray-200 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"
+
                                 wire:click="downloadExcelFormat"
                                 wire:loading.attr="disabled">
                                 <svg wire:loading.remove wire:target="downloadExcelFormat" width="12" height="18"
