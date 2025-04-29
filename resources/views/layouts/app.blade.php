@@ -127,6 +127,8 @@
         <div
             x-on:activated-user.window="pushNotification('success', 'User Activated', 'User has been activated successfully.');"></div>
         <div
+            x-on:voter-verified.window="pushNotification('success', 'User/s Verified', 'User/s has been verified successfully.');"></div>
+        <div
             x-on:success-position-import.window="pushNotification('success',
             $event.detail.title || 'Position/s Import Success',
             $event.detail.message || 'Positions imported successfully.'

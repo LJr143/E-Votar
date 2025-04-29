@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
@@ -41,6 +42,7 @@ class AppServiceProvider extends ServiceProvider
         Blade::stringable(function (\Carbon\Carbon $date) {
             return $date->format('M j, Y');
         });
+        DB::statement("SET time_zone = '+08:00'");
 
 //        // Force Livewire to use HTTPS
 //        Livewire::forceAssetInjection();

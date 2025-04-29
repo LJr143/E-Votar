@@ -136,7 +136,8 @@
                                     <td class="py-3 px-6 text-center">{{ $election->date_ended }}</td>
                                     <td class="py-4 px-6 text-white text-center">
                                         <p class="@if($election->status == 'ongoing') bg-red-500 @elseif($election->status == 'pending') bg-yellow-500
-                                               @elseif($election->status == 'completed')  bg-black   @endif w-[100px] py-2 px-2 rounded">{{ ucfirst($election->status) }}</p>
+                                               @elseif($election->status == 'completed')  bg-green @elseif($election->status == 'paused')  bg-gray-400   @endif w-[100px] py-2 px-2 rounded">{{ ucfirst($election->status) }}
+                                        </p>
                                     </td>
                                     <td class="py-3 px-6 text-center flex justify-center space-x-2 items-center exclude-print">
                                         @can('view election')

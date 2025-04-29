@@ -8,6 +8,7 @@ use App\Models\Election;
 use App\Models\User;
 use App\Models\Vote;
 use App\Models\VoterEncodeVote;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -64,7 +65,6 @@ class VoterElectionController extends Controller
                 ->from('election_excluded_voters')
                 ->where('user_id', $voterId);
         })
-            ->where('status', '!=', 'pending')
             ->orderBy('created_at', 'desc')
             ->get();
     }
@@ -78,9 +78,11 @@ class VoterElectionController extends Controller
         }
 
         return response()->json([
-            'start_time' => $election->date_started,
-            'end_time' => $election->date_ended
+            'start_time' => Carbon::parse($election->date_started)->timezone('Asia/Manila')->toIso8601String(),
+            'end_time' => Carbon::parse($election->date_ended)->timezone('Asia/Manila')->toIso8601String(),
+            'server_time' => now()->timezone('Asia/Manila')->toIso8601String(),
         ]);
+
     }
 
     public function voting($slug)

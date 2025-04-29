@@ -29,7 +29,7 @@ class AdminDashboardTimer extends Component
         }
     }
 
-    public function pauseElection()
+    public function pauseElection(): void
     {
         $election = Election::find($this->selectedElection);
 
@@ -46,7 +46,7 @@ class AdminDashboardTimer extends Component
         }
     }
 
-    public function resumeElection()
+    public function resumeElection(): void
     {
         $election = Election::find($this->selectedElection);
 
@@ -65,7 +65,7 @@ class AdminDashboardTimer extends Component
         }
     }
 
-    public function stopElection()
+    public function stopElection(): void
     {
         $election = Election::find($this->selectedElection);
 

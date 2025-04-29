@@ -82,7 +82,7 @@ class VotersImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFa
             'middle_initial'    => $normalized['middle_initial'] ?? null,
             'extension'         => $normalized['extension'] ?? null,
             'gender'            => $normalized['gender'] ?? null,
-            'birth_date'        => Date::excelToDateTimeObject($row['birth_date']),
+            'birth_date'        => $this->parseBirthDate($row['birth_date'] ?? null),
             'email'             => $normalized['email'],
             'phone_number'      => $this->formatPhoneNumber($normalized['phone_number'] ?? null),
             'year_level'        => $normalized['year_level'] ?? null,
@@ -94,7 +94,6 @@ class VotersImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFa
             'account_status' => 'Pending Verification',
             'username'          => $normalized['email'],
             'password'          => Hash::make($normalized['student_id']),
-            ''
         ]);
 
         $user->save();
@@ -118,24 +117,43 @@ class VotersImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFa
         try {
             // Handle Excel date serial numbers
             if (is_numeric($dateValue)) {
-                return Date::excelToDateTimeObject($dateValue)->format('Y-m-d');
+                $date = Date::excelToDateTimeObject($dateValue);
+                if ($date instanceof \DateTime) {
+                    return $date->format('Y-m-d');
+                }
+                throw new Exception("Invalid Excel serial date: {$dateValue}");
             }
 
-            // Try common date formats one by one
-            $formats = ['Y-m-d', 'm/d/Y', 'd/m/Y', 'n/j/Y', 'Y-m-d H:i:s'];
+            // Normalize date string (trim whitespace, replace multiple slashes, etc.)
+            $dateValue = trim($dateValue);
+            $dateValue = preg_replace('/[\s]+/', '', $dateValue); // Remove extra spaces
+            $dateValue = preg_replace('/\/+/', '/', $dateValue); // Normalize slashes
+
+            // Try common date formats
+            $formats = [
+                'Y-m-d',        // 2004-04-03
+                'm/d/Y',        // 04/03/2004
+                'd/m/Y',        // 03/04/2004
+                'n/j/Y',        // 4/3/2004
+                'Y/m/d',        // 2004/04/03
+                'm-d-Y',        // 04-03-2004
+            ];
 
             foreach ($formats as $format) {
                 try {
-                    return Carbon::createFromFormat($format, $dateValue)->format('Y-m-d');
+                    $date = Carbon::createFromFormat($format, $dateValue);
+                    if ($date && $date->isValid()) {
+                        return $date->format('Y-m-d');
+                    }
                 } catch (\Exception $e) {
                     continue;
                 }
             }
 
-            throw new Exception("None of the date formats matched");
+            throw new Exception("Invalid date format: '{$dateValue}'. Expected formats: YYYY-MM-DD, MM/DD/YYYY, or DD/MM/YYYY.");
         } catch (\Exception $e) {
-            Log::warning("Failed to parse birth date: {$dateValue}");
-            throw new Exception("Invalid date format for birth date. Please use YYYY-MM-DD format.");
+            Log::warning("Failed to parse birth date in row {$this->currentRow}: {$dateValue}. Error: {$e->getMessage()}");
+            throw new Exception("Invalid date format in row {$this->currentRow}: '{$dateValue}'. Expected formats: YYYY-MM-DD, MM/DD/YYYY, DD/MM/YYYY, or valid Excel serial number.");
         }
     }
 
@@ -212,32 +230,14 @@ class VotersImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFa
                 }
             ],
             'birth_date' => [
-                'nullable', 'date',
+                'nullable',
                 function ($attribute, $value, $fail) {
-                    try {
-                        if (is_numeric($value)) {
-                            Date::excelToDateTimeObject($value);
-                        } else {
-                            // Try each format one by one
-                            $formats = ['Y-m-d', 'm/d/Y', 'd/m/Y', 'n/j/Y'];
-                            $parsed = false;
-
-                            foreach ($formats as $format) {
-                                try {
-                                    Carbon::createFromFormat($format, $value);
-                                    $parsed = true;
-                                    break;
-                                } catch (\Exception $e) {
-                                    continue;
-                                }
-                            }
-
-                            if (!$parsed) {
-                                throw new \Exception('Invalid date format');
-                            }
+                    if (!empty($value)) {
+                        try {
+                            $this->parseBirthDate($value);
+                        } catch (\Exception $e) {
+                            $fail("Invalid date format in row {$this->currentRow}: '{$value}'. Expected formats: YYYY-MM-DD, MM/DD/YYYY, DD/MM/YYYY, or valid Excel serial number.");
                         }
-                    } catch (\Exception $e) {
-                        $fail('Invalid date format. Use YYYY-MM-DD format.');
                     }
                 }
             ],

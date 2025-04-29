@@ -11,7 +11,7 @@ use Livewire\Component;
 
 class AdminDashboard extends Component
 {
-    protected $listeners = ['candidate-created' => '$refresh'];
+    protected $listeners = ['candidate-created' => '$refresh', 'echo:election-status,ElectionStatus' => '$refresh'];
     public $candidates = [];
     public $filter = 'Student and Local Council Election';
     public $search = '';

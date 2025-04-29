@@ -130,9 +130,11 @@
                                                                                    wire:key="edit-system-user-{{ $user->id }}" />
                                         @endcan
                                         @can('delete users')
-                                            <livewire:manage-system-user.delete-user :user_id="$user->id"
-                                                                                     wire:key="delete-system-user-{{ $user->id }}"/>
-                                    @endcan
+                                            <livewire:manage-system-user.delete-user :user_id="$user->id" wire:key="delete-system-user-{{ $user->id }}"/>
+                                        @endcan
+                                        @can('verify voter')
+                                                <livewire:confirm-academic-details :voterId="$user->id" :key="'verify-'.$user->id" />
+                                        @endcan
                                 </tr>
                             @endforeach
                             </tbody>

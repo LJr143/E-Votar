@@ -120,7 +120,7 @@
                                     </div>
                                 </div>
                                 <div class="tick-onended-message" style="display: none">
-                                    <p>Time's up</p>
+                                    <p>Election has Ended!</p>
                                 </div>
                             </div>
 
