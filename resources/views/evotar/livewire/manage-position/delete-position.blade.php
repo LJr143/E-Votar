@@ -42,7 +42,7 @@
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <p class="text-gray-700 mb-6 ml-5 text-xs text-left">Are you sure you want to remove this position? This process cannot be undone.</p>
+            <p class="text-gray-700 mb-6 ml-5 text-xs text-left">Are you sure you want to remove this position? This process <br> cannot be undone.</p>
 
             <form wire:submit.prevent="deletePosition">
                 <div class="flex flex-col">

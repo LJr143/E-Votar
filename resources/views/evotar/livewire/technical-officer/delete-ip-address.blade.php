@@ -57,7 +57,7 @@
                         class="border border-gray-300 rounded w-full p-2 text-sm"
                         placeholder="Enter your password"
                     />
-                    @error('password') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                    @error('password') <div class="text-red-500 text-[10px] sm:text-[12px]">{{ $message }}</div> @enderror
                 </div>
 
                 <!-- Buttons -->
