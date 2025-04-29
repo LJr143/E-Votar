@@ -1,13 +1,12 @@
 <div>
-    <div class="flex w-full gap-4 min">
+    <div class="flex flex-col md:flex-row w-full gap-4">
         <div id="all_elections" class="w-full">
             <div class="bg-white shadow-md rounded p-6">
-                <div
-                    class="bg-white mt-0 p-5 rounded-md md:max-w-[800px] min-[90%]:max-w-[100%] lg:max-w-[900px] xl:w-[100%] xl:min-w-[100%] 2xl:max-w-[1190px]">
-                    <div class="flex flex-col md:flex-row w-full items-center justify-between">
-                        <div class="flex items-center justify-between flex-wrap md:flex-nowrap gap-2">
+                <div class="sm:p-5 rounded-md md:max-w-[800px] min-[90%]:max-w-[100%] lg:max-w-[900px] xl:w-[100%] xl:min-w-[100%] 2xl:max-w-[1190px]">
+                    <div class="flex flex-col lg:flex-row w-full items-center gap-2 justify-between">
+                        <div class="flex items-center w-full lg:w-auto justify-between flex-wrap md:flex-nowrap gap-2">
                             <button
-                                class="bg-white border border-gray-300 rounded h-8 px-3 py-2 flex items-center justify-center w-full sm:w-auto text-center space-x-1 hover:drop-shadow hover:bg-gray-200 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"
+                                class="bg-white border border-gray-300 rounded h-8 px-3 py-2 flex items-center justify-center w-full lg:w-auto whitespace-nowrap text-center space-x-1 hover:drop-shadow hover:bg-gray-200 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"
                                 wire:click="exportPartyLists"
                                 wire:loading.attr="disabled">
                                 <svg wire:loading.remove wire:target="exportPartyLists" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"
@@ -25,7 +24,7 @@
                                 <span wire:loading wire:target="exportPartyLists">Exporting...</span>
                             </button>
                             <button
-                                class="bg-white border border-gray-300 rounded h-8 px-3 py-2 flex items-center justify-center w-full sm:w-auto text-center space-x-1 hover:drop-shadow hover:bg-gray-200 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"
+                                class="bg-white border border-gray-300 rounded h-8 px-3 py-2 flex items-center justify-center w-full lg:w-auto text-center space-x-1 hover:drop-shadow hover:bg-gray-200 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"
                                 wire:click="$toggle('importing')"
                                 wire:loading.attr="disabled">
                                 <svg wire:loading.remove wire:target="import" width="12" height="18" viewBox="0 0 16 19" fill="none"
@@ -112,7 +111,7 @@
                                 </div>
                             @endif
                             <button
-                                class="bg-green-600 border text-white border-gray-300 rounded h-8 px-3 py-2 flex items-center justify-center w-full sm:w-auto text-center mb-2 sm:mb-0 space-x-1 hover:drop-shadow hover:bg-gray-200 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"
+                                class="bg-green-600 border text-white border-gray-300 rounded h-8 px-3 py-2 flex items-center justify-center w-full lg:w-auto whitespace-nowrap text-center mb-2 sm:mb-0 space-x-1 hover:drop-shadow hover:bg-gray-200 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"
                                 wire:click="downloadExcelFormat"
                                 wire:loading.attr="disabled">
                                 <svg wire:loading.remove wire:target="downloadExcelFormat" width="12" height="18" viewBox="0 0 16 19" fill="none"
@@ -132,9 +131,9 @@
                                 <span wire:loading wire:target="downloadExcelFormat">Downloading...</span>
                             </button>
                         </div>
-                        <div class="flex items-center gap-2">
+                        <div class="flex items-center gap-2 w-full lg:w-auto">
                                 <!-- Search Input -->
-                                <div class="w-full md:w-[250px]">
+                                <div class="w-full lg:w-[250px]">
                                     <div class="flex items-center border bg-white text-black border-gray-300 rounded-md h-8 px-3">
                                     <span class="flex items-center">
                                         <svg width="12" height="12" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -143,7 +142,7 @@
                                     </span>
                                         <x-input type="text" wire:model.live="search"
                                                  class="text-[12px] bg-transparent border-0 focus:ring-0 focus:outline-none w-full h-8 px-2"
-                                                 placeholder="Search elections..." aria-label="Search">
+                                                 placeholder="Search partylist..." aria-label="Search">
                                         </x-input>
                                     </div>
                             </div>
@@ -172,18 +171,18 @@
                                     });
                                 }
                             }" wire:key="party-list-table">
-                        <table class="min-w-full" id="partyListTable">
-                            <thead class="text-left text-[10px]">
+                        <table class="min-w-full whitespace-nowrap" id="partyListTable">
+                            <thead>
                             <tr class="w-full bg-gray-100 text-black uppercase text-[11px] leading-normal">
                                 <th class="py-3 px-6 text-left rounded-tl-lg border-b border-gray-300 exclude-print">
                                     <input type="checkbox" class="form-checkbox h-4 w-4 text-black"
                                            x-model="selectAll"
                                            @change="toggleSelectAll()">
                                 </th>
-                                <th class="py-3 px-6 border-b border-gray-300">Id</th>
-                                <th class="py-3 px-6 border-b border-gray-300">Party List Name</th>
-                                <th class="py-3 px-6 border-b border-gray-300 exclude-print">Members</th>
-                                <th class="py-3 px-6 rounded-tr-lg border-b border-gray-300 exclude-print">Actions</th>
+                                <th class="py-3 px-6 text-left border-b border-gray-300">Id</th>
+                                <th class="py-3 px-6 border-b text-left border-gray-300">Party List Name</th>
+                                <th class="py-3 px-6 border-b text-left border-gray-300 exclude-print">Members</th>
+                                <th class="py-3 px-6 text-center rounded-tr-lg border-b border-gray-300 exclude-print">Actions</th>
                             </tr>
                             </thead>
 
@@ -223,7 +222,7 @@
                                         </div>
                                     </td>
 
-                                    <td class="py-3 px-6 text-left exclude-print">
+                                    <td class="py-3 px-6 text-center flex justify-center items-center exclude-print">
                                         <div class="flex space-x-2" wire:key="actions-{{ $party_list->id }}"> <!-- Use flex and space-x for consistent spacing -->
                                             @can('edit party list')
                                                 <!-- View Party List Members -->
@@ -270,11 +269,10 @@
                                 </p>
                             </div>
                         @endif
-                        <div class="mt-4">
-                            {{ $party_lists->links('evotar.components.pagination.tailwind-pagination') }}
-                        </div>
                     </div>
-
+                    <div class="mt-4">
+                        {{ $party_lists->links('evotar.components.pagination.tailwind-pagination') }}
+                    </div>
 
                 </div>
             </div>
