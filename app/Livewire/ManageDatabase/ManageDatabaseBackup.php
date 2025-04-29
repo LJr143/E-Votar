@@ -125,7 +125,10 @@ class ManageDatabaseBackup extends Component
                 $backup->backupFiles()->create([
                     'file_path' => $filePath,
                     'file_size' => Storage::disk('public')->size($filePath),
-                    'created_by' => auth()->id() ?? 34,
+                    'created_by' => auth()->id() ?? \App\Models\User::whereHas('roles', function ($query) {
+                            $query->where('name', 'technical_officer');
+                        })->first()?->id ?? 1,
+
                 ]);
 
                 Log::info('Backup completed', [

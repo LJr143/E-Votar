@@ -94,6 +94,7 @@ class VotersImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFa
             'account_status' => 'Pending Verification',
             'username'          => $normalized['email'],
             'password'          => Hash::make($normalized['student_id']),
+            ''
         ]);
 
         $user->save();

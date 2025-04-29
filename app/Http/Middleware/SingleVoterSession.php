@@ -50,7 +50,7 @@ class SingleVoterSession
                 session()->regenerateToken();
 
                 return redirect()->route($routeRedirect)->withErrors([
-                    'error' => 'You are already logged in on another device.',
+                    'error' => 'You are already/still logged in on another device. Please wait 15 minutes and try again. If this issue persist contact comelec technical support',
                 ]);
             }
 

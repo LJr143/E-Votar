@@ -36,7 +36,7 @@ class PermissionsSeeder extends Seeder
                 'create voter',
                 'edit voter',
                 'delete voter',
-                'verify voter'
+                'verify voter',
             ],
             'User Management' => [
                 'view users',

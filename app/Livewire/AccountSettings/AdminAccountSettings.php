@@ -83,7 +83,7 @@ class AdminAccountSettings extends Component
             'middleInitial' => 'nullable|string|max:1',
             'lastName' => 'required|string|max:255',
             'birthdate' => 'required|date',
-            'gender' => 'required|string|in:male,female,non-binary,other,prefer-not',
+            'gender' => 'required|string|in:Male,Female,Non-binary,Other,Prefer-not',
             'email' => 'required|email|unique:users,email,'.$user->id,
             'phone' => 'required|string|regex:/^9\d{2}\d{3}\d{4}$/',
         ]);
