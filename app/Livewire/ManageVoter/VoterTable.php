@@ -60,7 +60,10 @@ class VoterTable extends Component
         })
             ->orderBy('id', 'desc')
             ->when($this->search, function ($query) {
-                $query->where('first_name', 'like', '%' . $this->search . '%');
+                $matchingUserIds = User::searchEncrypted($this->search, ['first_name', 'last_name'])
+                    ->pluck('id');
+
+                $query->whereIn('id', $matchingUserIds);
             });
 
         if ($this->perPage === 'all') {

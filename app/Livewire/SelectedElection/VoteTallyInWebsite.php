@@ -12,7 +12,7 @@ use Livewire\Component;
 
 class VoteTallyInWebsite extends Component
 {
-    protected $listeners = ['updateChartData' => '$refresh'];
+    protected $listeners = ['updateChartData' => '$refresh', 'echo:vote-tally,VoteTallyUpdated' => '$refresh'];
     public $council;
     public $councilId;
     public $positionsWithCandidates = [];

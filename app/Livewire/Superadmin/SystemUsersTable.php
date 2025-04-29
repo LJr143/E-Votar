@@ -61,7 +61,9 @@ class SystemUsersTable extends Component
             ->where('id', '!=', auth()->id());
 
         if ($this->search) {
-            $query->where('first_name', 'like', '%' . $this->search . '%');
+            $matchingUserIds = User::searchEncrypted($this->search, ['first_name', 'last_name'])
+                ->pluck('id');
+            $query->whereIn('id', $matchingUserIds);
         }
 
         switch ($this->filter) {

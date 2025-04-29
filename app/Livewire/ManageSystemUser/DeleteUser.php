@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Livewire\Component;
+use Spatie\Permission\Models\Role;
 
 class DeleteUser extends Component
 {
@@ -52,6 +53,9 @@ class DeleteUser extends Component
         }
 
         $this->user->roles()->detach();
+
+        $voterRole = Role::firstOrCreate(['name' => 'voter']);
+        $this->user->assignRole($voterRole);
 
         session()->flash('success', 'User deleted successfully.');
         $this->password = '';

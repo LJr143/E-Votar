@@ -154,10 +154,9 @@ class ViewCandidate extends Component
             ->select('candidates.*'); // Ensure only candidate columns are selected
 
         if ($this->search) {
-            $query->whereHas('users', function ($q) {
-                $q->where('first_name', 'like', '%' . $this->search . '%')
-                    ->orWhere('last_name', 'like', '%' . $this->search . '%');
-            });
+            $matchingUserIds = User::searchEncrypted($this->search, ['first_name', 'last_name'])
+                ->pluck('id');
+            $query->whereIn('user_id', $matchingUserIds);
         }
 
         if ($this->selectedElection) {

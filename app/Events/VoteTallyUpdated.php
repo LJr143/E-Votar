@@ -15,20 +15,14 @@ class VoteTallyUpdated implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $candidate;
 
-    public function __construct($candidate)
+    public function __construct()
     {
-        $this->candidate = $candidate;
+        logger('event called');
     }
 
-    public function broadcastOn()
+    public function broadcastOn(): Channel
     {
         return new Channel('vote-tally');
-    }
-
-    public function broadcastAs()
-    {
-        return 'vote.updated';
     }
 }

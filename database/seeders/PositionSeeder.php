@@ -25,9 +25,7 @@ class PositionSeeder extends Seeder
             ['election_type_id'=>3, 'name' => 'Secretary'],
             ['election_type_id'=>3, 'name' => 'Treasurer'],
             ['election_type_id'=>3, 'name' => 'Auditor'],
-            ['election_type_id'=>3, 'name' => 'Senator'],
-            ['election_type_id'=>3, 'name' => 'Senator'],
-            ['election_type_id'=>3, 'name' => 'Senator'],
+            ['election_type_id'=>3, 'name' => 'Legislator'],
 
         ];
 

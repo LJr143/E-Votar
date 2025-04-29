@@ -15,17 +15,37 @@
 
         </div>
     </div>
+    <div class="w-full  mx-auto relative">
+        {{-- Circle Backgrounds --}}
+        <div class="hidden lg:block absolute inset-0 z-50 overflow-hidden">
+            <!-- Red Circle -->
+            <div class="absolute rounded-full"
+                 style="
+                width: 25%;
+                height: 0;
+                padding-bottom: 25%;
+                background: linear-gradient(#ba0404, #882222);
+                left: 20%;
+                top: 10%;
+             ">
+            </div>
 
-    <div class="w-full lg:max-w-[900px] mx-auto">
-        <div class="lg:flex hidden z-50 circle red-circle w-[200px] h-[200px]  sm:w-[300px] sm:h-[300px] md:w-[400px] md:h-[400px] bg-red-900 absolute rounded-full z-50 left-[50px] sm:left-[150px] md:left-[300px] top-[80px]"
-             style="background: linear-gradient( #ba0404, #882222);">
-
+            <!-- Yellow Circle -->
+            <div class="absolute rounded-full"
+                 style="
+                width: 25%;
+                height: 0;
+                padding-bottom: 25%;
+                background: linear-gradient(#9e2323, #ffc800);
+                right: 20%;
+                bottom: 10%;
+             ">
+            </div>
         </div>
 
-        <div
-            class="lg:flex hidden circle yellow-circle w-[200px] h-[200px] sm:w-[300px] sm:h-[300px] md:w-[400px] md:h-[400px]  bg-yellow-900 absolute rounded-full z-50 right-[50px] sm:right-[150px] md:right-[250px] bottom-[40px] sm:bottom-[60px]"
-            style="background: linear-gradient(#9e2323, #ffc800);">
-        </div>
+    <div class="w-full lg:max-w-[900px] mx-auto !bg-black">
+    {{--        circle design absolute--}}
+
 
 
         <x-authentication-card>

@@ -1,7 +1,7 @@
 <div x-data="{ open: false }" x-cloak @voter-updated.window="open = false">
     <!-- Trigger Button -->
     <button @click="open = true"
-            class="bg-white border border-gray-300 w-8 h-8 rounded-md flex items-center justify-center hover:bg-gray-200 focus:outline-none">
+            class="bg-white border border-gray-100 rounded p-1 w-[30px] flex-row  items-center justify-items-center hover:drop-shadow  hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110">
         <svg width="14" height="18" viewBox="0 0 17 17" fill="none"
              xmlns="http://www.w3.org/2000/svg">
             <path
@@ -251,7 +251,10 @@
             </form>
             <div class=" w-full flex justify-start mt-[-25px]">
                 @if($user->account_status == 'Active')
-                    <livewire:account-status-management.deactivation :user_id="$user->id"/>
+                   <div class="flex justify-between space-x-2">
+                       <livewire:account-status-management.deactivation :user_id="$user->id"/>
+                       <livewire:account-status-management.update-facial-data :user_id="$user->id"/>
+                   </div>
                 @elseif($user->account_status == 'Deactivated')
                     <livewire:account-status-management.activation :user_id="$user->id"/>
                 @elseif($user->account_status == 'Pending Verification')

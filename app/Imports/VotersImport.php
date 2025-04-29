@@ -9,6 +9,7 @@ use App\Models\program_major;
 use App\Models\User;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\SkipsFailures;
@@ -34,14 +35,12 @@ class VotersImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFa
         $this->currentRow++;
 
         $normalized = array_change_key_case($row, CASE_LOWER);
-        Log::info("Row {$this->currentRow} - Starting processing", ['data' => $normalized]);
 
         $requiredFields = ['first_name', 'last_name', 'email', 'campus', 'college', 'program'];
 
         foreach ($requiredFields as $field) {
             if (empty($normalized[$field])) {
                 $message = "Required field '{$field}' is missing or empty in row {$this->currentRow}";
-                Log::warning($message, ['row_data' => $normalized]);
                 throw new Exception($message);
             }
         }
@@ -49,21 +48,18 @@ class VotersImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFa
         $campus = Campus::where('name', $normalized['campus'])->first();
         if (!$campus) {
             $message = "Campus '{$normalized['campus']}' not found (Row {$this->currentRow})";
-            Log::error($message);
             throw new Exception($message);
         }
 
         $college = College::where('name', $normalized['college'])->first();
         if (!$college) {
             $message = "College '{$normalized['college']}' not found (Row {$this->currentRow})";
-            Log::error($message);
             throw new Exception($message);
         }
 
         $program = Program::where('name', $normalized['program'])->first();
         if (!$program) {
             $message = "Program '{$normalized['program']}' not found (Row {$this->currentRow})";
-            Log::error($message);
             throw new Exception($message);
         }
 
@@ -72,7 +68,6 @@ class VotersImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFa
             $major = program_major::where('name', $normalized['program_major'])->first();
             if (!$major) {
                 $message = "Major '{$normalized['program_major']}' not found (Row {$this->currentRow})";
-                Log::error($message);
                 throw new Exception($message);
             }
         }
@@ -98,7 +93,8 @@ class VotersImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFa
             'program_major_id'  => $major->id ?? null,
             'account_status' => 'Pending Verification',
             'username'          => $normalized['email'],
-            'password'          => \Hash::make($normalized['student_id']),
+            'password'          => Hash::make($normalized['student_id']),
+            ''
         ]);
 
         $user->save();
@@ -111,7 +107,7 @@ class VotersImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFa
 
 
     /**
-     * Parse birth date from various Excel formats
+     * Parse birthdate from various Excel formats
      */
     protected function parseBirthDate($dateValue): ?string
     {
@@ -216,7 +212,7 @@ class VotersImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFa
                 }
             ],
             'birth_date' => [
-                'nullable',
+                'nullable', 'date',
                 function ($attribute, $value, $fail) {
                     try {
                         if (is_numeric($value)) {

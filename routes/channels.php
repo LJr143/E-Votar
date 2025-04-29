@@ -16,3 +16,6 @@ Broadcast::channel('table-updates', function ($user) {
 Broadcast::channel('election-status', function ($user) {
     return true;
 });
+Broadcast::channel('vote-tally', function ($user) {
+    return true;
+});

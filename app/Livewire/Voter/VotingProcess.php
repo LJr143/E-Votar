@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Voter;
 
+use App\Events\TableUpdated;
+use App\Events\VoteTallyUpdated;
 use App\Helpers\EncryptionHelper;
 use App\Helpers\SteganographyHelper;
 use App\Models\AbstainVote;
@@ -25,12 +27,13 @@ class VotingProcess extends Component
     public $localCouncilPositions = [];
     public $showProceedButton = false;
 
-    protected $listeners = ['submitVotes'];
+    protected $listeners = ['submitVotes', 'echo:vote-tally,VoteTallyUpdated' => '$refresh',];
     public $selectedCandidates = [];
     public $showSummaryModal = false;
     public $showDuplicateErrorModal = false;
     public $duplicateError = '';
     public $abstainSelections = [];
+
 
     public function mount($slug)
     {
@@ -272,7 +275,7 @@ class VotingProcess extends Component
 
         $feedbackCode = Str::uuid(); // or use Str::random(16) for shorter code
 
-// Save the feedback code for the user and election
+        // Save the feedback code for the user and election
         FeedbackToken::create([
             'user_id' => auth()->id(),
             'election_id' => $this->election->id,
@@ -280,6 +283,7 @@ class VotingProcess extends Component
         ]);
 
         // Reset selections and show success message
+        event(new VoteTallyUpdated());
         $this->selectedCandidates = [];
         logger()->info("🚀 Dispatching vote-submitted event for election ID: " . $this->election->id);
         $this->dispatch('updateChartData', $this->election->id);
