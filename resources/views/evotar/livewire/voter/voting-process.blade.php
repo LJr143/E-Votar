@@ -125,7 +125,23 @@
                                                     </div>
                                                     <div class="flex flex-col items-center justify-center mb-1 mx-2 space-y-1">
                                                         <h3 class="text-green-600 uppercase font-bold text-[12px]">
-                                                            <span x-text="candidate.users?.first_name + ' ' + (candidate.users?.middle_initial ?? '') + '. ' + candidate.users?.last_name"></span>
+                                                           <span x-init="
+                                                                (async () => {
+                                                                    if (!candidate.users) {
+                                                                        $el.textContent = '';
+                                                                        return;
+                                                                    }
+
+                                                                    const decrypted = await $wire.decryptUserData(candidate.users);
+
+                                                                    let fullName = decrypted.first_name + ' ' +
+                                                                                 (decrypted.middle_initial ? decrypted.middle_initial + '. ' : '') +
+                                                                                 decrypted.last_name +
+                                                                                 (decrypted.extension ? ' ' + decrypted.extension : '');
+
+                                                                    $el.textContent = fullName;
+                                                                })()
+                                                            "></span>
                                                         </h3>
                                                         <p class="text-gray-700 capitalize text-[9px] px-2">
                                                             <span x-text="candidate.users?.year_level + ' year'"></span>

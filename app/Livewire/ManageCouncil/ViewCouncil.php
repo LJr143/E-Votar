@@ -207,7 +207,6 @@ class ViewCouncil extends Component
         $this->reset(['importing', 'importError', 'importErrors', 'importFile']);
     }
 
-
     public function exportCouncils()
     {
         return Excel::download(new CouncilExport($this->search), 'LIST_OF_COUNCILS.xlsx');
@@ -220,7 +219,7 @@ class ViewCouncil extends Component
             'councils' => Council::with('program')
                 ->when($this->search, function ($query) {
                     $query->where('name', 'like', '%'.$this->search.'%');
-                })
+                })->orderBy('id', 'desc')
                 ->paginate($this->perPage)
         ]);
     }

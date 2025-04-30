@@ -97,7 +97,7 @@
                                 </thead>
                                 <tbody>
                                 @foreach ($voteData['votes'] ?? [] as $vote)
-                                    <tr class="border-t text-white">
+                                    <tr class="border-t text-black">
                                         <td class="px-2 py-2 border">{{ $vote['position_name'] ?? '—' }}</td>
                                         <td class="px-2 py-2 border">{{ $vote['candidate_name'] ?? '—' }}</td>
                                         <td class="px-2 py-2 border">{{ $vote['party_list'] ?? 'Independent' }}</td>

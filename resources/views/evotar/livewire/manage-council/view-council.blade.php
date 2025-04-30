@@ -145,7 +145,7 @@
                                     </span>
                                     <x-input type="text" wire:model.live="search"
                                              class="text-[12px] bg-transparent border-0 focus:ring-0 focus:outline-none w-full h-8 px-2"
-                                             placeholder="Search elections..." aria-label="Search">
+                                             placeholder="Search councils..." aria-label="Search">
                                     </x-input>
                                 </div>
                             </div>
