@@ -99,10 +99,10 @@ class VoterElectionController extends Controller
             ->latest()
             ->first();
 
-        // Ensure the encoded vote exists
-        if (!$encodedVote) {
-            return redirect()->route('voter.dashboard')->with('error', 'No vote found to verify.');
-        }
+//        // Ensure the encoded vote exists
+//        if (!$encodedVote) {
+//            return redirect()->route('voter.dashboard')->with('error', 'No vote found to verify.');
+//        }
 
         // Pass the encoded vote to the view
         return view('evotar.voter.pages.vote-confirmation-page', [

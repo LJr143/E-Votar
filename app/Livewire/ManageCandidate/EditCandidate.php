@@ -22,6 +22,7 @@ use Livewire\Component;
     public $selectedElection = null;
     public $candidate_position = null;
     public $candidate_party_list = null;
+    public $election;
     public $candidate_description = '';
     public $candidateId;
     public $candidate;
@@ -33,10 +34,13 @@ use Livewire\Component;
         $this->selectUser($this->candidate->users->id);
         $this->selectedUser = $this->candidate->users->id;
         $this->selectedElection = $this->candidate->election_id;
+
         $this->candidate_position = $this->candidate->election_position_id;
         $this->updatedSelectedElection($this->candidate->election_id);
         $this->candidate_party_list = $this->candidate->party_list_id;
         $this->candidate_description = $this->candidate->description;
+
+        $this->election = Election::find($this->candidate->election_id);
 
         $this->fetchElection();
         $this->fetchPartyList();
@@ -97,6 +101,7 @@ use Livewire\Component;
             'candidate_party_list' => 'required|exists:party_lists,id',
 
         ]);
+
         $this->candidate->update([
             'user_id' => $this->selectedUser,
             'election_id' => $this->selectedElection,
@@ -110,6 +115,6 @@ use Livewire\Component;
     }
     public function render(): \Illuminate\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\View\View
     {
-        return view('evotar.livewire.manage-candidate.edit-candidate');
+        return view('evotar.livewire.manage-candidate.edit-candidate', ['election' => $this->election]);
     }
 }
