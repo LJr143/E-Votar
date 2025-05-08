@@ -3,15 +3,19 @@
 namespace App\Livewire\ManageCandidate;
 
 use App\Models\Candidate;
+use App\Models\Election;
 use Livewire\Component;
 
 class DeleteCandidate extends Component
 {
     public $candidate;
+    public $election;
 
     public function mount($candidateId): void
     {
         $this->candidate = Candidate::findOrFail($candidateId);
+        $this->election = Election::find($this->candidate->election_id);
+
     }
 
     public function deleteCandidate(): void
