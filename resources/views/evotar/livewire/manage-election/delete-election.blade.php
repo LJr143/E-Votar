@@ -53,7 +53,7 @@
                     {{ session('error') }}
                 </div>
             @endif
-            <p class="text-gray-700 mb-6 ml-5 text-xs text-left">Are you sure you want to remove this election? This process cannot be undone <strong>{{ $election->name }}</strong>.</p>
+            <p class="text-gray-700 mb-6 ml-5 text-xs text-left">Are you sure you want to remove this election? This process <br> cannot be undone <strong>{{ $election->name }}</strong>.</p>
             <form wire:submit.prevent="deleteElection">
                 <div class="text-left">
                     <x-input
@@ -62,7 +62,7 @@
                         class="border border-gray-300 rounded w-full p-2 text-sm"
                         placeholder="Enter your password"
                     />
-                    @error('password') <span class="text-red-500 text-left text-xs">{{ $message }}</span> @enderror
+                    @error('password') <div class="text-red-500 text-[10px] sm:text-[12px]">{{ $message }}</div> @enderror
                 </div>
 
                 <!-- Buttons -->
