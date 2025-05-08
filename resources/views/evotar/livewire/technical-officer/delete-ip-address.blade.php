@@ -57,9 +57,8 @@
                         class="border border-gray-300 rounded w-full p-2 text-sm"
                         placeholder="Enter your password"
                     />
-                    @error('password') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                    @error('password') <div class="text-red-500 text-[10px] sm:text-[12px]">{{ $message }}</div> @enderror
                 </div>
-
                 <!-- Buttons -->
                 <div class="flex justify-end mt-4 space-x-2">
                     <button @click="open = false" type="button" class="px-4 py-2 border rounded-md text-xs">

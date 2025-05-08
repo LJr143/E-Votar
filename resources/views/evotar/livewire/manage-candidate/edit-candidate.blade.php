@@ -46,8 +46,9 @@
             x-transition:leave="transition ease-in duration-200"
             x-transition:leave-start="opacity-100 transform scale-100"
             x-transition:leave-end="opacity-0 transform scale-90"
-            class="bg-white p-6 rounded shadow-md w-2/5 max-h-[700px] z-[10000]"
+            class="bg-white p-6 rounded shadow-md w-11/12 sm:w-2/5 max-h-[700px] z-[10000]"
         >
+
 
             <div class="flex justify-between items-center mb-4 border-b border-gray-300 pb-2">
                 <div>
