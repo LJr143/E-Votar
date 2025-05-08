@@ -119,7 +119,7 @@
                             <div class="relative w-full md:w-[250px]">
                                 <x-input type="text" wire:model.live="search"
                                          class="rounded-md text-[12px] border bg-white text-black border-gray-300 h-8 pl-8 pr-4 focus:ring-1 focus:ring-black focus:border-black w-full"
-                                         placeholder="Search elections..." aria-label="Search"></x-input>
+                                         placeholder="Search candidates..." aria-label="Search"></x-input>
                                 <span class="absolute left-3 top-1/2 transform -translate-y-1/2">
                                                 <svg width="12" height="12" viewBox="0 0 14 14" fill="none"
                                                      xmlns="http://www.w3.org/2000/svg">

@@ -7,11 +7,9 @@
      x-data="{
         selectedCandidates: {},
         collectVotes() {
-            let inputs = document.querySelectorAll('input[name^=selected_candidate]');
+            let inputs = document.querySelectorAll('input[name^=selected_candidate]:checked');
             inputs.forEach(input => {
-                if (input.value) {
-                    this.selectedCandidates[input.name] = input.value;
-                }
+                this.selectedCandidates[input.name] = input.value;
             });
             return this.selectedCandidates;
         }
@@ -38,126 +36,118 @@
         </p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+    <div class="grid grid-cols-1 gap-4 mt-4">
         @foreach ($positions as $position)
             @for ($i = 1; $i <= $position->num_winners; $i++)
-                <div class="border px-2 py-2 rounded-lg w-[310px]" wire:key="{{ $currentStage }}_{{ $position->id }}_{{ $i }}">
-                    <h3 class="uppercase font-semibold text-center text-[12px]">
+                <div class="border px-4 py-4 rounded-lg w-full" wire:key="{{ $currentStage }}_{{ $position->id }}_{{ $i }}">
+                    <h3 class="uppercase font-semibold text-center text-[14px] mb-4">
                         {{ $position->name }} (Vote {{ $i }})
                     </h3>
 
+                    @php
+                        $hasCandidates = $position->candidates->count() > 0;
+                        $currentSelection = $selectedCandidates["selected_candidate_{$position->id}_{$i}"] ?? ($hasCandidates ? 'abstain' : '');
+                    @endphp
+
                     <div x-data="{
-                        activeIndex: 0,
-                        candidates: [],
-                        selectedId: '{{ $selectedCandidates["selected_candidate_{$position->id}_{$i}"] ?? 'abstain' }}',
-                        total() { return this.candidates.length; },
-                        next() { this.activeIndex = (this.activeIndex + 1) % this.total(); },
-                        prev() { this.activeIndex = (this.activeIndex - 1 + this.total()) % this.total(); },
-                        getCurrentCandidate() { return this.candidates[this.activeIndex] ?? null; },
-                        updateCandidates(newCandidates) { this.candidates = newCandidates; },
-                        getActiveCandidateId() {
-                            return this.getCurrentCandidate()?.id === 'abstain' ? 'abstain' : this.getCurrentCandidate()?.id;
+                        selectedId: '{{ $currentSelection }}',
+                        selectCandidate(candidateId) {
+                            this.selectedId = candidateId;
+                            // Uncheck all other radios in this group
+                            document.querySelectorAll(`input[name='selected_candidate_{{ $position->id }}_{{ $i }}']`).forEach(radio => {
+                                radio.checked = (radio.value === candidateId);
+                            });
                         }
-                    }"
-                         x-init="updateCandidates([
-                             { id: 'abstain', abstain: true, display_text: 'ABSTAIN FROM VOTING' },
-                             ...{{ $position->candidates->toJson() }}
-                         ]);
-                         let selectedIndex = candidates.findIndex(c => c.id == selectedId);
-                         activeIndex = selectedIndex >= 0 ? selectedIndex : 0;"
-                         class="relative flex flex-col items-center justify-center p-4 min-h-[250px] overflow-hidden" wire:ignore>
+                    }" class="w-full">
 
-                        <!-- Navigation Buttons -->
-                        <button @click="prev"
-                                class="absolute left-0 p-2 rounded bg-gray-800 hover:bg-gray-800 text-black hover:text-white z-10">
-                            ❮
-                        </button>
-                        <button @click="next"
-                                class="absolute right-0 p-2 bg-gray-800 rounded hover:bg-gray-800 text-black hover:text-white z-10">
-                            ❯
-                        </button>
-
-                        <!-- Candidate Display with Smooth Slide Effect -->
-                        <div class="relative w-[250px] h-[290px] overflow-hidden">
-                            <template x-for="(candidate, index) in candidates" :key="candidate.id">
-                                <div class="absolute inset-0 transition-transform ease-in-out duration-500"
-                                     :style="'transform: translateX(' + ((index - activeIndex) * 100) + '%);'">
-
-                                    <div class="relative bg-white px-6 py-4 min-h-[150px] w-[250px] text-center rounded-lg">
-                                        <template x-if="candidate.abstain">
-                                            <!-- Abstain Option Display -->
-                                            <div class="flex flex-col items-center justify-center min-h-full">
-                                                <div class="text-center min-h-[250px] w-[250px] flex flex-col justify-center items-center bg-white rounded-lg p-4 shadow-sm border border-gray-200">
-                                                    <div class="mb-2 flex justify-center">
-                                                        <div class="border-2 border-red-200 rounded-full p-1">
-                                                            <img class="w-[105px] h-[105px] object-cover rounded-full"
-                                                                 src="{{ asset('storage/assets/image/Abstain.jpg') }}"
-                                                                 alt="Abstain from voting">
-                                                        </div>
-                                                    </div>
-                                                    <div class="flex items-center justify-center mb-2">
-                                                        <svg class="w-5 h-5 mr-1 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-12.728 12.728M5.636 5.636l12.728 12.728"></path>
-                                                        </svg>
-                                                        <h3 class="text-red-600 uppercase font-bold text-[12px]">
-                                                            Abstain From Voting
-                                                        </h3>
-                                                    </div>
-                                                    <p class="text-gray-700 text-[10px] mb-2 px-2">
-                                                        By selecting this option, you choose not to vote for any candidate in this position.
-                                                    </p>
-                                                    <p class="text-gray-500 text-[8px] italic mt-1">
-                                                        Use the navigation arrows to review candidates or confirm abstention
-                                                    </p>
-                                                </div>
+                        @if($hasCandidates)
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                                <!-- Abstain Option -->
+                                <div @click="selectCandidate('abstain')"
+                                     :class="{'border-2 border-green-500 bg-green-50': selectedId === 'abstain', 'border border-gray-200': selectedId !== 'abstain'}"
+                                     class="cursor-pointer rounded-lg p-4 transition-all duration-200 hover:shadow-md">
+                                    <div class="flex flex-col items-center justify-center h-full">
+                                        <div class="mb-2 flex justify-center">
+                                            <div class="border-2 border-red-200 rounded-full p-1">
+                                                <img class="w-[80px] h-[80px] object-cover rounded-full"
+                                                     src="{{ asset('storage/assets/image/Abstain.jpg') }}"
+                                                     alt="Abstain from voting">
                                             </div>
-                                        </template>
-                                        <template x-if="!candidate.abstain">
-                                            <!-- Regular Candidate Display -->
-                                            <div class="flex flex-col items-center justify-center min-h-full">
-                                                <div class="text-center min-h-[250px] w-[250px] flex flex-col justify-center items-center bg-white rounded-lg p-4 shadow-sm border border-gray-200">
-                                                    <div class="mb-2 flex justify-center">
-                                                        <div class="border-2 border-red-200 rounded-full p-1">
-                                                            <img class="w-[105px] h-[105px] object-cover rounded-full"
-                                                                 x-bind:src="candidate.users?.profile_photo_path ? '{{ asset('storage') }}/' + candidate.users.profile_photo_path : '{{ asset('storage/assets/profile/cat_meme.jpg') }}'"
-                                                                 x-bind:alt="candidate.users?.first_name + ' ' + candidate.users?.last_name + ' profile photo'">
-                                                        </div>
-                                                    </div>
-                                                    <div class="flex flex-col items-center justify-center mb-1 mx-2 space-y-1">
-                                                        <h3 class="text-green-600 uppercase font-bold text-[12px]">
-                                                            <span x-text="candidate.users?.first_name + ' ' + (candidate.users?.middle_initial ?? '') + '. ' + candidate.users?.last_name"></span>
-                                                        </h3>
-                                                        <p class="text-gray-700 capitalize text-[9px] px-2">
-                                                            <span x-text="candidate.users?.year_level + ' year'"></span>
-                                                        </p>
-                                                        <p class="text-gray-700 capitalize text-[10px] px-2 leading-none">
-                                                            <span class="program-name !text-[10px]" x-text="candidate.users?.program?.name"></span>
-                                                        </p>
-                                                        <p class="text-gray-700 capitalize text-[10px] px-2 leading-none">
-                                                            <span x-text="candidate.users?.program_major?.name ?? ''"></span>
-                                                        </p>
-                                                        <p class="text-black capitalize px-2 text-[10px]">
-                                                            <span x-text="candidate.party_lists?.name ?? ''"></span>
-                                                        </p>
-                                                        <div class="mt-2 px-2 max-w-[250px]">
-                                                            <p class="text-[8px] italic text-center leading-tight overflow-hidden text-ellipsis whitespace-nowrap"
-                                                               :class="{ 'text-gray-400': !candidate.description, 'text-gray-600': candidate.description }"
-                                                               :title="candidate.description ? candidate.description : 'No motto/advocacy provided'"
-                                                               x-text="candidate.description ? '“' + candidate.description + '”' : 'No motto/advocacy provided'"></p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </template>
+                                        </div>
+                                        <div class="flex items-center justify-center mb-2">
+                                            <svg class="w-5 h-5 mr-1 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-12.728 12.728M5.636 5.636l12.728 12.728"></path>
+                                            </svg>
+                                            <h3 class="text-red-600 uppercase font-bold text-[12px]">
+                                                Abstain From Voting
+                                            </h3>
+                                        </div>
+                                        <p class="text-gray-700 text-[10px] text-center">
+                                            Choose not to vote for any candidate in this position
+                                        </p>
                                     </div>
+                                    <input type="radio" name="selected_candidate_{{ $position->id }}_{{ $i }}"
+                                           x-model="selectedId" value="abstain" class="hidden"
+                                           :checked="selectedId === 'abstain'">
                                 </div>
-                            </template>
-                        </div>
 
-                        <!-- Hidden Input to Store Active Candidate ID -->
-                        <input type="hidden"
-                               name="selected_candidate_{{ $position->id }}_{{ $i }}"
-                               x-model="getActiveCandidateId()">
+                                <!-- Candidate Options -->
+                                @foreach($position->candidates as $candidate)
+                                    <div @click="selectCandidate('{{ $candidate->id }}')"
+                                         :class="{'border-2 border-green-500 bg-green-50': selectedId === '{{ $candidate->id }}', 'border border-gray-200': selectedId !== '{{ $candidate->id }}'}"
+                                         class="cursor-pointer rounded-lg p-4 transition-all duration-200 hover:shadow-md">
+                                        <div class="flex flex-col items-center justify-center h-full">
+                                            <div class="mb-2 flex justify-center">
+                                                <div class="border-2 border-red-200 rounded-full p-1">
+                                                    <img class="w-[80px] h-[80px] object-cover rounded-full"
+                                                         src="{{ $candidate->users->profile_photo_path ? asset('storage/'.$candidate->users->profile_photo_path) : asset('storage/assets/profile/cat_meme.jpg') }}"
+                                                         alt="{{ $candidate->users->first_name }} {{ $candidate->users->last_name }} profile photo">
+                                                </div>
+                                            </div>
+                                            <div class="flex flex-col items-center justify-center mb-1 mx-2 space-y-1">
+                                                <h3 class="text-green-600 uppercase font-bold text-[12px] text-center">
+                                                    @php
+                                                        // Decrypt the name server-side for initial load
+                                                        $decrypted = $this->decryptUserData($candidate->users);
+                                                        $fullName = $decrypted['first_name'] . ' ' .
+                                                                   ($decrypted['middle_initial'] ? $decrypted['middle_initial'] . '. ' : '') .
+                                                                   $decrypted['last_name'] .
+                                                                   ($decrypted['extension'] ? ' ' . $decrypted['extension'] : '');
+                                                    @endphp
+                                                    {{ $fullName }}
+                                                </h3>
+                                                <p class="text-gray-700 capitalize text-[9px] px-2">
+                                                    <span>{{ $candidate->users->year_level }} year</span>
+                                                </p>
+                                                <p class="text-gray-700 capitalize text-[10px] px-2 leading-none">
+                                                    <span class="program-name !text-[10px]">{{ $candidate->users->program->name }}</span>
+                                                </p>
+                                                <p class="text-gray-700 capitalize text-[10px] px-2 leading-none">
+                                                    <span>{{ $candidate->users->program_major->name ?? '' }}</span>
+                                                </p>
+                                                <p class="text-black capitalize px-2 text-[10px]">
+                                                    <span>{{ $candidate->party_lists->name ?? '' }}</span>
+                                                </p>
+                                                <div class="mt-2 px-2 max-w-[250px]">
+                                                    <p class="text-[8px] italic text-center leading-tight overflow-hidden text-ellipsis whitespace-nowrap"
+                                                       title="{{ $candidate->description ?: 'No motto/advocacy provided' }}">
+                                                        {{ $candidate->description ? '“'.$candidate->description.'”' : 'No motto/advocacy provided' }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <input type="radio" name="selected_candidate_{{ $position->id }}_{{ $i }}"
+                                               x-model="selectedId" value="{{ $candidate->id }}" class="hidden"
+                                               :checked="selectedId === '{{ $candidate->id }}'">
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <div class="text-center py-4 text-gray-500">
+                                No candidates available for this position. You may proceed to the next.
+                            </div>
+                            <input type="hidden" name="selected_candidate_{{ $position->id }}_{{ $i }}" value="">
+                        @endif
                     </div>
                 </div>
             @endfor
@@ -165,45 +155,45 @@
     </div>
 
     <!-- Navigation Buttons -->
-    <div class="text-center mt-4 mb-4 w-full flex justify-end items-end">
+    <div class="text-center mt-4 mb-4 w-full flex flex-col sm:flex-row justify-end items-end gap-2">
         @if ($showProceedButton && $currentStage === 'local')
-            <div x-data="{ loading: false }">
+            <div x-data="{ loading: false }" class="w-full sm:w-auto">
                 <button
                     @click="loading = true; collectVotes();
-                    $wire.addSelections(selectedCandidates)
-                    .then(() => $wire.goBackToStudentCouncilElection())
-                    .catch(() => { /* Handle error here */ })
-                    .finally(() => loading = false);"
+                $wire.addSelections(selectedCandidates)
+                .then(() => $wire.goBackToStudentCouncilElection())
+                .catch(() => { /* Handle error here */ })
+                .finally(() => loading = false);"
                     x-bind:disabled="loading"
-                    class="text-white text-[12px] px-4 py-2 mb-4 rounded w-[220px] bg-gray-500 flex items-center justify-center">
+                    class="text-white text-[12px] px-4 py-2 rounded w-full sm:w-[250px] bg-gray-500 flex items-center justify-center">
                     <span x-show="!loading">Back to Student Council Election</span>
                     <span x-show="loading" class="animate-spin border-2 border-white border-t-transparent rounded-full w-5 h-5 ml-2"></span>
                 </button>
             </div>
         @endif
 
-        <div x-data="{ loading: false }" class="w-full flex justify-end items-end">
+        <div x-data="{ loading: false }" class="w-full sm:w-auto">
             @if ($showProceedButton && $currentStage === 'student')
                 <button
                     @click="loading = true; collectVotes();
-                    $wire.addSelections(selectedCandidates)
-                    .then(() => $wire.proceedToLocalCouncilElection())
-                    .catch(() => { /* Handle error here */ })
-                    .finally(() => loading = false);"
+                $wire.addSelections(selectedCandidates)
+                .then(() => $wire.proceedToLocalCouncilElection())
+                .catch(() => { /* Handle error here */ })
+                .finally(() => loading = false);"
                     x-bind:disabled="loading"
-                    class="text-white px-4 py-2 text-[12px] mb-4 rounded w-[280px] bg-black flex items-center justify-center">
+                    class="text-white px-4 py-2 text-[12px] rounded w-full sm:w-[280px] bg-black flex items-center justify-center">
                     <span x-show="!loading">Proceed to Local Council Election</span>
                     <span x-show="loading" class="animate-spin border-2 border-white border-t-transparent rounded-full hover:bg-gray-700 w-5 h-5 ml-2"></span>
                 </button>
             @else
                 <button
                     @click="loading = true; collectVotes();
-                    $wire.addSelections(selectedCandidates)
-                    .then(() => $wire.showSummary())
-                    .catch(() => { /* Handle error here */ })
-                    .finally(() => loading = false);"
+                $wire.addSelections(selectedCandidates)
+                .then(() => $wire.showSummary())
+                .catch(() => { /* Handle error here */ })
+                .finally(() => loading = false);"
                     x-bind:disabled="loading"
-                    class="text-white px-4 py-2 text-[12px] mb-4 rounded w-[280px] bg-green-600 flex items-center justify-center">
+                    class="text-white px-4 py-2 text-[12px] rounded w-full sm:w-[280px] bg-green-600 flex items-center justify-center">
                     <span x-show="!loading">Submit Vote</span>
                     <span x-show="loading" class="animate-spin border-2 border-white border-t-transparent rounded-full w-5 h-5 ml-2"></span>
                 </button>
@@ -346,7 +336,7 @@
                                                     {{ $positionVotes[$i]->users->first_name }} {{ $positionVotes[$i]->users->last_name }}
                                                 </div>
                                             @else
-                                                <span class="text-gray-500">No selection</span>
+                                                <span class="text-gray-500">No Candidate for this position</span>
                                             @endif
                                         @endfor
                                     </div>
@@ -387,7 +377,7 @@
                                                     {{ $positionVotes[$i]->users->first_name }} {{ $positionVotes[$i]->users->last_name }}
                                                 </div>
                                             @else
-                                                <span class="text-gray-500">No selection</span>
+                                                <span class="text-gray-500">No Candidate for this position</span>
                                             @endif
                                         @endfor
                                     </div>

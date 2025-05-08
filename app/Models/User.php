@@ -10,6 +10,7 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Session;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
@@ -164,6 +165,15 @@ class User extends Authenticatable
         return $this->is_verified &&
             ($this->verification_expires_at === null ||
                 $this->verification_expires_at->year - 1 == now()->year);
+    }
+
+    public function getDecryptedAttribute($attribute)
+    {
+        try {
+            return $this->$attribute ? Crypt::decrypt($this->$attribute) : null;
+        } catch (\Exception $e) {
+            return $this->$attribute;
+        }
     }
 
 }

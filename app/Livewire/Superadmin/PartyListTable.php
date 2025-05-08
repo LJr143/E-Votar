@@ -6,6 +6,7 @@ use App\Exports\PartyListExport;
 use App\Imports\CouncilImport;
 use App\Imports\PartyListImport;
 use App\Models\PartyList;
+use App\Models\User;
 use Livewire\Component;
 use Livewire\Features\SupportFileUploads\WithFileUploads;
 use Livewire\WithPagination;
@@ -40,7 +41,8 @@ class PartyListTable extends Component
 
     public function getPartyListsProperty(): \Illuminate\Database\Eloquent\Collection
     {
-        $query = PartyList::with('candidates');
+        $query = PartyList::with('candidates')
+            ->orderBy('id', 'desc');
 
         // Apply search filter
         if ($this->search) {
@@ -229,21 +231,24 @@ class PartyListTable extends Component
         $this->reset(['importing', 'importError', 'importErrors', 'importFile']);
     }
 
-
     public function render(): \Illuminate\Contracts\View\View
     {
         $query = PartyList::with(['candidates' => function($query) {
             $query->with('users');
-        }]);
+        }])->orderBy('id', 'desc');
 
         // Apply search filter
         if ($this->search) {
             $query->where(function($q) {
                 $q->where('name', 'like', '%' . $this->search . '%')
                     ->orWhereHas('candidates', function($q) {
-                        $q->whereHas('users', function($q) {
-                            $q->where('first_name', 'like', '%' . $this->search . '%')
-                                ->orWhere('last_name', 'like', '%' . $this->search . '%');
+                        $q->whereHas('users', function ($q) {
+                            $q->when($this->search, function ($query) {
+                                $matchingUserIds = User::searchEncrypted($this->search, ['first_name', 'last_name'])
+                                    ->pluck('id');
+
+                                $query->whereIn('id', $matchingUserIds);
+                            });
                         });
                     });
             });

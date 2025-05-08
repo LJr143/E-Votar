@@ -33,8 +33,12 @@ class AddCandidates extends Component
     {
         $this->users = User::role('voter')
         ->where(function ($query) {
-            $query->where('first_name', 'like', '%' . $this->search . '%')
-                ->orWhere('last_name', 'like', '%' . $this->search . '%');
+            $query->when($this->search, function ($query) {
+                $matchingUserIds = User::searchEncrypted($this->search, ['first_name', 'last_name'])
+                    ->pluck('id');
+
+                $query->whereIn('id', $matchingUserIds);
+            });
         })
             ->take(5)
             ->get();

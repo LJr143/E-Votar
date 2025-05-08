@@ -93,7 +93,6 @@ Route::get('/api/election-end-time/{electionId}', function ($electionId) {
     if ($election) {
         $startTime = Carbon::parse($election->date_started)->timezone('Asia/Manila')->toIso8601String();
         $endTime = Carbon::parse($election->date_ended)->timezone('Asia/Manila')->toIso8601String();
-        dd($endTime);
         return response()->json(['start_time' => $startTime, 'end_time' => $endTime]);
     }
 

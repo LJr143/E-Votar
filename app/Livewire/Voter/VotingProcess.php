@@ -13,6 +13,7 @@ use App\Models\FeedbackToken;
 use App\Models\Vote;
 use App\Models\VoterEncodeVote;
 use Exception;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Livewire\Component;
@@ -88,6 +89,31 @@ class VotingProcess extends Component
         if ($this->currentStage === 'local') {
             $this->currentStage = 'student';
         }
+    }
+
+    public function decrypt($value)
+    {
+        try {
+            return Crypt::decrypt($value);
+        } catch (\Exception $e) {
+            return $value; // Return original if decryption fails
+        }
+    }
+    public function decryptForFrontend($value)
+    {
+        return $this->decrypt($value);
+    }
+
+    public function decryptUserData($userData): ?array
+    {
+        if (!$userData) return null;
+
+        return [
+            'first_name' => $userData['first_name'] ? $this->decrypt($userData['first_name']) : '',
+            'last_name' => $userData['last_name'] ? $this->decrypt($userData['last_name']) : '',
+            'middle_initial' => $userData['middle_initial'] ? $this->decrypt($userData['middle_initial']) : '',
+            'extension' => $userData['extension'] ? $this->decrypt($userData['extension']) : ''
+        ];
     }
 
     public function showSummary(): void

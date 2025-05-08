@@ -1,12 +1,13 @@
 <div>
-    <div class="flex flex-col md:flex-row w-full gap-4">
+    <div class="flex w-full gap-4 min">
         <div id="all_elections" class="w-full">
             <div class="bg-white shadow-md rounded p-6">
-                <div class="sm:p-5 rounded-md md:max-w-[800px] min-[90%]:max-w-[100%] lg:max-w-[900px] xl:w-[100%] xl:min-w-[100%] 2xl:max-w-[1190px]">
-                    <div class="flex flex-col lg:flex-row w-full items-center gap-2 justify-between">
-                        <div class="flex items-center w-full lg:w-auto justify-between flex-wrap md:flex-nowrap gap-2">
+                <div
+                    class="bg-white mt-0 p-5 rounded-md md:max-w-[800px] min-[90%]:max-w-[100%] lg:max-w-[900px] xl:w-[100%] xl:min-w-[100%] 2xl:max-w-[1190px]">
+                    <div class="flex flex-col md:flex-row w-full items-center justify-between">
+                        <div class="flex items-center justify-between flex-wrap md:flex-nowrap gap-2">
                             <button
-                                class="bg-white border border-gray-300 rounded h-8 px-3 py-2 flex items-center whitespace-nowrap justify-center w-full lg:w-auto text-center space-x-1 hover:drop-shadow hover:bg-gray-200 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"
+                                class="bg-white border border-gray-300 rounded h-8 px-3 py-2 flex items-center justify-center w-full sm:w-auto text-center space-x-1 hover:drop-shadow hover:bg-gray-200 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"
                                 wire:click="exportCouncils"
                                 wire:loading.attr="disabled">
                                 <svg wire:loading.remove wire:target="exportCouncils" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"
@@ -24,7 +25,7 @@
                                 <span wire:loading wire:target="exportCouncils">Exporting...</span>
                             </button>
                             <button
-                                class="bg-white border border-gray-300 rounded h-8 px-3 py-2 flex items-center justify-center w-full lg:w-auto whitespace-nowrap text-center space-x-1 hover:drop-shadow hover:bg-gray-200 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"
+                                class="bg-white border border-gray-300 rounded h-8 px-3 py-2 flex items-center justify-center w-full sm:w-auto text-center space-x-1 hover:drop-shadow hover:bg-gray-200 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"
                                 wire:click="$toggle('importing')"
                                 wire:loading.attr="disabled">
                                 <svg wire:loading.remove wire:target="import" width="12" height="18" viewBox="0 0 16 19" fill="none"
@@ -111,7 +112,7 @@
                                 </div>
                             @endif
                             <button
-                                class="bg-green-600 border text-white border-gray-300 rounded h-8 px-3 py-2 flex items-center whitespace-nowrap justify-center w-full lg:w-auto text-center mb-2 sm:mb-0 space-x-1 hover:drop-shadow hover:bg-gray-200 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"
+                                class="bg-green-600 border text-white border-gray-300 rounded h-8 px-3 py-2 flex items-center justify-center w-full sm:w-auto text-center mb-2 sm:mb-0 space-x-1 hover:drop-shadow hover:bg-gray-200 hover:scale-105 hover:ease-in-out hover:duration-300 transition-all duration-300 [transition-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)] active:-translate-y-1 active:scale-x-90 active:scale-y-110"
                                 wire:click="downloadExcelFormat"
                                 wire:loading.attr="disabled">
                                 <svg wire:loading.remove wire:target="downloadExcelFormat" width="12" height="18" viewBox="0 0 16 19" fill="none"
@@ -133,8 +134,8 @@
                         </div>
 
 
-                        <div class="flex items-center gap-2 w-full lg:w-auto">
-                            <div class="w-full lg:w-[250px]">
+                        <div class="flex items-center gap-2">
+                            <div class="w-full md:w-[250px]">
                                 <!-- Search Input -->
                                 <div class="flex items-center border bg-white text-black border-gray-300 rounded-md h-8 px-3">
                                     <span class="flex items-center">
@@ -144,7 +145,7 @@
                                     </span>
                                     <x-input type="text" wire:model.live="search"
                                              class="text-[12px] bg-transparent border-0 focus:ring-0 focus:outline-none w-full h-8 px-2"
-                                             placeholder="Search council..." aria-label="Search">
+                                             placeholder="Search councils..." aria-label="Search">
                                     </x-input>
                                 </div>
                             </div>
@@ -163,7 +164,7 @@
                                 {{--                                           @click="checkboxes.forEach(checkbox => checkbox.checked = $event.target.checked)"--}}
                                 {{--                                           type="checkbox">--}}
                                 {{--                                </th>--}}
-                                <th class="py-3 px-6 rounded-tl-lg  border-b border-gray-300">Id</th>
+                                <th class="py-3 px-6 border-b border-gray-300">Id</th>
                                 <th class="py-3 px-6 border-b border-gray-300">Council Name</th>
                                 <th class="py-3 px-6 rounded-tr-lg border-b border-gray-300 exclude-print">Actions</th>
                             </tr>
@@ -213,11 +214,11 @@
                                 </p>
                             </div>
                         @endif
+                        <div class="mt-4" wire:key="pagination-table">
+                            {{ $councils->links('evotar.components.pagination.tailwind-pagination') }}
+                        </div>
+                    </div>
 
-                    </div>
-                    <div class="mt-4" wire:key="pagination-table">
-                        {{ $councils->links('evotar.components.pagination.tailwind-pagination') }}
-                    </div>
                 </div>
             </div>
         </div>

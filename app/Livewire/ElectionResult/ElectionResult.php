@@ -107,12 +107,12 @@ class ElectionResult extends Component
 
         try {
             $this->totalVoters = User::where('campus_id', $election->campus_id)
-                ->whereHas('roles', fn($q) => $q->where('name', 'voter'))
+//                ->whereHas('roles', fn($q) => $q->where('name', 'voter'))
                 ->whereDoesntHave('electionExcludedVoters', fn($q) => $q->where('election_id', $election->id))
                 ->count();
 
             $this->totalVoterVoted = User::where('campus_id', $election->campus_id)
-                ->whereHas('roles', fn($q) => $q->where('name', 'voter'))
+//                ->whereHas('roles', fn($q) => $q->where('name', 'voter'))
                 ->whereDoesntHave('electionExcludedVoters', fn($q) => $q->where('election_id', $election->id))
                 ->whereHas('votes', fn($q) => $q->where('election_id', $election->id))
                 ->count();
@@ -243,13 +243,15 @@ class ElectionResult extends Component
                 ->having('votes_count', '>', 0)
                 ->get()
                 ->groupBy(function ($candidate) use ($councilPositionSettings) {
-                    $councilId = $candidate->users->program->council->id;
-                    $separateByMajor = $councilPositionSettings->where('council_id', $councilId)->first()->separate_by_major ?? false;
+                    $councilId = $candidate->users->program->council->id ?? '';
+                    if($councilId){
+                        $separateByMajor = $councilPositionSettings->where('council_id', $councilId)->first()->separate_by_major ?? false;
 
-                    if ($separateByMajor) {
-                        return $councilId . '-' . $candidate->users->major; // Group by council and major
-                    } else {
-                        return $councilId; // Group by council only
+                        if ($separateByMajor) {
+                            return $councilId . '-' . $candidate->users->major; // Group by council and major
+                        } else {
+                            return $councilId;
+                        }
                     }
                 });
 
