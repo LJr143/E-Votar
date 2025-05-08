@@ -97,6 +97,7 @@ use Livewire\Component;
             'candidate_party_list' => 'required|exists:party_lists,id',
 
         ]);
+
         $this->candidate->update([
             'user_id' => $this->selectedUser,
             'election_id' => $this->selectedElection,

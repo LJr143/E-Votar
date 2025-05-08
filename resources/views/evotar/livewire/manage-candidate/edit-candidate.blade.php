@@ -52,8 +52,14 @@
             <div class="flex justify-between items-center mb-4 border-b border-gray-300 pb-2">
                 <div>
                     <h2 class="text-sm font-bold text-left w-full sm:w-auto">Edit Candidate</h2>
+                    @if($selectedElection->status == 'completed' || $selectedElection->status == 'ongoing')
+                        <p class="text-[10px] text-gray-500 italic">
+                            You are in <span class="text-red-600 font-semibold">read-only mode</span>. Updates are not permitted while the election is ongoing or has started.
+                        </p>
+                    @else
                     <p class="text-[10px] text-gray-500 italic">To edit a candidate please provide the required
                         information. note that candidates should be a valid voter.</p>
+                    @endif
                 </div>
                 <!-- Close Button (X) -->
                 <button @click="open = false" class="text-gray-500 hover:text-gray-700">
@@ -61,8 +67,9 @@
                 </button>
             </div>
 
-            <form wire:submit.prevent="submit">
+            <form wire:submit.prevent="submit" readonly>
                 <div>
+                    <fieldset @disabled(in_array($selectedElection->status, ['completed', 'ongoing']))>
                     <div class="flex space-x-4 w-full">
                         <div x-data="{ isOpen: false }" class="flex-col w-full">
                             <div class="mb-3 relative">
@@ -168,6 +175,7 @@
                             Save Changes
                         </button>
                     </div>
+                    </fieldset>
                 </div>
 
             </form>
