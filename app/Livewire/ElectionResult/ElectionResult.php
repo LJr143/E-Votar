@@ -370,6 +370,7 @@ class ElectionResult extends Component
             'totalVoters' => $this->totalVoters,
             'totalVoterVoted' => $this->totalVoterVoted,
             'councils' => $this->councils,
+            'latestElection' => $this->latestElection,
             'hasStudentCouncilPositions' => $this->hasStudentCouncilPositions,
             'hasLocalCouncilPositions' => $this->hasLocalCouncilPositions,
             'studentCouncilWinners' => $this->studentCouncilWinners,
