@@ -18,16 +18,20 @@
             <div class="flex items-center gap-4">
                 <div class="flex items-center gap-2 hidden sm:flex">
                     <div class="h-8 w-8 rounded-full overflow-hidden">
-                        <img alt="USeP_logo" class="h-full w-full  object-cover" height="32" src="{{ asset('storage/assets/logo/usep_logo.jpg') }}" width="32"/>
+                        <img alt="USeP_logo" class="h-full w-full  object-cover" height="32"
+                             src="{{ asset('storage/assets/logo/usep_logo.jpg') }}" width="32"/>
                     </div>
                     <div class="h-8 w-8 rounded-full overflow-hidden">
-                        <img alt="usg_logo" class="h-full w-full object-cover" height="32" src="{{ asset('storage/assets/logo/usg_logo.png') }}" width="32"/>
+                        <img alt="usg_logo" class="h-full w-full object-cover" height="32"
+                             src="{{ asset('storage/assets/logo/usg_logo.png') }}" width="32"/>
                     </div>
                     <div class="h-8 w-8 rounded-full overflow-hidden">
-                        <img alt="tsc_logo" class="h-full w-full object-cover" height="32" src="{{ asset('storage/assets/logo/tsc_logo.png') }}" width="32"/>
+                        <img alt="tsc_logo" class="h-full w-full object-cover" height="32"
+                             src="{{ asset('storage/assets/logo/tsc_logo.png') }}" width="32"/>
                     </div>
                     <div class="h-8 w-8 rounded-full overflow-hidden">
-                        <img alt="tsc_comelec_logo" class="h-full w-full object-cover" height="32" src="{{ asset('storage/assets/logo/tsc_comelec_logo.png') }}" width="32"/>
+                        <img alt="tsc_comelec_logo" class="h-full w-full object-cover" height="32"
+                             src="{{ asset('storage/assets/logo/tsc_comelec_logo.png') }}" width="32"/>
                     </div>
                 </div>
 
@@ -36,56 +40,71 @@
                 <div class="flex items-center gap-2 focus:outline-none">
                     <div class="border-[1px] border-gray-800 rounded-full overflow-hidden w-[33px] h-[33px]">
                         <img alt="Profile Picture" class="w-8 h-8 rounded-full" height="32"
-                             src="{{ asset('storage/' . (auth()->user()->profile_photo_path ?? 'assets/profile/default.jpg')) }}" width="32"/>
+                             src="{{ asset('storage/' . (auth()->user()->profile_photo_path ?? 'assets/profile/default.jpg')) }}"
+                             width="32"/>
                     </div>
                     @if (!session('Admin-Voting-Access'))
-                    <div class="mt-2">
-                        <x-dropdown align="right" width="58" contentClasses="py-2 bg-white"
-                                    dropdownClasses="border border-gray-200">
-                            <x-slot name="trigger">
-                                <button class="mt-2">
-                                    <svg width="12" height="6" viewBox="0 0 12 6" fill="none"
-                                         xmlns="http://www.w3.org/2000/svg">
-                                        <path
-                                            d="M0.68448 0.155061C0.872433 -0.0328917 1.16655 -0.0499784 1.3738 0.103801L1.43318 0.155061L6.00001 4.72165L10.5668 0.155062C10.7548 -0.0328913 11.0489 -0.0499779 11.2562 0.103802L11.3155 0.155062C11.5035 0.343014 11.5206 0.63713 11.3668 0.844385L11.3155 0.903763L6.37436 5.84494C6.1864 6.03289 5.89229 6.04998 5.68503 5.8962L5.62566 5.84494L0.68448 0.903762C0.477732 0.697014 0.477732 0.361809 0.68448 0.155061Z"
-                                            fill="#808080" fill-opacity="0.55"/>
-                                    </svg>
-                                </button>
-                            </x-slot>
-
-                            <x-slot name="content">
-                                <ul class="py-1 text-[10px]">
-                                    <!-- Account Settings -->
-                                    <a href="{{ route('voter.account.settings') }}">
-                                        <li class="flex items-center px-5 py-4 hover:bg-gray-200 cursor-pointer">
-                                            <svg class="w-4 h-4 mr-2 text-gray-600"  viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z" stroke="#1F2937" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                                <path d="M18.7273 14.7273C18.6063 15.0015 18.5702 15.3056 18.6236 15.6005C18.6771 15.8954 18.8177 16.1676 19.0273 16.3818L19.0818 16.4364C19.2509 16.6052 19.385 16.8057 19.4765 17.0265C19.568 17.2472 19.6151 17.4838 19.6151 17.7227C19.6151 17.9617 19.568 18.1983 19.4765 18.419C19.385 18.6397 19.2509 18.8402 19.0818 19.0091C18.913 19.1781 18.7124 19.3122 18.4917 19.4037C18.271 19.4952 18.0344 19.5423 17.7955 19.5423C17.5565 19.5423 17.3199 19.4952 17.0992 19.4037C16.8785 19.3122 16.678 19.1781 16.5091 19.0091L16.4545 18.9545C16.2403 18.745 15.9682 18.6044 15.6733 18.5509C15.3784 18.4974 15.0742 18.5335 14.8 18.6545C14.5311 18.7698 14.3018 18.9611 14.1403 19.205C13.9788 19.4489 13.8921 19.7347 13.8909 20.0273V20.1818C13.8909 20.664 13.6994 21.1265 13.3584 21.4675C13.0174 21.8084 12.5549 22 12.0727 22C11.5905 22 11.1281 21.8084 10.7871 21.4675C10.4461 21.1265 10.2545 20.664 10.2545 20.1818V20.1C10.2475 19.7991 10.1501 19.5073 9.97501 19.2625C9.79991 19.0176 9.55521 18.8312 9.27273 18.7273C8.99853 18.6063 8.69437 18.5702 8.39947 18.6236C8.10456 18.6771 7.83244 18.8177 7.61818 19.0273L7.56364 19.0818C7.39478 19.2509 7.19425 19.385 6.97353 19.4765C6.7528 19.568 6.51621 19.6151 6.27727 19.6151C6.03834 19.6151 5.80174 19.568 5.58102 19.4765C5.36029 19.385 5.15977 19.2509 4.99091 19.0818C4.82186 18.913 4.68775 18.7124 4.59626 18.4917C4.50476 18.271 4.45766 18.0344 4.45766 17.7955C4.45766 17.5565 4.50476 17.3199 4.59626 17.0992C4.68775 16.8785 4.82186 16.678 4.99091 16.5091L5.04545 16.4545C5.25503 16.2403 5.39562 15.9682 5.4491 15.6733C5.50257 15.3784 5.46647 15.0742 5.34545 14.8C5.23022 14.5311 5.03887 14.3018 4.79497 14.1403C4.55107 13.9788 4.26526 13.8921 3.97273 13.8909H3.81818C3.33597 13.8909 2.87351 13.6994 2.53253 13.3584C2.19156 13.0174 2 12.5549 2 12.0727C2 11.5905 2.19156 11.1281 2.53253 10.7871C2.87351 10.4461 3.33597 10.2545 3.81818 10.2545H3.9C4.2009 10.2475 4.49273 10.1501 4.73754 9.97501C4.98236 9.79991 5.16883 9.55521 5.27273 9.27273C5.39374 8.99853 5.42984 8.69437 5.37637 8.39947C5.3229 8.10456 5.18231 7.83244 4.97273 7.61818L4.91818 7.56364C4.74913 7.39478 4.61503 7.19425 4.52353 6.97353C4.43203 6.7528 4.38493 6.51621 4.38493 6.27727C4.38493 6.03834 4.43203 5.80174 4.52353 5.58102C4.61503 5.36029 4.74913 5.15977 4.91818 4.99091C5.08704 4.82186 5.28757 4.68775 5.50829 4.59626C5.72901 4.50476 5.96561 4.45766 6.20455 4.45766C6.44348 4.45766 6.68008 4.50476 6.9008 4.59626C7.12152 4.68775 7.32205 4.82186 7.49091 4.99091L7.54545 5.04545C7.75971 5.25503 8.03183 5.39562 8.32674 5.4491C8.62164 5.50257 8.9258 5.46647 9.2 5.34545H9.27273C9.54161 5.23022 9.77093 5.03887 9.93245 4.79497C10.094 4.55107 10.1807 4.26526 10.1818 3.97273V3.81818C10.1818 3.33597 10.3734 2.87351 10.7144 2.53253C11.0553 2.19156 11.5178 2 12 2C12.4822 2 12.9447 2.19156 13.2856 2.53253C13.6266 2.87351 13.8182 3.33597 13.8182 3.81818V3.9C13.8193 4.19253 13.906 4.47834 14.0676 4.72224C14.2291 4.96614 14.4584 5.15749 14.7273 5.27273C15.0015 5.39374 15.3056 5.42984 15.6005 5.37637C15.8954 5.3229 16.1676 5.18231 16.3818 4.97273L16.4364 4.91818C16.6052 4.74913 16.8057 4.61503 17.0265 4.52353C17.2472 4.43203 17.4838 4.38493 17.7227 4.38493C17.9617 4.38493 18.1983 4.43203 18.419 4.52353C18.6397 4.61503 18.8402 4.74913 19.0091 4.91818C19.1781 5.08704 19.3122 5.28757 19.4037 5.50829C19.4952 5.72901 19.5423 5.96561 19.5423 6.20455C19.5423 6.44348 19.4952 6.68008 19.4037 6.9008C19.3122 7.12152 19.1781 7.32205 19.0091 7.49091L18.9545 7.54545C18.745 7.75971 18.6044 8.03183 18.5509 8.32674C18.4974 8.62164 18.5335 8.9258 18.6545 9.2V9.27273C18.7698 9.54161 18.9611 9.77093 19.205 9.93245C19.4489 10.094 19.7347 10.1807 20.0273 10.1818H20.1818C20.664 10.1818 21.1265 10.3734 21.4675 10.7144C21.8084 11.0553 22 11.5178 22 12C22 12.4822 21.8084 12.9447 21.4675 13.2856C21.1265 13.6266 20.664 13.8182 20.1818 13.8182H20.1C19.8075 13.8193 19.5217 13.906 19.2778 14.0676C19.0339 14.2291 18.8425 14.4584 18.7273 14.7273Z" stroke="#1F2937" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                            </svg>
-                                            Account Settings
-                                            <svg class="w-3 h-3 ml-5  text-gray-600" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M1 13L7 7L1 1" stroke="#6B7280" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                            </svg>
-                                        </li>
-                                    </a>
-                                    <!-- Logout -->
-                                    <li class="flex items-center px-5 py-3 hover:bg-gray-200 cursor-pointer">
-                                        <svg  class="w-4 h-4 mr-2 text-gray-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M18 8L22 12M22 12L18 16M22 12H9M15 4.20404C13.7252 3.43827 12.2452 3 10.6667 3C5.8802 3 2 7.02944 2 12C2 16.9706 5.8802 21 10.6667 21C12.2452 21 13.7252 20.5617 15 19.796" stroke="#1F2937" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <div class="mt-2">
+                            <x-dropdown align="right" width="58" contentClasses="py-2 bg-white"
+                                        dropdownClasses="border border-gray-200">
+                                <x-slot name="trigger">
+                                    <button class="mt-2">
+                                        <svg width="12" height="6" viewBox="0 0 12 6" fill="none"
+                                             xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M0.68448 0.155061C0.872433 -0.0328917 1.16655 -0.0499784 1.3738 0.103801L1.43318 0.155061L6.00001 4.72165L10.5668 0.155062C10.7548 -0.0328913 11.0489 -0.0499779 11.2562 0.103802L11.3155 0.155062C11.5035 0.343014 11.5206 0.63713 11.3668 0.844385L11.3155 0.903763L6.37436 5.84494C6.1864 6.03289 5.89229 6.04998 5.68503 5.8962L5.62566 5.84494L0.68448 0.903762C0.477732 0.697014 0.477732 0.361809 0.68448 0.155061Z"
+                                                fill="#808080" fill-opacity="0.55"/>
                                         </svg>
-                                        <a href="{{ route('logout') }}"
-                                           class="text-gray-600 "
-                                           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                            Logout
+                                    </button>
+                                </x-slot>
+
+                                <x-slot name="content">
+                                    <ul class="py-1 text-[10px]">
+                                        <!-- Account Settings -->
+                                        <a href="{{ route('voter.account.settings') }}">
+                                            <li class="flex items-center px-5 py-4 hover:bg-gray-200 cursor-pointer">
+                                                <svg class="w-4 h-4 mr-2 text-gray-600" viewBox="0 0 24 24" fill="none"
+                                                     xmlns="http://www.w3.org/2000/svg">
+                                                    <path
+                                                        d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z"
+                                                        stroke="#1F2937" stroke-width="1.5" stroke-linecap="round"
+                                                        stroke-linejoin="round"/>
+                                                    <path
+                                                        d="M18.7273 14.7273C18.6063 15.0015 18.5702 15.3056 18.6236 15.6005C18.6771 15.8954 18.8177 16.1676 19.0273 16.3818L19.0818 16.4364C19.2509 16.6052 19.385 16.8057 19.4765 17.0265C19.568 17.2472 19.6151 17.4838 19.6151 17.7227C19.6151 17.9617 19.568 18.1983 19.4765 18.419C19.385 18.6397 19.2509 18.8402 19.0818 19.0091C18.913 19.1781 18.7124 19.3122 18.4917 19.4037C18.271 19.4952 18.0344 19.5423 17.7955 19.5423C17.5565 19.5423 17.3199 19.4952 17.0992 19.4037C16.8785 19.3122 16.678 19.1781 16.5091 19.0091L16.4545 18.9545C16.2403 18.745 15.9682 18.6044 15.6733 18.5509C15.3784 18.4974 15.0742 18.5335 14.8 18.6545C14.5311 18.7698 14.3018 18.9611 14.1403 19.205C13.9788 19.4489 13.8921 19.7347 13.8909 20.0273V20.1818C13.8909 20.664 13.6994 21.1265 13.3584 21.4675C13.0174 21.8084 12.5549 22 12.0727 22C11.5905 22 11.1281 21.8084 10.7871 21.4675C10.4461 21.1265 10.2545 20.664 10.2545 20.1818V20.1C10.2475 19.7991 10.1501 19.5073 9.97501 19.2625C9.79991 19.0176 9.55521 18.8312 9.27273 18.7273C8.99853 18.6063 8.69437 18.5702 8.39947 18.6236C8.10456 18.6771 7.83244 18.8177 7.61818 19.0273L7.56364 19.0818C7.39478 19.2509 7.19425 19.385 6.97353 19.4765C6.7528 19.568 6.51621 19.6151 6.27727 19.6151C6.03834 19.6151 5.80174 19.568 5.58102 19.4765C5.36029 19.385 5.15977 19.2509 4.99091 19.0818C4.82186 18.913 4.68775 18.7124 4.59626 18.4917C4.50476 18.271 4.45766 18.0344 4.45766 17.7955C4.45766 17.5565 4.50476 17.3199 4.59626 17.0992C4.68775 16.8785 4.82186 16.678 4.99091 16.5091L5.04545 16.4545C5.25503 16.2403 5.39562 15.9682 5.4491 15.6733C5.50257 15.3784 5.46647 15.0742 5.34545 14.8C5.23022 14.5311 5.03887 14.3018 4.79497 14.1403C4.55107 13.9788 4.26526 13.8921 3.97273 13.8909H3.81818C3.33597 13.8909 2.87351 13.6994 2.53253 13.3584C2.19156 13.0174 2 12.5549 2 12.0727C2 11.5905 2.19156 11.1281 2.53253 10.7871C2.87351 10.4461 3.33597 10.2545 3.81818 10.2545H3.9C4.2009 10.2475 4.49273 10.1501 4.73754 9.97501C4.98236 9.79991 5.16883 9.55521 5.27273 9.27273C5.39374 8.99853 5.42984 8.69437 5.37637 8.39947C5.3229 8.10456 5.18231 7.83244 4.97273 7.61818L4.91818 7.56364C4.74913 7.39478 4.61503 7.19425 4.52353 6.97353C4.43203 6.7528 4.38493 6.51621 4.38493 6.27727C4.38493 6.03834 4.43203 5.80174 4.52353 5.58102C4.61503 5.36029 4.74913 5.15977 4.91818 4.99091C5.08704 4.82186 5.28757 4.68775 5.50829 4.59626C5.72901 4.50476 5.96561 4.45766 6.20455 4.45766C6.44348 4.45766 6.68008 4.50476 6.9008 4.59626C7.12152 4.68775 7.32205 4.82186 7.49091 4.99091L7.54545 5.04545C7.75971 5.25503 8.03183 5.39562 8.32674 5.4491C8.62164 5.50257 8.9258 5.46647 9.2 5.34545H9.27273C9.54161 5.23022 9.77093 5.03887 9.93245 4.79497C10.094 4.55107 10.1807 4.26526 10.1818 3.97273V3.81818C10.1818 3.33597 10.3734 2.87351 10.7144 2.53253C11.0553 2.19156 11.5178 2 12 2C12.4822 2 12.9447 2.19156 13.2856 2.53253C13.6266 2.87351 13.8182 3.33597 13.8182 3.81818V3.9C13.8193 4.19253 13.906 4.47834 14.0676 4.72224C14.2291 4.96614 14.4584 5.15749 14.7273 5.27273C15.0015 5.39374 15.3056 5.42984 15.6005 5.37637C15.8954 5.3229 16.1676 5.18231 16.3818 4.97273L16.4364 4.91818C16.6052 4.74913 16.8057 4.61503 17.0265 4.52353C17.2472 4.43203 17.4838 4.38493 17.7227 4.38493C17.9617 4.38493 18.1983 4.43203 18.419 4.52353C18.6397 4.61503 18.8402 4.74913 19.0091 4.91818C19.1781 5.08704 19.3122 5.28757 19.4037 5.50829C19.4952 5.72901 19.5423 5.96561 19.5423 6.20455C19.5423 6.44348 19.4952 6.68008 19.4037 6.9008C19.3122 7.12152 19.1781 7.32205 19.0091 7.49091L18.9545 7.54545C18.745 7.75971 18.6044 8.03183 18.5509 8.32674C18.4974 8.62164 18.5335 8.9258 18.6545 9.2V9.27273C18.7698 9.54161 18.9611 9.77093 19.205 9.93245C19.4489 10.094 19.7347 10.1807 20.0273 10.1818H20.1818C20.664 10.1818 21.1265 10.3734 21.4675 10.7144C21.8084 11.0553 22 11.5178 22 12C22 12.4822 21.8084 12.9447 21.4675 13.2856C21.1265 13.6266 20.664 13.8182 20.1818 13.8182H20.1C19.8075 13.8193 19.5217 13.906 19.2778 14.0676C19.0339 14.2291 18.8425 14.4584 18.7273 14.7273Z"
+                                                        stroke="#1F2937" stroke-width="1.5" stroke-linecap="round"
+                                                        stroke-linejoin="round"/>
+                                                </svg>
+                                                Account Settings
+                                                <svg class="w-3 h-3 ml-5  text-gray-600" viewBox="0 0 8 14" fill="none"
+                                                     xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M1 13L7 7L1 1" stroke="#6B7280" stroke-width="1.5"
+                                                          stroke-linecap="round" stroke-linejoin="round"/>
+                                                </svg>
+                                            </li>
                                         </a>
-                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
-                                            @csrf
-                                        </form>
-                                    </li>
-                                </ul>
-                            </x-slot>
-                        </x-dropdown>
-                    </div>
+                                        <!-- Logout -->
+                                        <li class="flex items-center px-5 py-3 hover:bg-gray-200 cursor-pointer">
+                                            <svg class="w-4 h-4 mr-2 text-gray-600" viewBox="0 0 24 24" fill="none"
+                                                 xmlns="http://www.w3.org/2000/svg">
+                                                <path
+                                                    d="M18 8L22 12M22 12L18 16M22 12H9M15 4.20404C13.7252 3.43827 12.2452 3 10.6667 3C5.8802 3 2 7.02944 2 12C2 16.9706 5.8802 21 10.6667 21C12.2452 21 13.7252 20.5617 15 19.796"
+                                                    stroke="#1F2937" stroke-width="1.5" stroke-linecap="round"
+                                                    stroke-linejoin="round"/>
+                                            </svg>
+                                            <a href="{{ route('logout') }}"
+                                               class="text-gray-600 "
+                                               onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                                Logout
+                                            </a>
+                                            <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                                  class="hidden">
+                                                @csrf
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </x-slot>
+                            </x-dropdown>
+                        </div>
                     @endif
                 </div>
             </div>
@@ -94,10 +113,17 @@
         <style>
             /* Gradient animation */
             @keyframes gradientBg {
-                0% { background-position: 0% 50%; }
-                50% { background-position: 100% 50%; }
-                100% { background-position: 0% 50%; }
+                0% {
+                    background-position: 0% 50%;
+                }
+                50% {
+                    background-position: 100% 50%;
+                }
+                100% {
+                    background-position: 0% 50%;
+                }
             }
+
             .animate-gradient {
                 background-size: 200% 200%;
                 animation: gradientBg 15s ease infinite;
@@ -105,24 +131,46 @@
 
             /* Floating animation */
             @keyframes float {
-                0% { transform: translateY(0px); }
-                50% { transform: translateY(-10px); }
-                100% { transform: translateY(0px); }
+                0% {
+                    transform: translateY(0px);
+                }
+                50% {
+                    transform: translateY(-10px);
+                }
+                100% {
+                    transform: translateY(0px);
+                }
             }
 
 
             /* Pulse animation */
             @keyframes pulse {
-                0% { transform: scale(1); opacity: 1; }
-                50% { transform: scale(1.05); opacity: 0.8; }
-                100% { transform: scale(1); opacity: 1; }
+                0% {
+                    transform: scale(1);
+                    opacity: 1;
+                }
+                50% {
+                    transform: scale(1.05);
+                    opacity: 0.8;
+                }
+                100% {
+                    transform: scale(1);
+                    opacity: 1;
+                }
             }
 
             /* Fade in animations */
             @keyframes fadeIn {
-                0% { opacity: 0; transform: translateY(20px); }
-                100% { opacity: 1; transform: translateY(0); }
+                0% {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                100% {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
             }
+
             .animate-fade-in-1 {
                 opacity: 0;
                 animation: fadeIn 0.8s ease-out forwards;
@@ -132,18 +180,32 @@
 
             /* Particle animation */
             @keyframes particle-float {
-                0% { transform: translate(0, 0); }
-                25% { transform: translate(10px, -10px); }
-                50% { transform: translate(20px, 0); }
-                75% { transform: translate(10px, 10px); }
-                100% { transform: translate(0, 0); }
+                0% {
+                    transform: translate(0, 0);
+                }
+                25% {
+                    transform: translate(10px, -10px);
+                }
+                50% {
+                    transform: translate(20px, 0);
+                }
+                75% {
+                    transform: translate(10px, 10px);
+                }
+                100% {
+                    transform: translate(0, 0);
+                }
             }
 
 
             /* Shine effect */
             @keyframes shine {
-                0% { background-position: -100% 0; }
-                100% { background-position: 200% 0; }
+                0% {
+                    background-position: -100% 0;
+                }
+                100% {
+                    background-position: 200% 0;
+                }
             }
 
             /* Path animations */
@@ -178,7 +240,6 @@
             }
 
 
-
             /* Voted card animations */
             @keyframes checkmark {
                 0% {
@@ -190,7 +251,6 @@
                     opacity: 1;
                 }
             }
-
 
 
             .voted-card img {
@@ -298,10 +358,13 @@
             <div class="relative bg-gradient-to-r from-red-900 via-black to-gray-500 animate-gradient min-h-[150px]">
                 <!-- Animated SVG paths -->
                 <div class="absolute inset-0 overflow-hidden opacity-20">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 800 400" preserveAspectRatio="none">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 800 400"
+                         preserveAspectRatio="none">
                         <!-- Curved paths -->
-                        <path class="path-animation" d="M0,100 C150,200 350,0 500,100 C650,200 750,0 800,100" stroke="white" stroke-width="2" fill="none" />
-                        <path class="path-animation" d="M0,200 C200,100 400,300 600,200 C800,100 800,300 800,200" stroke="white" stroke-width="1.5" fill="none" style="animation-delay: 0.5s" />
+                        <path class="path-animation" d="M0,100 C150,200 350,0 500,100 C650,200 750,0 800,100"
+                              stroke="white" stroke-width="2" fill="none"/>
+                        <path class="path-animation" d="M0,200 C200,100 400,300 600,200 C800,100 800,300 800,200"
+                              stroke="white" stroke-width="1.5" fill="none" style="animation-delay: 0.5s"/>
                     </svg>
                 </div>
                 <!-- Content with padding -->
@@ -310,7 +373,8 @@
                         <!-- Typing effect -->
                         <h2 class="text-[24px] font-bold text-center justify-center" x-text="typed"></h2>
                         <!-- Blinking cursor -->
-                        <span class="text-[24px] text-center justify-center font-bold animate-pulse" x-show="typed.length < 'Hi! {{ $voter->first_name }}, Welcome!'.length">|</span>
+                        <span class="text-[24px] text-center justify-center font-bold animate-pulse"
+                              x-show="typed.length < 'Hi! {{ $voter->first_name }}, Welcome!'.length">|</span>
                     </div>
 
 
@@ -319,7 +383,8 @@
                         @if($hasVoted)
                             Thank you for participating in the {{ $election->name }}! Your vote has been recorded.
                         @else
-                            Don't miss your chance to make your voice heard in the {{ $election->name }}! Make sure to cast your vote before it's too late!
+                            Don't miss your chance to make your voice heard in the {{ $election->name }}! Make sure to
+                            cast your vote before it's too late!
                         @endif
                     </p>
 
@@ -331,29 +396,42 @@
                                 'bg-white text-black hover:bg-gray-100' => !$hasVoted
                             ])>
                             <form wire:submit.prevent="submit">
-                                <button @if($hasVoted || $hasEnded || $election->status == 'paused') disabled @endif type="submit"
+                                <button @if($hasVoted || $hasEnded || $election->status == 'paused') disabled
+                                        @endif type="submit"
                                         class="h-10 px-6 flex items-center gap-2 transform scale-100 hover:scale-105 font-medium transition duration-300">
                                     @if($hasVoted)
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
+                                             fill="currentColor">
+                                            <path fill-rule="evenodd"
+                                                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                                  clip-rule="evenodd"/>
                                         </svg>
                                         You Already Voted
                                     @elseif($hasEnded)
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="currentColor">
-                                            <path d="M12 1.75a10.25 10.25 0 1 0 10.25 10.25A10.26 10.26 0 0 0 12 1.75zm0 18.5a8.25 8.25 0 1 1 8.25-8.25 8.26 8.26 0 0 1-8.25 8.25z"/>
-                                            <path d="M12.75 7a.75.75 0 0 0-1.5 0v5a.75.75 0 0 0 .22.53l3.25 3.25a.75.75 0 1 0 1.06-1.06l-3.03-3.03V7z"/>
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500"
+                                             viewBox="0 0 24 24" fill="currentColor">
+                                            <path
+                                                d="M12 1.75a10.25 10.25 0 1 0 10.25 10.25A10.26 10.26 0 0 0 12 1.75zm0 18.5a8.25 8.25 0 1 1 8.25-8.25 8.26 8.26 0 0 1-8.25 8.25z"/>
+                                            <path
+                                                d="M12.75 7a.75.75 0 0 0-1.5 0v5a.75.75 0 0 0 .22.53l3.25 3.25a.75.75 0 1 0 1.06-1.06l-3.03-3.03V7z"/>
                                         </svg>
                                         <span class="ml-1 text-sm text-gray-600 font-medium">Election Ended</span>
                                     @elseif($election->status == 'paused')
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="currentColor">
-                                            <path d="M12 1.75a10.25 10.25 0 1 0 10.25 10.25A10.26 10.26 0 0 0 12 1.75zm0 18.5a8.25 8.25 0 1 1 8.25-8.25 8.26 8.26 0 0 1-8.25 8.25z"/>
-                                            <path d="M12.75 7a.75.75 0 0 0-1.5 0v5a.75.75 0 0 0 .22.53l3.25 3.25a.75.75 0 1 0 1.06-1.06l-3.03-3.03V7z"/>
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500"
+                                             viewBox="0 0 24 24" fill="currentColor">
+                                            <path
+                                                d="M12 1.75a10.25 10.25 0 1 0 10.25 10.25A10.26 10.26 0 0 0 12 1.75zm0 18.5a8.25 8.25 0 1 1 8.25-8.25 8.26 8.26 0 0 1-8.25 8.25z"/>
+                                            <path
+                                                d="M12.75 7a.75.75 0 0 0-1.5 0v5a.75.75 0 0 0 .22.53l3.25 3.25a.75.75 0 1 0 1.06-1.06l-3.03-3.03V7z"/>
                                         </svg>
                                         <span class="ml-1 text-sm text-gray-600 font-medium">Election Paused</span>
                                     @else
                                         Vote Now
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                            <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
+                                             fill="currentColor">
+                                            <path fill-rule="evenodd"
+                                                  d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
+                                                  clip-rule="evenodd"/>
                                         </svg>
                                     @endif
                                 </button>
@@ -375,7 +453,8 @@
         </div>
 
         @if(!$hasEnded && !$hasVoted)
-            <div wire:ignore class="mb-6 bg-black text-white p-4 rounded-lg shadow-md text-center min-h-[100px] sm:min-h-[160px]">
+            <div wire:ignore
+                 class="mb-6 bg-black text-white p-4 rounded-lg shadow-md text-center min-h-[100px] sm:min-h-[160px]">
                 <div class="flex justify-between items-center">
                     <div class="flex items-center space-x-2 mb-4">
                         <i class="fas fa-stopwatch text-white text-sm"></i>
@@ -404,7 +483,8 @@
 
             </div>
         @else
-            <div class="mb-6 bg-black text-white p-4 rounded-lg shadow-md text-center min-h-[100px] sm:min-h-[160px] flex items-center justify-center">
+            <div
+                class="mb-6 bg-black text-white p-4 rounded-lg shadow-md text-center min-h-[100px] sm:min-h-[160px] flex items-center justify-center">
                 @if(!$hasEnded && $hasVoted)
                     <div class="w-full">
                         <h2 class="text-[12px] sm:text-[12px] font-semibold mb-1">Thank You for Participating!</h2>
@@ -414,11 +494,12 @@
                         <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
                             <div class="flex items-center mb-5 space-x-3">
                                 <svg class="h-4 w-4 text-blue-600" viewBox="0 0 24 24" fill="none">
-                                    <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z"
-                                          stroke="currentColor"
-                                          stroke-width="2"
-                                          stroke-linecap="round"
-                                          stroke-linejoin="round"/>
+                                    <path
+                                        d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"/>
                                     <path d="M14 2V8H20"
                                           stroke="currentColor"
                                           stroke-width="2"
@@ -427,7 +508,30 @@
                                 </svg>
                                 <div class="flex justify-between w-full">
                                     <h3 class="text-[12px] font-bold text-gray-800">Election Receipt</h3>
-                                    <h3 class="text-[12px] font-semibold text-gray-800">Feedback Token : <span class="text-[10px] font-semibold italic text-gray-800">{{ $this->feedbackToken->token ?? 'something went wrong.' }}</span></h3>
+                                    <div x-data="{
+                                            token: '{{ $this->feedbackToken->token ?? 'something went wrong.' }}',
+                                            copied: false
+                                        }"
+                                         class="flex items-center space-x-2"
+                                    >
+                                        <h3 class="text-[12px] font-semibold text-gray-800">
+                                            Feedback Token :
+                                            <span class="text-[10px] font-semibold italic text-gray-800"
+                                                  x-text="token"></span>
+                                        </h3>
+
+                                        <button
+                                            @click="
+                                                    navigator.clipboard.writeText(token).then(() => {
+                                                        copied = true;
+                                                        setTimeout(() => copied = false, 1500);
+                                                    })
+                                                "
+                                            class="text-blue-600 text-[10px] font-semibold border border-blue-500 px-2 py-1 rounded hover:bg-blue-100 transition"
+                                            x-text="copied ? 'Copied!' : 'Copy'"
+                                        >
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
 
@@ -440,21 +544,24 @@
                                               stroke-width="2"
                                               stroke-linecap="round"
                                               stroke-linejoin="round"/>
-                                        <path d="M3 17V19C3 19.5304 3.21071 20.0391 3.58579 20.4142C3.96086 20.7893 4.46957 21 5 21H19C19.5304 21 20.0391 20.7893 20.4142 20.4142C20.7893 20.0391 21 19.5304 21 19V17"
-                                              stroke="currentColor"
-                                              stroke-width="2"
-                                              stroke-linecap="round"
-                                              stroke-linejoin="round"/>
+                                        <path
+                                            d="M3 17V19C3 19.5304 3.21071 20.0391 3.58579 20.4142C3.96086 20.7893 4.46957 21 5 21H19C19.5304 21 20.0391 20.7893 20.4142 20.4142C20.7893 20.0391 21 19.5304 21 19V17"
+                                            stroke="currentColor"
+                                            stroke-width="2"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"/>
                                     </svg>
                                     <span class="font-semibold text-sm">Download Secure Receipt</span>
-                                    <div class="absolute inset-0 border-2 border-white/20 rounded-lg group-hover:border-white/30 transition-all"></div>
+                                    <div
+                                        class="absolute inset-0 border-2 border-white/20 rounded-lg group-hover:border-white/30 transition-all"></div>
                                 </a>
 
                                 <div class="flex items-center space-x-3">
                                     <div class="hidden sm:block w-px h-8 bg-gray-200"></div>
                                     <a href="{{ route('verify.vote.page', ['voteId' => $encodedVotes->id]) }}"
                                        class="flex items-center gap-2 text-purple-600 hover:text-purple-700 group transition-colors">
-                                        <svg class="h-5 w-5 text-purple-500 group-hover:text-purple-600" viewBox="0 0 24 24" fill="none">
+                                        <svg class="h-5 w-5 text-purple-500 group-hover:text-purple-600"
+                                             viewBox="0 0 24 24" fill="none">
                                             <path d="M12 22C12 22 20 18 20 12V5L12 2L4 5V12C4 18 12 22 12 22Z"
                                                   stroke="currentColor"
                                                   stroke-width="2"
@@ -468,7 +575,8 @@
                                         </svg>
                                         <span class="font-medium text-sm relative">
                     Verify Your Vote
-                    <span class="absolute bottom-0 left-0 w-0 h-px bg-purple-600 group-hover:w-full transition-all duration-300"></span>
+                    <span
+                        class="absolute bottom-0 left-0 w-0 h-px bg-purple-600 group-hover:w-full transition-all duration-300"></span>
                 </span>
                                     </a>
                                 </div>
@@ -484,7 +592,8 @@
                     <div>
                         <h2 class="text-[12px] sm:text-xl font-semibold mb-1">You Missed a Milestone</h2>
                         <p class="text-sm sm:text-base text-gray-300">
-                            You have not participated in this election. Every vote counts—let your voice be heard next time.
+                            You have not participated in this election. Every vote counts—let your voice be heard next
+                            time.
                         </p>
                     </div>
                 @endif
@@ -493,40 +602,46 @@
         @endif
 
 
-
-        <div class="mt-2 bg-white rounded-lg shadow-sm overflow-hidden border border-gray-100" x-data="{ hover: false }">
+        <div class="mt-2 bg-white rounded-lg shadow-sm overflow-hidden border border-gray-100"
+             x-data="{ hover: false }">
             <div class="p-6 flex flex-col gap-4"
                  @mouseenter="hover = true"
                  @mouseleave="hover = false">
                 <div class="flex items-center gap-4">
                     <div class="h-12 w-12 bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0">
-                        <svg class="h-6 w-6 text-gray-700" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                        <svg class="h-6 w-6 text-gray-700" fill="none" stroke="currentColor" viewbox="0 0 24 24"
+                             xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
                         </svg>
                     </div>
                     <div>
                         <h3 class="font-bold text-black text-[12px]">COMELEC Website</h3>
-                        <p class="text-gray-700 text-[11px]">Visit the Commission on Elections website for verified election details, announcements, and voting guidelines.</p>
+                        <p class="text-gray-700 text-[11px]">Visit the Commission on Elections website for verified
+                            election details, announcements, and voting guidelines.</p>
                     </div>
                 </div>
                 <a href="{{ route('comelec-website.home') }}" target="_blank" rel="noopener noreferrer"
                    class="flex items-center justify-center gap-2 bg-black text-white text-[12px] py-2 px-6 rounded-md transition-all duration-300"
                    :class="{ 'bg-gray-800': hover }">
                     <span>Proceed to COMELEC Website</span>
-                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"
+                         xmlns="http://www.w3.org/2000/svg"
                          :class="{ 'transform translate-x-1': hover }">
-                        <path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                        <path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                              stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
                     </svg>
                 </a>
             </div>
         </div>
 
 
-
         <footer class="border-t mt-[10%] py-4 bottom-0">
             <div class="flex flex-col md:flex-row justify-between items-center gap-2">
                 <p class="text-[11px] text-gray-700">Copyright@2025</p>
-                <a class="text-[11px] underline text-blue-500 hover:text-blue-800" href="#">Feedback? We want to hear from you!</a>
+                <a class="text-[11px] underline text-blue-500 hover:text-blue-800" href="#">Feedback? We want to hear
+                    from you!</a>
                 <p class="text-[11px] text-gray-700">E-Votar@2025</p>
 
             </div>
