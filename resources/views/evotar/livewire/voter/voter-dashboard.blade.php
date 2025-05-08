@@ -485,7 +485,7 @@
         @else
             <div
                 class="mb-6 bg-black text-white p-4 rounded-lg shadow-md text-center min-h-[100px] sm:min-h-[160px] flex items-center justify-center">
-                @if(!$hasEnded && $hasVoted)
+                @if((!$hasEnded || $hasEnded) && $hasVoted)
                     <div class="w-full">
                         <h2 class="text-[12px] sm:text-[12px] font-semibold mb-1">Thank You for Participating!</h2>
                         <p class="text-[10px] text-gray-300">
