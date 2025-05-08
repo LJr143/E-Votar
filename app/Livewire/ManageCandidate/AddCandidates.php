@@ -42,12 +42,11 @@ class AddCandidates extends Component
         })
             ->take(5)
             ->get();
-
     }
 
     public function fetchElection(): void
     {
-        $this->elections = Election::query()->get();
+        $this->elections = Election::where('status', '!=', 'ongoing')->get();
     }
 
     public function fetchPositions(): void
