@@ -88,153 +88,175 @@
             </div>
 
             <div>
+
                 @if($selectedElection)
-                    <div class="w-full mt-8 md:mt-0 mb-8" wire:key="voter-tally-{{ $selectedElection }}">
-                        <div
-                            class="bg-gray-100 text-black uppercase text-[11px] leading-normal text-center font-bold py-2 border-b border-gray-300 rounded-t-lg">
-                            {{ $selectedElectionName }} summary
-                        </div>
-                        <table class="w-full border-collapse border-t border-b border-gray-100 rounded-t-lg">
-                            <tbody>
-                            <tr class="bg-white border-b border-gray-100 py-3 px-6 text-left">
-                                <td class="py-3 px-6 border-t border-b border-gray-100">Voters Turnout</td>
-                                <td class="py-3 px-6 border-t border-b border-gray-100">
-                                    @if($totalVoters > 0)
-                                        {{ number_format(($totalVoterVoted / $totalVoters) * 100, 2) }}%
-                                        {{ ' - ' . $totalVoterVoted . '/' . $totalVoters }}
-                                    @else
-                                        0% - 0/0
-                                    @endif
-                                </td>
-
-                            </tr>
-                            <tr>
-                                <td class="py-3 px-6 border-t border-b border-gray-100">Voters Who Actually Voted</td>
-                                <td class="py-3 px-6 border-t border-b border-gray-100">{{ $totalVoterVoted }}</td>
-                            </tr>
-
-
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="w-full">
-                        <!-- Student Council Election -->
-                        @if ($hasStudentCouncilPositions && $studentCouncilWinners != null)
-                            <div class="mb-8">
-                                <h2 class="text-[14px] font-bold uppercase text-center mb-4">
-                                    {{ $selectedElectionCampus->name ?? 'No campus available' }} Student Council Election
-                                    Results
-                                </h2>
-                                <div class="overflow-x-auto min-h-[350px]">
-                                    <table class="min-w-full">
-                                        <thead>
-                                        <tr class="w-full bg-gray-100 text-black uppercase text-[11px] leading-normal">
-                                            <th class="py-2 px-6 text-left rounded-tl-lg border-b border-gray-300">
-                                                Position
-                                            </th>
-                                            <th class="py-2 px-8 text-left border-b border-gray-300">Candidate</th>
-                                            <th class="py-2 px-6 text-left border-b border-gray-300">Party list</th>
-                                            <th class="py-2 px-6 text-left border-b border-gray-300">Abstain Count</th>
-                                            <th class="py-2 px-6 text-left rounded-tr-lg border-b border-gray-300">Vote
-                                                Tally
-                                            </th>
-                                        </tr>
-                                        </thead>
-                                        <tbody class="text-black text-[12px] font-light">
-                                        @foreach ($studentCouncilWinners as $winner)
-                                            <tr class="border-b border-gray-100">
-                                                <td class="py-3 px-6 text-left">{{ $winner['position'] }}</td>
-                                                <td class="py-3 px-8 text-left font-bold">
-                                                    {{ $winner['candidate'] ? $winner['candidate']->users->first_name . ' ' . $winner['candidate']->users->last_name : 'No winner' }}
-                                                </td>
-                                                <td class="py-3 px-6 text-left">{{ $winner['candidate'] ? $winner['candidate']->partyLists->name : '-' }}</td>
-                                                <td class="py-3 px-6 text-left">
-                                                    {{ $abstainCounts[$winner['position_id']] ?? 0 }}
-                                                </td>
-                                                <td class="py-3 px-6 text-left">
-                                                    <div
-                                                        class="font-bold">{{ $winner['candidate'] ? $winner['candidate']->votes_count . ' votes' : '-' }}</div>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                        </tbody>
-                                    </table>
+                    @if($latestElection != 'ongoing')
+                        <div class="space-y-8">
+                            <!-- Election Summary Card -->
+                            <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                                <div class="bg-indigo-600 px-4 py-3">
+                                    <h3 class="text-sm font-semibold text-white uppercase tracking-wider">
+                                        {{ $selectedElectionName }} Summary
+                                    </h3>
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 p-4">
+                                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-100">
+                                        <p class="text-xs font-medium text-gray-500 uppercase tracking-wider">Total Voters</p>
+                                        <p class="text-2xl font-bold text-gray-900 mt-1">{{ $totalVoters }}</p>
+                                    </div>
+                                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-100">
+                                        <p class="text-xs font-medium text-gray-500 uppercase tracking-wider">Voters Turnout</p>
+                                        <p class="text-2xl font-bold text-gray-900 mt-1">
+                                            @if($totalVoters > 0)
+                                                {{ number_format(($totalVoterVoted / $totalVoters) * 100, 2) }}%
+                                            @else
+                                                0%
+                                            @endif
+                                        </p>
+                                        <p class="text-xs text-gray-500 mt-1">
+                                            {{ $totalVoterVoted }} out of {{ $totalVoters }} voted
+                                        </p>
+                                    </div>
+                                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-100">
+                                        <p class="text-xs font-medium text-gray-500 uppercase tracking-wider">Abstentions</p>
+                                        <p class="text-2xl font-bold text-gray-900 mt-1">{{ array_sum($abstainCounts) }}</p>
+                                    </div>
                                 </div>
                             </div>
-                        @endif
 
+                            <!-- Student Council Results -->
+                            @if ($hasStudentCouncilPositions && $studentCouncilWinners != null)
+                                <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                                    <div class="bg-indigo-600 px-4 py-3">
+                                        <h3 class="text-sm font-semibold text-white uppercase tracking-wider">
+                                            {{ $selectedElectionCampus->name ?? 'No campus available' }} Student Council Results
+                                        </h3>
+                                    </div>
+                                    <div class="overflow-x-auto">
+                                        <table class="min-w-full divide-y divide-gray-200">
+                                            <thead class="bg-gray-50">
+                                            <tr>
+                                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Position</th>
+                                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Winner</th>
+                                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Party</th>
+                                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Votes</th>
+                                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Abstentions</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody class="bg-white divide-y divide-gray-200">
+                                            @foreach ($studentCouncilWinners as $winner)
+                                                <tr class="{{ $loop->even ? 'bg-gray-50' : 'bg-white' }}">
+                                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $winner['position'] }}</td>
+                                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
+                                                        {{ $winner['candidate'] ? $winner['candidate']->users->first_name . ' ' . $winner['candidate']->users->last_name : 'No winner' }}
+                                                    </td>
+                                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                        {{ $winner['candidate'] ? $winner['candidate']->partyLists->name : '-' }}
+                                                    </td>
+                                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                        {{ $winner['candidate'] ? $winner['candidate']->votes_count : '-' }}
+                                                    </td>
+                                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                        {{ $abstainCounts[$winner['position_id']] ?? 0 }}
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            @endif
 
-                        <!-- Local Council Election Results -->
-                        @if ($hasLocalCouncilPositions && $localCouncilWinners != null )
-                            <div class="mb-4">
-                                <h2 class="text-[14px] font-bold uppercase text-center mb-4">
-                                    {{ $selectedElectionCampus->name ?? 'No campus available' }} Local Council Election
-                                    Results
-                                </h2>
-                                @foreach ($localCouncilWinners as $council => $winners)
-                                    <div class="mb-8">
-                                        <h3 class="text-[14px] font-semibold mb-2 uppercase">{{ $council }}</h3>
-                                        <!-- Group winners by major -->
+                            <!-- Local Council Results -->
+                            @if ($hasLocalCouncilPositions && $localCouncilWinners != null)
+                                <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                                    <div class="bg-indigo-600 px-4 py-3">
+                                        <h3 class="text-sm font-semibold text-white uppercase tracking-wider">
+                                            {{ $selectedElectionCampus->name ?? 'No campus available' }} Local Council Results
+                                        </h3>
+                                    </div>
+
+                                    @foreach ($localCouncilWinners as $council => $winners)
                                         @php
                                             $winnersByMajor = collect($winners)->groupBy(function ($winner) {
                                                 return $winner['major'] ?? 'N/A';
                                             });
                                         @endphp
-                                        @foreach ($winnersByMajor as $major => $majorWinners)
-                                            @if ($major !== 'N/A')
-                                                <h4 class="text-[12px] font-bold uppercase">(MAJOR - {{ $major }})</h4>
-                                            @endif
-                                            <div class="overflow-x-auto mb-2">
-                                                <table class="min-w-full">
-                                                    <thead>
-                                                    <tr class="w-full bg-gray-100 text-black uppercase text-[11px] leading-normal">
-                                                        <th class="py-2 px-6 text-left rounded-tl-lg border-b border-gray-300">
-                                                            Position
-                                                        </th>
-                                                        <th class="py-2 px-6 text-left border-b border-gray-300">Candidate
-                                                        </th>
-                                                        <th class="py-2 px-6 text-left border-b border-gray-300">Partylist
-                                                        </th>
-                                                        <th class="py-2 px-6 text-left border-b border-gray-300">Abstain
-                                                            Count
-                                                        </th>
-                                                        <th class="py-2 px-6 text-left rounded-tr-lg border-b border-gray-300">
-                                                            Vote Tally
-                                                        </th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody class="text-black text-[12px] font-light">
-                                                    @foreach ($majorWinners as $winner)
-                                                        <tr class="border-b border-gray-100">
-                                                            <td class="py-3 px-6 text-left">{{ $winner['position'] }}</td>
-                                                            <td class="py-3 px-8 text-left font-bold">
-                                                                {{ $winner['candidate'] ? $winner['candidate']->users->first_name . ' ' . $winner['candidate']->users->last_name : 'No winner' }}
-                                                            </td>
-                                                            <td class="py-3 px-6 text-left">{{ $winner['candidate'] ? $winner['candidate']->partyLists->name : '-' }}</td>
-                                                            <td class="py-3 px-6 text-left">
-                                                                {{ $abstainCounts[$winner['position_id']] ?? 0 }}
-                                                            </td>
-                                                            <td class="py-3 px-6 text-left">
-                                                                <div
-                                                                    class="font-bold">{{ $winner['candidate'] ? $winner['candidate']->votes_count . ' votes' : '-' }}</div>
-                                                            </td>
-                                                        </tr>
-                                                    @endforeach
-                                                    </tbody>
-                                                </table>
+
+                                        <div class="border-b border-gray-200 last:border-b-0">
+                                            <div class="px-4 py-3 bg-gray-50">
+                                                <h4 class="text-xs font-semibold text-gray-700 uppercase tracking-wider">{{ $council }}</h4>
                                             </div>
-                                        @endforeach
-                                    </div>
-                                @endforeach
-                            </div>
-                        @endif
-                    </div>
-                @else
-                    <div class="border border-gray-200 rounded-md p-8 text-center">
-                        <div class="flex justify-center mb-4">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-500 opacity-20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+
+                                            @foreach ($winnersByMajor as $major => $majorWinners)
+                                                @if ($major !== 'N/A')
+                                                    <div class="px-4 py-2 bg-gray-100">
+                                                        <h5 class="text-xs font-medium text-gray-600 uppercase">Major: {{ $major }}</h5>
+                                                    </div>
+                                                @endif
+
+                                                <div class="overflow-x-auto">
+                                                    <table class="min-w-full divide-y divide-gray-200">
+                                                        <thead class="bg-gray-50">
+                                                        <tr>
+                                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Position</th>
+                                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Winner</th>
+                                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Party</th>
+                                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Votes</th>
+                                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Abstentions</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody class="bg-white divide-y divide-gray-200">
+                                                        @foreach ($majorWinners as $winner)
+                                                            <tr class="{{ $loop->even ? 'bg-gray-50' : 'bg-white' }}">
+                                                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $winner['position'] }}</td>
+                                                                <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
+                                                                    {{ $winner['candidate'] ? $winner['candidate']->users->first_name . ' ' . $winner['candidate']->users->last_name : 'No winner' }}
+                                                                </td>
+                                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                                    {{ $winner['candidate'] ? $winner['candidate']->partyLists->name : '-' }}
+                                                                </td>
+                                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                                    {{ $winner['candidate'] ? $winner['candidate']->votes_count : '-' }}
+                                                                </td>
+                                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                                    {{ $abstainCounts[$winner['position_id']] ?? 0 }}
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @endif
                         </div>
-                        <h3 class="text-[14px] font-medium mb-2">No currently created election</h3>
+                    @else
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-lg">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0">
+                                    <svg class="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div class="ml-3">
+                                    <h3 class="text-sm font-medium text-yellow-800">Election in Progress</h3>
+                                    <div class="mt-1 text-sm text-yellow-700">
+                                        <p>Results will be available once the election period has concluded.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                @else
+                    <div class="text-center py-12">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        <h3 class="mt-2 text-sm font-medium text-gray-900">No election selected</h3>
+                        <p class="mt-1 text-sm text-gray-500">Please select an election to view results.</p>
                     </div>
                 @endif
             </div>
