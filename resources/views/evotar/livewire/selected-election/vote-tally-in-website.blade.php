@@ -46,7 +46,7 @@
                                                                         </div>
                                                                         <div class="mt-[-38px] flex justify-center">
                                                                             <div class="border-2 border-black">
-                                                                                <img class="w-[110px]" src="{{ asset('storage/assets/profile/default.jpg') }}" alt="">
+                                                                                <img class="w-[110px]" src="{{ $candidate->users?->profile_photo_path ? asset('storage/' . $candidate->users?->profile_photo_path) : asset('storage/assets/profile/default.jpg') }}" alt="">
                                                                             </div>
                                                                         </div>
                                                                         <div class="mt-2 text-center">
