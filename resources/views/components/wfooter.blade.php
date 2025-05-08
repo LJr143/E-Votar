@@ -70,11 +70,6 @@
                     </h3>
                     <ul>
                         <li class="mb-1">
-                            <a class="hover:underline text-[12px]" href="{{ route('comelec-website.list-of-elections') }}">
-                                Elections
-                            </a>
-                        </li>
-                        <li class="mb-1">
                             <a class="hover:underline text-[12px]" href="{{ route('comelec-website.tutorial') }}">
                                 Tutorial
                             </a>

@@ -62,7 +62,6 @@
                     />
                     @error('password') <div class="text-green-500 text-[10px] sm:text-[12px]">{{ $message }}</div> @enderror
                 </div>
-
                 <!-- Buttons -->
                 <div class="flex justify-end mt-4 space-x-2">
                     <button @click="open = false" type="button" class="px-4 py-2 border rounded-md text-xs">

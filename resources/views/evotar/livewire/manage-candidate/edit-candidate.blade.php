@@ -49,6 +49,7 @@
             class="bg-white p-6 rounded shadow-md w-11/12 sm:w-2/5 max-h-[700px] z-[10000]"
         >
 
+
             <div class="flex justify-between items-center mb-4 border-b border-gray-300 pb-2">
                 <div>
                     <h2 class="text-sm font-bold text-left w-full sm:w-auto">Edit Candidate</h2>

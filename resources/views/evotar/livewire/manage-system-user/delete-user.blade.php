@@ -56,6 +56,7 @@
                 Are you sure you want to remove this user? This process <br>
                 cannot be undone {{ $user->first_name }}.
             </p>
+
             <form wire:submit.prevent="deleteUser">
                 <div>
                     <x-input
