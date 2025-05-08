@@ -90,7 +90,7 @@
             <div>
 
                 @if($selectedElection)
-                    @if($latestElection != 'ongoing')
+                    @if($latestElection->status != 'ongoing')
                         <div class="w-full mt-8 md:mt-0 mb-8" wire:key="voter-tally-{{ $selectedElection }}">
                             <div
                                 class="bg-gray-100 text-black uppercase text-[11px] leading-normal text-center font-bold py-2 border-b border-gray-300 rounded-t-lg">
