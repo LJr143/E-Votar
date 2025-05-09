@@ -36,7 +36,7 @@
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <p class="text-gray-700 mb-6 ml-5 text-xs text-left">Are you sure you want to verify user's facial authentication?: {{ $user->first_name . ' ' . $user->middle_initial
+            <p class="text-gray-700 mb-6 ml-5 text-xs text-left break-words whitespace-normal">Are you sure you want to verify user's facial authentication?: <br> {{ $user->first_name . ' ' . $user->middle_initial
   . ' ' . $user->last_name}}.</p>
 
             <form wire:submit.prevent="verifyUser">
@@ -47,7 +47,7 @@
                         class="border border-gray-300 rounded w-full p-2 text-sm"
                         placeholder="Enter your password"
                     />
-                    @error('password') <span class="text-yellow-500 text-xs">{{ $message }}</span> @enderror
+                    @error('password') <div class="text-yellow-500 text-[10px] sm:text-[12px]">{{ $message }}</div> @enderror
                 </div>
 
                 <!-- Buttons -->
