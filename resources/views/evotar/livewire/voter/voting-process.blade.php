@@ -266,7 +266,7 @@
          class="fixed inset-0 bg-black flex items-center justify-center z-50"
          x-cloak
          style="background-image: url('{{ asset('storage/assets/image/bg-image-voted.png') }}'); background-size: contain">
-        <div class="bg-white p-6 rounded w-[630px] flex flex-col justify-center items-center">
+        <div class="bg-white p-6 rounded w-full max-w-[630px] flex flex-col justify-center items-center overflow-y-auto max-h-[90vh]">
             <h2 class="text-[18px] font-bold mb-2 text-center uppercase">University of Southeastern Philippines Tagum-Unit</h2>
             <div class="flex justify-between items-center mb-1 w-1/2">
                 <img src="{{ asset('storage/assets/logo/usep_logo.jpg') }}" class="w-[45px]" alt="usep-logo">
