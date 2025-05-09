@@ -132,7 +132,6 @@ class ViewController extends Controller
             'college.exists' => 'The selected college does not exist.',
             'program.required' => 'Program selection is required.',
             'program.exists' => 'The selected program does not exist.',
-            'program_major.required' => 'Program major selection is required.',
             'program_major.exists' => 'The selected program major does not exist.',
             'username.required' => 'Username is required.',
             'username.unique' => 'This username is already taken.',
