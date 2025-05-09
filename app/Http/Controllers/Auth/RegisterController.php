@@ -62,7 +62,7 @@ class RegisterController extends Controller
     {
         return [
             'first_name' => 'required|string|max:255',
-            'middle_initial' => 'required|string|max:3',
+            'middle_initial' => 'nullable|string|max:3',
             'last_name' => 'required|string|max:255',
             'extension' => 'max:5',
             'gender' => 'required',
