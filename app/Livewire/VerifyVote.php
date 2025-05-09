@@ -25,7 +25,7 @@ class VerifyVote extends Component
         $this->voteId = $voteId;
     }
 
-    public function verify()
+    public function verify(): void
     {
         $this->reset(['error', 'success', 'encryptedData', 'voteData']);
 
@@ -44,7 +44,7 @@ class VerifyVote extends Component
             }
 
             // Get the image path (assuming you store this in the encoded_votes table)
-            $imagePath = storage_path('app/public/' . $encodedVote->image_path);
+            $imagePath = storage_path('app/public/' . $encodedVote->encoded_image_path);
 
             if (!file_exists($imagePath)) {
                 throw new \Exception('Vote receipt image not found.');
