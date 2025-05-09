@@ -266,9 +266,9 @@
          class="fixed inset-0 bg-black flex items-center justify-center z-50"
          x-cloak
          style="background-image: url('{{ asset('storage/assets/image/bg-image-voted.png') }}'); background-size: contain">
-        <div class="bg-white p-6 rounded w-[630px] flex flex-col justify-center items-center">
+        <div class="bg-white p-6 rounded shadow-md w-full max-w-4xl mx-4 max-h-[90vh] overflow-y-auto">
             <h2 class="text-[18px] font-bold mb-2 text-center uppercase">University of Southeastern Philippines Tagum-Unit</h2>
-            <div class="flex justify-between items-center mb-1 w-1/2">
+            <div class="flex justify-between items-center mb-1 md:w-1/2 mx-auto ">
                 <img src="{{ asset('storage/assets/logo/usep_logo.jpg') }}" class="w-[45px]" alt="usep-logo">
                 <h2 class="text-[16px] font-black text-center uppercase">Summary of Votes</h2>
                 <img src="{{ asset('storage/assets/logo/usg_logo.png') }}" class="w-[45px]" alt="usg-logo">
@@ -325,9 +325,9 @@
                                 $numWinners = $electionPosition->position->num_winners ?? 1;
                             @endphp
                             <li class="mb-2">
-                                <div class="flex justify-between">
+                                <div class="flex flex-col sm:flex-row justify-between">
                                     <p class="font-semibold">{{ optional($electionPosition->position)->name ?? 'Unknown Position' }}:</p>
-                                    <div class="flex flex-col items-end w-2/3 space-y-1">
+                                    <div class="flex flex-col items-end w-full sm:w-2/3  space-y-1">
                                         @for ($i = 1; $i <= $numWinners; $i++)
                                             @if(isset($positionAbstentions[$i]))
                                                 <span class="text-red-600 font-medium">(Abstained)</span>
@@ -364,11 +364,11 @@
                                 $numWinners = $electionPosition->position->num_winners ?? 1;
                             @endphp
                             <li class="mb-2">
-                                <div class="flex justify-between">
+                                <div class="flex flex-col sm:flex-row justify-between">
                                     <p class="font-semibold w-1/3">
                                         {{ optional($electionPosition->position)->name ?? 'Unknown Position' }}:
                                     </p>
-                                    <div class="flex flex-col items-end w-2/3 space-y-1">
+                                    <div class="flex flex-col items-end  w-full sm:w-2/3  space-y-1">
                                         @for ($i = 1; $i <= $numWinners; $i++)
                                             @if(isset($positionAbstentions[$i]))
                                                 <span class="text-red-600 font-medium">(Abstained)</span>
