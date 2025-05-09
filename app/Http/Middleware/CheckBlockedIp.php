@@ -15,7 +15,7 @@ class CheckBlockedIp
         $ipAddress = $request->ip();
         $userId = Auth::id();
 
-        $ipRecord = IpRecord::where('ip_address', $ipAddress)->where('user_id', $userId)
+        $ipRecord = IpRecord::where('user_id', $userId)
             ->where('status', 'blocked')
             ->first();
 
