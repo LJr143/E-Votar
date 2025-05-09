@@ -224,8 +224,8 @@
                         <div class="relative mt-1">
                             <select name="year_level" id="year_level" wire:model="year_level"
                                     class="border border-gray-300 text-xs rounded px-2 py-0 w-full focus:ring-black focus:border-black h-[28px] text-[12px] @error('year_level') border-red-500 @enderror">
-                                <option value="" disabled selected>Select year level</option>
-                                <option value="1st Year">1st year</option>
+                                <option value="" >Select year level</option>
+                                <option value="1st year">1st year</option>
                                 <option value="2nd Year">2nd year</option>
                                 <option value="3rd Year">3rd year</option>
                                 <option value="4th Year">4th year</option>
