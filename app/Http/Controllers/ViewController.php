@@ -98,7 +98,6 @@ class ViewController extends Controller
             'campus' => 'required|integer|exists:campuses,id',
             'college' => 'required|integer|exists:colleges,id',
             'program' => 'required|integer|exists:programs,id',
-            'program_major' => 'nullable|integer|exists:program_majors,id',
             'username' => 'required|string|max:255|unique:users,username',
             'password' => 'required|string|min:8',
             'confirm_password' => 'required|string|min:8|same:password',
