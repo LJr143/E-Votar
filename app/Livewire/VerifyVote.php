@@ -5,7 +5,6 @@ namespace App\Livewire;
 use App\Models\VoterEncodeVote;
 use Livewire\Component;
 use Illuminate\Support\Facades\Hash;
-use App\Models\EncodedVote;
 use App\Helpers\SteganographyHelper;
 use App\Helpers\EncryptionHelper;
 use Illuminate\Support\Facades\Storage;
@@ -18,9 +17,11 @@ class VerifyVote extends Component
     public $voteData;
     public $error;
     public $success;
+    public $user;
 
     public function mount($voteId)
     {
+        $this->user = auth()->user();
         $this->voteId = $voteId;
     }
 
@@ -38,7 +39,7 @@ class VerifyVote extends Component
             }
 
             // Verify the password
-            if (!Hash::check($this->password, $encodedVote->verification_password)) {
+            if (!Hash::check($this->password, $this->user->password)) {
                 throw new \Exception('Invalid verification password.');
             }
 

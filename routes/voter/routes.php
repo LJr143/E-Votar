@@ -22,6 +22,10 @@ Route::middleware(['splash.screen', 'check.deactivated', 'single.voter.session',
     Route::get('/accounts-settings', [ViewController::class, 'voterAccountSettings'])    ->name('voter.account.settings')->middleware('voter.auth' );
     Route::get('/verify-vote', [VoterElectionController::class, 'showVerifyVotePage']) ->name('verify.vote.page')->middleware('auth');
     Route::post('/verify-vote', [VoterElectionController::class, 'verifyVote'])->name('verify.vote.submit')->middleware('auth');
+    // In web.php
+    Route::get('/verify-vote/{voteId}', function ($voteId) {
+        return view('evotar.livewire.verify-vote', ['voteId' => $voteId]);
+    })->name('verify.vote.page');
     Route::get('/download-receipt/{id}', [VoterElectionController::class, 'downloadReceipt'])->name('voter.download.receipt');
 });
 
