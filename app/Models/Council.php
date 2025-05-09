@@ -16,7 +16,7 @@ class Council extends Model
 
     public function program(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(Program::class, 'id');
+        return $this->hasMany(Program::class, 'council_id');
     }
 
     public function councilPositionSetting(): \Illuminate\Database\Eloquent\Relations\HasMany

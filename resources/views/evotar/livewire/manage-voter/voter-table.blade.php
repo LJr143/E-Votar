@@ -287,17 +287,17 @@
                                 <th class="py-3 px-6 border-b text-left border-gray-300">Name</th>
                                 <th class="py-3 px-6 border-b text-left border-gray-300">Student ID</th>
                                 <th class="py-3 px-6 border-b text-left border-gray-300">Email</th>
-                                {{--                                <th class="px-4 py-3 text-[12px] text-left w-[18ch]">College</th>--}}
                                 <th class="py-3 px-6 border-b text-left border-gray-300">Program</th>
                                 <th class="py-3 px-6 border-b text-left border-gray-300">Major</th>
                                 <th class="py-3 px-6 border-b text-left border-gray-300">Year</th>
                                 <th class="py-3 px-6 border-b text-center border-gray-300">Account Status</th>
+                                <th class="py-3 px-6 border-b text-center border-gray-300">Voting Status</th>
                                 <th class="py-3 px-6 rounded-tr-lg border-b text-center border-gray-300 exclude-print">
                                     Actions
                                 </th>
                             </tr>
                             </thead>
-                            <tbody class="text-black text-[12px] font-light">
+                            <tbody class="text-black text-[12px] font-light" >
                             @foreach($voters as $voter)
                                 <tr class="border-b border-gray-100 rows" wire:key="voter-table-{{ $voter->id }}">
                                     <td class="py-3 px-6 text-left exclude-print">
@@ -333,19 +333,29 @@
                                             {{ $voter->account_status }}
                                         </span>
                                     </td>
-                                    <td class="py-3 px-6 text-center flex justify-center items-center exclude-print" wire:key="voter-action-column-{{ $voter->id }}">
-                                        <div class="inline-flex justify-between align-middle items-center space-x-2" wire:key="voter-action-column-{{ $voter->id }}">
-                                             @can('edit voter')
-                                                <livewire:manage-voter.edit-voter :userId="$voter->id"
-                                                                                  wire:key="edit-election-{{ $voter->id }}"/>
-                                            @endcan
-                                            @can('delete voter')
-                                                <livewire:manage-voter.delete-voter :user_id="$voter->id"
-                                                                                    wire:key="delete-election-{{ $voter->id }}"/>
-                                            @endcan
-                                            @can('verify voter')
-                                                     <livewire:confirm-academic-details :voterId="$voter->id" :key="'verify-'.$voter->id" />
-                                            @endcan
+                                    <td class="py-3 px-6 text-center">
+                                            <span class="inline-block w-auto px-2 py-1 text-center whitespace-nowrap rounded
+                                                @if($voter->votes->isNotEmpty()) bg-purple-500 text-white @else bg-gray-500 text-white @endif">
+                                                @if($voter->votes->isNotEmpty()) Voted @else Not Voted @endif
+                                            </span>
+                                    </td>
+                                    <td class="py-3 px-6 text-center flex justify-center items-center exclude-print">
+                                        <div class="inline-flex justify-between align-middle items-center space-x-2">
+                                            <div wire:key="edit-voter-column-{{ $voter->id }}">
+                                                @can('edit voter')
+                                                    <livewire:manage-voter.edit-voter :userId="$voter->id" wire:key="edit-voter-{{ $voter->id }}"/>
+                                                @endcan
+                                            </div>
+{{--                                           <div wire:key="delete-voter-column-{{ $voter->id }}">--}}
+{{--                                               @can('delete voter')--}}
+{{--                                                   <livewire:manage-voter.delete-voter :user_id="$voter->id" wire:key="delete-voter--column-voter{{ $voter->id }}"/>--}}
+{{--                                               @endcan--}}
+{{--                                           </div>--}}
+                                           <div wire:key="verify-voter-column-{{ $voter->id }}">
+                                               @can('verify voter')
+                                                   <livewire:confirm-academic-details :voterId="$voter->id" wire:key="verify-voter-{{ $voter->id }}"/>
+                                               @endcan
+                                           </div>
                                         </div>
                                     </td>
                                 </tr>

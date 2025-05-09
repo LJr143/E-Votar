@@ -32,5 +32,10 @@ class Position extends Model
         return $this->hasManyThrough(Candidate::class, ElectionPosition::class, 'position_id', 'election_position_id');
     }
 
+    public function abstains(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(AbstainVote::class, 'position_id');
+    }
+
 
 }

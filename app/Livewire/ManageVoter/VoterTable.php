@@ -24,7 +24,6 @@ class VoterTable extends Component
     use WithPagination, WithFileUploads;
     protected $listeners  = ['voter-updated' => '$refresh', 'deactivated-user' => '$refresh', 'activated-user' => '$refresh'];
 
-//    public string $filter = 'all_users';
     public string $search = '';
     public $perPage = 10;
 
@@ -60,9 +59,12 @@ class VoterTable extends Component
 
     public function fetchUsers()
     {
+        $selectedElectionId = session('selectedElection');
         $usersQuery = User::whereHas('roles', function ($q) {
             $q->where('name', 'voter');
-        })
+        })->with(['votes' => function($query) use ($selectedElectionId) {
+            $query->where('election_id', $selectedElectionId);
+        }])
             ->orderBy('id', 'desc')
             ->when($this->search, function ($query) {
                 $matchingUserIds = User::searchEncrypted($this->search, ['first_name', 'last_name'])
