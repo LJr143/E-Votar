@@ -34,7 +34,7 @@ class VerifyVote extends Component
             $encodedVote = VoterEncodeVote::findOrFail($this->voteId);
 
             // Verify the voter owns this vote
-            if (auth()->id() !== $encodedVote->voter_id) {
+            if (auth()->id() !== $encodedVote->user_id) {
                 throw new \Exception('You can only verify your own votes.');
             }
 
