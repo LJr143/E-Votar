@@ -11,7 +11,7 @@
         <div class="min-h-screen w-full flex justify-center  " style="background-color: #E8EBEE">
             <div>
                 <div>
-                    <img src="{{ asset('storage/assets/image/voted-animation-gif.gif') }}" alt="" style="height: 550px">
+                    <livewire:verify-vote :voteId="$encodedVote->id" />
                 </div>
                 <div class="mt-6 flex flex-col justify-center items-center">
                    <div class="flex justify-between items-center w-full">
@@ -34,12 +34,13 @@
                            </a>
                        @endif
                    </div>
-                    <div>
-                        <a href="{{ route('verify.vote.page', ['voteId' => $encodedVote->id]) }}"
-                           class="text-red-700 hover:underline text-[12px]">
-                            Verify Your Vote
-                        </a>
-                    </div>
+{{--                    <div>--}}
+{{--                        <a href="{{ route('verify.vote.page', ['voteId' => $encodedVote->id]) }}"--}}
+{{--                           class="text-red-700 hover:underline text-[12px]">--}}
+{{--                            Verify Your Vote--}}
+{{--                        </a>--}}
+{{--                    </div>--}}
+
 
                 </div>
             </div>
