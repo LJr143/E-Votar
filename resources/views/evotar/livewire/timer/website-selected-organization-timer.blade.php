@@ -52,19 +52,11 @@
             display: none !important;
         }
     </style>
-    @php
-        $election = \App\Models\Election::find($selectedElection);
-        $now = now();
-    @endphp
-
-    @if(!$election)
-        <span class="text-sm font-bold text-red-500">No election selected</span>
-    @elseif($election->date_started > $now)
-        <span class="text-sm font-bold text-blue-500">
-        Election starts in {{ $election->date_started->diffForHumans() }}
-    </span>
-    @elseif($election->date_ended <= $now)
-        <span class="text-sm font-bold text-red-500">Election has ended</span>
+@php
+    $election = \App\Models\Election::find($selectedElection);
+@endphp
+    @if($election->date_started > now())
+        <span class="text-sm font-bold">Election has not yet Started</span>
     @else
         <div class="custom-countdown">
             <div class="timer-header flex justify-center text-center">
@@ -99,6 +91,7 @@
             </div>
         </div>
     @endif
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
