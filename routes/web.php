@@ -35,6 +35,9 @@ Route::get('login', function () {
    return redirect(route('voter.login'));
 });
 
+Route::get('/login', fn () => redirect('/'))->name('login');
+
+
 Route::post('/forgot-password', [CustomPasswordResetLinkController::class, 'store'])
     ->middleware('guest')
     ->name('password.email');
