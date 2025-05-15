@@ -397,6 +397,22 @@
                                             <span class="text-white font-bold text-[12px] text-center">Verification Required</span>
                                         </div>
                                     @endif
+                                    @if(!$hasStarted)
+                                        <!-- Not Started Overlay -->
+                                        <div class="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center rounded-lg">
+                                            <div class="bg-white rounded-full h-12 w-12 flex items-center justify-center mb-2">
+                                                <svg class="h-6 w-6 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                                </svg>
+                                            </div>
+                                            <span class="text-white font-bold text-xs text-center px-2">
+                                                Election has not yet started<br>
+                                                @if(isset($election->date_started))
+                                                                                        <span class="font-normal">Begins {{ $election->date_started->format('M j, Y g:i A') }}</span>
+                                                                                    @endif
+                                            </span>
+                                        </div>
+                                    @endif
 
                                     @if($hasVoted)
                                         <!-- Voted overlay -->
