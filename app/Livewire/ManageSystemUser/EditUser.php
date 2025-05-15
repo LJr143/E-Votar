@@ -89,16 +89,23 @@ class EditUser extends Component
     {
         $this->validate([
             'selectedUser' => 'required'
-
         ]);
 
         $this->currentStep = 2;
 
-        $this->user = User::findOrFail($this->userId);
+        // Refresh all data
+        $this->refreshPermissions();
+    }
+
+    private function refreshPermissions(): void
+    {
+        $this->user = User::with(['roles', 'permissions'])->findOrFail($this->userId);
         $this->roles = Role::with('permissions')->get();
         $this->permissions = Permission::all();
-        $this->userPermissions = $this->user->getDirectPermissions();
-        $this->rolePermissions = $this->user->getPermissionsViaRoles();
+
+        // Always convert to array of permission names for consistent comparison
+        $this->userPermissions = $this->user->getDirectPermissions()->pluck('name')->toArray();
+        $this->rolePermissions = $this->user->getPermissionsViaRoles()->pluck('name')->toArray();
     }
 
     /**
@@ -106,35 +113,18 @@ class EditUser extends Component
      */
     public function togglePermission($permissionName): void
     {
-        if (!Permission::where('name', $permissionName)->exists()) {
-            throw new \Exception('Invalid permission');
-        }
+        $user = User::findOrFail($this->userId);
 
-        $user = User::find($this->userId);
-
-        // Check if the permission is granted via role
-        if ($this->rolePermissions->contains('name', $permissionName)) {
-            // Override the role-based permission by directly assigning or revoking
-            if ($user->hasDirectPermission($permissionName)) {
-                $user->revokePermissionTo($permissionName);
-                session()->flash('success', "Permission '{$permissionName}' has been removed.");
-            } else {
-                $user->givePermissionTo($permissionName);
-                session()->flash('success', "Permission '{$permissionName}' has been added.");
-            }
+        if ($user->hasDirectPermission($permissionName)) {
+            $user->revokePermissionTo($permissionName);
+            session()->flash('success', "Permission '{$permissionName}' has been removed.");
         } else {
-            // Handle direct user permissions
-            if ($user->hasDirectPermission($permissionName)) {
-                $user->revokePermissionTo($permissionName);
-                session()->flash('success', "Permission '{$permissionName}' has been removed.");
-            } else {
-                $user->givePermissionTo($permissionName);
-                session()->flash('success', "Permission '{$permissionName}' has been added.");
-            }
+            $user->givePermissionTo($permissionName);
+            session()->flash('success', "Permission '{$permissionName}' has been added.");
         }
 
-        // Refresh permissions
-        $this->userPermissions = $user->getDirectPermissions();
+        // Refresh all permissions after change
+        $this->refreshPermissions();
     }
 
     public function addPermission($permissionName): void
