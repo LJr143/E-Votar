@@ -253,6 +253,9 @@
                             </svg>
                         </button>
 
+
+                @endcanany
+
                         <!-- Dropdown Menu -->
                         <ul x-show="open" x-collapse class="mt-1 ml-10 border-l-2 border-gray-300 space-y-1">
                             <li>
@@ -286,7 +289,6 @@
                             </li>
                         </ul>
                     </li>
-                @endcanany
 
                 @canany(['view colleges', 'view programs', 'view majors'])
                     <li x-data="{ isActive: false, open: {{ request()->routeIs('admin.college') || request()->routeIs('admin.program') || request()->routeIs('admin.program.major*') ? 'true' : 'false' }} }"
