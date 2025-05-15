@@ -100,7 +100,7 @@
                                             <div class="mb-2 flex justify-center">
                                                 <div class="border-2 border-red-200 rounded-full p-1">
                                                     <img class="w-[80px] h-[80px] object-cover rounded-full"
-                                                         src="{{ $candidate->users->profile_photo_path ? asset('storage/'.$candidate->users->profile_photo_path) : asset('storage/assets/profile/cat_meme.jpg') }}"
+                                                         src="{{ $candidate->users->profile_photo_path ? asset('storage/'.$candidate->users->profile_photo_path) : asset('storage/assets/profile/default.jpg') }}"
                                                          alt="{{ $candidate->users->first_name }} {{ $candidate->users->last_name }} profile photo">
                                                 </div>
                                             </div>
