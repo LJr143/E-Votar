@@ -15,8 +15,9 @@ class CustomPasswordResetLinkController extends Controller
         // Use searchEncrypted which decrypts then compares
         $users = User::searchEncrypted($request->email, ['email']);
 
+
         if ($users->isEmpty()) {
-            return back()->withErrors(['email' => __('We can\'t find a user with that email address.')]);
+            return back()->withErrors(['email' => __('We can\'t find a user with that email address. Stress na ako')]);
         }
 
         // Get the first matching user

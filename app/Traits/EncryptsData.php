@@ -75,7 +75,7 @@ trait EncryptsData
         // Then filter by decrypted values
         return $results->filter(function($item) use ($fields, $searchTerm) {
             foreach ($fields as $field) {
-                $decryptedValue = strtolower($item->$field); // Automatically decrypted by getAttribute
+                $decryptedValue = strtolower($item->$field);
                 if (str_contains($decryptedValue, $searchTerm)) {
                     return true;
                 }
