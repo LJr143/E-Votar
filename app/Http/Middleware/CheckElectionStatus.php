@@ -27,6 +27,13 @@ class CheckElectionStatus
                     'status' => 'paused'
                 ], 403);
             }
+
+            if ($election && $election->date_started > now()) {
+                return response()->json([
+                    'message' => 'Election has not yet started',
+                    'status' => 'pending'
+                ], 403);
+            }
         }
 
         return $next($request);
