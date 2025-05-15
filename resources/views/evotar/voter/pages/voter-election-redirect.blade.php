@@ -407,9 +407,6 @@
                                             </div>
                                             <span class="text-white font-bold text-xs text-center px-2">
                                                 Election has not yet started<br>
-                                                @if(isset($election->date_started))
-                                                                                        <span class="font-normal">Begins {{ $election->date_started->format('M j, Y g:i A') }}</span>
-                                                                                    @endif
                                             </span>
                                         </div>
                                     @endif
