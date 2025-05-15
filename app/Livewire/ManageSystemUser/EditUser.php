@@ -37,9 +37,6 @@ class EditUser extends Component
             $this->selectedUser = $this->user->id;
             $this->username = $this->user->username;
             $this->selectedRole = $this->user->roles->pluck('id')->first();
-
-            // Automatically load permissions if editing existing user
-            $this->proceedToAccessRole();
         }
 
         $this->roles = Role::all();
