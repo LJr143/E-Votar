@@ -92,9 +92,7 @@ class AddSystemUser extends Component
         $this->user = User::findOrFail($this->userId);
         $this->roles = Role::with('permissions')->get();
         $this->permissions = Permission::all();
-
-        // Get all permissions (direct and via roles)
-        $this->userPermissions = $this->user->getAllPermissions()->pluck('id')->toArray();
+        $this->userPermissions = $this->user->getDirectPermissions()->pluck('id')->toArray();
         $this->rolePermissions = $this->user->getPermissionsViaRoles();
     }
 
@@ -109,23 +107,29 @@ class AddSystemUser extends Component
 
         $user = User::find($this->userId);
 
-        // Check current permission status
-        if ($user->hasPermissionTo($permissionName)) {
-            // If permission comes from role, we can only add direct permission
+        // Convert rolePermissions to an array
+        $rolePermissionsArray = $this->rolePermissions->pluck('name')->toArray();
+
+        // Check if the permission is granted via role
+        if (in_array($permissionName, $rolePermissionsArray)) {
             if ($user->hasDirectPermission($permissionName)) {
                 $user->revokePermissionTo($permissionName);
                 session()->flash('success', "Permission '{$permissionName}' has been removed.");
             } else {
-                // Permission comes from role, so we add direct permission to override
                 $user->givePermissionTo($permissionName);
-                session()->flash('success', "Explicit permission '{$permissionName}' has been added (overriding role permission).");
+                session()->flash('success', "Permission '{$permissionName}' has been added.");
             }
         } else {
-            $user->givePermissionTo($permissionName);
-            session()->flash('success', "Permission '{$permissionName}' has been added.");
+            if ($user->hasDirectPermission($permissionName)) {
+                $user->revokePermissionTo($permissionName);
+                session()->flash('success', "Permission '{$permissionName}' has been removed.");
+            } else {
+                $user->givePermissionTo($permissionName);
+                session()->flash('success', "Permission '{$permissionName}' has been added.");
+            }
         }
 
-        $this->userPermissions = $user->getAllPermissions()->pluck('id')->toArray();
+        $this->userPermissions = $user->getDirectPermissions()->pluck('id')->toArray();
     }
 
     public function submit(): void
