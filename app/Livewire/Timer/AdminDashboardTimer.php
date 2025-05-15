@@ -57,7 +57,7 @@ class AdminDashboardTimer extends Component
             $election->update([
                 'end_time' => $newEndTime,
                 'remaining_time' => null,
-                'status' => 'active'
+                'status' => 'pending'
             ]);
 
             event(new ElectionStatus());

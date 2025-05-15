@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CampusController;
 use App\Http\Controllers\FaceAuthController;
@@ -104,6 +105,13 @@ Route::post('/face/registration', [FaceRegistrationController::class, 'register'
 
 Route::get('/api/face/descriptors', [FaceAuthController::class, 'getDescriptors'])->name('api.face.get-descriptors');
 Route::post('/api/face/verification', [FaceAuthController::class, 'verify'])->name('api.face.verification');
+
+Route::get('/forgot-password', function () {
+    return view('auth.forgot-password');
+})->middleware('guest')->name('password.request');
+
+Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])
+    ->middleware('guest')->name('password.email');
 
 
 

@@ -86,6 +86,11 @@ class User extends Authenticatable
         'two_factor_secret',
     ];
 
+    public function findForPassport($username)
+    {
+        return $this->whereEncrypted('email', $username)->first();
+    }
+
     /**
      * The accessors to append to the model's array form.
      *
