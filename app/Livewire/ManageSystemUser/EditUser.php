@@ -113,17 +113,35 @@ class EditUser extends Component
      */
     public function togglePermission($permissionName): void
     {
-        $user = User::findOrFail($this->userId);
-
-        if ($user->hasDirectPermission($permissionName)) {
-            $user->revokePermissionTo($permissionName);
-            session()->flash('success', "Permission '{$permissionName}' has been removed.");
-        } else {
-            $user->givePermissionTo($permissionName);
-            session()->flash('success', "Permission '{$permissionName}' has been added.");
+        if (!Permission::where('name', $permissionName)->exists()) {
+            throw new \Exception('Invalid permission');
         }
 
-        // Refresh all permissions after change
+        $user = User::find($this->userId);
+
+        // Check if the permission is granted via role
+        if ($this->rolePermissions->contains('name', $permissionName)) {
+            // Override the role-based permission by directly assigning or revoking
+            if ($user->hasDirectPermission($permissionName)) {
+                $user->revokePermissionTo($permissionName);
+                session()->flash('success', "Permission '{$permissionName}' has been removed.");
+            } else {
+                $user->givePermissionTo($permissionName);
+                session()->flash('success', "Permission '{$permissionName}' has been added.");
+            }
+        } else {
+            // Handle direct user permissions
+            if ($user->hasDirectPermission($permissionName)) {
+                $user->revokePermissionTo($permissionName);
+                session()->flash('success', "Permission '{$permissionName}' has been removed.");
+            } else {
+                $user->givePermissionTo($permissionName);
+                session()->flash('success', "Permission '{$permissionName}' has been added.");
+            }
+        }
+
+        // Refresh permissions
+        $this->userPermissions = $user->getDirectPermissions();
         $this->refreshPermissions();
     }
 
