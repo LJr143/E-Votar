@@ -35,6 +35,10 @@ class UpdateElectionStatus extends Command
             ->orWhere('status', 'active')
             ->update(['status' => 'ongoing']);
 
+        Election::where('date_started', '>', $now)
+            ->where('status', 'active')
+            ->update(['status' => 'pending']);
+
         // Optional: Also mark elections as "completed" when date_ended is passed
         Election::where('date_ended', '<', $now)
             ->where('status', 'ongoing')
