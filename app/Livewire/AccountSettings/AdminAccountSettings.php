@@ -14,7 +14,6 @@ class AdminAccountSettings extends Component
 {
     use WithFileUploads;
 
-    // Properties match frontend wire:model bindings
     public $firstName;
     public $middleInitial;
     public $lastName;
@@ -40,7 +39,7 @@ class AdminAccountSettings extends Component
         'special' => false,
     ];
 
-    public $formErrors = []; // Not used in frontend, can be removed if no other logic depends on it
+    public $formErrors = [];
 
     protected $listeners = ['refreshComponent' => '$refresh'];
 
@@ -66,9 +65,8 @@ class AdminAccountSettings extends Component
 
     public function updatedProfileImage()
     {
-        // Validates and sets temporary URL for preview
         $this->validate([
-            'profileImage' => 'image|max:10240'
+            'profileImage' => 'image|max:20480'
 
         ]);
 
