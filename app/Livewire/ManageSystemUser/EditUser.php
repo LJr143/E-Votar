@@ -89,23 +89,16 @@ class EditUser extends Component
     {
         $this->validate([
             'selectedUser' => 'required'
+
         ]);
 
         $this->currentStep = 2;
 
-        // Refresh all data
-        $this->refreshPermissions();
-    }
-
-    private function refreshPermissions(): void
-    {
-        $this->user = User::with(['roles', 'permissions'])->findOrFail($this->userId);
+        $this->user = User::findOrFail($this->userId);
         $this->roles = Role::with('permissions')->get();
         $this->permissions = Permission::all();
-
-        // Always convert to array of permission names for consistent comparison
-        $this->userPermissions = $this->user->getDirectPermissions()->pluck('name')->toArray();
-        $this->rolePermissions = $this->user->getPermissionsViaRoles()->pluck('name')->toArray();
+        $this->userPermissions = $this->user->getDirectPermissions();
+        $this->rolePermissions = $this->user->getPermissionsViaRoles();
     }
 
     /**
@@ -142,7 +135,6 @@ class EditUser extends Component
 
         // Refresh permissions
         $this->userPermissions = $user->getDirectPermissions();
-        $this->refreshPermissions();
     }
 
     public function addPermission($permissionName): void
