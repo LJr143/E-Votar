@@ -223,22 +223,20 @@
                 @endcan
 
                 @canany(['view users', 'view voter'])
-                    <li x-data="{  isActive: false, open: {{ request()->routeIs('admin.voters') || request()->routeIs('admin.system.user') ? 'true' : 'false' }} }"
+                    <li x-data="{ isActive: false, open: {{ in_array(request()->route()->getName(), ['admin.voters', 'admin.voters.*', 'admin.system.user', 'admin.system.user.*']) ? 'true' : 'false' }} }"
                         class="relative group mb-2">
                         <!-- Parent Button -->
                         <button @click="open = !open"
                                 class="flex justify-between items-center px-4 py-2 w-full rounded-md transition duration-200
-                                 {{ request()->routeIs('admin.voters*') || request()->routeIs('admin.system.user*') ? 'bg-black text-white' : 'text-[#757575] hover:bg-black hover:text-white' }}">
+                 {{ in_array(request()->route()->getName(), ['admin.voters', 'admin.voters.*', 'admin.system.user', 'admin.system.user.*']) ? 'bg-black text-white' : 'text-[#757575] hover:bg-black hover:text-white' }}">
 
-                            <div class="flex items-center space-x-1 ">
-
+                            <div class="flex items-center space-x-1">
                                 <!-- SVG Icon -->
                                 <svg class="icon mr-1"
                                      :class="isActive ? 'text-white fill-white' : 'text-[#757575] fill-[#757575]'"
                                      xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"
                                      width="20px" fill="currentColor">
-                                    <path
-                                        d="M384-484.07q-63.59 0-107.86-44.27-44.27-44.27-44.27-107.86 0-63.58 44.27-107.74 44.27-44.15 107.86-44.15 63.59 0 107.86 44.15 44.27 44.16 44.27 107.74 0 63.59-44.27 107.86-44.27 44.27-107.86 44.27ZM87.87-179.8v-100.61q0-29.59 14.77-52.76 14.77-23.18 36.77-36.18 55-32 117.8-49.36Q320-436.07 384-436.07q11 0 22.53.5 11.54.5 23.49 1.5-7.48 17-12.77 39.79-5.29 22.78-7.77 42.21l-24.9-1q-52.19 0-103.95 13.41-51.76 13.4-98.76 41.21-4.95 2.89-7.98 7.83-3.02 4.93-3.02 11.4v16.42h247.65q5.33 21.26 15.67 43.03 10.35 21.77 23.03 39.97H87.87Zm554.72 43.93-12.24-57.2q-13.05-4.52-25.07-11.4-12.02-6.88-22.3-15.16l-56.2 17.48-34.87-60.26 41.96-40.72q-4.24-12.8-3.62-27.45.62-14.64 3.62-27.44l-41.96-39.96L526.78-459l55.2 16.48q10.28-9.28 22.8-16.66 12.52-7.39 25.57-10.91l13.24-57.19h69.98l13.23 57.19q13.05 4.52 25.69 11.29 12.64 6.76 22.92 16.28L830.37-458l35.11 60.02-41.2 38.96q2.24 14.04 2.12 28.5-.12 14.45-3.12 27.39l42.2 39.72-35.11 60.26-55.96-16.48q-10.28 8.28-22.42 15.66-12.14 7.38-25.19 10.9l-14.23 57.2h-69.98Zm36.32-125.5q28.83 0 49.35-20.85 20.52-20.86 20.52-49.69t-20.73-49.35q-20.74-20.52-49.57-20.52-28.83 0-49.47 20.73-20.64 20.74-20.64 49.57 0 28.83 20.85 49.47 20.86 20.64 49.69 20.64ZM384.2-567.07q28.6 0 48.77-20.36 20.16-20.37 20.16-48.97 0-28.6-20.37-48.64-20.36-20.05-48.96-20.05t-48.77 20.3q-20.16 20.3-20.16 48.81 0 28.6 20.37 48.76 20.36 20.15 48.96 20.15Zm-.2-69.13Zm34.52 373.4Z"/>
+                                    <path d="M384-484.07q-63.59 0-107.86-44.27-44.27-44.27-44.27-107.86 0-63.58 44.27-107.74 44.27-44.15 107.86-44.15 63.59 0 107.86 44.15 44.27 44.16 44.27 107.74 0 63.59-44.27 107.86-44.27 44.27-107.86 44.27ZM87.87-179.8v-100.61q0-29.59 14.77-52.76 14.77-23.18 36.77-36.18 55-32 117.8-49.36Q320-436.07 384-436.07q11 0 22.53.5 11.54.5 23.49 1.5-7.48 17-12.77 39.79-5.29 22.78-7.77 42.21l-24.9-1q-52.19 0-103.95 13.41-51.76 13.4-98.76 41.21-4.95 2.89-7.98 7.83-3.02 4.93-3.02 11.4v16.42h247.65q5.33 21.26 15.67 43.03 10.35 21.77 23.03 39.97H87.87Zm554.72 43.93-12.24-57.2q-13.05-4.52-25.07-11.4-12.02-6.88-22.3-15.16l-56.2 17.48-34.87-60.26 41.96-40.72q-4.24-12.8-3.62-27.45.62-14.64 3.62-27.44l-41.96-39.96L526.78-459l55.2 16.48q10.28-9.28 22.8-16.66 12.52-7.39 25.57-10.91l13.24-57.19h69.98l13.23 57.19q13.05 4.52 25.69 11.29 12.64 6.76 22.92 16.28L830.37-458l35.11 60.02-41.2 38.96q2.24 14.04 2.12 28.5-.12 14.45-3.12 27.39l42.2 39.72-35.11 60.26-55.96-16.48q-10.28 8.28-22.42 15.66-12.14 7.38-25.19 10.9l-14.23 57.2h-69.98Zm36.32-125.5q28.83 0 49.35-20.85 20.52-20.86 20.52-49.69t-20.73-49.35q-20.74-20.52-49.57-20.52-28.83 0-49.47 20.73-20.64 20.74-20.64 49.57 0 28.83 20.85 49.47 20.86 20.64 49.69 20.64ZM384.2-567.07q28.6 0 48.77-20.36 20.16-20.37 20.16-48.97 0-28.6-20.37-48.64-20.36-20.05-48.96-20.05t-48.77 20.3q-20.16 20.3-20.16 48.81 0 28.6 20.37 48.76 20.36 20.15 48.96 20.15Zm-.2-69.13Zm34.52 373.4Z"/>
                                 </svg>
 
                                 <span class="text-[12px] font-normal">Manage System User</span>
@@ -253,42 +251,40 @@
                             </svg>
                         </button>
 
-
-                @endcanany
-
                         <!-- Dropdown Menu -->
                         <ul x-show="open" x-collapse class="mt-1 ml-10 border-l-2 border-gray-300 space-y-1">
-                            <li>
-                                <a href="{{ auth()->user()->hasAnyRole($rolesExceptVoter) ? route('admin.voters') : '#' }}"
-                                   class="flex items-center block px-3 py-2 text-[11px] transition duration-200 rounded-md
-                                    {{ request()->routeIs('admin.voters') ? 'bg-black text-white' : 'text-[#757575] hover:bg-black hover:text-white' }}">
-                                    <!-- SVG Icon -->
-                                    <svg class="icon mr-2" width="20" height="20" xmlns="http://www.w3.org/2000/svg"
-                                         viewBox="0 -960 960 960" fill="currentColor">
-                                        <path
-                                            d="M80-160v-112q0-33 17-62t47-44q51-26 115-44t141-18q30 0 58.5 3t55.5 9l-70 70q-11-2-21.5-2H400q-71 0-127.5 17T180-306q-9 5-14.5 14t-5.5 20v32h250l80 80H80Zm542 16L484-282l56-56 82 82 202-202 56 56-258 258ZM400-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47Zm10 240Zm-10-320q33 0 56.5-23.5T480-640q0-33-23.5-56.5T400-720q-33 0-56.5 23.5T320-640q0 33 23.5 56.5T400-560Zm0-80Z"/>
-                                    </svg>
-                                    <!-- Text -->
-                                    Voter (Election Voter)
-                                </a>
-                            </li>
+                            @can('view voter')
+                                <li>
+                                    <a href="{{ route('admin.voters') }}"
+                                       class="flex items-center block px-3 py-2 text-[11px] transition duration-200 rounded-md
+                {{ request()->routeIs('admin.voters*') ? 'bg-black text-white' : 'text-[#757575] hover:bg-black hover:text-white' }}">
+                                        <!-- SVG Icon -->
+                                        <svg class="icon mr-2" width="20" height="20" xmlns="http://www.w3.org/2000/svg"
+                                             viewBox="0 -960 960 960" fill="currentColor">
+                                            <path d="M80-160v-112q0-33 17-62t47-44q51-26 115-44t141-18q30 0 58.5 3t55.5 9l-70 70q-11-2-21.5-2H400q-71 0-127.5 17T180-306q-9 5-14.5 14t-5.5 20v32h250l80 80H80Zm542 16L484-282l56-56 82 82 202-202 56 56-258 258ZM400-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47Zm10 240Zm-10-320q33 0 56.5-23.5T480-640q0-33-23.5-56.5T400-720q-33 0-56.5 23.5T320-640q0 33 23.5 56.5T400-560Zm0-80Z"/>
+                                        </svg>
+                                        Voter (Election Voter)
+                                    </a>
+                                </li>
+                            @endcan
 
-                            <li>
-                                <a href="{{ auth()->user()->hasAnyRole($rolesExceptVoter) ? route('admin.system.user') : '#' }}"
-                                   class="flex items-center block px-3 py-2 text-[11px] transition duration-200 rounded-md
-                                    {{ request()->routeIs('admin.system.user') ? 'bg-black text-white' : 'text-[#757575] hover:bg-black hover:text-white' }}">
-                                    <!-- SVG Icon -->
-                                    <svg class="icon mr-2" width="20" height="20" xmlns="http://www.w3.org/2000/svg"
-                                         viewBox="0 -960 960 960" fill="currentColor">
-                                        <path
-                                            d="M672-288q25 0 42.5-17.5T732-348q0-25-17.5-42.5T672-408q-25 0-42.5 17.5T612-348q0 25 17.5 42.5T672-288Zm-.09 120q32.47 0 59.28-15.81 26.81-15.81 43.19-41.81Q751-239 725.28-245.5q-25.72-6.5-53.5-6.5t-53.28 7q-25.5 7-48.88 19.38 16.38 26 43.1 41.81Q639.44-168 671.91-168ZM480-116.77q-123.77-30.39-207.88-143.77Q188-373.92 188-515v-215.15l292-112.31 292 112.31v220.61q-17-7.69-29.39-11.77-12.38-4.07-22.61-5.69v-168.38L480-787l-240 91.62V-515q0 55.15 15 105.81 15 50.65 42.85 93.69 27.84 43.04 66.96 76.58 39.11 33.54 85.96 56.46l1.16-.39q4.92 13 17.03 29.66 12.12 16.65 26.19 32.11-1.53.77-7.57 2.16-6.04 1.38-7.58 2.15Zm191.77.77q-71.69 0-121.73-50.27Q500-216.53 500-288.23q0-71.69 50.27-121.73Q600.53-460 672.23-460q71.69 0 121.73 50.27Q844-359.47 844-287.77q0 71.69-50.27 121.73Q743.47-116 671.77-116ZM480-474.23Z"/>
-                                    </svg>
-                                    <!-- Text -->
-                                    System user (Admins)
-                                </a>
-                            </li>
+                            @can('view users')
+                                <li>
+                                    <a href="{{ route('admin.system.user') }}"
+                                       class="flex items-center block px-3 py-2 text-[11px] transition duration-200 rounded-md
+                {{ request()->routeIs('admin.system.user*') ? 'bg-black text-white' : 'text-[#757575] hover:bg-black hover:text-white' }}">
+                                        <!-- SVG Icon -->
+                                        <svg class="icon mr-2" width="20" height="20" xmlns="http://www.w3.org/2000/svg"
+                                             viewBox="0 -960 960 960" fill="currentColor">
+                                            <path d="M672-288q25 0 42.5-17.5T732-348q0-25-17.5-42.5T672-408q-25 0-42.5 17.5T612-348q0 25 17.5 42.5T672-288Zm-.09 120q32.47 0 59.28-15.81 26.81-15.81 43.19-41.81Q751-239 725.28-245.5q-25.72-6.5-53.5-6.5t-53.28 7q-25.5 7-48.88 19.38 16.38 26 43.1 41.81Q639.44-168 671.91-168ZM480-116.77q-123.77-30.39-207.88-143.77Q188-373.92 188-515v-215.15l292-112.31 292 112.31v220.61q-17-7.69-29.39-11.77-12.38-4.07-22.61-5.69v-168.38L480-787l-240 91.62V-515q0 55.15 15 105.81 15 50.65 42.85 93.69 27.84 43.04 66.96 76.58 39.11 33.54 85.96 56.46l1.16-.39q4.92 13 17.03 29.66 12.12 16.65 26.19 32.11-1.53.77-7.57 2.16-6.04 1.38-7.58 2.15Zm191.77.77q-71.69 0-121.73-50.27Q500-216.53 500-288.23q0-71.69 50.27-121.73Q600.53-460 672.23-460q71.69 0 121.73 50.27Q844-359.47 844-287.77q0 71.69-50.27 121.73Q743.47-116 671.77-116ZM480-474.23Z"/>
+                                        </svg>
+                                        System user (Admins)
+                                    </a>
+                                </li>
+                            @endcan
                         </ul>
                     </li>
+                @endcanany
 
                 @canany(['view colleges', 'view programs', 'view majors'])
                     <li x-data="{ isActive: false, open: {{ request()->routeIs('admin.college') || request()->routeIs('admin.program') || request()->routeIs('admin.program.major*') ? 'true' : 'false' }} }"
