@@ -366,7 +366,8 @@
                             @php
                                 $hasVoted = in_array($election->id, $votedElections);
                                 $hasEnded = $election->date_ended <= now();
-                                $canVote = $isVerified;
+                                $ongoing = $election->date_started >= now();
+                                $canVote = $isVerified && ($hasEnded || $ongoing );
                             @endphp
 
                                 <!-- Election Card - Entire card is clickable -->
