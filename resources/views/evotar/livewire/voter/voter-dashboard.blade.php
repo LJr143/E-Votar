@@ -434,7 +434,7 @@
                                             <path
                                                 d="M12.75 7a.75.75 0 0 0-1.5 0v5a.75.75 0 0 0 .22.53l3.25 3.25a.75.75 0 1 0 1.06-1.06l-3.03-3.03V7z"/>
                                         </svg>
-                                        <span class="ml-1 text-sm text-gray-600 font-medium">Election Paused</span>
+                                        <span class="ml-1 text-sm text-gray-600 font-medium">Election is Pending</span>
                                     @else
                                         Vote Now
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
