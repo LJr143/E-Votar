@@ -5,5 +5,4 @@ return [
     App\Providers\EvotarServiceProvider::class,
     App\Providers\FortifyServiceProvider::class,
     App\Providers\JetstreamServiceProvider::class,
-    App\Auth\EncryptedUserProvider::class,
 ];
