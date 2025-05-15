@@ -131,9 +131,11 @@ class AdminAccountSettings extends Component
                     ->symbols()
             ],
             'confirmPassword' => 'required|same:newPassword',
+            'username' => 'required',
         ]);
 
         $user->update([
+            'username' => $this->username,
             'password' => Hash::make($this->newPassword)
         ]);
 
