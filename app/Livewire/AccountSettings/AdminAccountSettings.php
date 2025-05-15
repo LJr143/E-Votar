@@ -131,6 +131,7 @@ class AdminAccountSettings extends Component
             ],
             'confirmPassword' => 'required|same:newPassword',
             'username' => 'required',
+            'profile' => 'image|max:20480',
         ]);
 
         $user->update([
