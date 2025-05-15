@@ -222,7 +222,7 @@
 
                 @endcan
 
-                @can('view users')
+                @canany(['view users', 'view voter'])
                     <li x-data="{  isActive: false, open: {{ request()->routeIs('admin.voters') || request()->routeIs('admin.system.user') ? 'true' : 'false' }} }"
                         class="relative group mb-2">
                         <!-- Parent Button -->
@@ -286,7 +286,7 @@
                             </li>
                         </ul>
                     </li>
-                @endcan
+                @endcanany
 
                 @canany(['view colleges', 'view programs', 'view majors'])
                     <li x-data="{ isActive: false, open: {{ request()->routeIs('admin.college') || request()->routeIs('admin.program') || request()->routeIs('admin.program.major*') ? 'true' : 'false' }} }"
