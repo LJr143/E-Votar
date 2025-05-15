@@ -65,6 +65,7 @@
     </span>
     @elseif($election->date_ended <= $now)
         <span class="text-sm font-bold text-red-500">Election has ended</span>
+    @else
         <div class="custom-countdown">
             <div class="timer-header flex justify-center text-center">
                 <div class="flex items-center space-x-2">
