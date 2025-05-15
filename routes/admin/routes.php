@@ -20,7 +20,7 @@ Route::prefix('admin')->middleware(['splash.screen', 'check.deactivated', 'set.s
     Route::get('election/positions', [ViewController::class, 'positions'])->name('admin.positions');
 
     Route::get('election/results', [ViewController::class, 'electionResult'])->name('admin.election.result')->middleware('admin.auth:view election results');
-    Route::get('voters', [ViewController::class, 'voter'])->name('admin.voters')->middleware('admin.auth: view voter');
+    Route::get('voters', [ViewController::class, 'voter'])->name('admin.voters')->middleware('admin.auth:view voter');
     Route::get('system/users', [ViewController::class, 'systemUsers'])->name('admin.system.user')->middleware('admin.auth:view users');
     Route::get('college', [ViewController::class, 'college'])->name('admin.college')->middleware('admin.auth');
     Route::get('program', [ViewController::class, 'program'])->name('admin.program')->middleware('admin.auth');
