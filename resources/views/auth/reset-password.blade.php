@@ -12,6 +12,8 @@
 
                 <!-- Token from URL parameter -->
                 <input type="hidden" name="token" value="{{ $token }}">
+                <!-- Get email from URL query string -->
+                <input type="hidden" name="email" value="{{ request()->email }}">
 
                 <div>
                     <x-label for="email" value="{{ __('Email') }}" class="block text-sm font-medium text-gray-700" />
