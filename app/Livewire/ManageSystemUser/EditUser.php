@@ -35,6 +35,7 @@ class EditUser extends Component
         if ($this->user) {
             $this->userId = $this->user->id;
             $this->selectedUser = $this->user->id;
+            $this->selectUser($this->userId);
             $this->username = $this->user->username;
             $this->selectedRole = $this->user->roles->pluck('id')->first();
         }
@@ -85,6 +86,8 @@ class EditUser extends Component
     {
         $this->validate(['selectedUser' => 'required']);
         $this->currentStep = 2;
+        // Automatically load permissions if editing existing user
+        $this->proceedToAccessRole();
 
         $this->user = User::findOrFail($this->userId);
         $this->userPermissions = $this->user->getDirectPermissions()->pluck('name');
