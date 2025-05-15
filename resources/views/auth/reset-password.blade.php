@@ -4,40 +4,60 @@
             <x-authentication-card-logo />
         </x-slot>
 
-        <x-validation-errors class="mb-4" />
+        <div class="w-full max-w-md mx-auto p-6 sm:p-8 bg-white rounded-lg shadow-lg">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">{{ __('Reset Your Password') }}</h2>
 
-        <form method="POST" action="{{ route('password.update') }}">
-            @csrf
+            <x-validation-errors class="mb-6 bg-red-100 text-red-700 p-4 rounded-lg" />
 
-            <!-- Get token from URL parameter -->
-            <input type="hidden" name="token" value="{{ $token }}">
+            <form method="POST" action="{{ route('password.update') }}" class="space-y-6">
+                @csrf
 
-            <!-- Get email from URL query string -->
-            <input type="hidden" name="email" value="{{ request()->email }}">
+                <!-- Hidden inputs for token and email -->
+                <input type="hidden" name="token" value="{{ $token }}">
+                <input type="hidden" name="email" value="{{ request()->email }}">
 
-            <div class="block">
-                <x-label for="email" value="{{ __('Email') }}" />
-                <x-input id="email" class="block mt-1 w-full" type="email" name="email"
-                         :value="old('email', request()->email)" required autofocus autocomplete="username" />
-            </div>
+                <!-- Email Field -->
+                <div>
+                    <x-label for="email" value="{{ __('Email') }}" class="block text-sm font-medium text-gray-700" />
+                    <x-input id="email"
+                             class="block mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                             type="email"
+                             name="email"
+                             :value="old('email', request()->email)"
+                             required
+                             autofocus
+                             autocomplete="username" />
+                </div>
 
-            <div class="mt-4">
-                <x-label for="password" value="{{ __('Password') }}" />
-                <x-input id="password" class="block mt-1 w-full" type="password"
-                         name="password" required autocomplete="new-password" />
-            </div>
+                <!-- Password Field -->
+                <div>
+                    <x-label for="password" value="{{ __('Password') }}" class="block text-sm font-medium text-gray-700" />
+                    <x-input id="password"
+                             class="block mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                             type="password"
+                             name="password"
+                             required
+                             autocomplete="new-password" />
+                </div>
 
-            <div class="mt-4">
-                <x-label for="password_confirmation" value="{{ __('Confirm Password') }}" />
-                <x-input id="password_confirmation" class="block mt-1 w-full" type="password"
-                         name="password_confirmation" required autocomplete="new-password" />
-            </div>
+                <!-- Confirm Password Field -->
+                <div>
+                    <x-label for="password_confirmation" value="{{ __('Confirm Password') }}" class="block text-sm font-medium text-gray-700" />
+                    <x-input id="password_confirmation"
+                             class="block mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                             type="password"
+                             name="password_confirmation"
+                             required
+                             autocomplete="new-password" />
+                </div>
 
-            <div class="flex items-center justify-end mt-4">
-                <x-button>
-                    {{ __('Reset Password') }}
-                </x-button>
-            </div>
-        </form>
+                <!-- Submit Button -->
+                <div class="flex justify-end">
+                    <x-button class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50">
+                        {{ __('Reset Password') }}
+                    </x-button>
+                </div>
+            </form>
+        </div>
     </x-authentication-card>
 </x-guest-layout>
