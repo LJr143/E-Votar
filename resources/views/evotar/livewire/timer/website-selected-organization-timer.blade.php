@@ -52,39 +52,52 @@
             display: none !important;
         }
     </style>
+    @php
+        $election = \App\Models\Election::find($selectedElection);
+        $now = now();
+    @endphp
 
-    <div class="custom-countdown">
-                <div class="timer-header flex justify-center text-center">
-                    <div class="flex items-center space-x-2">
-                        <i class="fas fa-stopwatch text-black"></i>
-                        <span class="text-sm font-bold">Election Ends In:</span>
-                    </div>
-                </div>
-        <div id="countdown-display">
-            <div class="tick-container">
-                <div class="tick-group">
-                    <div class="tick-value" id="days">00</div>
-                    <span class="tick-label">Days</span>
-                </div>
-                <div class="tick-group">
-                    <div class="tick-value" id="hours">00</div>
-                    <span class="tick-label">Hours</span>
-                </div>
-                <div class="tick-group">
-                    <div class="tick-value" id="minutes">00</div>
-                    <span class="tick-label">Minutes</span>
-                </div>
-                <div class="tick-group">
-                    <div class="tick-value" id="seconds">00</div>
-                    <span class="tick-label">Seconds</span>
+    @if(!$election)
+        <span class="text-sm font-bold text-red-500">No election selected</span>
+    @elseif($election->date_started > $now)
+        <span class="text-sm font-bold text-blue-500">
+        Election starts in {{ $election->date_started->diffForHumans() }}
+    </span>
+    @elseif($election->date_ended <= $now)
+        <span class="text-sm font-bold text-red-500">Election has ended</span>
+        <div class="custom-countdown">
+            <div class="timer-header flex justify-center text-center">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-stopwatch text-black"></i>
+                    <span class="text-sm font-bold">Election Ends In:</span>
                 </div>
             </div>
-        </div>
+            <div id="countdown-display">
+                <div class="tick-container">
+                    <div class="tick-group">
+                        <div class="tick-value" id="days">00</div>
+                        <span class="tick-label">Days</span>
+                    </div>
+                    <div class="tick-group">
+                        <div class="tick-value" id="hours">00</div>
+                        <span class="tick-label">Hours</span>
+                    </div>
+                    <div class="tick-group">
+                        <div class="tick-value" id="minutes">00</div>
+                        <span class="tick-label">Minutes</span>
+                    </div>
+                    <div class="tick-group">
+                        <div class="tick-value" id="seconds">00</div>
+                        <span class="tick-label">Seconds</span>
+                    </div>
+                </div>
+            </div>
 
-        <div class="times-up" id="times-up-message">
-            Time's up! Election has ended.
+            <div class="times-up" id="times-up-message">
+                Time's up! Election has ended.
+            </div>
         </div>
-    </div>
+    @endif
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
