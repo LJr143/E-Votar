@@ -500,7 +500,7 @@
                     <div>
                         <h2 class="text-[12px] sm:text-xl font-semibold mb-1">Election Has Not Yet Started</h2>
                         <p class="text-sm sm:text-base text-gray-300">
-                            Voting will begin on {{ $election->date_started->format('M j, Y g:i A') }}
+                            Voting will begin on {{ $election->date_started->toFormattedDateString() }} at {{ $election->date_started->format('g:i A') }}
                         </p>
                     </div>
                 @elseif($hasEnded && !$hasVoted)
@@ -508,7 +508,7 @@
                     <div>
                         <h2 class="text-[12px] sm:text-xl font-semibold mb-1">You Missed This Election</h2>
                         <p class="text-sm sm:text-base text-gray-300">
-                            Voting ended on {{ $election->date_ended->format('M j, Y g:i A') }}. Stay tuned for future elections.
+                            Voting ended on {{ $election->date_ended->toDayDateTimeString() }}
                         </p>
                     </div>
                 @endif
