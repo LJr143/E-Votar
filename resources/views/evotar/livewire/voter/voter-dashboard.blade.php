@@ -495,115 +495,20 @@
         @else
             <div
                 class="mb-6 bg-black text-white p-4 rounded-lg shadow-md text-center min-h-[100px] sm:min-h-[160px] flex items-center justify-center">
-                @if((!$hasEnded || $hasEnded) && $hasVoted)
-                    <div class="w-full">
-                        <h2 class="text-[12px] sm:text-[12px] font-semibold mb-1">Thank You for Participating!</h2>
-                        <p class="text-[10px] text-gray-300">
-                            Your vote has been recorded. Your voice contributes to shaping the future of this community.
-                        </p>
-                        <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
-                            <div class="flex items-center mb-5 space-x-3">
-                                <svg class="h-4 w-4 text-blue-600" viewBox="0 0 24 24" fill="none">
-                                    <path
-                                        d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z"
-                                        stroke="currentColor"
-                                        stroke-width="2"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"/>
-                                    <path d="M14 2V8H20"
-                                          stroke="currentColor"
-                                          stroke-width="2"
-                                          stroke-linecap="round"
-                                          stroke-linejoin="round"/>
-                                </svg>
-                                <div class="flex justify-between w-full">
-                                    <h3 class="text-[12px] font-bold text-gray-800">Election Receipt</h3>
-                                    <div x-data="{
-                                            token: '{{ $this->feedbackToken->token ?? 'something went wrong.' }}',
-                                            copied: false
-                                        }"
-                                         class="flex items-center space-x-2"
-                                    >
-                                        <h3 class="text-[12px] font-semibold text-gray-800">
-                                            Feedback Token :
-                                            <span class="text-[10px] font-semibold italic text-gray-800"
-                                                  x-text="token"></span>
-                                        </h3>
-
-                                        <button
-                                            @click="
-                                                    navigator.clipboard.writeText(token).then(() => {
-                                                        copied = true;
-                                                        setTimeout(() => copied = false, 1500);
-                                                    })
-                                                "
-                                            class="text-blue-600 text-[10px] font-semibold border border-blue-500 px-2 py-1 rounded hover:bg-blue-100 transition"
-                                            x-text="copied ? 'Copied!' : 'Copy'"
-                                        >
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
-                                <a href="{{ route('voter.download.receipt', $encodedVotes->id) }}"
-                                   class="group relative w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-lg transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-                                    <svg class="h-5 w-5 text-white" viewBox="0 0 24 24" fill="none">
-                                        <path d="M12 3V16M12 16L16 12M12 16L8 12"
-                                              stroke="currentColor"
-                                              stroke-width="2"
-                                              stroke-linecap="round"
-                                              stroke-linejoin="round"/>
-                                        <path
-                                            d="M3 17V19C3 19.5304 3.21071 20.0391 3.58579 20.4142C3.96086 20.7893 4.46957 21 5 21H19C19.5304 21 20.0391 20.7893 20.4142 20.4142C20.7893 20.0391 21 19.5304 21 19V17"
-                                            stroke="currentColor"
-                                            stroke-width="2"
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"/>
-                                    </svg>
-                                    <span class="font-semibold text-sm">Download Secure Receipt</span>
-                                    <div
-                                        class="absolute inset-0 border-2 border-white/20 rounded-lg group-hover:border-white/30 transition-all"></div>
-                                </a>
-
-                                <div class="flex items-center space-x-3">
-                                    <div class="hidden sm:block w-px h-8 bg-gray-200"></div>
-                                    <a href="{{ route('verify.vote.page', ['voteId' => $encodedVotes->id]) }}"
-                                       class="flex items-center gap-2 text-purple-600 hover:text-purple-700 group transition-colors">
-                                        <svg class="h-5 w-5 text-purple-500 group-hover:text-purple-600"
-                                             viewBox="0 0 24 24" fill="none">
-                                            <path d="M12 22C12 22 20 18 20 12V5L12 2L4 5V12C4 18 12 22 12 22Z"
-                                                  stroke="currentColor"
-                                                  stroke-width="2"
-                                                  stroke-linecap="round"
-                                                  stroke-linejoin="round"/>
-                                            <path d="M9 12L11 14L15 10"
-                                                  stroke="currentColor"
-                                                  stroke-width="2"
-                                                  stroke-linecap="round"
-                                                  stroke-linejoin="round"/>
-                                        </svg>
-                                        <span class="font-medium text-sm relative">
-                    Verify Your Vote
-                    <span
-                        class="absolute bottom-0 left-0 w-0 h-px bg-purple-600 group-hover:w-full transition-all duration-300"></span>
-                </span>
-                                    </a>
-                                </div>
-                            </div>
-
-                            <p class="mt-4 text-xs text-gray-500 text-center">
-                                Receipt contains encrypted verification data. Store securely.
-                            </p>
-                        </div>
-                    </div>
-
-                @else
+                @if($election->date_started > now())
+                    {{-- Election hasn't started yet --}}
                     <div>
-                        <h2 class="text-[12px] sm:text-xl font-semibold mb-1">You Missed a Milestone</h2>
+                        <h2 class="text-[12px] sm:text-xl font-semibold mb-1">Election Has Not Yet Started</h2>
                         <p class="text-sm sm:text-base text-gray-300">
-                            You have not participated in this election. Every vote counts—let your voice be heard next
-                            time.
+                            Voting will begin on {{ $election->date_started->format('M j, Y g:i A') }}
+                        </p>
+                    </div>
+                @elseif($hasEnded && !$hasVoted)
+                    {{-- Election ended and user didn't vote --}}
+                    <div>
+                        <h2 class="text-[12px] sm:text-xl font-semibold mb-1">You Missed This Election</h2>
+                        <p class="text-sm sm:text-base text-gray-300">
+                            Voting ended on {{ $election->date_ended->format('M j, Y g:i A') }}. Stay tuned for future elections.
                         </p>
                     </div>
                 @endif
