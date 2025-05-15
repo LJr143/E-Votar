@@ -27,6 +27,7 @@ class EditUser extends Component
 
     public $username, $password, $confirm_password;
 
+
     public function mount($userId): void
     {
         $this->user = User::find($userId);
@@ -34,14 +35,13 @@ class EditUser extends Component
         if ($this->user) {
             $this->userId = $this->user->id;
             $this->selectedUser = $this->user->id;
-            $this->selectUser($this->userId);
             $this->username = $this->user->username;
             $this->selectedRole = $this->user->roles->pluck('id')->first();
-            $this->userPermissions = $this->user->getDirectPermissions();
-            $this->rolePermissions = $this->user->getPermissionsViaRoles();
-        } else {
-            session()->flash('error', 'User not found.');
+
+            // Automatically load permissions if editing existing user
+            $this->proceedToAccessRole();
         }
+
         $this->roles = Role::all();
         $this->permissions = Permission::all();
     }
@@ -64,10 +64,8 @@ class EditUser extends Component
             $role = Role::with('permissions')->find($roleId);
             $this->rolePermissions = $role ? $role->permissions : collect();
         } else {
-            $this->rolePermissions = collect();
+            $this->resetPermissions();
         }
-        // Ensure userPermissions is not reset
-        $this->userPermissions = User::find($this->userId)->getDirectPermissions();
     }
 
     public function selectUser($userId): void
@@ -78,9 +76,6 @@ class EditUser extends Component
             $this->selectedUser = $user->id;
             $this->search = $user->first_name . ' ' . $user->middle_initial . '. ' . $user->last_name;
             $this->users = [];
-            $this->userPermissions = $user->getDirectPermissions();
-            $this->rolePermissions = $user->getPermissionsViaRoles();
-            $this->selectedRole = $user->roles->pluck('id')->first();
         }
     }
 
@@ -91,38 +86,31 @@ class EditUser extends Component
 
     public function proceedToAccessRole(): void
     {
-        $this->validate([
-            'selectedUser' => 'required'
-        ]);
-
+        $this->validate(['selectedUser' => 'required']);
         $this->currentStep = 2;
 
         $this->user = User::findOrFail($this->userId);
-        $this->roles = Role::with('permissions')->get();
-        $this->permissions = Permission::all();
-        $this->userPermissions = $this->user->getDirectPermissions();
-        $this->rolePermissions = $this->user->getPermissionsViaRoles();
+        $this->userPermissions = $this->user->getDirectPermissions()->pluck('name');
+        $this->rolePermissions = $this->user->getPermissionsViaRoles()->pluck('name');
     }
 
+
+    /**
+     * @throws Exception
+     */
     public function togglePermission($permissionName): void
     {
-        if (!Permission::where('name', $permissionName)->exists()) {
-            throw new Exception('Invalid permission');
-        }
-
-        $user = User::find($this->userId);
+        $user = User::findOrFail($this->userId);
 
         if ($user->hasDirectPermission($permissionName)) {
             $user->revokePermissionTo($permissionName);
-            session()->flash('success', "Permission '{$permissionName}' has been removed.");
         } else {
             $user->givePermissionTo($permissionName);
-            session()->flash('success', "Permission '{$permissionName}' has been added.");
         }
 
-        // Refresh permissions
-        $this->userPermissions = $user->getDirectPermissions();
-        $this->rolePermissions = $user->getPermissionsViaRoles();
+        // Refresh both types of permissions
+        $this->userPermissions = $user->getDirectPermissions()->pluck('name');
+        $this->rolePermissions = $user->getPermissionsViaRoles()->pluck('name');
     }
 
     public function addPermission($permissionName): void
@@ -152,21 +140,24 @@ class EditUser extends Component
         }
     }
 
+    private function resetPermissions(): void
+    {
+        $this->rolePermissions = collect();
+        $this->permissions = collect();
+    }
+
     public function submit(): void
     {
-        $this->validate([
-            'selectedRole' => 'required|exists:roles,id',
-        ]);
+        $this->validate(['selectedRole' => 'required|exists:roles,id']);
 
         $user = User::find($this->selectedUser);
-        $user->roles()->sync([$this->selectedRole]); // Use sync to avoid duplicate roles
+        $user->syncRoles($this->selectedRole);
 
-        // Persist direct permissions
-        $user->syncPermissions($this->userPermissions->pluck('name')->toArray());
-
-        session()->flash('success', 'User permissions and role updated successfully.');
+        // Refresh permissions after role change
+        $this->proceedToAccessRole();
         $this->dispatch('system-user-updated');
     }
+
 
     public function render(): \Illuminate\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\View\View
     {

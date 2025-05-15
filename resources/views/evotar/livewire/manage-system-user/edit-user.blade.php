@@ -190,13 +190,10 @@
                                                                     <div class="flex items-center">
                                                                         <input
                                                                             type="checkbox"
-                                                                            id="permission_{{ $permission->id }}"
-                                                                            value="{{ $permission->name }}"
-                                                                            @if (in_array($permission->name, is_array($userPermissions) ? $userPermissions : $userPermissions->toArray()) || in_array($permission->name, $rolePermissions instanceof \Illuminate\Support\Collection ? $rolePermissions->pluck('name')->toArray() : $rolePermissions))
+                                                                            @if ($userPermissions->contains('name', $permission->name) || $rolePermissions->contains('name', $permission->name))
                                                                                 checked
                                                                             @endif
                                                                             wire:change="togglePermission('{{ $permission->name }}')"
-                                                                            class="mr-2"
                                                                         >
                                                                         <label for="permission_{{ $permission->id }}" class="text-[11px]">
                                                                             {{ $permission->name }}
@@ -314,13 +311,10 @@
                                                                     <div class="flex items-center">
                                                                         <input
                                                                             type="checkbox"
-                                                                            id="permission_{{ $permission->id }}"
-                                                                            value="{{ $permission->name }}"
-                                                                            @if (in_array($permission->name, is_array($userPermissions) ? $userPermissions : $userPermissions->toArray()) || in_array($permission->name, $rolePermissions instanceof \Illuminate\Support\Collection ? $rolePermissions->pluck('name')->toArray() : $rolePermissions))
+                                                                            @if ($userPermissions->contains('name', $permission->name) || $rolePermissions->contains('name', $permission->name))
                                                                                 checked
                                                                             @endif
                                                                             wire:change="togglePermission('{{ $permission->name }}')"
-                                                                            class="mr-2"
                                                                         >
                                                                         <label for="permission_{{ $permission->id }}" class="text-[11px]">
                                                                             {{ $permission->name }}
