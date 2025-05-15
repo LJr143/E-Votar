@@ -192,7 +192,7 @@
                                                                             type="checkbox"
                                                                             id="permission_{{ $permission->id }}"
                                                                             value="{{ $permission->name }}"
-                                                                            @if (in_array($permission->name, $userPermissions) || in_array($permission->name, $rolePermissions))
+                                                                            @if (in_array($permission->name, is_array($userPermissions) ? $userPermissions : $userPermissions->toArray()) || in_array($permission->name, $rolePermissions instanceof \Illuminate\Support\Collection ? $rolePermissions->pluck('name')->toArray() : $rolePermissions))
                                                                                 checked
                                                                             @endif
                                                                             wire:change="togglePermission('{{ $permission->name }}')"
@@ -223,7 +223,7 @@
                                                                             type="checkbox"
                                                                             id="permission_{{ $permission->id }}"
                                                                             value="{{ $permission->name }}"
-                                                                            @if (in_array($permission->name, $userPermissions) || in_array($permission->name, $rolePermissions))
+                                                                            @if (in_array($permission->name, is_array($userPermissions) ? $userPermissions : $userPermissions->toArray()) || in_array($permission->name, $rolePermissions instanceof \Illuminate\Support\Collection ? $rolePermissions->pluck('name')->toArray() : $rolePermissions))
                                                                                 checked
                                                                             @endif
                                                                             wire:change="togglePermission('{{ $permission->name }}')"
@@ -254,7 +254,7 @@
                                                                             type="checkbox"
                                                                             id="permission_{{ $permission->id }}"
                                                                             value="{{ $permission->name }}"
-                                                                            @if (in_array($permission->name, $userPermissions) || in_array($permission->name, $rolePermissions))
+                                                                            @if (in_array($permission->name, is_array($userPermissions) ? $userPermissions : $userPermissions->toArray()) || in_array($permission->name, $rolePermissions instanceof \Illuminate\Support\Collection ? $rolePermissions->pluck('name')->toArray() : $rolePermissions))
                                                                                 checked
                                                                             @endif
                                                                             wire:change="togglePermission('{{ $permission->name }}')"
@@ -285,7 +285,7 @@
                                                                             type="checkbox"
                                                                             id="permission_{{ $permission->id }}"
                                                                             value="{{ $permission->name }}"
-                                                                            @if (in_array($permission->name, $userPermissions) || in_array($permission->name, $rolePermissions))
+                                                                            @if (in_array($permission->name, is_array($userPermissions) ? $userPermissions : $userPermissions->toArray()) || in_array($permission->name, $rolePermissions instanceof \Illuminate\Support\Collection ? $rolePermissions->pluck('name')->toArray() : $rolePermissions))
                                                                                 checked
                                                                             @endif
                                                                             wire:change="togglePermission('{{ $permission->name }}')"
@@ -316,7 +316,7 @@
                                                                             type="checkbox"
                                                                             id="permission_{{ $permission->id }}"
                                                                             value="{{ $permission->name }}"
-                                                                            @if (in_array($permission->name, $userPermissions) || in_array($permission->name, $rolePermissions))
+                                                                            @if (in_array($permission->name, is_array($userPermissions) ? $userPermissions : $userPermissions->toArray()) || in_array($permission->name, $rolePermissions instanceof \Illuminate\Support\Collection ? $rolePermissions->pluck('name')->toArray() : $rolePermissions))
                                                                                 checked
                                                                             @endif
                                                                             wire:change="togglePermission('{{ $permission->name }}')"
@@ -347,7 +347,7 @@
                                                                             type="checkbox"
                                                                             id="permission_{{ $permission->id }}"
                                                                             value="{{ $permission->name }}"
-                                                                            @if (in_array($permission->name, $userPermissions) || in_array($permission->name, $rolePermissions))
+                                                                            @if (in_array($permission->name, is_array($userPermissions) ? $userPermissions : $userPermissions->toArray()) || in_array($permission->name, $rolePermissions instanceof \Illuminate\Support\Collection ? $rolePermissions->pluck('name')->toArray() : $rolePermissions))
                                                                                 checked
                                                                             @endif
                                                                             wire:change="togglePermission('{{ $permission->name }}')"
@@ -378,7 +378,7 @@
                                                                             type="checkbox"
                                                                             id="permission_{{ $permission->id }}"
                                                                             value="{{ $permission->name }}"
-                                                                            @if (in_array($permission->name, $userPermissions) || in_array($permission->name, $rolePermissions))
+                                                                            @if (in_array($permission->name, is_array($userPermissions) ? $userPermissions : $userPermissions->toArray()) || in_array($permission->name, $rolePermissions instanceof \Illuminate\Support\Collection ? $rolePermissions->pluck('name')->toArray() : $rolePermissions))
                                                                                 checked
                                                                             @endif
                                                                             wire:change="togglePermission('{{ $permission->name }}')"
@@ -409,7 +409,7 @@
                                                                             type="checkbox"
                                                                             id="permission_{{ $permission->id }}"
                                                                             value="{{ $permission->name }}"
-                                                                            @if (in_array($permission->name, $userPermissions) || in_array($permission->name, $rolePermissions))
+                                                                            @if (in_array($permission->name, is_array($userPermissions) ? $userPermissions : $userPermissions->toArray()) || in_array($permission->name, $rolePermissions instanceof \Illuminate\Support\Collection ? $rolePermissions->pluck('name')->toArray() : $rolePermissions))
                                                                                 checked
                                                                             @endif
                                                                             wire:change="togglePermission('{{ $permission->name }}')"
@@ -440,7 +440,7 @@
                                                                             type="checkbox"
                                                                             id="permission_{{ $permission->id }}"
                                                                             value="{{ $permission->name }}"
-                                                                            @if (in_array($permission->name, $userPermissions) || in_array($permission->name, $rolePermissions))
+                                                                            @if (in_array($permission->name, is_array($userPermissions) ? $userPermissions : $userPermissions->toArray()) || in_array($permission->name, $rolePermissions instanceof \Illuminate\Support\Collection ? $rolePermissions->pluck('name')->toArray() : $rolePermissions))
                                                                                 checked
                                                                             @endif
                                                                             wire:change="togglePermission('{{ $permission->name }}')"
@@ -471,7 +471,7 @@
                                                                             type="checkbox"
                                                                             id="permission_{{ $permission->id }}"
                                                                             value="{{ $permission->name }}"
-                                                                            @if (in_array($permission->name, $userPermissions) || in_array($permission->name, $rolePermissions))
+                                                                            @if (in_array($permission->name, is_array($userPermissions) ? $userPermissions : $userPermissions->toArray()) || in_array($permission->name, $rolePermissions instanceof \Illuminate\Support\Collection ? $rolePermissions->pluck('name')->toArray() : $rolePermissions))
                                                                                 checked
                                                                             @endif
                                                                             wire:change="togglePermission('{{ $permission->name }}')"
@@ -502,7 +502,7 @@
                                                                             type="checkbox"
                                                                             id="permission_{{ $permission->id }}"
                                                                             value="{{ $permission->name }}"
-                                                                            @if (in_array($permission->name, $userPermissions) || in_array($permission->name, $rolePermissions))
+                                                                            @if (in_array($permission->name, is_array($userPermissions) ? $userPermissions : $userPermissions->toArray()) || in_array($permission->name, $rolePermissions instanceof \Illuminate\Support\Collection ? $rolePermissions->pluck('name')->toArray() : $rolePermissions))
                                                                                 checked
                                                                             @endif
                                                                             wire:change="togglePermission('{{ $permission->name }}')"
@@ -533,7 +533,7 @@
                                                                             type="checkbox"
                                                                             id="permission_{{ $permission->id }}"
                                                                             value="{{ $permission->name }}"
-                                                                            @if (in_array($permission->name, $userPermissions) || in_array($permission->name, $rolePermissions))
+                                                                            @if (in_array($permission->name, is_array($userPermissions) ? $userPermissions : $userPermissions->toArray()) || in_array($permission->name, $rolePermissions instanceof \Illuminate\Support\Collection ? $rolePermissions->pluck('name')->toArray() : $rolePermissions))
                                                                                 checked
                                                                             @endif
                                                                             wire:change="togglePermission('{{ $permission->name }}')"
