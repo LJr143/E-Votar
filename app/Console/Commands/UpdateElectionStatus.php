@@ -31,7 +31,8 @@ class UpdateElectionStatus extends Command
 
         // Update elections where date_started <= now AND status is "upcoming"
         Election::where('date_started', '<=', $now)
-            ->where('status', 'pending') // Ensure we don't update completed elections
+            ->where('status', 'pending')
+            ->orWhere('status', 'active')
             ->update(['status' => 'ongoing']);
 
         // Optional: Also mark elections as "completed" when date_ended is passed

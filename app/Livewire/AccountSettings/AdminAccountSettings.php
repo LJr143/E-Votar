@@ -85,6 +85,7 @@ class AdminAccountSettings extends Component
             'gender' => 'required|string|in:Male,Female,Non-binary,Other,Prefer-not',
             'email' => 'required|email|unique:users,email,'.$user->id,
             'phone' => 'required|string|regex:/^9\d{2}\d{3}\d{4}$/',
+            'profileImage' => 'image|max:20480',
         ]);
 
         // Handle profile image upload
@@ -131,7 +132,6 @@ class AdminAccountSettings extends Component
             ],
             'confirmPassword' => 'required|same:newPassword',
             'username' => 'required',
-            'profile' => 'image|max:20480',
         ]);
 
         $user->update([

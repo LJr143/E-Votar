@@ -23,9 +23,16 @@
                             <p class="text-gray-700 text-sm sm:text-base">
                                 To the newly elected {{ $council->name }} officers
                             </p>
-                        @else
+                        @elseif($election->status == 'ongoing')
                             <h2 class="text-center text-2xl sm:text-3xl md:text-4xl font-bold mb-2" style="background-size: 200% auto; -webkit-background-clip: text; background-clip: text; color: transparent; text-shadow: 0px 2px 4px rgba(0,0,0,0.1); background-image: linear-gradient(to right, #D4AF37, #8B0000, #D4AF37); animation: shine 2s linear infinite;">
                                 ELECTION IS ONGOING
+                            </h2>
+                            <p class="text-gray-700 text-sm sm:text-base">
+                                The Results are only available right after the election ends.
+                            </p>
+                            @else
+                            <h2 class="text-center text-2xl sm:text-3xl md:text-4xl font-bold mb-2" style="background-size: 200% auto; -webkit-background-clip: text; background-clip: text; color: transparent; text-shadow: 0px 2px 4px rgba(0,0,0,0.1); background-image: linear-gradient(to right, #D4AF37, #8B0000, #D4AF37); animation: shine 2s linear infinite;">
+                                ELECTION HAS NOT YET STARTED
                             </h2>
                             <p class="text-gray-700 text-sm sm:text-base">
                                 The Results are only available right after the election ends.
