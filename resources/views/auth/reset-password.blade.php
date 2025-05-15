@@ -2,7 +2,7 @@
     <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
         <div class="w-full sm:max-w-md px-6 py-8 bg-white shadow-md overflow-hidden sm:rounded-lg">
             <div class="flex justify-center">
-                <x-authentication-card-logo class="w-20 h-20 sm:w-24 sm:h-24" />
+                <img class="w-20 h-20 sm:w-24 sm:h-24"  alt="" src="{{ asset('storage/assets/icon/evotar_v_logo.png) }}"/>
             </div>
 
             <x-validation-errors class="mb-4" />
