@@ -495,20 +495,20 @@
         @else
             <div
                 class="mb-6 bg-black text-white p-4 rounded-lg shadow-md text-center min-h-[100px] sm:min-h-[160px] flex items-center justify-center">
-                @if($election->date_started > now())
+                @if(Carbon\Carbon::parse($election->date_started)->isFuture())
                     {{-- Election hasn't started yet --}}
                     <div>
                         <h2 class="text-[12px] sm:text-xl font-semibold mb-1">Election Has Not Yet Started</h2>
                         <p class="text-sm sm:text-base text-gray-300">
-                            Voting will begin on {{ $election->date_started->toFormattedDateString() }} at {{ $election->date_started->format('g:i A') }}
+                            Voting will begin on {{ Carbon\Carbon::parse($election->date_started)->toFormattedDateString() }}
                         </p>
                     </div>
-                @elseif($hasEnded && !$hasVoted)
+                @elseif(Carbon\Carbon::parse($election->date_ended)->isPast() && !$hasVoted)
                     {{-- Election ended and user didn't vote --}}
                     <div>
                         <h2 class="text-[12px] sm:text-xl font-semibold mb-1">You Missed This Election</h2>
                         <p class="text-sm sm:text-base text-gray-300">
-                            Voting ended on {{ $election->date_ended->toDayDateTimeString() }}
+                            Voting ended {{ Carbon\Carbon::parse($election->date_ended)->diffForHumans() }}
                         </p>
                     </div>
                 @endif
