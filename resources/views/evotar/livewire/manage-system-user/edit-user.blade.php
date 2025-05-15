@@ -285,7 +285,7 @@
                                                                             type="checkbox"
                                                                             id="permission_{{ $permission->id }}"
                                                                             value="{{ $permission->name }}"
-                                                                            @if (in_array($permission->name, is_array($userPermissions) ? $userPermissions : $userPermissions->toArray()) || in_array($permission->name, $rolePermissions instanceof \Illuminate\Support\Collection ? $rolePermissions->pluck('name')->toArray() : $rolePermissions))
+                                                                            @if(in_array($permission->name, $userPermissions))
                                                                                 checked
                                                                             @endif
                                                                             wire:change="togglePermission('{{ $permission->name }}')"
@@ -293,7 +293,7 @@
                                                                         >
                                                                         <label for="permission_{{ $permission->id }}" class="text-[11px]">
                                                                             {{ $permission->name }}
-                                                                            @if ($rolePermissions->contains('name', $permission->name))
+                                                                            @if(in_array($permission->name, $rolePermissions) && !in_array($permission->name, $userPermissions))
                                                                                 <span class="text-[11px] text-gray-500">(via role)</span>
                                                                             @endif
                                                                         </label>
