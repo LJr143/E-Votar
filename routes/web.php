@@ -37,9 +37,11 @@ Route::get('login', function () {
 Route::post('/forgot-password', [CustomPasswordResetLinkController::class, 'store'])
     ->middleware(['guest'])
     ->name('password.email');
+
 Route::get('/reset-password/{token}', function ($token) {
     return view('auth.reset-password', ['token' => $token]);
 })->middleware('guest')->name('password.reset');
+
 
 Route::get('/campuses', [CampusController::class, 'index'])->name('campuses');
 Route::get('/colleges/{campusId}', [CampusController::class, 'getColleges']);

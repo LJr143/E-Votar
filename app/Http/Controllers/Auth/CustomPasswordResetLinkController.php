@@ -13,7 +13,7 @@ class CustomPasswordResetLinkController extends Controller
         $request->validate(['email' => 'required|email']);
 
         // Use your trait method to find the encrypted user
-        $user = User::whereEncrypted('email', $request->email)->first();
+        $user = User::find('email', $request->email)->first();
 
         if (! $user) {
             return back()->withErrors(['email' => __('We can\'t find a user with that email address.')]);
