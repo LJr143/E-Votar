@@ -462,7 +462,7 @@
             </div>
         </div>
 
-        @if(!$hasEnded && !$hasVoted)
+        @if(!$hasEnded && !$hasVoted && $hasStarted)
             <div wire:ignore
                  class="mb-6 bg-black text-white p-4 rounded-lg shadow-md text-center min-h-[100px] sm:min-h-[160px]">
                 <div class="flex justify-between items-center">

@@ -15,6 +15,7 @@ class VoterDashboard extends Component
     public $voter;
     public $hasVoted;
     public $hasEnded;
+    public $hasStarted;
 
     public $encodedVotes;
     public $feedbackToken;
@@ -36,6 +37,7 @@ class VoterDashboard extends Component
                 ->where('election_id', $this->election->id)
                 ->exists();
 
+        $this->hasStarted = $this->election->date_started > now();
         $this->hasEnded = $this->election->date_ended <= now();
         $this->encodedVotes = VoterEncodeVote::where([
             ['election_id', '=', $this->election->id],
@@ -73,6 +75,7 @@ class VoterDashboard extends Component
             'election' => $this->election,
             'voter'=> $this->voter,
             'hasVoted' => $this->hasVoted,
+
         ]);
     }
 }
