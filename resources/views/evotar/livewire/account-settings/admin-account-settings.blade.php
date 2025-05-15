@@ -150,11 +150,11 @@
                                         <select wire:model="gender" id="gender" required
                                                 class="w-full h-9 px-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm">
                                             <option value="">Select gender</option>
-                                            <option value="male">Male</option>
-                                            <option value="female">Female</option>
-                                            <option value="non-binary">Non-binary</option>
-                                            <option value="other">Other</option>
-                                            <option value="prefer-not">Prefer not to say</option>
+                                            <option value="Male">Male</option>
+                                            <option value="Female">Female</option>
+                                            <option value="Non-binary">Non-binary</option>
+                                            <option value="Other">Other</option>
+                                            <option value="Prefer-not">Prefer not to say</option>
                                         </select>
                                         @error('gender') <p
                                             class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
