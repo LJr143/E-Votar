@@ -157,7 +157,16 @@ return [
         ]),
     ],
     'reset' => [
-        'passwords' => ['users' => 'users'],
+        'passwords' => [
+            'user' => App\Models\User::class,
+            'table' => 'password_reset_tokens',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+    ],
+
+    'routes' => [
+        'password-reset' => '/forgot-password',
     ],
 
 ];

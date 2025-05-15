@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Http\Controllers\Auth\CustomPasswordResetLinkController;
+use Laravel\Fortify\Fortify;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\DB;
@@ -47,5 +49,17 @@ class AppServiceProvider extends ServiceProvider
 //        // Force Livewire to use HTTPS
 //        Livewire::forceAssetInjection();
         Paginator::useTailwind();
+
+        Fortify::requestPasswordResetLinkView(function () {
+            return view('auth.forgot-password');
+        });
+
+        // Override the default password reset link logic
+        Fortify::resetPasswordView(function ($request) {
+            return view('auth.reset-password', ['request' => $request]);
+        });
+
+        // This is the key override:
+        Fortify::requestPasswordResetLinkUsing(CustomPasswordResetLinkController::class.'@store');
     }
 }

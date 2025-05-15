@@ -32,9 +32,6 @@ class CustomPasswordResetLinkController extends Controller
 
         // Search for user with encrypted email
         $user = User::searchEncrypted($email, ['email'])->first();
-        if(!$user){
-            dd('no match');
-        }
 
         if (!$user) {
             return app(FailedPasswordResetLinkRequestResponse::class, [
