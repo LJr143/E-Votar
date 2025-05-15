@@ -86,9 +86,15 @@ class User extends Authenticatable
         'two_factor_secret',
     ];
 
+    // Add these methods to your User model
     public function findForPassport($username)
     {
         return $this->whereEncrypted('email', $username)->first();
+    }
+
+    public function getEmailForPasswordReset()
+    {
+        return $this->email; // The getAttribute accessor will decrypt automatically
     }
 
     /**
