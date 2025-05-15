@@ -68,7 +68,8 @@ class AdminAccountSettings extends Component
     {
         // Validates and sets temporary URL for preview
         $this->validate([
-            'profileImage' => 'image|max:2048',
+            'profileImage' => 'image|max:10240'
+
         ]);
 
         $this->temporaryProfileImageUrl = $this->profileImage->temporaryUrl();
