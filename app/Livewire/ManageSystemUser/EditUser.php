@@ -67,13 +67,6 @@ class EditUser extends Component
         }
     }
 
-    public function hydrate(): void
-    {
-        if ($this->currentStep === 2 && $this->userId) {
-            $this->refreshPermissions();
-        }
-    }
-
     public function selectUser($userId): void
     {
         $user = User::find($userId);
