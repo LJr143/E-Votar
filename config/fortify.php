@@ -157,7 +157,7 @@ return [
         ]),
     ],
     'reset' => [
-        'passwords' => ['users' => 'users'], // Default table
+        'passwords' => ['users' => 'users'],
     ],
 
 ];

@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CampusController;
 use App\Http\Controllers\FaceAuthController;
@@ -33,10 +32,6 @@ Route::group(['middleware' => ['check.first.creation.superadmin']], function () 
 Route::get('login', function () {
    return redirect(route('voter.login'));
 });
-
-Route::post('/forgot-password', [ForgotPasswordController::class, 'store'])
-    ->middleware('guest')
-    ->name('password.email');
 
 Route::get('/reset-password/{token}', function ($token) {
     return view('auth.reset-password', ['token' => $token]);
