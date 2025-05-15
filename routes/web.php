@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\CustomNewPasswordController;
 use App\Http\Controllers\Auth\CustomPasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CampusController;
@@ -37,6 +38,10 @@ Route::get('login', function () {
 Route::post('/forgot-password', [CustomPasswordResetLinkController::class, 'store'])
     ->middleware('guest')
     ->name('password.email');
+
+Route::post('/reset-password', [CustomNewPasswordController::class, 'store'])
+    ->middleware('guest')
+    ->name('password.update');
 
 Route::get('/reset-password/{token}', function ($token) {
     return view('auth.reset-password', ['token' => $token]);
