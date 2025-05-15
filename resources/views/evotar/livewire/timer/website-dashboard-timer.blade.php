@@ -65,7 +65,7 @@
     @elseif(Carbon::parse($election->date_started)->isFuture())
         <div>
             <h2 class="text-[12px] sm:text-xl font-semibold mb-1">Election Has Not Yet Started</h2>
-            <p class="text-sm sm:text-base text-gray-300">
+            <p class="text-sm sm:text-base text-gray-300 text-center">
                 Voting will begin on {{ Carbon::parse($election->date_started)->isoFormat('MMMM D, YYYY') }}<br>
                 ({{ Carbon::parse($election->date_started)->diffForHumans() }})
             </p>
