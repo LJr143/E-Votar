@@ -157,12 +157,7 @@ return [
         ]),
     ],
     'reset' => [
-        'passwords' => [
-            'user' => App\Models\User::class,
-            'table' => 'password_reset_tokens',
-            'expire' => 60,
-            'throttle' => 60,
-        ],
+        'passwords' => ['users' => 'users'],
     ],
 
     'routes' => [
