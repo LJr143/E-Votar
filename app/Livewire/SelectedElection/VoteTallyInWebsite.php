@@ -83,23 +83,17 @@ use Livewire\Component;
         $this->totalVoters = $baseVoterQuery->count();
 
         // Total voters who voted in this election (for current council)
-        $this->totalVoterVoted = User::whereHas('roles', function($q) {
-            $q->where('name', '!=', 'faculty');
-        })
+        $this->totalVoterVoted = DB::table('votes')
+            ->join('users', 'votes.user_id', '=', 'users.id')
             ->when(!str($this->council->name)->contains('Student Council'), function($query) {
-                $query->whereHas('program', function($q) {
-                    $q->where('council_id', $this->council->id);
-                });
+                $query->join('programs', 'users.program_id', '=', 'programs.id')
+                    ->where('programs.council_id', $this->council->id);
             })
-            ->whereDoesntHave('electionExcludedVoters', function($q) {
-                $q->where('election_id', $this->selectedElection);
-            })
-            ->whereHas('votes', function($q) {
-                $q->where('election_id', $this->selectedElection);
-            })
-            ->count();
+            ->where('votes.election_id', $this->selectedElection)
+            ->distinct('votes.user_id')
+            ->count('votes.user_id');
 
-        // College-wise turnout - show all councils for Student Council
+        // College-wise turnout
         $this->collegeTurnout = Council::withCount([
             'program as voters_count' => function($query) {
                 $query->select(DB::raw('count(distinct users.id)'))
@@ -133,26 +127,30 @@ use Livewire\Component;
                 ];
             });
 
-        // Calculate position votes and abstentions
-        $positionVotes = \App\Models\Vote::where('election_id', $this->selectedElection)
-            ->when(!str($this->council->name)->contains('Student Council'), function($query) {
-                $query->whereHas('users.program', function($q) {
-                    $q->where('council_id', $this->council->id);
-                });
-            })
-            ->selectRaw('position_id, count(distinct user_id) as vote_count')
-            ->groupBy('position_id')
-            ->pluck('vote_count', 'position_id')
-            ->toArray();
-
-        // Calculate abstentions by position (total voters who voted minus votes for position)
-        $this->positionAbstentions = [];
+        // Calculate position votes using your specified method
+        $this->positionVotes = [];
         $positions = ElectionPosition::where('election_id', $this->selectedElection)
             ->with('position')
             ->get();
 
         foreach ($positions as $position) {
-            $votesForPosition = $positionVotes[$position->position_id] ?? 0;
+            $this->positionVotes[$position->position_id] = DB::table('votes')
+                ->join('candidates', 'votes.candidate_id', '=', 'candidates.id')
+                ->join('users', 'candidates.user_id', '=', 'users.id')
+                ->join('programs', 'users.program_id', '=', 'programs.id')
+                ->where('candidates.election_position_id', $position->id)
+                ->where('votes.election_id', $this->selectedElection)
+                ->when(!str($this->council->name)->contains('Student Council'), function($query) {
+                    $query->where('programs.council_id', $this->council->id);
+                })
+                ->distinct('votes.user_id')
+                ->count('votes.user_id');
+        }
+
+        // Calculate abstentions by position (total voters who voted minus votes for position)
+        $this->positionAbstentions = [];
+        foreach ($positions as $position) {
+            $votesForPosition = $this->positionVotes[$position->position_id] ?? 0;
             $this->positionAbstentions[$position->position_id] = max(0, $this->totalVoterVoted - $votesForPosition);
         }
 

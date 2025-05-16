@@ -75,25 +75,11 @@
                         $positionId = null;
                         $totalVotes = 0;
                         $abstentions = 0;
-                        $totalVoterVoted = $totalVoterVoted ?? 0; // From the component
 
                         if ($positionCandidates->isNotEmpty()) {
                             $positionId = optional(optional($positionCandidates->first())->election_positions)->position->id ?? null;
-
-                            // Calculate total votes for this position (sum of distinct votes per candidate)
-                            $totalVotes = $positionCandidates->sum(function($candidate) {
-                                return $candidate->votes_count; // This should already be distinct count from backend
-                            });
-
-                            // Calculate abstentions for this position
-                            if ($positionId) {
-                                // Method 1: If you have positionVotes array from backend
-                                $votesForPosition = $positionVotes[$positionId] ?? $totalVotes;
-                                $abstentions = max(0, $totalVoterVoted - $votesForPosition);
-
-                                // OR Method 2: If you want to calculate directly from candidates
-                                // $abstentions = max(0, $totalVoterVoted - $totalVotes);
-                            }
+                            $totalVotes = $positionId ? ($positionVotes[$positionId] ?? 0) : 0;
+                            $abstentions = $positionId ? ($positionAbstentions[$positionId] ?? 0) : 0;
                         }
                     @endphp
 
