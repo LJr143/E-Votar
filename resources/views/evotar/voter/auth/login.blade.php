@@ -102,10 +102,10 @@
                                     </button>
 
                                     <!-- Forget Password Link -->
-                                    <p class="text-[12px] text-left">
-                                        Forget Password? <a href="/forgot-password"
-                                                            class="underline font-bold text-black">Click here</a>
-                                    </p>
+{{--                                    <p class="text-[12px] text-left">--}}
+{{--                                        Forget Password? <a href="/forgot-password"--}}
+{{--                                                            class="underline font-bold text-black">Click here</a>--}}
+{{--                                    </p>--}}
                                 </div>
                             </form>
                         </div>
