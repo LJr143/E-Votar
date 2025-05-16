@@ -180,12 +180,16 @@ class ElectionResult extends Component
                 // Student Council counts
                 $totalVoters = $this->totalVoters;
 
-                // Count abstentions for this position
+                // Count abstentions for this position (filtered by Student Council)
                 $abstainCount = DB::table('abstain_votes')
-                    ->where('position_id', $positionId)
-                    ->where('election_id', $this->latestElection->id)
-                    ->distinct('user_id')
-                    ->count('user_id');
+                    ->join('users', 'abstain_votes.user_id', '=', 'users.id')
+                    ->join('programs', 'users.program_id', '=', 'programs.id')
+                    ->join('councils', 'programs.council_id', '=', 'councils.id')
+                    ->where('abstain_votes.position_id', $positionId)
+                    ->where('abstain_votes.election_id', $this->latestElection->id)
+                    ->where('councils.name', 'Student Council')
+                    ->distinct('abstain_votes.user_id')
+                    ->count('abstain_votes.user_id');
 
                 // Count votes for candidates in this election position
                 $voteCount = DB::table('votes')
