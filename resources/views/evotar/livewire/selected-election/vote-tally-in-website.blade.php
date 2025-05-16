@@ -38,7 +38,7 @@
 
         <!-- College Turnout -->
         <div class="mt-6">
-            <h3 class="text-sm font-semibold text-gray-700 mb-3">VOTER TURNOUT BY COLLEGE</h3>
+            <h3 class="text-sm font-semibold text-gray-700 mb-3">VOTER TURNOUT BY COUNCIL</h3>
             <div class="space-y-3">
                 @foreach($collegeTurnout as $college)
                     <div>
@@ -71,18 +71,23 @@
 
                 <div class="p-4">
                     @php
-                        // Get the position ID from the first candidate (if exists)
                         $positionId = null;
                         $totalVotes = 0;
                         $abstentions = 0;
 
                         if ($positionCandidates->isNotEmpty()) {
                             $positionId = optional(optional($positionCandidates->first())->election_positions)->position->id ?? null;
-                            $totalVotes = $positionVotes[$positionId] ?? $positionCandidates->sum('votes_count');
-                            $abstentions = $positionId ? ($positionAbstentions[$positionId] ?? 0) : 0;
+
+                            // Get distinct votes for this position
+                            $totalVotes = $positionId
+                                ? ($positionVotes[$positionId] ?? 0)
+                                : 0;
+
+                            $abstentions = $positionId
+                                ? ($positionAbstentions[$positionId] ?? 0)
+                                : 0;
                         }
                     @endphp
-
                     <div class="flex justify-between items-center mb-4">
                     <span class="text-xs text-gray-500">
                         Total Votes Cast: {{ number_format($totalVotes) }}

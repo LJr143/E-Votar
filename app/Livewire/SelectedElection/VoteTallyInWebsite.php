@@ -154,6 +154,18 @@ use Livewire\Component;
             ])
             ->get();
 
+
+        $this->positionVotes = \App\Models\Vote::where('election_id', $this->selectedElection)
+            ->when(!str($this->council->name)->contains('Student Council'), function($query) {
+                $query->whereHas('users.program', function($q) {
+                    $q->where('council_id', $this->council->id);
+                });
+            })
+            ->selectRaw('position_id, count(*) as vote_count')
+            ->groupBy('position_id')
+            ->pluck('vote_count', 'position_id')
+            ->toArray();
+
         $this->studentCouncilPositions = $this->positionsWithCandidates->filter(function ($position) {
             return $position->electionType->name === 'Student Council Election';
         });
