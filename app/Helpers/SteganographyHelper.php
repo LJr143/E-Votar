@@ -159,9 +159,10 @@ class SteganographyHelper
      */
     private static function prepareDataForEncoding(string $data): string
     {
-        // Add checksum and delimiter
+        // Add length prefix, checksum, and delimiter
+        $length = strlen($data);
         $checksum = crc32($data);
-        $payload = $data . '|CHECKSUM:' . $checksum . '|END|';
+        $payload = pack('N', $length) . $data . pack('N', $checksum) . '|END|';
 
         return self::stringToBinary($payload);
     }
@@ -171,21 +172,37 @@ class SteganographyHelper
      */
     private static function processDecodedData(string $binaryData): string
     {
-        $decodedString = self::binaryToString($binaryData);
+        // Convert binary to string
+        $decoded = self::binaryToString($binaryData);
 
-        // Extract checksum and verify
-        if (preg_match('/(.*)\|CHECKSUM:(\d+)\|END\|/', $decodedString, $matches)) {
-            $data = $matches[1];
-            $storedChecksum = $matches[2];
-
-            if (crc32($data) != $storedChecksum) {
-                throw new Exception("Data checksum verification failed - possible corruption");
-            }
-
-            return $data;
+        // Extract length prefix (first 4 bytes)
+        if (strlen($decoded) < 4) {
+            throw new Exception("Data too short to contain length prefix");
         }
 
-        throw new Exception("Invalid data format - delimiter not found");
+        $unpacked = unpack('Nlength', substr($decoded, 0, 4));
+        $length = $unpacked['length'];
+
+        // Extract the main data
+        if (strlen($decoded) < 4 + $length + 4) {
+            throw new Exception("Data truncated - missing checksum");
+        }
+
+        $data = substr($decoded, 4, $length);
+        $storedChecksum = unpack('N', substr($decoded, 4 + $length, 4))[1];
+
+        // Verify checksum
+        if (crc32($data) !== $storedChecksum) {
+            throw new Exception("Checksum verification failed");
+        }
+
+        // Verify terminator
+        $terminator = substr($decoded, 4 + $length + 4);
+        if ($terminator !== '|END|') {
+            throw new Exception("Terminator not found");
+        }
+
+        return $data;
     }
 
     /**
