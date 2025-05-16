@@ -410,7 +410,6 @@
                                             </span>
                                         </div>
                                     @endif
-
                                     @if($hasVoted)
                                         <!-- Voted overlay -->
                                         <div class="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center">
@@ -422,7 +421,6 @@
                                             <span class="text-white font-bold text-[12px] text-center">You've Voted</span>
                                         </div>
                                     @endif
-
                                     @if (!$hasVoted && $hasEnded)
                                         <!-- Election Ended Overlay -->
                                         <div class="absolute inset-0 bg-black bg-opacity-60 flex flex-col items-center justify-center">
@@ -455,17 +453,13 @@
                                         <span class="text-xs">End Date: {{ \Carbon\Carbon::parse($election->date_ended)->format('M d, Y \a\t h:i A') }}</span>
                                     </div>
                                 </div>
-                                        @if($canVote)
+{{--                                        @if($canVote)--}}
                                     </a>
-                                    @endif
+{{--                                    @endif--}}
                             </div>
                         @endforeach
                     </div>
                 </div>
-
-
-
-
 
                 <div class="mt-6 bg-white rounded-lg shadow-sm overflow-hidden border border-gray-100" x-data="{ hover: false }">
                     <div class="p-6 flex flex-col gap-4"
