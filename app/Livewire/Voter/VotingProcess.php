@@ -277,6 +277,8 @@ class VotingProcess extends Component
             'timestamp' => now()->toDateTimeString(),
         ];
 
+        dd($voteData);
+
         // Encode the vote data as JSON
         $jsonData = json_encode($voteData);
 
