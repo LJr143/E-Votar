@@ -164,13 +164,7 @@ class ElectionResult extends Component
             return collect();
         }
 
-        // Get all voters who participated
-        $votedUsers = DB::table('votes')
-            ->where('election_id', $this->latestElection->id)
-            ->distinct('user_id')
-            ->pluck('user_id');
-
-        $positions = ElectionPosition::with('position')
+        $positions = ElectionPosition::with(['position', 'position.electionType'])
             ->where('election_id', $this->latestElection->id)
             ->get();
 
@@ -178,28 +172,63 @@ class ElectionResult extends Component
 
         foreach ($positions as $position) {
             $positionId = $position->position->id;
+            $positionName = $position->position->name;
+            $electionType = $position->position->electionType->name;
 
-            // Count UNIQUE voters per position
-            $totalVotes = DB::table('votes')
-                ->where('position_id', $positionId)
-                ->where('election_id', $this->latestElection->id)
-                ->distinct('user_id')
-                ->count('user_id');
+            // For Student Council positions (count all together)
+            if ($electionType === 'Student Council Election') {
+                $totalVotes = DB::table('votes')
+                    ->where('position_id', $positionId)
+                    ->where('election_id', $this->latestElection->id)
+                    ->distinct('user_id')
+                    ->count('user_id');
 
-            // Count UNIQUE abstentions per position
-            $abstainCount = DB::table('abstain_votes')
-                ->where('position_id', $positionId)
-                ->where('election_id', $this->latestElection->id)
-                ->distinct('user_id')
-                ->count('user_id');
+                $abstainCount = DB::table('abstain_votes')
+                    ->where('position_id', $positionId)
+                    ->where('election_id', $this->latestElection->id)
+                    ->distinct('user_id')
+                    ->count('user_id');
 
-            $tally[] = [
-                'position_id' => $positionId,
-                'position' => $position->position->name,
-                'total_votes' => $totalVotes,
-                'abstain_count' => $abstainCount,
-                'total_participation' => $totalVotes + $abstainCount
-            ];
+                $tally[] = [
+                    'position_id' => $positionId,
+                    'position' => $positionName,
+                    'council' => 'All', // Explicitly set council for Student Council
+                    'total_votes' => $totalVotes,
+                    'abstain_count' => $abstainCount
+                ];
+            }
+            // For Local Council positions (separate by council)
+            else {
+                $councils = Council::where('name', '!=', 'Student Council')->get();
+
+                foreach ($councils as $council) {
+                    $totalVotes = DB::table('votes')
+                        ->join('users', 'votes.user_id', '=', 'users.id')
+                        ->join('programs', 'users.program_id', '=', 'programs.id')
+                        ->where('votes.position_id', $positionId)
+                        ->where('votes.election_id', $this->latestElection->id)
+                        ->where('programs.council_id', $council->id)
+                        ->distinct('votes.user_id')
+                        ->count('votes.user_id');
+
+                    $abstainCount = DB::table('abstain_votes')
+                        ->join('users', 'abstain_votes.user_id', '=', 'users.id')
+                        ->join('programs', 'users.program_id', '=', 'programs.id')
+                        ->where('abstain_votes.position_id', $positionId)
+                        ->where('abstain_votes.election_id', $this->latestElection->id)
+                        ->where('programs.council_id', $council->id)
+                        ->distinct('abstain_votes.user_id')
+                        ->count('abstain_votes.user_id');
+
+                    $tally[] = [
+                        'position_id' => $positionId,
+                        'position' => $positionName,
+                        'council' => $council->name, // Set council name
+                        'total_votes' => $totalVotes,
+                        'abstain_count' => $abstainCount
+                    ];
+                }
+            }
         }
 
         return collect($tally);
