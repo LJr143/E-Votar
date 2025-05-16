@@ -113,7 +113,7 @@ class LoginController extends Controller
     {
         try {
             $googleUser = Socialite::driver('google')->user();
-            $user = User::where('email', $googleUser->getEmail())->first();
+            $user = User::searchEncrypted($googleUser->getEmail(), ['email'])->first();
 
             if ($user) {
                 $user->google_id = $googleUser->getId();
