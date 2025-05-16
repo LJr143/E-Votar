@@ -27,7 +27,7 @@ class SteganographyHelper
             $width = imagesx($image);
             $height = imagesy($image);
 
-            // Prepare binary payload
+            // Prepare binary payload with 3 copies of data for redundancy
             $binaryData = self::prepareDataForEncoding($data);
             $requiredPixels = ceil(strlen($binaryData) / 3); // 3 bits per pixel (RGB)
 
@@ -56,7 +56,7 @@ class SteganographyHelper
                 }
             }
 
-            // Save image
+            // Save image with maximum quality
             if (!imagepng($image, $outputPath, 9)) {
                 throw new Exception("Failed to save image to: $outputPath");
             }
@@ -68,7 +68,7 @@ class SteganographyHelper
     }
 
     /**
-     * Decode data from an image
+     * Decode data from an image with redundancy checking
      */
     public static function decode(string $imagePath): string
     {
@@ -76,7 +76,21 @@ class SteganographyHelper
         try {
             $image = self::loadImage($imagePath);
             $binaryData = self::extractBinaryData($image);
-            return self::validateAndDecodeData($binaryData);
+
+            // Try decoding with multiple redundancy checks
+            for ($attempt = 0; $attempt < 3; $attempt++) {
+                try {
+                    return self::validateAndDecodeData($binaryData);
+                } catch (Exception $e) {
+                    // On last attempt, rethrow the exception
+                    if ($attempt === 2) throw $e;
+
+                    // Try recovering by shifting bits
+                    $binaryData = substr($binaryData, 1) . '0';
+                }
+            }
+
+            throw new Exception("All decoding attempts failed");
         } finally {
             if ($image) imagedestroy($image);
         }
@@ -84,22 +98,88 @@ class SteganographyHelper
 
     private static function prepareDataForEncoding(string $data): string
     {
+        // Add version, length, checksum and triple redundancy
         $checksum = crc32($data);
         $header = pack(
-            'CCNN',  // Corrected format string (unsigned char + unsigned char + unsigned long (32 bit) + unsigned long (32 bit))
+            'CCNN', // Version (C), VersionCheck (C), Length (N), Checksum (N)
             self::VERSION,
             self::VERSION,
             strlen($data),
             $checksum
         );
-        $payload = $header . $data . self::DELIMITER;
 
-        // Convert to binary string (8 bits per byte)
+        // Encode 3 copies of the data for redundancy
+        $payload = $header . str_repeat($data, 3) . self::DELIMITER;
+
+        // Convert to binary string
         $binary = '';
         for ($i = 0; $i < strlen($payload); $i++) {
             $binary .= str_pad(decbin(ord($payload[$i])), 8, '0', STR_PAD_LEFT);
         }
         return $binary;
+    }
+
+    private static function validateAndDecodeData(string $binaryData): string
+    {
+        // Convert binary to string
+        $data = '';
+        for ($i = 0; $i < strlen($binaryData); $i += 8) {
+            $byte = substr($binaryData, $i, 8);
+            if (strlen($byte) < 8) break;
+            $data .= chr(bindec($byte));
+        }
+
+        // Find all possible delimiters in the data
+        $delimiterPositions = [];
+        $offset = 0;
+        while (($pos = strpos($data, self::DELIMITER, $offset)) !== false) {
+            $delimiterPositions[] = $pos;
+            $offset = $pos + 1;
+        }
+
+        if (empty($delimiterPositions)) {
+            throw new Exception("Delimiter not found in extracted data");
+        }
+
+        // Try each potential delimiter position
+        foreach ($delimiterPositions as $pos) {
+            try {
+                $potentialData = substr($data, 0, $pos);
+
+                // Verify header
+                if (strlen($potentialData) < self::HEADER_SIZE) continue;
+
+                $header = substr($potentialData, 0, self::HEADER_SIZE);
+                $unpacked = @unpack('Cversion/CversionCheck/Nlength/Nchecksum', $header);
+
+                if (!is_array($unpacked) || count($unpacked) !== 4) continue;
+                if ($unpacked['version'] !== self::VERSION || $unpacked['versionCheck'] !== self::VERSION) continue;
+
+                // Verify checksum against all 3 copies
+                $payloadLength = $unpacked['length'];
+                $expectedChecksum = $unpacked['checksum'];
+
+                // Check all 3 copies of the data
+                $validCopies = 0;
+                for ($i = 0; $i < 3; $i++) {
+                    $offset = self::HEADER_SIZE + ($i * $payloadLength);
+                    $copy = substr($potentialData, $offset, $payloadLength);
+
+                    if (crc32($copy) === $expectedChecksum) {
+                        $validCopies++;
+                    }
+                }
+
+                // Require at least 2 matching copies
+                if ($validCopies >= 2) {
+                    return substr($potentialData, self::HEADER_SIZE, $payloadLength);
+                }
+            } catch (Exception $e) {
+                continue;
+            }
+        }
+
+        throw new Exception("No valid data found matching all verification checks");
     }
 
     private static function extractBinaryData($image): string
@@ -117,61 +197,6 @@ class SteganographyHelper
             }
         }
         return $binary;
-    }
-
-    private static function validateAndDecodeData(string $binaryData): string
-    {
-        // Convert binary to string (8 bits per byte)
-        $data = '';
-        for ($i = 0; $i < strlen($binaryData); $i += 8) {
-            $byte = substr($binaryData, $i, 8);
-            if (strlen($byte) < 8) break;
-            $data .= chr(bindec($byte));
-        }
-
-        // Verify minimum length
-        if (strlen($data) < self::HEADER_SIZE) {
-            throw new Exception("Data too short (".strlen($data)." bytes)");
-        }
-
-        // Extract and verify header
-        $header = substr($data, 0, self::HEADER_SIZE);
-        $unpacked = @unpack('Cversion/CversionCheck/Nlength/Nchecksum', $header);
-
-        if (!is_array($unpacked) || count($unpacked) !== 4) {
-            throw new Exception("Invalid header format");
-        }
-
-        // Verify version
-        if ($unpacked['version'] !== self::VERSION || $unpacked['versionCheck'] !== self::VERSION) {
-            throw new Exception("Version mismatch");
-        }
-
-        // Verify length
-        $expectedLength = self::HEADER_SIZE + $unpacked['length'] + strlen(self::DELIMITER);
-        if (strlen($data) < $expectedLength) {
-            throw new Exception("Data truncated. Expected {$expectedLength} bytes, got ".strlen($data));
-        }
-
-        // Extract payload
-        $payload = substr($data, self::HEADER_SIZE, $unpacked['length']);
-        $delimiter = substr($data, self::HEADER_SIZE + $unpacked['length']);
-
-        // Verify checksum
-        if (crc32($payload) !== $unpacked['checksum']) {
-            throw new Exception(sprintf(
-                "Checksum failed (Expected: %u, Actual: %u)",
-                $unpacked['checksum'],
-                crc32($payload)
-            ));
-        }
-
-        // Verify delimiter
-        if ($delimiter !== self::DELIMITER) {
-            throw new Exception("Delimiter not found");
-        }
-
-        return $payload;
     }
 
     private static function loadImage(string $path)
@@ -193,5 +218,45 @@ class SteganographyHelper
     {
         $color = @imagecolorallocate($image, $r, $g, $b);
         return $color !== false ? $color : imagecolorclosest($image, $r, $g, $b);
+    }
+
+    /**
+     * Debug an encoded image
+     */
+    public static function debug(string $imagePath): array
+    {
+        $image = null;
+        try {
+            $image = self::loadImage($imagePath);
+            $binaryData = self::extractBinaryData($image);
+
+            // Convert first 1000 bits for analysis
+            $sample = substr($binaryData, 0, 1000);
+            $sampleStr = '';
+            for ($i = 0; $i < strlen($sample); $i += 8) {
+                $byte = substr($sample, $i, 8);
+                if (strlen($byte) < 8) break;
+                $sampleStr .= chr(bindec($byte));
+            }
+
+            // Find all delimiter positions
+            $delimiterPositions = [];
+            $offset = 0;
+            while (($pos = strpos($sampleStr, self::DELIMITER, $offset)) !== false) {
+                $delimiterPositions[] = $pos;
+                $offset = $pos + 1;
+            }
+
+            return [
+                'image_size' => imagesx($image) . 'x' . imagesy($image),
+                'binary_length' => strlen($binaryData) . ' bits',
+                'header_sample' => bin2hex(substr($sampleStr, 0, self::HEADER_SIZE)),
+                'delimiter_positions' => $delimiterPositions,
+                'data_sample' => substr($sampleStr, self::HEADER_SIZE, 50),
+                'delimiter_found' => !empty($delimiterPositions)
+            ];
+        } finally {
+            if ($image) imagedestroy($image);
+        }
     }
 }
