@@ -430,6 +430,7 @@ class ElectionResult extends Component
 
     public function render()
     {
+        $voteTally = $this->getVoteTally();
         return view('evotar.livewire.election-result.election-result', [
             'candidates' => $this->candidates,
             'elections' => $this->elections,
@@ -444,7 +445,7 @@ class ElectionResult extends Component
             'studentCouncilWinners' => $this->studentCouncilWinners,
             'localCouncilWinners' => $this->localCouncilWinners,
             'abstainCounts' => $this->abstainCounts ?? collect(),
-            'voteTally' => $voteTally
+            'voteTally' => $voteTally,
         ]);
     }
 }
