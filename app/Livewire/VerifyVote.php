@@ -43,7 +43,7 @@ class VerifyVote extends Component
                 throw new \Exception('Invalid verification password.');
             }
 
-            // Get the image path (assuming you store this in the encoded_votes table)
+            // Get the image path
             $imagePath = storage_path('app/public/' . $encodedVote->encoded_image_path);
 
             if (!file_exists($imagePath)) {
@@ -51,30 +51,37 @@ class VerifyVote extends Component
             }
 
             // Extract encrypted data from image
-            $this->encryptedData = SteganographyHelper::decode($imagePath);
+            $encryptedData = SteganographyHelper::decode($imagePath);
 
-            if (empty($this->encryptedData)) {
+            if (empty($encryptedData)) {
                 throw new \Exception('No encrypted data found in the image.');
             }
 
             // Decrypt the data
             EncryptionHelper::setKey(config('app.stegano_secret_key'));
-            $decryptedData = EncryptionHelper::decrypt($this->encryptedData);
+            $decryptedData = EncryptionHelper::decrypt($encryptedData);
 
             if (!$decryptedData) {
                 throw new \Exception('Decryption failed. Data might be corrupted.');
             }
 
-            $this->voteData = json_decode($decryptedData, true);
+            $voteData = json_decode($decryptedData, true);
 
             if (json_last_error() !== JSON_ERROR_NONE) {
                 throw new \Exception('Failed to decode vote data.');
             }
 
+            // Update component properties
+            $this->encryptedData = $encryptedData;
+            $this->voteData = $voteData;
             $this->success = 'Vote verified successfully!';
 
         } catch (\Exception $e) {
             $this->error = 'Verification failed: ' . $e->getMessage();
+            logger()->error('Vote verification failed', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
         }
     }
 
