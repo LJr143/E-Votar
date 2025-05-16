@@ -289,18 +289,22 @@
 
                                         @foreach($candidates->where('election_positions.position.electionType.name', 'Local Council Election')->groupBy('users.program.council.name') as $councilName => $councilCandidates)
                                             @php
-                                                // Calculate total abstain votes for this entire council
+                                                // Calculate abstain votes for this specific council
                                                 $totalCouncilAbstain = \App\Models\AbstainVote::where('election_id', $selectedElection)
                                                     ->whereHas('position', function($q) {
                                                         $q->whereHas('electionType', function($q) {
                                                             $q->where('name', 'Local Council Election');
                                                         });
                                                     })
+                                                    ->whereHas('user', function($q) use ($councilName) {
+                                                        $q->whereHas('program', function($q) use ($councilName) {
+                                                            $q->where('council.name', $councilName);
+                                                        });
+                                                    })
                                                     ->count();
 
                                                 $totalCouncilVotes = $councilCandidates->sum('votes_count') + $totalCouncilAbstain;
                                             @endphp
-
                                                 <!-- Council Header -->
                                             <div class="bg-white p-5 rounded-lg shadow-sm border-l-4 border-black mb-6">
                                                 <div class="flex justify-between items-center flex-wrap gap-4">
