@@ -85,7 +85,13 @@ class SteganographyHelper
     private static function prepareDataForEncoding(string $data): string
     {
         $checksum = crc32($data);
-        $header = pack(self::HEADER_FORMAT, self::VERSION, self::VERSION, strlen($data), $checksum);
+        $header = pack(
+            'CCNN',  // Corrected format string (unsigned char + unsigned char + unsigned long (32 bit) + unsigned long (32 bit))
+            self::VERSION,
+            self::VERSION,
+            strlen($data),
+            $checksum
+        );
         $payload = $header . $data . self::DELIMITER;
 
         // Convert to binary string (8 bits per byte)
@@ -130,7 +136,7 @@ class SteganographyHelper
 
         // Extract and verify header
         $header = substr($data, 0, self::HEADER_SIZE);
-        $unpacked = unpack(self::HEADER_FORMAT, $header);
+        $unpacked = @unpack('Cversion/CversionCheck/Nlength/Nchecksum', $header);
 
         if (!is_array($unpacked) || count($unpacked) !== 4) {
             throw new Exception("Invalid header format");
@@ -187,34 +193,5 @@ class SteganographyHelper
     {
         $color = @imagecolorallocate($image, $r, $g, $b);
         return $color !== false ? $color : imagecolorclosest($image, $r, $g, $b);
-    }
-
-    /**
-     * Debug an encoded image
-     */
-    public static function debug(string $imagePath): array
-    {
-        $image = null;
-        try {
-            $image = self::loadImage($imagePath);
-            $binaryData = self::extractBinaryData($image);
-
-            // Get first 100 bytes for analysis
-            $sample = substr($binaryData, 0, 800); // 100 bytes * 8 bits
-            $sampleStr = '';
-            for ($i = 0; $i < strlen($sample); $i += 8) {
-                $sampleStr .= chr(bindec(substr($sample, $i, 8)));
-            }
-
-            return [
-                'image_size' => imagesx($image) . 'x' . imagesy($image),
-                'binary_length' => strlen($binaryData) . ' bits',
-                'header_sample' => bin2hex(substr($sampleStr, 0, self::HEADER_SIZE)),
-                'data_sample' => substr($sampleStr, self::HEADER_SIZE, 50),
-                'full_sample' => $sampleStr
-            ];
-        } finally {
-            if ($image) imagedestroy($image);
-        }
     }
 }
