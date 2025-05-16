@@ -289,12 +289,13 @@
 
                                         @foreach($candidates->where('election_positions.position.electionType.name', 'Local Council Election')->groupBy('users.program.council.name') as $councilName => $councilCandidates)
                                             @php
-                                                // Calculate total abstain votes for this entire council
+                                                // Calculate abstain votes from voters belonging to this council
                                                 $totalCouncilAbstain = \App\Models\AbstainVote::where('election_id', $selectedElection)
-                                                    ->whereHas('position', function($q) {
-                                                        $q->whereHas('electionType', function($q) {
-                                                            $q->where('name', 'Local Council Election');
-                                                        });
+                                                    ->whereHas('users.program.council', function($q) use ($councilName) {
+                                                        $q->where('name', $councilName);
+                                                    })
+                                                    ->whereHas('position.electionType', function($q) {
+                                                        $q->where('name', 'Local Council Election');
                                                     })
                                                     ->count();
 
