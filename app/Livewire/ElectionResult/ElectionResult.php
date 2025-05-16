@@ -131,7 +131,9 @@ class ElectionResult extends Component
     public function fetchCandidates(): void
     {
         $query = Candidate::with(['users','users.program.council', 'elections', 'election_positions.position.electionType'])
-            ->withCount('votes'); // Add this to fetch vote count
+            ->withCount(['votes as votes_count' => function($q) {
+                $q->select(DB::raw('COUNT(DISTINCT user_id)'));
+            }]);
 
         if ($this->search) {
             $query->whereHas('users', function ($q) {
@@ -154,6 +156,70 @@ class ElectionResult extends Component
 
 
         $this->candidates = $query->get();
+    }
+
+    public function getVoteTally()
+    {
+        if (!$this->latestElection) {
+            return collect();
+        }
+
+        $positions = ElectionPosition::with('position')
+            ->where('election_id', $this->latestElection->id)
+            ->get();
+
+        $tally = [];
+
+        foreach ($positions as $position) {
+            $positionId = $position->position->id;
+            $positionName = $position->position->name;
+
+            // For Student Council positions, count all votes together
+            if ($position->position->electionType->name === 'Student Council Election') {
+                $totalVotes = DB::table('votes')
+                    ->where('election_position_id', $position->id)
+                    ->distinct('user_id')
+                    ->count('user_id');
+
+                $tally[$positionId] = [
+                    'position' => $positionName,
+                    'council' => 'All',
+                    'total_votes' => $totalVotes,
+                    'abstain_count' => $this->abstainCounts[$positionId] ?? 0
+                ];
+            }
+            // For Local Council positions, separate by council
+            else {
+                $councils = Council::where('name', '!=', 'Student Council')->get();
+
+                foreach ($councils as $council) {
+                    $totalVotes = DB::table('votes')
+                        ->join('users', 'votes.user_id', '=', 'users.id')
+                        ->join('programs', 'users.program_id', '=', 'programs.id')
+                        ->where('votes.election_position_id', $position->id)
+                        ->where('programs.council_id', $council->id)
+                        ->distinct('votes.user_id')
+                        ->count('votes.user_id');
+
+                    $abstainCount = DB::table('abstain_votes')
+                        ->join('users', 'abstain_votes.user_id', '=', 'users.id')
+                        ->join('programs', 'users.program_id', '=', 'programs.id')
+                        ->where('abstain_votes.position_id', $positionId)
+                        ->where('programs.council_id', $council->id)
+                        ->distinct('abstain_votes.user_id')
+                        ->count('abstain_votes.user_id');
+
+                    $tally[$positionId.'-'.$council->id] = [
+                        'position' => $positionName,
+                        'council' => $council->name,
+                        'total_votes' => $totalVotes,
+                        'abstain_count' => $abstainCount
+                    ];
+                }
+            }
+        }
+
+        return collect($tally);
     }
 
 
@@ -207,12 +273,13 @@ class ElectionResult extends Component
             $this->localCouncilWinners = $this->getWinnersByProgram();
             // Get abstain counts for each position
             $this->abstainCounts = \App\Models\AbstainVote::where('election_id', $this->latestElection->id)
-                ->selectRaw('position_id, count(*) as count')
+                ->selectRaw('position_id, COUNT(DISTINCT user_id) as count')
                 ->groupBy('position_id')
                 ->pluck('count', 'position_id');
         } else {
             $this->studentCouncilWinners = collect();
             $this->localCouncilWinners = collect();
+            $this->abstainCounts = collect();
         }
     }
 
@@ -376,7 +443,8 @@ class ElectionResult extends Component
             'hasLocalCouncilPositions' => $this->hasLocalCouncilPositions,
             'studentCouncilWinners' => $this->studentCouncilWinners,
             'localCouncilWinners' => $this->localCouncilWinners,
-            'abstainCounts' => $this->abstainCounts ?? collect()
+            'abstainCounts' => $this->abstainCounts ?? collect(),
+            'voteTally' => $voteTally
         ]);
     }
 }
