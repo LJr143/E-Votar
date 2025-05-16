@@ -380,7 +380,7 @@
                                     <div class="absolute inset-0 bg-gray-100 bg-opacity-50 z-10"></div>
                                 @endif
 
-                                @if($canVote)
+                                @if($hasStarted || $hasEnded )
                                     <a href="{{ route('dashboard', ['slug' => $election->slug]) }}">
                                         @endif
                                 <div class="h-28 bg-gray-200 relative">
