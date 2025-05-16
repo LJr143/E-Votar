@@ -46,7 +46,7 @@ class AddCandidates extends Component
 
     public function fetchElection(): void
     {
-        $this->elections = Election::where('status', '!=', 'ongoing')->get();
+        $this->elections = Election::whereNotIn('status', ['ongoing', 'pending', 'paused', 'completed'])->get();
     }
 
     public function fetchPositions(): void
