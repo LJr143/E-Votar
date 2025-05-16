@@ -133,7 +133,7 @@ class ElectionResult extends Component
         $query = Candidate::with(['users','users.program.council', 'elections', 'election_positions.position.electionType'])
             ->withCount(['votes as votes_count' => function($q) {
                 $q->select(DB::raw('COUNT(DISTINCT user_id)'))
-                    ->where('position_id', DB::raw('election_positions.position_id'));
+                    ->where('position_id', DB::raw('election_positions.position.id'));
             }]);
 
         if ($this->search) {
