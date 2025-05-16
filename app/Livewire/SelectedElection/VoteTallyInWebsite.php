@@ -66,47 +66,26 @@ use Livewire\Component;
 
     protected function loadStatisticsData(Election $election)
     {
-        // Total voters count
-        $this->totalVoters = User::whereHas('roles', function($q) {
+        // Base query for eligible voters
+        $baseVoterQuery = User::whereHas('roles', function($q) {
             $q->where('name', '!=', 'faculty');
         })
-            ->when(!str($this->council->name)->contains('Student Council'), function($query) {
-                $query->whereHas('program', function($q) {
-                    $q->where('council_id', $this->council->id);
-                });
+            ->whereHas('program', function($q) {
+                $q->where('council_id', $this->council->id);
             })
-            ->count();
+            ->whereDoesntHave('electionExcludedVoters', function($q) {
+                $q->where('election_id', $this->selectedElection);
+            });
 
-        // Count unique voters (users who voted in this election)
-        $this->totalVoterVoted = \App\Models\Vote::where('election_id', $this->selectedElection)
-            ->when(!str($this->council->name)->contains('Student Council'), function($query) {
-                $query->whereHas('users.program', function($q) {
-                    $q->where('council_id', $this->council->id);
-                });
-            })
-            ->distinct('user_id')
-            ->count('user_id');
+        // Total voters count (using same base query)
+        $this->totalVoters = $baseVoterQuery->count();
 
-        // Count votes per position for the current council
-        $this->positionVotes = \App\Models\Vote::where('election_id', $this->selectedElection)
-            ->when(!str($this->council->name)->contains('Student Council'), function($query) {
-                $query->whereHas('users.program', function($q) {
-                    $q->where('council_id', $this->council->id);
-                });
-            })
-            ->selectRaw('position_id, count(distinct user_id) as vote_count')
-            ->groupBy('position_id')
-            ->pluck('vote_count', 'position_id')
-            ->toArray();
-
-        // College-wise turnout - FIXED QUERY
+        // College-wise turnout - using same base voter definition
         $this->collegeTurnout = Council::withCount([
-            'program as voters_count' => function($query) {
+            'program as voters_count' => function($query) use ($baseVoterQuery) {
                 $query->select(DB::raw('count(distinct users.id)'))
                     ->join('users', 'programs.id', '=', 'users.program_id')
-                    ->whereHas('users.roles', function($q) {
-                        $q->where('name', '!=', 'faculty');
-                    });
+                    ->whereIn('users.id', $baseVoterQuery->pluck('users.id'));
             },
             'program as voted_count' => function($query) {
                 $query->select(DB::raw('count(distinct votes.user_id)'))
@@ -114,19 +93,41 @@ use Livewire\Component;
                     ->join('votes', 'users.id', '=', 'votes.user_id')
                     ->where('votes.election_id', $this->selectedElection);
             }
-        ])->get()->map(function($council) {
-            return [
-                'name' => $council->name,
-                'voters' => $council->voters_count,
-                'voted' => $council->voted_count
-            ];
-        });
+        ])
+            ->where('id', $this->council->id) // Only get current council
+            ->get()
+            ->map(function($council) {
+                return [
+                    'name' => $council->name,
+                    'voters' => $council->voters_count,
+                    'voted' => $council->voted_count
+                ];
+            });
 
-        // Abstention counts per position
+        // Rest of your statistics loading...
+        $this->totalVoterVoted = \App\Models\Vote::where('election_id', $this->selectedElection)
+            ->whereHas('user.program', function($q) {
+                $q->where('council_id', $this->council->id);
+            })
+            ->distinct('user_id')
+            ->count('user_id');
+
+        $this->positionVotes = \App\Models\Vote::where('election_id', $this->selectedElection)
+            ->whereHas('user.program', function($q) {
+                $q->where('council_id', $this->council->id);
+            })
+            ->selectRaw('position_id, count(distinct user_id) as vote_count')
+            ->groupBy('position_id')
+            ->pluck('vote_count', 'position_id')
+            ->toArray();
+
         $this->positionAbstentions = ElectionPosition::where('election_id', $this->selectedElection)
             ->with(['position' => function($query) {
                 $query->withCount(['abstains as abstain_count' => function($q) {
-                    $q->where('election_id', $this->selectedElection);
+                    $q->where('election_id', $this->selectedElection)
+                        ->whereHas('user.program', function($q) {
+                            $q->where('council_id', $this->council->id);
+                        });
                 }]);
             }])
             ->get()
