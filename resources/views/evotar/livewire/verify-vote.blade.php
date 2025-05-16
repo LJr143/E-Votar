@@ -17,7 +17,7 @@
                        class="w-full px-3 py-2 text-sm md:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
             </div>
 
-            <button wire:click="verify" wire:loading.attr="disabled"
+            <button wire:click="verifyVote" wire:loading.attr="disabled"
                     class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-sm md:text-base">
                 <span wire:loading.remove>Verify Vote</span>
                 <span wire:loading wire:target="verify">

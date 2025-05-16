@@ -25,7 +25,7 @@ class VerifyVote extends Component
         $this->voteId = $voteId;
     }
 
-    public function verify(): void
+    public function verifyVote(): void
     {
         $this->reset(['error', 'success', 'encryptedData', 'voteData']);
 
