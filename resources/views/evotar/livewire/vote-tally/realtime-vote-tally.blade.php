@@ -291,7 +291,7 @@
                                             @php
                                                 // Calculate abstain votes from voters belonging to this council
                                                 $totalCouncilAbstain = \App\Models\AbstainVote::where('election_id', $selectedElection)
-                                                    ->whereHas('users.program.council', function($q) use ($councilName) {
+                                                    ->whereHas('user.program.council', function($q) use ($councilName) {
                                                         $q->where('name', $councilName);
                                                     })
                                                     ->whereHas('position.electionType', function($q) {
