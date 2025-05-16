@@ -119,10 +119,18 @@ class ElectionResult extends Component
 
     public function fetchCandidates(): void
     {
-        $query = Candidate::with(['users','users.program.council', 'elections', 'election_positions.position.electionType'])
-            ->withCount(['votes as votes_count' => function($q) {
-                $q->select(DB::raw('COUNT(DISTINCT votes.user_id)'));
-            }]);
+        $query = Candidate::with([
+            'users',
+            'users.program.council',
+            'elections',
+            'election_positions.position.electionType'
+        ])
+            ->withCount([
+                'votes as votes_count' => function($q) {
+                    $q->select(DB::raw('COUNT(DISTINCT votes.user_id)'))
+                        ->where('votes.election_id', $this->selectedElection);
+                }
+            ]);
 
         if ($this->search) {
             $query->whereHas('users', function ($q) {
@@ -132,9 +140,7 @@ class ElectionResult extends Component
         }
 
         if ($this->selectedElection) {
-            $query->whereHas('elections', function ($q) {
-                $q->where('id', $this->selectedElection);
-            });
+            $query->where('election_id', $this->selectedElection);
         }
 
         if ($this->filter) {
@@ -168,27 +174,31 @@ class ElectionResult extends Component
 
         foreach ($positions as $position) {
             $positionId = $position->position->id;
-            $positionName = $position->position->name;
             $electionType = $position->position->electionType->name;
 
             if ($electionType === 'Student Council Election') {
                 // Student Council counts
                 $totalVoters = $this->totalVoters;
+
+                // Count abstentions for this position
                 $abstainCount = DB::table('abstain_votes')
                     ->where('position_id', $positionId)
                     ->where('election_id', $this->latestElection->id)
                     ->distinct('user_id')
                     ->count('user_id');
 
+                // Count votes for candidates in this election position
                 $voteCount = DB::table('votes')
-                    ->where('position_id', $positionId)
-                    ->where('election_id', $this->latestElection->id)
-                    ->distinct('user_id')
-                    ->count('user_id');
+                    ->join('candidates', 'votes.candidate_id', '=', 'candidates.id')
+                    ->where('candidates.election_position_id', $position->id)
+                    ->where('votes.election_id', $this->latestElection->id)
+                    ->distinct('votes.user_id')
+                    ->count('votes.user_id');
 
                 $tally[] = [
                     'position_id' => $positionId,
-                    'position' => $positionName,
+                    'election_position_id' => $position->id,
+                    'position' => $position->position->name,
                     'council' => 'All',
                     'total_voters' => $totalVoters,
                     'abstain_count' => $abstainCount,
@@ -202,6 +212,7 @@ class ElectionResult extends Component
                 foreach ($councils as $council) {
                     $totalVoters = $councilVoters[$council->id] ?? 0;
 
+                    // Count abstentions for this position in this council
                     $abstainCount = DB::table('abstain_votes')
                         ->join('users', 'abstain_votes.user_id', '=', 'users.id')
                         ->join('programs', 'users.program_id', '=', 'programs.id')
@@ -211,10 +222,12 @@ class ElectionResult extends Component
                         ->distinct('abstain_votes.user_id')
                         ->count('abstain_votes.user_id');
 
+                    // Count votes for candidates in this election position and council
                     $voteCount = DB::table('votes')
-                        ->join('users', 'votes.user_id', '=', 'users.id')
+                        ->join('candidates', 'votes.candidate_id', '=', 'candidates.id')
+                        ->join('users', 'candidates.user_id', '=', 'users.id')
                         ->join('programs', 'users.program_id', '=', 'programs.id')
-                        ->where('votes.position_id', $positionId)
+                        ->where('candidates.election_position_id', $position->id)
                         ->where('votes.election_id', $this->latestElection->id)
                         ->where('programs.council_id', $council->id)
                         ->distinct('votes.user_id')
@@ -222,7 +235,8 @@ class ElectionResult extends Component
 
                     $tally[] = [
                         'position_id' => $positionId,
-                        'position' => $positionName,
+                        'election_position_id' => $position->id,
+                        'position' => $position->position->name,
                         'council' => $council->name,
                         'total_voters' => $totalVoters,
                         'abstain_count' => $abstainCount,
