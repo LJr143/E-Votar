@@ -131,7 +131,7 @@ class User extends Authenticatable
 
     public function programMajor(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(program_major::class, 'program_major_id');
+        return $this->belongsTo(program_major::class);
     }
 
     public function candidates(): \Illuminate\Database\Eloquent\Relations\BelongsTo

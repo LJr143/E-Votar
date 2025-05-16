@@ -5,6 +5,7 @@ namespace App\Livewire\SelectedElection;
 use App\Models\Candidate;
 use App\Models\Council;
 use App\Models\Election;
+use App\Models\program_major;
 use App\Models\ProgramMajor;
 use Illuminate\Database\Eloquent\Builder;
 use Livewire\Component;
@@ -133,7 +134,7 @@ class ElectionResultInWebsite extends Component
                             $numWinners = $position->num_winners ?? 1;
 
                             if ($separateByMajor) {
-                                $majors = ProgramMajor::whereHas('program', fn($q) => $q->where('council_id', $this->council->id))
+                                $majors = program_major::whereHas('program', fn($q) => $q->where('council_id', $this->council->id))
                                     ->distinct()
                                     ->pluck('id');
 
