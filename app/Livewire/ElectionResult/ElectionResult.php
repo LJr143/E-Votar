@@ -132,13 +132,15 @@ class ElectionResult extends Component
     {
         $query = Candidate::with(['users','users.program.council', 'elections', 'election_positions.position.electionType'])
             ->withCount(['votes as votes_count' => function($q) {
-                $q->select(DB::raw('COUNT(DISTINCT user_id)'));
+                $q->select(DB::raw('COUNT(DISTINCT user_id)'))
+                    ->whereColumn('votes.position_id', 'election_positions.position_id');
             }]);
 
         if ($this->search) {
             $query->whereHas('users', function ($q) {
                 $q->where('first_name', 'like', '%' . $this->search . '%')
                     ->orWhere('last_name', 'like', '%' . $this->search . '%');
+
             });
         }
 
@@ -192,7 +194,7 @@ class ElectionResult extends Component
                     ->count('user_id');
 
                 $voteCount = DB::table('votes')
-                    ->where('election_position_id', $position->id)
+                    ->where('position_id', $positionId) // Changed from election_position_id
                     ->where('election_id', $this->latestElection->id)
                     ->distinct('user_id')
                     ->count('user_id');
@@ -203,7 +205,7 @@ class ElectionResult extends Component
                     'council' => 'All',
                     'total_voters' => $totalVoters,
                     'abstain_count' => $abstainCount,
-                    'vote_tally' => $voteCount, // Actual unique voters who voted for this position
+                    'vote_tally' => $voteCount,
                     'participation_rate' => $totalVoters > 0 ? round(($voteCount / $totalVoters) * 100, 2) : 0
                 ];
             } else {
@@ -225,7 +227,7 @@ class ElectionResult extends Component
                     $voteCount = DB::table('votes')
                         ->join('users', 'votes.user_id', '=', 'users.id')
                         ->join('programs', 'users.program_id', '=', 'programs.id')
-                        ->where('votes.election_position_id', $position->id)
+                        ->where('votes.position_id', $positionId) // Changed from election_position_id
                         ->where('votes.election_id', $this->latestElection->id)
                         ->where('programs.council_id', $council->id)
                         ->distinct('votes.user_id')
@@ -237,7 +239,7 @@ class ElectionResult extends Component
                         'council' => $council->name,
                         'total_voters' => $totalVoters,
                         'abstain_count' => $abstainCount,
-                        'vote_tally' => $voteCount, // Actual unique voters who voted for this position
+                        'vote_tally' => $voteCount,
                         'participation_rate' => $totalVoters > 0 ? round(($voteCount / $totalVoters) * 100, 2) : 0
                     ];
                 }

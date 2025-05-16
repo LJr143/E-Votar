@@ -19,4 +19,8 @@ class Vote extends Model
     {
         return $this->belongsTo(Election::class, 'election_id', 'id');
     }
+   public function position(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+   {
+       return $this->belongsTo(Position::class, 'position_id', 'id');
+   }
 }
