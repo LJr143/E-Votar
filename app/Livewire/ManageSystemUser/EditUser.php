@@ -86,9 +86,6 @@ class EditUser extends Component
     {
         $this->validate(['selectedUser' => 'required']);
         $this->currentStep = 2;
-        // Automatically load permissions if editing existing user
-        $this->proceedToAccessRole();
-
         $this->user = User::findOrFail($this->userId);
         $this->userPermissions = $this->user->getDirectPermissions()->pluck('name');
         $this->rolePermissions = $this->user->getPermissionsViaRoles()->pluck('name');
