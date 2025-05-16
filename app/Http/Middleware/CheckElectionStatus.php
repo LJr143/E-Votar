@@ -16,7 +16,7 @@ class CheckElectionStatus
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $electionId = session('selectedElection');
+        $electionId = session('selectedSelection');
 
         if (!$electionId) {
             return response()->json([
