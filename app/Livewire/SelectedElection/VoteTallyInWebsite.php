@@ -66,26 +66,33 @@ use Livewire\Component;
 
     protected function loadStatisticsData(Election $election)
     {
-        // Base query for eligible voters
+        // Base query for eligible voters (current council only)
         $baseVoterQuery = User::whereHas('roles', function($q) {
             $q->where('name', '!=', 'faculty');
         })
-            ->whereHas('program', function($q) {
-                $q->where('council_id', $this->council->id);
+            ->when(!str($this->council->name)->contains('Student Council'), function($query) {
+                $query->whereHas('program', function($q) {
+                    $q->where('council_id', $this->council->id);
+                });
             })
             ->whereDoesntHave('electionExcludedVoters', function($q) {
                 $q->where('election_id', $this->selectedElection);
             });
 
-        // Total voters count (using same base query)
+        // Total voters count
         $this->totalVoters = $baseVoterQuery->count();
 
-        // College-wise turnout - using same base voter definition
+        // College-wise turnout - show all councils for Student Council
         $this->collegeTurnout = Council::withCount([
-            'program as voters_count' => function($query) use ($baseVoterQuery) {
+            'program as voters_count' => function($query) {
                 $query->select(DB::raw('count(distinct users.id)'))
                     ->join('users', 'programs.id', '=', 'users.program_id')
-                    ->whereIn('users.id', $baseVoterQuery->pluck('users.id'));
+                    ->whereHas('users.roles', function($q) {
+                        $q->where('name', '!=', 'faculty');
+                    })
+                    ->whereDoesntHave('users.electionExcludedVoters', function($q) {
+                        $q->where('election_id', $this->selectedElection);
+                    });
             },
             'program as voted_count' => function($query) {
                 $query->select(DB::raw('count(distinct votes.user_id)'))
@@ -94,7 +101,12 @@ use Livewire\Component;
                     ->where('votes.election_id', $this->selectedElection);
             }
         ])
-            ->where('id', $this->council->id) // Only get current council
+            ->when(str($this->council->name)->contains('Student Council'), function($query) {
+                // Show all councils for Student Council view
+            }, function($query) {
+                // Only show current council for other views
+                $query->where('id', $this->council->id);
+            })
             ->get()
             ->map(function($council) {
                 return [
@@ -106,8 +118,10 @@ use Livewire\Component;
 
         // Rest of your statistics loading...
         $this->totalVoterVoted = \App\Models\Vote::where('election_id', $this->selectedElection)
-            ->whereHas('users.program', function($q) {
-                $q->where('council_id', $this->council->id);
+            ->when(!str($this->council->name)->contains('Student Council'), function($query) {
+                $query->whereHas('user.program', function($q) {
+                    $q->where('council_id', $this->council->id);
+                });
             })
             ->distinct('user_id')
             ->count('user_id');
