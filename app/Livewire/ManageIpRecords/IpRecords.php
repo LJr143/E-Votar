@@ -4,6 +4,7 @@ namespace App\Livewire\ManageIpRecords;
 use App\Exports\IpRecordsExport;
 use App\Exports\SystemUserAdminExport;
 use App\Models\IpRecord;
+use App\Models\User;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -42,13 +43,19 @@ class IpRecords extends Component
             })
             ->when($this->search, function ($query) {
                 $query->where(function ($q) {
+                    // Search plaintext IP address (works normally)
                     $q->where('ip_address', 'like', "%{$this->search}%")
+
+                        // Search encrypted user fields using your searchEncrypted method
                         ->orWhereHas('user', function ($userQuery) {
-                            $userQuery->where('first_name', 'like', "%{$this->search}%")
-                                ->orWhere('last_name', 'like', "%{$this->search}%");
+                            $matchingUserIds = User::searchEncrypted($this->search, ['first_name', 'last_name'])
+                                ->pluck('id');
+                            $userQuery->whereIn('id', $matchingUserIds);
                         });
                 });
             })
+
+
             ->with('user')
             ->orderByDesc('last_seen_at')
             ->paginate($this->perPage);
