@@ -164,6 +164,14 @@ class ElectionResult extends Component
             return collect();
         }
 
+        // Get total voters per council
+        $councilVoters = User::select('programs.council_id', DB::raw('COUNT(users.id) as voter_count'))
+            ->join('programs', 'users.program_id', '=', 'programs.id')
+            ->where('users.campus_id', $this->latestElection->campus_id)
+            ->whereDoesntHave('electionExcludedVoters', fn($q) => $q->where('election_id', $this->latestElection->id))
+            ->groupBy('programs.council_id')
+            ->pluck('voter_count', 'council_id');
+
         $positions = ElectionPosition::with(['position', 'position.electionType'])
             ->where('election_id', $this->latestElection->id)
             ->get();
@@ -175,14 +183,9 @@ class ElectionResult extends Component
             $positionName = $position->position->name;
             $electionType = $position->position->electionType->name;
 
-            // For Student Council positions (count all together)
             if ($electionType === 'Student Council Election') {
-                $totalVotes = DB::table('votes')
-                    ->where('position_id', $positionId)
-                    ->where('election_id', $this->latestElection->id)
-                    ->distinct('user_id')
-                    ->count('user_id');
-
+                // For Student Council (count all voters)
+                $totalVoters = $this->totalVoters;
                 $abstainCount = DB::table('abstain_votes')
                     ->where('position_id', $positionId)
                     ->where('election_id', $this->latestElection->id)
@@ -192,25 +195,17 @@ class ElectionResult extends Component
                 $tally[] = [
                     'position_id' => $positionId,
                     'position' => $positionName,
-                    'council' => 'All', // Explicitly set council for Student Council
-                    'total_votes' => $totalVotes,
-                    'abstain_count' => $abstainCount
+                    'council' => 'All',
+                    'total_voters' => $totalVoters,
+                    'abstain_count' => $abstainCount,
+                    'vote_tally' => $totalVoters - $abstainCount
                 ];
-            }
-            // For Local Council positions (separate by council)
-            else {
+            } else {
+                // For Local Council (count per council)
                 $councils = Council::where('name', '!=', 'Student Council')->get();
 
                 foreach ($councils as $council) {
-                    $totalVotes = DB::table('votes')
-                        ->join('users', 'votes.user_id', '=', 'users.id')
-                        ->join('programs', 'users.program_id', '=', 'programs.id')
-                        ->where('votes.position_id', $positionId)
-                        ->where('votes.election_id', $this->latestElection->id)
-                        ->where('programs.council_id', $council->id)
-                        ->distinct('votes.user_id')
-                        ->count('votes.user_id');
-
+                    $totalVoters = $councilVoters[$council->id] ?? 0;
                     $abstainCount = DB::table('abstain_votes')
                         ->join('users', 'abstain_votes.user_id', '=', 'users.id')
                         ->join('programs', 'users.program_id', '=', 'programs.id')
@@ -223,9 +218,10 @@ class ElectionResult extends Component
                     $tally[] = [
                         'position_id' => $positionId,
                         'position' => $positionName,
-                        'council' => $council->name, // Set council name
-                        'total_votes' => $totalVotes,
-                        'abstain_count' => $abstainCount
+                        'council' => $council->name,
+                        'total_voters' => $totalVoters,
+                        'abstain_count' => $abstainCount,
+                        'vote_tally' => $totalVoters - $abstainCount
                     ];
                 }
             }

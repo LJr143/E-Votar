@@ -142,9 +142,10 @@
                                             @foreach ($studentCouncilWinners as $winner)
                                                 @php
                                                     $positionId = $winner['position_id'];
-                                                    $voteCount = $voteTally->firstWhere('position_id', $positionId)['total_votes'] ?? 0;
-                                                    $abstainCount = $voteTally->firstWhere('position_id', $positionId)['abstain_count'] ?? 0;
-                                                    $total = $voteCount + $abstainCount;
+                                                    $voteData = $voteTally->firstWhere('position_id', $positionId);
+                                                    $abstainCount = $voteData['abstain_count'] ?? 0;
+                                                    $voteTallyCount = $voteData['vote_tally'] ?? 0;
+                                                    $totalVoters = $voteData['total_voters'] ?? 0;
                                                 @endphp
                                                 <tr class="border-b border-gray-100">
                                                     <td class="py-3 px-6 text-left">{{ $winner['position'] }}</td>
@@ -154,9 +155,9 @@
                                                     <td class="py-3 px-6 text-left">{{ $winner['candidate'] ? $winner['candidate']->partyLists->name : '-' }}</td>
                                                     <td class="py-3 px-6 text-left">{{ $abstainCount }}</td>
                                                     <td class="py-3 px-6 text-left">
-                                                        <div class="font-bold">{{ $winner['candidate'] ? $winner['candidate']->votes_count . ' votes' : '-' }}</div>
+                                                        <div class="font-bold">{{ $voteTallyCount }} votes</div>
                                                     </td>
-                                                    <td class="py-3 px-6 text-left">{{ $total }}</td>
+                                                    <td class="py-3 px-6 text-left">{{ $totalVoters }}</td>
                                                 </tr>
                                             @endforeach
                                             </tbody>
@@ -197,29 +198,30 @@
                                                         </tr>
                                                         </thead>
                                                         <tbody class="text-black text-[12px] font-light">
-                                                        @foreach ($majorWinners as $winner)
-                                                            @php
-                                                                $positionId = $winner['position_id'];
-                                                                // Find the vote tally for this position and council
-                                                                $councilVoteTally = $voteTally->first(function ($item) use ($positionId, $council) {
-                                                                    return $item['position_id'] == $positionId && $item['council'] == $council;
-                                                                });
-                                                                $voteCount = $councilVoteTally['total_votes'] ?? 0;
-                                                                $abstainCount = $councilVoteTally['abstain_count'] ?? 0;
-                                                                $total = $voteCount + $abstainCount;
-                                                            @endphp
-                                                            <tr class="border-b border-gray-100">
-                                                                <td class="py-3 px-6 text-left">{{ $winner['position'] }}</td>
-                                                                <td class="py-3 px-8 text-left font-bold">
-                                                                    {{ $winner['candidate'] ? $winner['candidate']->users->first_name . ' ' . $winner['candidate']->users->last_name : 'No winner' }}
-                                                                </td>
-                                                                <td class="py-3 px-6 text-left">{{ $winner['candidate'] ? $winner['candidate']->partyLists->name : '-' }}</td>
-                                                                <td class="py-3 px-6 text-left">{{ $abstainCount }}</td>
-                                                                <td class="py-3 px-6 text-left">
-                                                                    <div class="font-bold">{{ $winner['candidate'] ? $winner['candidate']->votes_count . ' votes' : '-' }}</div>
-                                                                </td>
-                                                                <td class="py-3 px-6 text-left">{{ $total }}</td>
-                                                            </tr>
+                                                        @foreach ($localCouncilWinners as $council => $winners)
+                                                            @foreach ($winners as $winner)
+                                                                @php
+                                                                    $positionId = $winner['position_id'];
+                                                                    $voteData = $voteTally->first(function ($item) use ($positionId, $council) {
+                                                                        return $item['position_id'] == $positionId && $item['council'] == $council;
+                                                                    });
+                                                                    $abstainCount = $voteData['abstain_count'] ?? 0;
+                                                                    $voteTallyCount = $voteData['vote_tally'] ?? 0;
+                                                                    $totalVoters = $voteData['total_voters'] ?? 0;
+                                                                @endphp
+                                                                <tr class="border-b border-gray-100">
+                                                                    <td class="py-3 px-6 text-left">{{ $winner['position'] }}</td>
+                                                                    <td class="py-3 px-8 text-left font-bold">
+                                                                        {{ $winner['candidate'] ? $winner['candidate']->users->first_name . ' ' . $winner['candidate']->users->last_name : 'No winner' }}
+                                                                    </td>
+                                                                    <td class="py-3 px-6 text-left">{{ $winner['candidate'] ? $winner['candidate']->partyLists->name : '-' }}</td>
+                                                                    <td class="py-3 px-6 text-left">{{ $abstainCount }}</td>
+                                                                    <td class="py-3 px-6 text-left">
+                                                                        <div class="font-bold">{{ $voteTallyCount }} votes</div>
+                                                                    </td>
+                                                                    <td class="py-3 px-6 text-left">{{ $totalVoters }}</td>
+                                                                </tr>
+                                                            @endforeach
                                                         @endforeach
                                                         </tbody>
                                                     </table>
