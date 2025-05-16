@@ -1,3 +1,4 @@
+@php use Illuminate\Support\Facades\DB; @endphp
 <div class="container mx-auto px-4 py-8" x-data="{
     activeTab: 'results',
     showDetails: false,
@@ -80,6 +81,16 @@
                             $positionId = optional(optional($positionCandidates->first())->election_positions)->position->id ?? null;
                             $totalVotes = $positionId ? ($positionVotes[$positionId] ?? 0) : 0;
                             $abstentions = $positionId ? ($positionAbstentions[$positionId] ?? 0) : 0;
+
+                            // Calculate individual candidate votes (distinct counts)
+                            $candidateVotes = [];
+                            foreach ($positionCandidates as $candidate) {
+                                $candidateVotes[$candidate->id] = DB::table('votes')
+                                    ->where('candidate_id', $candidate->id)
+                                    ->where('election_id', $this->selectedElection)
+                                    ->distinct('user_id')
+                                    ->count('user_id');
+                            }
                         }
                     @endphp
 
@@ -94,11 +105,14 @@
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                         @foreach($positionCandidates as $candidate)
+                            @php
+                                $candidateVoteCount = $candidateVotes[$candidate->id] ?? 0;
+                                $votePercentage = $totalVotes > 0 ? ($candidateVoteCount/$totalVotes)*100 : 0;
+                            @endphp
                             <div class="border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
                                 <!-- Vote Percentage Bar -->
                                 <div class="bg-gray-100 w-full h-2">
-                                    <div class="bg-green-500 h-2"
-                                         style="width: {{ $totalVotes > 0 ? ($candidate->votes_count/$totalVotes)*100 : 0 }}%"></div>
+                                    <div class="bg-green-500 h-2" style="width: {{ $votePercentage }}%"></div>
                                 </div>
 
                                 <!-- Candidate Info -->
@@ -119,8 +133,8 @@
 
                                     <div class="text-center mb-3">
                                 <span class="inline-block bg-red-100 text-red-800 text-xs px-2 py-1 rounded">
-                                    {{ number_format($candidate->votes_count) }} votes
-                                    ({{ $totalVotes > 0 ? number_format(($candidate->votes_count/$totalVotes)*100, 1) : 0 }}%)
+                                     {{ number_format($candidateVoteCount) }} votes
+                                    ({{ number_format($votePercentage, 1) }}%)
                                 </span>
                                     </div>
 

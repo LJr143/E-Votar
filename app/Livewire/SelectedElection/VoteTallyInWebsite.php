@@ -13,7 +13,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
-#[AllowDynamicProperties] class VoteTallyInWebsite extends Component
+#[AllowDynamicProperties]
+class VoteTallyInWebsite extends Component
 {
     protected $listeners = ['updateChartData' => '$refresh', 'echo:vote-tally,VoteTallyUpdated' => '$refresh'];
     public $council;
@@ -26,11 +27,12 @@ use Livewire\Component;
     public $councils;
     public $search = '';
 
-    // New properties for statistics
+    // Statistics properties
     public $totalVoters;
     public $totalVoterVoted;
     public $totalAbstentions;
     public $collegeTurnout = [];
+    public $positionVotes = [];
     public $positionAbstentions = [];
 
     public function mount($councilId)
@@ -45,16 +47,8 @@ use Livewire\Component;
             if ($election) {
                 $this->filter = $election->election_type->name;
                 $this->selectedElection = $selectedElectionId;
-
-                // Load statistics data
                 $this->loadStatisticsData($election);
-            } else {
-                $this->filter = null;
-                $this->selectedElection = null;
             }
-        } else {
-            $this->filter = null;
-            $this->selectedElection = null;
         }
 
         $this->councils = Council::all();
@@ -66,7 +60,7 @@ use Livewire\Component;
 
     protected function loadStatisticsData(Election $election)
     {
-        // Base query for eligible voters (current council only)
+        // Base query for eligible voters
         $baseVoterQuery = User::whereHas('roles', function($q) {
             $q->where('name', '!=', 'faculty');
         })
@@ -82,7 +76,7 @@ use Livewire\Component;
         // Total voters count
         $this->totalVoters = $baseVoterQuery->count();
 
-        // Total voters who voted in this election (for current council)
+        // Total voters who voted (distinct count)
         $this->totalVoterVoted = DB::table('votes')
             ->join('users', 'votes.user_id', '=', 'users.id')
             ->when(!str($this->council->name)->contains('Student Council'), function($query) {
@@ -123,12 +117,14 @@ use Livewire\Component;
                 return [
                     'name' => $council->name,
                     'voters' => $council->voters_count,
-                    'voted' => $council->voted_count
+                    'voted' => $council->voted_count,
+                    'turnout' => $council->voters_count > 0
+                        ? round(($council->voted_count / $council->voters_count) * 100, 1)
+                        : 0
                 ];
             });
 
-        // Calculate position votes using your specified method
-        $this->positionVotes = [];
+        // Calculate position votes using exact specified method
         $positions = ElectionPosition::where('election_id', $this->selectedElection)
             ->with('position')
             ->get();
@@ -145,13 +141,12 @@ use Livewire\Component;
                 })
                 ->distinct('votes.user_id')
                 ->count('votes.user_id');
-        }
 
-        // Calculate abstentions by position (total voters who voted minus votes for position)
-        $this->positionAbstentions = [];
-        foreach ($positions as $position) {
-            $votesForPosition = $this->positionVotes[$position->position_id] ?? 0;
-            $this->positionAbstentions[$position->position_id] = max(0, $this->totalVoterVoted - $votesForPosition);
+            // Calculate abstentions for this position
+            $this->positionAbstentions[$position->position_id] = max(
+                0,
+                $this->totalVoterVoted - ($this->positionVotes[$position->position_id] ?? 0)
+            );
         }
 
         // Total abstentions is sum of all position abstentions
@@ -164,16 +159,19 @@ use Livewire\Component;
             ->positions()
             ->with([
                 'electionPositions.candidates' => function ($q) {
-                    $q->where('election_id', $this->selectedElection);
-
-                    if (!str($this->council->name)->contains('Student Council')) {
-                        $q->whereHas('users.program', function ($query) {
-                            $query->where('council_id', $this->council->id);
-                        });
-                    }
-
-                    $q->with(['users.program', 'users.programMajor'])
-                        ->withCount('votes');
+                    $q->where('election_id', $this->selectedElection)
+                        ->when(!str($this->council->name)->contains('Student Council'), function($query) {
+                            $query->whereHas('users.program', function ($q) {
+                                $q->where('council_id', $this->council->id);
+                            });
+                        })
+                        ->with(['users.program', 'users.programMajor'])
+                        ->withCount([
+                            'votes as votes_count' => function($query) {
+                                $query->select(DB::raw('COUNT(DISTINCT votes.user_id)'))
+                                    ->where('votes.election_id', $this->selectedElection);
+                            }
+                        ]);
                 }
             ])
             ->get();
@@ -196,7 +194,7 @@ use Livewire\Component;
                 ? $this->studentCouncilPositions
                 : $this->localCouncilPositions;
 
-            $positions->map(function ($position) use (&$candidatesByPosition) {
+            foreach ($positions as $position) {
                 $candidates = Candidate::where('election_id', $this->selectedElection)
                     ->whereHas('election_positions.position', function ($query) use ($position) {
                         $query->where('id', $position->id);
@@ -215,13 +213,17 @@ use Livewire\Component;
                             });
                     })
                     ->with(['users.program', 'users.programMajor', 'partyLists'])
-                    ->withCount('votes')
+                    ->withCount([
+                        'votes as votes_count' => function($query) {
+                            $query->select(DB::raw('COUNT(DISTINCT votes.user_id)'))
+                                ->where('votes.election_id', $this->selectedElection);
+                        }
+                    ])
                     ->orderByDesc('votes_count')
                     ->get();
 
                 $candidatesByPosition[$position->name] = $candidates;
-                return $position;
-            });
+            }
         }
 
         return view('evotar.livewire.selected-election.vote-tally-in-website', [
@@ -233,6 +235,7 @@ use Livewire\Component;
             'totalVoterVoted' => $this->totalVoterVoted ?? 0,
             'totalAbstentions' => $this->totalAbstentions ?? 0,
             'collegeTurnout' => $this->collegeTurnout ?? [],
+            'positionVotes' => $this->positionVotes ?? [],
             'positionAbstentions' => $this->positionAbstentions ?? [],
         ]);
     }
