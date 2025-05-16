@@ -166,6 +166,12 @@ class ElectionResult extends Component
             ->groupBy('programs.council_id')
             ->pluck('voter_count', 'council_id');
 
+        // Get total voters who voted in this election (across all positions)
+        $totalVotersWhoVoted = User::where('campus_id', $this->latestElection->campus_id)
+            ->whereDoesntHave('electionExcludedVoters', fn($q) => $q->where('election_id', $this->latestElection->id))
+            ->whereHas('votes', fn($q) => $q->where('election_id', $this->latestElection->id))
+            ->count();
+
         $positions = ElectionPosition::with(['position', 'position.electionType'])
             ->where('election_id', $this->latestElection->id)
             ->get();
@@ -180,22 +186,6 @@ class ElectionResult extends Component
                 // Student Council counts
                 $totalVoters = $this->totalVoters;
 
-                // Count abstentions only if there are candidates running for this position
-                $hasCandidates = Candidate::where('election_position_id', $position->id)->exists();
-
-                $abstainCount = 0;
-                if ($hasCandidates) {
-                    $abstainCount = DB::table('abstain_votes')
-                        ->join('users', 'abstain_votes.user_id', '=', 'users.id')
-                        ->join('programs', 'users.program_id', '=', 'programs.id')
-                        ->join('councils', 'programs.council_id', '=', 'councils.id')
-                        ->where('abstain_votes.position_id', $positionId)
-                        ->where('abstain_votes.election_id', $this->latestElection->id)
-                        ->where('councils.name', 'Student Council')
-                        ->distinct('abstain_votes.user_id')
-                        ->count('abstain_votes.user_id');
-                }
-
                 // Count votes for candidates in this election position
                 $voteCount = DB::table('votes')
                     ->join('candidates', 'votes.candidate_id', '=', 'candidates.id')
@@ -204,13 +194,16 @@ class ElectionResult extends Component
                     ->distinct('votes.user_id')
                     ->count('votes.user_id');
 
+                // Calculate abstain count (total voters who voted minus votes cast for this position)
+                $abstainCount = $totalVotersWhoVoted - $voteCount;
+
                 $tally[] = [
                     'position_id' => $positionId,
                     'election_position_id' => $position->id,
                     'position' => $position->position->name,
                     'council' => 'All',
                     'total_voters' => $totalVoters,
-                    'abstain_count' => $abstainCount,
+                    'abstain_count' => $abstainCount > 0 ? $abstainCount : 0, // Ensure not negative
                     'vote_tally' => $voteCount,
                     'participation_rate' => $totalVoters > 0 ? round(($voteCount / $totalVoters) * 100, 2) : 0
                 ];
@@ -221,24 +214,13 @@ class ElectionResult extends Component
                 foreach ($councils as $council) {
                     $totalVoters = $councilVoters[$council->id] ?? 0;
 
-                    // Check if there are candidates running for this position in this council
-                    $hasCandidates = Candidate::where('election_position_id', $position->id)
-                        ->join('users', 'candidates.user_id', '=', 'users.id')
+                    // Get total voters who voted in this council
+                    $councilVotersWhoVoted = User::where('campus_id', $this->latestElection->campus_id)
                         ->join('programs', 'users.program_id', '=', 'programs.id')
                         ->where('programs.council_id', $council->id)
-                        ->exists();
-
-                    $abstainCount = 0;
-                    if ($hasCandidates) {
-                        $abstainCount = DB::table('abstain_votes')
-                            ->join('users', 'abstain_votes.user_id', '=', 'users.id')
-                            ->join('programs', 'users.program_id', '=', 'programs.id')
-                            ->where('abstain_votes.position_id', $positionId)
-                            ->where('abstain_votes.election_id', $this->latestElection->id)
-                            ->where('programs.council_id', $council->id)
-                            ->distinct('abstain_votes.user_id')
-                            ->count('abstain_votes.user_id');
-                    }
+                        ->whereDoesntHave('electionExcludedVoters', fn($q) => $q->where('election_id', $this->latestElection->id))
+                        ->whereHas('votes', fn($q) => $q->where('election_id', $this->latestElection->id))
+                        ->count();
 
                     // Count votes for candidates in this election position and council
                     $voteCount = DB::table('votes')
@@ -251,13 +233,16 @@ class ElectionResult extends Component
                         ->distinct('votes.user_id')
                         ->count('votes.user_id');
 
+                    // Calculate abstain count for this council
+                    $abstainCount = $councilVotersWhoVoted - $voteCount;
+
                     $tally[] = [
                         'position_id' => $positionId,
                         'election_position_id' => $position->id,
                         'position' => $position->position->name,
                         'council' => $council->name,
                         'total_voters' => $totalVoters,
-                        'abstain_count' => $abstainCount,
+                        'abstain_count' => $abstainCount > 0 ? $abstainCount : 0, // Ensure not negative
                         'vote_tally' => $voteCount,
                         'participation_rate' => $totalVoters > 0 ? round(($voteCount / $totalVoters) * 100, 2) : 0
                     ];
