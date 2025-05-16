@@ -31,7 +31,10 @@
             <div class="bg-amber-50 p-4 rounded-lg border border-amber-100">
                 <p class="text-xs font-medium text-amber-600 uppercase tracking-wider">Abstention Rate</p>
                 <p class="text-2xl font-bold text-amber-800 mt-1">
-                    {{ $totalVoters > 0 ? number_format((($totalVoters - $totalVoterVoted)/$totalVoters)*100, 1) : 0 }}%
+                    {{ $totalVoters > 0 ? number_format(($totalAbstentions/$totalVoters)*100, 1) : 0 }}%
+                </p>
+                <p class="text-xs text-amber-600 mt-1">
+                    {{ number_format($totalAbstentions) }} total abstentions
                 </p>
             </div>
         </div>
@@ -78,18 +81,19 @@
 
                         if ($positionCandidates->isNotEmpty()) {
                             $positionId = optional(optional($positionCandidates->first())->election_positions)->position->id ?? null;
-                            $totalVotes = $positionVotes[$positionId] ?? $positionCandidates->sum('votes_count');
+                            $totalVotes = $positionCandidates->sum('votes_count');
                             $abstentions = $positionId ? ($positionAbstentions[$positionId] ?? 0) : 0;
                         }
                     @endphp
 
                     <div class="flex justify-between items-center mb-4">
-                    <span class="text-xs text-gray-500">
-                        Total Votes Cast: {{ number_format($totalVotes) }}
-                    </span>
                         <span class="text-xs text-gray-500">
-                        Abstentions: {{ number_format($abstentions) }}
-                    </span>
+                            Total Votes Cast: {{ number_format($totalVotes) }}
+                        </span>
+                        <span class="text-xs text-gray-500">
+                            Abstentions: {{ number_format($abstentions) }}
+                            ({{ $totalVoterVoted > 0 ? number_format(($abstentions/$totalVoterVoted)*100, 1) : 0 }}% of voters)
+                        </span>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
