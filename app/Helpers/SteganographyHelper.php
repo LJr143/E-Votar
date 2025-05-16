@@ -7,32 +7,35 @@ class SteganographyHelper
 {
     private const VERSION = 1;
     private const DELIMITER = '|END|';
-    private const HEADER_SIZE = 9; // Version (1) + Declared Length (4) + Actual Length (4)
+    private const HEADER_FORMAT = 'Cversion/CversionCheck/Nlength/Nchecksum';
+    private const HEADER_SIZE = 10; // 1+1+4+4 bytes
 
     /**
      * Encode data into an image
      */
     public static function encode(string $imagePath, string $data, string $outputPath): string
     {
+        $image = null;
         try {
             // Validate input
             if (!file_exists($imagePath)) {
-                throw new Exception("Source image not found");
+                throw new Exception("Source image not found at: $imagePath");
             }
 
-            // Load image and convert to true color
+            // Load and prepare image
             $image = self::loadImage($imagePath);
             $width = imagesx($image);
             $height = imagesy($image);
-            $maxDataSize = ($width * $height * 3) / 8; // 3 bits per pixel (RGB)
 
-            // Prepare binary data with headers and checksum
+            // Prepare binary payload
             $binaryData = self::prepareDataForEncoding($data);
-            if (strlen($binaryData) > $maxDataSize) {
-                throw new Exception("Data too large for image. Max: {$maxDataSize} bytes");
+            $requiredPixels = ceil(strlen($binaryData) / 3); // 3 bits per pixel (RGB)
+
+            if ($requiredPixels > $width * $height) {
+                throw new Exception("Image too small. Needs {$requiredPixels} pixels but has " . ($width * $height));
             }
 
-            // Encode data into image
+            // Encode data
             $dataIndex = 0;
             for ($y = 0; $y < $height; $y++) {
                 for ($x = 0; $x < $width; $x++) {
@@ -43,30 +46,24 @@ class SteganographyHelper
                     $g = ($color >> 8) & 0xFF;
                     $b = $color & 0xFF;
 
-                    // Encode in all three channels
-                    if ($dataIndex < strlen($binaryData)) {
-                        $r = ($r & ~1) | intval($binaryData[$dataIndex++]);
-                    }
-                    if ($dataIndex < strlen($binaryData)) {
-                        $g = ($g & ~1) | intval($binaryData[$dataIndex++]);
-                    }
-                    if ($dataIndex < strlen($binaryData)) {
-                        $b = ($b & ~1) | intval($binaryData[$dataIndex++]);
-                    }
+                    // Encode in RGB channels
+                    if ($dataIndex < strlen($binaryData)) $r = ($r & ~1) | $binaryData[$dataIndex++];
+                    if ($dataIndex < strlen($binaryData)) $g = ($g & ~1) | $binaryData[$dataIndex++];
+                    if ($dataIndex < strlen($binaryData)) $b = ($b & ~1) | $binaryData[$dataIndex++];
 
                     $newColor = self::safeColorAllocate($image, $r, $g, $b);
                     imagesetpixel($image, $x, $y, $newColor);
                 }
             }
 
-            // Save with maximum compression
+            // Save image
             if (!imagepng($image, $outputPath, 9)) {
-                throw new Exception("Failed to save encoded image");
+                throw new Exception("Failed to save image to: $outputPath");
             }
 
             return $outputPath;
         } finally {
-            if (isset($image)) imagedestroy($image);
+            if ($image) imagedestroy($image);
         }
     }
 
@@ -75,68 +72,96 @@ class SteganographyHelper
      */
     public static function decode(string $imagePath): string
     {
+        $image = null;
         try {
             $image = self::loadImage($imagePath);
-            $width = imagesx($image);
-            $height = imagesy($image);
-
-            // Extract binary data from all channels
-            $binaryData = '';
-            for ($y = 0; $y < $height; $y++) {
-                for ($x = 0; $x < $width; $x++) {
-                    $color = imagecolorat($image, $x, $y);
-                    $binaryData .= ($color >> 16) & 1; // R
-                    $binaryData .= ($color >> 8) & 1;  // G
-                    $binaryData .= $color & 1;         // B
-                }
-            }
-
-            return self::processDecodedData($binaryData);
+            $binaryData = self::extractBinaryData($image);
+            return self::validateAndDecodeData($binaryData);
         } finally {
-            if (isset($image)) imagedestroy($image);
+            if ($image) imagedestroy($image);
         }
     }
 
     private static function prepareDataForEncoding(string $data): string
     {
         $checksum = crc32($data);
-        $header = pack('C2N2', self::VERSION, self::VERSION, strlen($data), $checksum);
+        $header = pack(self::HEADER_FORMAT, self::VERSION, self::VERSION, strlen($data), $checksum);
         $payload = $header . $data . self::DELIMITER;
-        return self::stringToBinary($payload);
+
+        // Convert to binary string (8 bits per byte)
+        $binary = '';
+        for ($i = 0; $i < strlen($payload); $i++) {
+            $binary .= str_pad(decbin(ord($payload[$i])), 8, '0', STR_PAD_LEFT);
+        }
+        return $binary;
     }
 
-    private static function processDecodedData(string $binaryData): string
+    private static function extractBinaryData($image): string
     {
-        $data = self::binaryToString($binaryData);
+        $width = imagesx($image);
+        $height = imagesy($image);
+        $binary = '';
 
-        // Verify minimum length
-        if (strlen($data) < self::HEADER_SIZE + 4 + strlen(self::DELIMITER)) {
-            throw new Exception("Data too short");
+        for ($y = 0; $y < $height; $y++) {
+            for ($x = 0; $x < $width; $x++) {
+                $color = imagecolorat($image, $x, $y);
+                $binary .= ($color >> 16) & 1; // R
+                $binary .= ($color >> 8) & 1;  // G
+                $binary .= $color & 1;        // B
+            }
+        }
+        return $binary;
+    }
+
+    private static function validateAndDecodeData(string $binaryData): string
+    {
+        // Convert binary to string (8 bits per byte)
+        $data = '';
+        for ($i = 0; $i < strlen($binaryData); $i += 8) {
+            $byte = substr($binaryData, $i, 8);
+            if (strlen($byte) < 8) break;
+            $data .= chr(bindec($byte));
         }
 
-        // Extract header
-        $header = unpack('Cversion/CversionCheck/Nlength/Nchecksum', substr($data, 0, self::HEADER_SIZE));
+        // Verify minimum length
+        if (strlen($data) < self::HEADER_SIZE) {
+            throw new Exception("Data too short (".strlen($data)." bytes)");
+        }
 
-        // Verify header consistency
-        if ($header['version'] !== self::VERSION || $header['versionCheck'] !== self::VERSION) {
-            throw new Exception("Invalid data format version");
+        // Extract and verify header
+        $header = substr($data, 0, self::HEADER_SIZE);
+        $unpacked = unpack(self::HEADER_FORMAT, $header);
+
+        if (!is_array($unpacked) || count($unpacked) !== 4) {
+            throw new Exception("Invalid header format");
+        }
+
+        // Verify version
+        if ($unpacked['version'] !== self::VERSION || $unpacked['versionCheck'] !== self::VERSION) {
+            throw new Exception("Version mismatch");
+        }
+
+        // Verify length
+        $expectedLength = self::HEADER_SIZE + $unpacked['length'] + strlen(self::DELIMITER);
+        if (strlen($data) < $expectedLength) {
+            throw new Exception("Data truncated. Expected {$expectedLength} bytes, got ".strlen($data));
         }
 
         // Extract payload
-        $payload = substr($data, self::HEADER_SIZE, $header['length']);
-        $storedDelimiter = substr($data, self::HEADER_SIZE + $header['length']);
+        $payload = substr($data, self::HEADER_SIZE, $unpacked['length']);
+        $delimiter = substr($data, self::HEADER_SIZE + $unpacked['length']);
 
         // Verify checksum
-        if (crc32($payload) !== $header['checksum']) {
+        if (crc32($payload) !== $unpacked['checksum']) {
             throw new Exception(sprintf(
-                "Checksum mismatch (Expected: %u, Actual: %u)",
-                $header['checksum'],
+                "Checksum failed (Expected: %u, Actual: %u)",
+                $unpacked['checksum'],
                 crc32($payload)
             ));
         }
 
         // Verify delimiter
-        if ($storedDelimiter !== self::DELIMITER) {
+        if ($delimiter !== self::DELIMITER) {
             throw new Exception("Delimiter not found");
         }
 
@@ -146,9 +171,8 @@ class SteganographyHelper
     private static function loadImage(string $path)
     {
         $image = @imagecreatefrompng($path);
-        if (!$image) throw new Exception("Invalid PNG image");
+        if (!$image) throw new Exception("Invalid PNG image: $path");
 
-        // Convert to true color if needed
         if (!imageistruecolor($image)) {
             $trueColor = imagecreatetruecolor(imagesx($image), imagesy($image));
             imagecopy($trueColor, $image, 0, 0, 0, 0, imagesx($image), imagesy($image));
@@ -161,59 +185,36 @@ class SteganographyHelper
 
     private static function safeColorAllocate($image, $r, $g, $b)
     {
-        $color = imagecolorallocate($image, $r, $g, $b);
+        $color = @imagecolorallocate($image, $r, $g, $b);
         return $color !== false ? $color : imagecolorclosest($image, $r, $g, $b);
     }
 
-    private static function stringToBinary(string $data): string
-    {
-        $binary = '';
-        foreach (str_split($data) as $char) {
-            $binary .= str_pad(decbin(ord($char)), 8, '0', STR_PAD_LEFT);
-        }
-        return $binary;
-    }
-
-    private static function binaryToString(string $binary): string
-    {
-        $string = '';
-        foreach (str_split($binary, 8) as $byte) {
-            $string .= chr(bindec(str_pad($byte, 8, '0')));
-        }
-        return $string;
-    }
-
     /**
-     * Debugging tool to verify encoding
+     * Debug an encoded image
      */
     public static function debug(string $imagePath): array
     {
-        $image = self::loadImage($imagePath);
-        $width = imagesx($image);
-        $height = imagesy($image);
+        $image = null;
+        try {
+            $image = self::loadImage($imagePath);
+            $binaryData = self::extractBinaryData($image);
 
-        $binary = '';
-        for ($y = 0; $y < min($height, 10); $y++) { // Sample first 10 rows
-            for ($x = 0; $x < $width; $x++) {
-                $color = imagecolorat($image, $x, $y);
-                $binary .= ($color >> 16) & 1; // R
-                $binary .= ($color >> 8) & 1;  // G
-                $binary .= $color & 1;        // B
+            // Get first 100 bytes for analysis
+            $sample = substr($binaryData, 0, 800); // 100 bytes * 8 bits
+            $sampleStr = '';
+            for ($i = 0; $i < strlen($sample); $i += 8) {
+                $sampleStr .= chr(bindec(substr($sample, $i, 8)));
             }
+
+            return [
+                'image_size' => imagesx($image) . 'x' . imagesy($image),
+                'binary_length' => strlen($binaryData) . ' bits',
+                'header_sample' => bin2hex(substr($sampleStr, 0, self::HEADER_SIZE)),
+                'data_sample' => substr($sampleStr, self::HEADER_SIZE, 50),
+                'full_sample' => $sampleStr
+            ];
+        } finally {
+            if ($image) imagedestroy($image);
         }
-
-        imagedestroy($image);
-
-        $headerBinary = substr($binary, 0, self::HEADER_SIZE * 8);
-        $header = self::binaryToString($headerBinary);
-        $unpacked = @unpack('Cversion/CversionCheck/Nlength/Nchecksum', $header);
-
-        return [
-            'image_size' => "{$width}x{$height}",
-            'header_raw' => bin2hex($header),
-            'header_parsed' => $unpacked ?: 'Invalid header',
-            'first_100_bits' => substr($binary, 0, 100),
-            'estimated_capacity' => floor(($width * $height * 3) / 8) . ' bytes'
-        ];
     }
 }
