@@ -18,92 +18,82 @@ class SteganographyHelper
     public static function encode(string $imagePath, string $data, string $outputPath): string
     {
         try {
-            // Verify the image exists
+            // Verify the image exists and is PNG
             if (!file_exists($imagePath)) {
-                throw new Exception("Source image not found at path: {$imagePath}");
+                throw new Exception("Source image not found");
             }
 
-            // Check if the directory exists
-            $outputDir = dirname($outputPath);
-            if (!is_dir($outputDir)) {
-                Storage::makeDirectory($outputDir);
+            $imageInfo = getimagesize($imagePath);
+            if ($imageInfo[2] !== IMAGETYPE_PNG) {
+                throw new Exception("Only PNG images are supported");
             }
 
             // Load the image
             $image = @imagecreatefrompng($imagePath);
             if (!$image) {
-                throw new Exception("Failed to load image. Ensure it's a valid PNG file.");
+                throw new Exception("Failed to load PNG image");
             }
 
-            // Convert data to binary with checksum and delimiter
-            $binaryData = self::prepareDataForEncoding($data);
+            // Convert to true color if needed
+            if (!imageistruecolor($image)) {
+                $trueColorImage = imagecreatetruecolor(imagesx($image), imagesy($image));
+                imagecopy($trueColorImage, $image, 0, 0, 0, 0, imagesx($image), imagesy($image));
+                imagedestroy($image);
+                $image = $trueColorImage;
+            }
 
-            // Get image dimensions
+            // Prepare data
+            $binaryData = self::prepareDataForEncoding($data);
+            $dataLength = strlen($binaryData);
             $width = imagesx($image);
             $height = imagesy($image);
-            $totalPixels = $width * $height;
-            $requiredPixels = strlen($binaryData);
 
-            // Verify image can hold the data
-            if ($requiredPixels > $totalPixels * 3) { // 3 channels per pixel
-                imagedestroy($image);
-                throw new Exception("Image too small to hold the data. Needs at least " .
-                    ceil($requiredPixels / 3) . " pixels but has {$totalPixels}.");
-            }
-
-            // Embed data into the image
             $dataIndex = 0;
-            $channel = 0; // 0=red, 1=green, 2=blue
             for ($y = 0; $y < $height; $y++) {
                 for ($x = 0; $x < $width; $x++) {
-                    if ($dataIndex >= strlen($binaryData)) {
-                        break 2; // Stop if all data is embedded
+                    if ($dataIndex >= $dataLength) {
+                        break 2;
                     }
 
-                    // Get the color of the current pixel
                     $color = imagecolorat($image, $x, $y);
                     $r = ($color >> 16) & 0xFF;
                     $g = ($color >> 8) & 0xFF;
                     $b = $color & 0xFF;
 
-                    // Modify the least significant bit of the current channel
-                    switch ($channel) {
-                        case 0: $r = ($r & ~1) | intval($binaryData[$dataIndex]); break;
-                        case 1: $g = ($g & ~1) | intval($binaryData[$dataIndex]); break;
-                        case 2: $b = ($b & ~1) | intval($binaryData[$dataIndex]); break;
-                    }
+                    // Modify LSB
+                    $b = ($b & ~1) | intval($binaryData[$dataIndex]);
 
+                    // Allocate color with retry logic
                     $newColor = imagecolorallocate($image, $r, $g, $b);
                     if ($newColor === false) {
-                        imagedestroy($image);
-                        throw new Exception("Failed to allocate color for pixel at {$x},{$y}");
+                        $newColor = imagecolorclosest($image, $r, $g, $b);
+                        if ($newColor === false) {
+                            $newColor = imagecolorallocate($image, $r & 0xFE, $g & 0xFE, $b & 0xFE);
+                            if ($newColor === false) {
+                                imagedestroy($image);
+                                throw new Exception("Color allocation failed at {$x},{$y}");
+                            }
+                        }
                     }
 
                     imagesetpixel($image, $x, $y, $newColor);
-
                     $dataIndex++;
-                    $channel = ($channel + 1) % 3; // Rotate through RGB channels
                 }
             }
 
-            // Save the encoded image
-            if (!imagepng($image, $outputPath, 9)) { // Maximum compression
-                throw new Exception("Failed to save encoded image to {$outputPath}");
+            // Save with maximum compression
+            if (!imagepng($image, $outputPath, 9)) {
+                throw new Exception("Failed to save encoded image");
             }
 
             imagedestroy($image);
-
-            // Verify the output file was created
-            if (!file_exists($outputPath)) {
-                throw new Exception("Encoded image was not created at {$outputPath}");
-            }
-
             return $outputPath;
+
         } catch (Exception $e) {
             if (isset($image) && is_resource($image)) {
                 imagedestroy($image);
             }
-            throw new Exception("Steganography encoding failed: " . $e->getMessage());
+            throw new Exception("Encoding failed: " . $e->getMessage());
         }
     }
 
