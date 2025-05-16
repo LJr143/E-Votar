@@ -326,6 +326,7 @@ class ElectionResult extends Component
                         foreach ($sortedCandidates as $candidate) {
                             $winners[] = [
                                 'position' => $position->position->name,
+                                'position_id' => $positionId,
                                 'candidate' => $candidate,
                                 'major' => $major,
                             ];
