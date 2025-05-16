@@ -102,10 +102,10 @@
                                     </button>
 
                                     <!-- Forget Password Link -->
-                                    <p class="text-[12px] text-left">
-                                        Forget Password? <a href="/forgot-password"
-                                                            class="underline font-bold text-black">Click here</a>
-                                    </p>
+                                    <form method="POST" action="/forgot-password" class="inline">
+                                        @csrf
+                                        <button type="submit" class="underline font-bold text-black">Click here</button>
+                                    </form>
                                 </div>
                             </form>
                         </div>
