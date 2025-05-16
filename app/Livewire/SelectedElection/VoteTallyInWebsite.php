@@ -102,14 +102,14 @@ use Livewire\Component;
 
         // Rest of your method remains the same...
         $this->totalVoterVoted = \App\Models\Vote::where('election_id', $this->selectedElection)
-            ->whereHas('user.program', function($q) {
+            ->whereHas('users.program', function($q) {
                 $q->where('council_id', $this->council->id);
             })
             ->distinct('user_id')
             ->count('user_id');
 
         $this->positionVotes = \App\Models\Vote::where('election_id', $this->selectedElection)
-            ->whereHas('user.program', function($q) {
+            ->whereHas('users.program', function($q) {
                 $q->where('council_id', $this->council->id);
             })
             ->selectRaw('position_id, count(distinct user_id) as vote_count')
