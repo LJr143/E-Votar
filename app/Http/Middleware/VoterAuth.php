@@ -38,7 +38,7 @@ class VoterAuth
 
     protected function isAdmin($user, Request $request): bool
     {
-        $isAdmin = $user->hasAnyRole(['superadmin', 'admin', 'technical_officer', 'watcher']);
+        $isAdmin = $user->hasAnyRole(['superadmin', 'admin', 'technical_officer', 'student-council-watcher', 'local-council-watcher']);
 
         if ($isAdmin && !session('Admin-Voting-Access')) {
             session([
