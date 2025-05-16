@@ -31,7 +31,7 @@ class ConfirmAcademicDetails extends Component
         'campus_id' => 'required|exists:campuses,id',
         'college_id' => 'required|exists:colleges,id',
         'program_id' => 'required|exists:programs,id',
-        'major_id' => 'required|exists:program_majors,id',
+        'major_id' => 'nullable|exists:program_majors,id',
     ];
 
     public function mount($voterId): void
