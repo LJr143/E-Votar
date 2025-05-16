@@ -380,9 +380,9 @@
                                     <div class="absolute inset-0 bg-gray-100 bg-opacity-50 z-10"></div>
                                 @endif
 
-                                @if($hasStarted || $hasEnded )
+{{--                                @if($hasStarted || $hasEnded )--}}
                                     <a href="{{ route('dashboard', ['slug' => $election->slug]) }}">
-                                        @endif
+{{--                                        @endif--}}
                                 <div class="h-28 bg-gray-200 relative">
                                     <img alt="{{ $election->name }}" class="h-full w-full object-cover" src="{{ asset('storage/' . $election->image_path)  ?? asset('storage/assets/profile/cat_meme.jpg') }}"/>
 
