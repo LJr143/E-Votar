@@ -31,10 +31,7 @@
             <div class="bg-amber-50 p-4 rounded-lg border border-amber-100">
                 <p class="text-xs font-medium text-amber-600 uppercase tracking-wider">Abstention Rate</p>
                 <p class="text-2xl font-bold text-amber-800 mt-1">
-                    {{ $totalVoters > 0 ? number_format(($totalAbstentions/$totalVoters)*100, 1) : 0 }}%
-                </p>
-                <p class="text-xs text-amber-600 mt-1">
-                    {{ number_format($totalAbstentions) }} total abstentions
+                    {{ $totalVoters > 0 ? number_format((($totalVoters - $totalVoterVoted)/$totalVoters)*100, 1) : 0 }}%
                 </p>
             </div>
         </div>
@@ -78,22 +75,35 @@
                         $positionId = null;
                         $totalVotes = 0;
                         $abstentions = 0;
+                        $totalVoterVoted = $totalVoterVoted ?? 0; // From the component
 
                         if ($positionCandidates->isNotEmpty()) {
                             $positionId = optional(optional($positionCandidates->first())->election_positions)->position->id ?? null;
-                            $totalVotes = $positionCandidates->sum('votes_count');
-                            $abstentions = $positionId ? ($positionAbstentions[$positionId] ?? 0) : 0;
+
+                            // Calculate total votes for this position (sum of distinct votes per candidate)
+                            $totalVotes = $positionCandidates->sum(function($candidate) {
+                                return $candidate->votes_count; // This should already be distinct count from backend
+                            });
+
+                            // Calculate abstentions for this position
+                            if ($positionId) {
+                                // Method 1: If you have positionVotes array from backend
+                                $votesForPosition = $positionVotes[$positionId] ?? $totalVotes;
+                                $abstentions = max(0, $totalVoterVoted - $votesForPosition);
+
+                                // OR Method 2: If you want to calculate directly from candidates
+                                // $abstentions = max(0, $totalVoterVoted - $totalVotes);
+                            }
                         }
                     @endphp
 
                     <div class="flex justify-between items-center mb-4">
+                    <span class="text-xs text-gray-500">
+                        Total Votes Cast: {{ number_format($totalVotes) }}
+                    </span>
                         <span class="text-xs text-gray-500">
-                            Total Votes Cast: {{ number_format($totalVotes) }}
-                        </span>
-                        <span class="text-xs text-gray-500">
-                            Abstentions: {{ number_format($abstentions) }}
-                            ({{ $totalVoterVoted > 0 ? number_format(($abstentions/$totalVoterVoted)*100, 1) : 0 }}% of voters)
-                        </span>
+                        Abstentions: {{ number_format($abstentions) }}
+                    </span>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
