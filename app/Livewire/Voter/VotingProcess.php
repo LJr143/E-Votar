@@ -15,6 +15,7 @@ use App\Models\VoterEncodeVote;
 use Exception;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Livewire\Component;
 
@@ -284,20 +285,39 @@ class VotingProcess extends Component
         EncryptionHelper::setKey(config('app.stegano_secret_key'));
         $encryptedData = EncryptionHelper::encrypt($jsonData);
 
-        // Encode the encrypted data into an image
-        $imagePath = storage_path('app/public/' . $this->election->image_path);
-        $outputFileName = auth()->user()->first_name . '_' . auth()->user()->last_name . '_' . $this->election->name . '_vote.png';
-        $relativePath = 'encoded_votes/' . $outputFileName;
-        $outputPath = storage_path('app/public/' . $relativePath);
-        SteganographyHelper::encode($imagePath, $encryptedData, $outputPath);
+        try {
+            // Encode the encrypted data into an image
+            $imagePath = storage_path('app/public/' . $this->election->image_path);
+            $outputFileName = auth()->user()->first_name . '_' . auth()->user()->last_name . '_' . $this->election->name . '_vote.png';
+            $relativePath = 'encoded_votes/' . $outputFileName;
+            $outputPath = storage_path('app/public/' . $relativePath);
 
-        // Save encoded vote record
-        VoterEncodeVote::create([
-            'user_id' => auth()->id(),
-            'election_id' => $this->election->id,
-            'encrypted_data' => $encryptedData,
-            'encoded_image_path' => $relativePath,
-        ]);
+            $encodedPath = SteganographyHelper::encode($imagePath, $encryptedData, $outputPath);
+
+            // Save encoded vote record
+            VoterEncodeVote::create([
+                'user_id' => auth()->id(),
+                'election_id' => $this->election->id,
+                'encrypted_data' => $encryptedData,
+                'encoded_image_path' => $relativePath,
+                'status' => 'success'
+            ]);
+
+        } catch (Exception $e) {
+            Log::error("Steganography failed: " . $e->getMessage());
+
+            VoterEncodeVote::create([
+                'user_id' => auth()->id(),
+                'election_id' => $this->election->id,
+                'encrypted_data' => $encryptedData,
+                'encoded_image_path' => '',
+                'status' => 'failed',
+                'error_message' => $e->getMessage()
+            ]);
+
+            session()->flash('error', 'Vote submission failed during encoding: ' . $e->getMessage());
+            return;
+        }
 
         $feedbackCode = Str::uuid(); // or use Str::random(16) for shorter code
 
