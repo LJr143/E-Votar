@@ -119,7 +119,7 @@ use Livewire\Component;
         // Rest of your statistics loading...
         $this->totalVoterVoted = \App\Models\Vote::where('election_id', $this->selectedElection)
             ->when(!str($this->council->name)->contains('Student Council'), function($query) {
-                $query->whereHas('user.program', function($q) {
+                $query->whereHas('users.program', function($q) {
                     $q->where('council_id', $this->council->id);
                 });
             })
