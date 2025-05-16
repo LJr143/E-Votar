@@ -148,7 +148,14 @@ class EditUser extends Component
         $this->validate(['selectedRole' => 'required|exists:roles,id']);
 
         $user = User::find($this->selectedUser);
-        $user->syncRoles($this->selectedRole);
+
+        // Option 1: Get the role by ID and pass the Role object
+        $role = Role::findById($this->selectedRole);
+        $user->syncRoles($role);
+
+        // OR Option 2: Get the role name and pass it
+        // $roleName = Role::find($this->selectedRole)->name;
+        // $user->syncRoles($roleName);
 
         // Refresh permissions after role change
         $this->proceedToAccessRole();
