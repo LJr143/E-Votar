@@ -371,9 +371,9 @@
                                 $canVote = $isVerified && $ongoing && !$hasVoted;
                             @endphp
 
-                            {{--                                @if($hasStarted || $hasEnded )--}}
+                            @if(($hasStarted || $hasEnded) && $isVerified)
                             <a href="{{ route('dashboard', ['slug' => $election->slug]) }}">
-                                {{--                                        @endif--}}
+                                                                        @endif
                                 <!-- Election Card - Entire card is clickable -->
                             <div class="relative rounded-lg shadow-sm overflow-hidden border transition-transform w-64 flex-shrink-0
                                     {{ $hasVoted ? 'bg-green-50 border-green-400' : 'bg-white border-gray-100' }}
