@@ -371,6 +371,9 @@
                                 $canVote = $isVerified && $ongoing && !$hasVoted;
                             @endphp
 
+                            {{--                                @if($hasStarted || $hasEnded )--}}
+                            <a href="{{ route('dashboard', ['slug' => $election->slug]) }}">
+                                {{--                                        @endif--}}
                                 <!-- Election Card - Entire card is clickable -->
                             <div class="relative rounded-lg shadow-sm overflow-hidden border transition-transform w-64 flex-shrink-0
                                     {{ $hasVoted ? 'bg-green-50 border-green-400' : 'bg-white border-gray-100' }}
@@ -380,9 +383,6 @@
                                     <div class="absolute inset-0 bg-gray-100 bg-opacity-50 z-10"></div>
                                 @endif
 
-{{--                                @if($hasStarted || $hasEnded )--}}
-                                    <a href="{{ route('dashboard', ['slug' => $election->slug]) }}">
-{{--                                        @endif--}}
                                 <div class="h-28 bg-gray-200 relative">
                                     <img alt="{{ $election->name }}" class="h-full w-full object-cover" src="{{ asset('storage/' . $election->image_path)  ?? asset('storage/assets/profile/cat_meme.jpg') }}"/>
 
@@ -453,9 +453,7 @@
                                         <span class="text-xs">End Date: {{ \Carbon\Carbon::parse($election->date_ended)->format('M d, Y \a\t h:i A') }}</span>
                                     </div>
                                 </div>
-{{--                                        @if($canVote)--}}
                                     </a>
-{{--                                    @endif--}}
                             </div>
                         @endforeach
                     </div>
