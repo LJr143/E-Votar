@@ -164,8 +164,8 @@ class ElectionResult extends Component
             return collect();
         }
 
-        // Get total voters per council
-        $councilVoters = User::select('programs.council_id', DB::raw('COUNT(users.id) as voter_count'))
+        // Get total voters per council (including those who didn't vote)
+        $councilVoters = User::select('programs.council_id', DB::raw('COUNT(DISTINCT users.id) as voter_count'))
             ->join('programs', 'users.program_id', '=', 'programs.id')
             ->where('users.campus_id', $this->latestElection->campus_id)
             ->whereDoesntHave('electionExcludedVoters', fn($q) => $q->where('election_id', $this->latestElection->id))
@@ -180,11 +180,10 @@ class ElectionResult extends Component
 
         foreach ($positions as $position) {
             $positionId = $position->position->id;
-            $positionName = $position->position->name;
             $electionType = $position->position->electionType->name;
 
             if ($electionType === 'Student Council Election') {
-                // For Student Council (count all voters)
+                // Student Council - campus-wide counts
                 $totalVoters = $this->totalVoters;
                 $abstainCount = DB::table('abstain_votes')
                     ->where('position_id', $positionId)
@@ -192,20 +191,28 @@ class ElectionResult extends Component
                     ->distinct('user_id')
                     ->count('user_id');
 
+                $voteCount = DB::table('votes')
+                    ->where('election_position_id', $position->id)
+                    ->where('election_id', $this->latestElection->id)
+                    ->distinct('user_id')
+                    ->count('user_id');
+
                 $tally[] = [
                     'position_id' => $positionId,
-                    'position' => $positionName,
+                    'position' => $position->position->name,
                     'council' => 'All',
                     'total_voters' => $totalVoters,
                     'abstain_count' => $abstainCount,
-                    'vote_tally' => $totalVoters - $abstainCount
+                    'vote_tally' => $voteCount, // Actual unique voters who voted for this position
+                    'participation_rate' => $totalVoters > 0 ? round(($voteCount / $totalVoters) * 100, 2) : 0
                 ];
             } else {
-                // For Local Council (count per council)
+                // Local Council - council-specific counts
                 $councils = Council::where('name', '!=', 'Student Council')->get();
 
                 foreach ($councils as $council) {
                     $totalVoters = $councilVoters[$council->id] ?? 0;
+
                     $abstainCount = DB::table('abstain_votes')
                         ->join('users', 'abstain_votes.user_id', '=', 'users.id')
                         ->join('programs', 'users.program_id', '=', 'programs.id')
@@ -215,13 +222,23 @@ class ElectionResult extends Component
                         ->distinct('abstain_votes.user_id')
                         ->count('abstain_votes.user_id');
 
+                    $voteCount = DB::table('votes')
+                        ->join('users', 'votes.user_id', '=', 'users.id')
+                        ->join('programs', 'users.program_id', '=', 'programs.id')
+                        ->where('votes.election_position_id', $position->id)
+                        ->where('votes.election_id', $this->latestElection->id)
+                        ->where('programs.council_id', $council->id)
+                        ->distinct('votes.user_id')
+                        ->count('votes.user_id');
+
                     $tally[] = [
                         'position_id' => $positionId,
-                        'position' => $positionName,
+                        'position' => $position->position->name,
                         'council' => $council->name,
                         'total_voters' => $totalVoters,
                         'abstain_count' => $abstainCount,
-                        'vote_tally' => $totalVoters - $abstainCount
+                        'vote_tally' => $voteCount, // Actual unique voters who voted for this position
+                        'participation_rate' => $totalVoters > 0 ? round(($voteCount / $totalVoters) * 100, 2) : 0
                     ];
                 }
             }
