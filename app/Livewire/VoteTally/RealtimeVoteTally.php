@@ -9,261 +9,234 @@ use App\Models\Council;
 use App\Models\Election;
 use App\Models\ElectionPosition;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Maatwebsite\Excel\Facades\Excel;
 
 class RealtimeVoteTally extends Component
 {
-    protected $listeners = ['candidate-created' => '$refresh'];
-    public $candidates = [];
+    protected $listeners = ['updateChartData' => '$refresh', 'echo:vote-tally,VoteTallyUpdated' => '$refresh'];
+    public $council;
+    public $councilId;
+    public $positionsWithCandidates = [];
+    public $studentCouncilPositions = [];
+    public $localCouncilPositions = [];
     public $filter;
-    public $search = '';
     public $selectedElection;
-    public $selectedFilter = 'tsc';
-    public $elections;
-    public $latestElection;
-    public $hasStudentCouncilPositions;
-    public $hasLocalCouncilPositions;
-    public $selectedElectionName;
-    public $selectedElectionCampus;
+    public $councils;
+    public $search = '';
 
+    // Statistics properties
     public $totalVoters;
     public $totalVoterVoted;
     public $totalAbstentions;
-    public $councils;
+    public $collegeTurnout = [];
     public $positionVotes = [];
     public $positionAbstentions = [];
 
-    public $hasLocalCouncilCandidate = false;
-    public $hasStudentCouncilCandidate = false;
-
-    public function mount(): void
+    public function mount($councilId)
     {
-        $this->selectedElection = session('selectedElection');
+        $this->councilId = $councilId;
+        $this->council = Council::find($councilId);
+        $selectedElectionId = session('selectedElectionWeb');
+
+        if ($selectedElectionId) {
+            $election = Election::with('election_type')->find($selectedElectionId);
+
+            if ($election) {
+                $this->filter = $election->election_type->name;
+                $this->selectedElection = $selectedElectionId;
+                $this->loadStatisticsData($election);
+            }
+        }
+
+        $this->councils = Council::all();
+
         if ($this->selectedElection) {
-            $this->filter = Election::with('election_type')
-                ->find(session('selectedElection'))
-                ->election_type
-                ->name;
-            $this->fetchElection($this->filter);
-            $this->selectedFilter = $this->filter;
-            $this->councils = Council::all();
-            $this->fetchCandidates();
-            $this->fetchVoterTally();
-            $this->calculatePositionStats();
+            $this->loadPositionData();
         }
     }
 
-    public function updatedSearch(): void
+    protected function loadStatisticsData(Election $election)
     {
-        $this->fetchElection($this->filter);
-        $this->fetchCandidates();
-        $this->fetchVoterTally();
-        $this->calculatePositionStats();
-    }
+        // Base query for eligible voters
+        $baseVoterQuery = User::whereHas('roles', function($q) {
+            $q->where('name', '!=', 'faculty');
+        })
+            ->when(!str($this->council->name)->contains('Student Council'), function($query) {
+                $query->whereHas('program', function($q) {
+                    $q->where('council_id', $this->council->id);
+                });
+            })
+            ->whereDoesntHave('electionExcludedVoters', function($q) {
+                $q->where('election_id', $this->selectedElection);
+            });
 
-    public function updatedFilter(): void
-    {
-        $this->fetchElection($this->filter);
-        $this->fetchCandidates();
-        $this->fetchVoterTally();
-        $this->calculatePositionStats();
-        $this->dispatch('updateChartData', $this->selectedElection);
-    }
+        // Total voters count
+        $this->totalVoters = $baseVoterQuery->count();
 
-    public function updatedSelectedElection(): void
-    {
-        $election = Election::find($this->selectedElection);
-        $this->selectedElectionName = $election?->name;
-        $this->selectedElectionCampus = $election?->campus;
-
-        $this->fetchElection($this->filter);
-        $this->fetchCandidates();
-        $this->fetchVoterTally();
-        $this->calculatePositionStats();
-        $this->dispatch('updateChartData', $this->selectedElection);
-    }
-
-    public function fetchVoterTally(): void
-    {
-        $election = Election::find($this->selectedElection);
-        if (!$election) {
-            $this->totalVoters = 0;
-            $this->totalVoterVoted = 0;
-            return;
-        }
-
-        // Total eligible voters - matches VoteTallyInWebsite
-        $this->totalVoters = User::where('campus_id', $election->campus_id)
-            ->whereHas('roles', fn($q) => $q->where('name', '!=', 'faculty'))
-            ->whereDoesntHave('electionExcludedVoters', fn($q) => $q->where('election_id', $election->id))
-            ->count();
-
-        // Total voters who voted (distinct count) - matches VoteTallyInWebsite
+        // Total voters who voted (distinct count)
         $this->totalVoterVoted = DB::table('votes')
             ->join('users', 'votes.user_id', '=', 'users.id')
-            ->where('votes.election_id', $election->id)
-            ->where('users.campus_id', $election->campus_id)
+            ->when(!str($this->council->name)->contains('Student Council'), function($query) {
+                $query->join('programs', 'users.program_id', '=', 'programs.id')
+                    ->where('programs.council_id', $this->council->id);
+            })
+            ->where('votes.election_id', $this->selectedElection)
             ->distinct('votes.user_id')
             ->count('votes.user_id');
-    }
 
-    public function calculatePositionStats(): void
-    {
-        $election = Election::find($this->selectedElection);
-        if (!$election) {
-            $this->positionVotes = [];
-            $this->positionAbstentions = [];
-            $this->totalAbstentions = 0;
-            return;
-        }
+        // College-wise turnout
+        $this->collegeTurnout = Council::withCount([
+            'program as voters_count' => function($query) {
+                $query->select(DB::raw('count(distinct users.id)'))
+                    ->join('users', 'programs.id', '=', 'users.program_id')
+                    ->whereHas('users.roles', function($q) {
+                        $q->where('name', '!=', 'faculty');
+                    })
+                    ->whereDoesntHave('users.electionExcludedVoters', function($q) {
+                        $q->where('election_id', $this->selectedElection);
+                    });
+            },
+            'program as voted_count' => function($query) {
+                $query->select(DB::raw('count(distinct votes.user_id)'))
+                    ->join('users', 'programs.id', '=', 'users.program_id')
+                    ->join('votes', 'users.id', '=', 'votes.user_id')
+                    ->where('votes.election_id', $this->selectedElection);
+            }
+        ])
+            ->when(str($this->council->name)->contains('Student Council'), function($query) {
+                // Show all councils for Student Council view
+            }, function($query) {
+                // Only show current council for other views
+                $query->where('id', $this->council->id);
+            })
+            ->get()
+            ->map(function($council) {
+                return [
+                    'name' => $council->name,
+                    'voters' => $council->voters_count,
+                    'voted' => $council->voted_count,
+                    'turnout' => $council->voters_count > 0
+                        ? round(($council->voted_count / $council->voters_count) * 100, 1)
+                        : 0
+                ];
+            });
 
-        $positions = ElectionPosition::where('election_id', $election->id)
-            ->with(['position', 'candidates' => function($query) use ($election) {
-                $query->where('election_id', $election->id)
-                    ->withCount([
-                        'votes as distinct_votes_count' => function($q) use ($election) {
-                            $q->where('votes.election_id', $election->id);
-                        }
-                    ]);
-            }])
+        // Calculate position votes using exact specified method
+        $positions = ElectionPosition::where('election_id', $this->selectedElection)
+            ->with('position')
             ->get();
 
         foreach ($positions as $position) {
-            $this->positionVotes[$position->position_id] = $position->candidates->sum('distinct_votes_count');
+            $this->positionVotes[$position->position_id] = DB::table('votes')
+                ->join('candidates', 'votes.candidate_id', '=', 'candidates.id')
+                ->join('users', 'candidates.user_id', '=', 'users.id')
+                ->join('programs', 'users.program_id', '=', 'programs.id')
+                ->where('candidates.election_position_id', $position->id)
+                ->where('votes.election_id', $this->selectedElection)
+                ->when(!str($this->council->name)->contains('Student Council'), function($query) {
+                    $query->where('programs.council_id', $this->council->id);
+                })
+                ->distinct('votes.user_id')
+                ->count('votes.user_id');
 
+            // Calculate abstentions for this position
             $this->positionAbstentions[$position->position_id] = max(
                 0,
                 $this->totalVoterVoted - ($this->positionVotes[$position->position_id] ?? 0)
             );
         }
 
+        // Total abstentions is sum of all position abstentions
         $this->totalAbstentions = array_sum($this->positionAbstentions);
     }
 
-    public function fetchCandidates(): void
+    protected function loadPositionData(): void
     {
-        $query = Candidate::query()
+        $this->positionsWithCandidates = Election::find($this->selectedElection)
+            ->positions()
             ->with([
-                'users',
-                'users.program.council',
-                'elections',
-                'election_positions.position.electionType',
-                'partyLists'
-            ])
-            ->withCount([
-                'votes as votes_count' => function($query) {
-                    $query->where('votes.election_id', $this->selectedElection);
+                'electionPositions.candidates' => function ($q) {
+                    $q->where('election_id', $this->selectedElection)
+                        ->when(!str($this->council->name)->contains('Student Council'), function($query) {
+                            $query->whereHas('users.program', function ($q) {
+                                $q->where('council_id', $this->council->id);
+                            });
+                        })
+                        ->with(['users.program', 'users.programMajor'])
+                        ->withCount([
+                            'votes as votes_count' => function($query) {
+                                $query->select(DB::raw('COUNT(DISTINCT votes.user_id)'))
+                                    ->where('votes.election_id', $this->selectedElection);
+                            }
+                        ]);
                 }
             ])
-            ->whereHas('elections', function($q) {
-                $q->where('elections.id', $this->selectedElection);
-            });
-
-        // Check if the logged-in user has the 'local-council-watcher' role using Spatie
-        $user = auth()->user();
-        if ($user && $user->hasRole('local-council-watcher')) {
-            $query->whereHas('election_positions.position.electionType', function ($q) {
-                $q->where('name', 'Local Council Election');
-            })
-                ->whereHas('users', function ($q) use ($user) {
-                    $q->where('program_id', $user->program_id);
-                });
-        }
-
-        // Apply search filter
-        if ($this->search) {
-            $query->whereHas('users', function ($q) {
-                $q->where('first_name', 'like', '%'.$this->search.'%')
-                    ->orWhere('last_name', 'like', '%'.$this->search.'%');
-            });
-        }
-
-        // Apply election type filter
-        if ($this->filter) {
-            $query->whereHas('elections.election_type', function ($q) {
-                $q->where('name', $this->filter);
-            });
-        }
-
-        // Get results with proper ordering
-        $this->candidates = $query
-            ->orderBy('election_position_id')
-            ->get()
-            ->groupBy('election_positions.position.name');
-
-        $this->hasStudentCouncilCandidate = Candidate::whereHas('election_positions.position.electionType', function ($q) {
-            $q->where('name', 'Student Council Election');
-        })->whereHas('elections', function ($q) {
-            $q->where('id', $this->selectedElection);
-        })->exists();
-
-        $this->hasLocalCouncilCandidate = Candidate::whereHas('election_positions.position.electionType', function ($q) {
-            $q->where('name', 'Local Council Election');
-        })->whereHas('elections', function ($q) {
-            $q->where('id', $this->selectedElection);
-        })->exists();
-    }
-
-    public function fetchElection($filter): void
-    {
-        $this->latestElection = Election::with('election_type')
-            ->whereHas('election_type', function ($q) use ($filter) {
-                $q->where('name', $filter);
-            })
-            ->orderBy('created_at', 'desc')
-            ->first();
-
-        $this->selectedElectionName = $this->latestElection ? $this->latestElection->name : null;
-        $this->selectedElectionCampus = $this->latestElection ? $this->latestElection->campus : null;
-
-        $this->hasStudentCouncilPositions = false;
-        $this->hasLocalCouncilPositions = false;
-
-        if ($this->latestElection) {
-            $this->hasStudentCouncilPositions = ElectionPosition::where('election_id', $this->latestElection->id)
-                ->whereHas('position.electionType', function ($q) {
-                    $q->where('name', 'Student Council Election');
-                })
-                ->exists();
-
-
-            $this->hasLocalCouncilPositions = ElectionPosition::where('election_id', $this->latestElection->id)
-                ->whereHas('position.electionType', function ($q) {
-                    $q->where('name', 'Local Council Election');
-                })
-                ->exists();
-        }
-
-        $this->elections = Election::with('election_type')
-            ->whereHas('election_type', function ($q) use ($filter) {
-                $q->where('name', $filter);
-            })
             ->get();
-    }
 
-    public function exportVoteTally()
-    {
-        return Excel::download(new VoteTallyExport($this->search, $this->filter, $this->selectedElection),
-            'VOTE_TALLY_' . strtoupper($this->latestElection->name) . '.xlsx');
+        $this->studentCouncilPositions = $this->positionsWithCandidates->filter(function ($position) {
+            return $position->electionType->name === 'Student Council Election';
+        });
+
+        $this->localCouncilPositions = $this->positionsWithCandidates->filter(function ($position) {
+            return $position->electionType->name === 'Local Council Election';
+        });
     }
 
     public function render()
     {
+        $candidatesByPosition = [];
+
+        if ($this->selectedElection) {
+            $positions = str($this->council->name)->contains('Student Council')
+                ? $this->studentCouncilPositions
+                : $this->localCouncilPositions;
+
+            foreach ($positions as $position) {
+                $candidates = Candidate::where('election_id', $this->selectedElection)
+                    ->whereHas('election_positions.position', function ($query) use ($position) {
+                        $query->where('id', $position->id);
+                    })
+                    ->when(!str($this->council->name)->contains('Student Council'), function ($query) {
+                        $query->whereHas('users.program', function ($q) {
+                            $q->where('council_id', $this->council->id);
+                        });
+                    })
+                    ->where(function (Builder $query) {
+                        $query->whereHas('users', function ($q) {
+                            $q->where('first_name', 'like', '%' . $this->search . '%');
+                        })
+                            ->orWhereHas('partyLists', function ($q) {
+                                $q->where('name', 'like', '%' . $this->search . '%');
+                            });
+                    })
+                    ->with(['users.program', 'users.programMajor', 'partyLists'])
+                    ->withCount([
+                        'votes as votes_count' => function($query) {
+                            $query->select(DB::raw('COUNT(DISTINCT votes.user_id)'))
+                                ->where('votes.election_id', $this->selectedElection);
+                        }
+                    ])
+                    ->orderByDesc('votes_count')
+                    ->get();
+
+                $candidatesByPosition[$position->name] = $candidates;
+            }
+        }
+
         return view('evotar.livewire.vote-tally.realtime-vote-tally', [
-            'candidates' => $this->candidates,
-            'elections' => $this->elections,
-            'selectedElectionName' => $this->selectedElectionName,
-            'selectedElectionCampus' => $this->selectedElectionCampus,
+            'council' => $this->council,
+            'candidates' => $candidatesByPosition,
+            'election' => $this->selectedElection ? Election::find($this->selectedElection) : null,
+            'positions' => $this->positionsWithCandidates,
             'totalVoters' => $this->totalVoters ?? 0,
             'totalVoterVoted' => $this->totalVoterVoted ?? 0,
             'totalAbstentions' => $this->totalAbstentions ?? 0,
-            'councils' => $this->councils,
-            'hasStudentCouncilPositions' => $this->hasStudentCouncilPositions,
-            'hasLocalCouncilPositions' => $this->hasLocalCouncilPositions,
-            'positionVotes' => $this->positionVotes,
-            'positionAbstentions' => $this->positionAbstentions,
+            'collegeTurnout' => $this->collegeTurnout ?? [],
+            'positionVotes' => $this->positionVotes ?? [],
+            'positionAbstentions' => $this->positionAbstentions ?? [],
         ]);
     }
 }
