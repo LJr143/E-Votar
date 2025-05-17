@@ -109,9 +109,9 @@
                                     ->distinct('votes.user_id')
                                     ->count('votes.user_id');
 
-                            $expectedVotes = $distinctVoters * $positionWinnersCount;
-                            $partialAbstain = $expectedVotes - $positionTotalVotes;
-                            $positionAbstainCount += $partialAbstain;
+//                            $expectedVotes = $distinctVoters * $positionWinnersCount;
+//                            $partialAbstain = $expectedVotes - $positionTotalVotes;
+                            $positionAbstainCountPer = $totalVoterVoted - $distinctVoters;
                         }
                     }
                 }
@@ -134,6 +134,8 @@
                             Total Abstentions: {{ number_format($positionAbstainCount) }}
                             ({{ $totalVoterVoted > 0 ? number_format(($positionAbstainCount/$totalVoterVoted)*100, 1) : 0 }}
                             %)
+                            @else
+                            Total Abstentions: Calculated per candidate
                         @endif
                     </span>
                     </div>
@@ -339,6 +341,11 @@
                                                 {{ number_format($candidateVoteCount) }} votes
                                                 ({{ number_format($votePercentage, 1) }}%)
                                             </span>
+                                        </div>
+                                        <div class="text-center mb-3">
+                                        <span class="inline-block bg-red-100 text-red-800 text-xs px-2 py-1 rounded">
+                                            {{ number_format($abstainCountPerCandidate) }} abstain
+                                        </span>
                                         </div>
 
                                         <div class="text-xs mb-3 text-center text-gray-600 space-y-1">
