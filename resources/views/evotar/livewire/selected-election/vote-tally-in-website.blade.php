@@ -138,6 +138,11 @@
                                     ({{ number_format($votePercentage, 1) }}%)
                                 </span>
                                     </div>
+                                    <div class="text-center mb-3">
+                                <span class="inline-block bg-red-100 text-red-800 text-xs px-2 py-1 rounded">
+                                     {{ number_format($abstainCountPerCandidate) }} abstain
+                                </span>
+                                    </div>
 
                                     <div class="text-xs mb-3 text-center text-gray-600 space-y-1">
                                         <p>{{ $candidate->users->year_level }} Year</p>
