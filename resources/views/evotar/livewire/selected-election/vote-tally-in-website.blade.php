@@ -95,12 +95,12 @@
                     @endphp
 
                     <div class="flex justify-between items-center mb-4">
-                    <span class="text-xs text-gray-500">
-                        Total Votes Cast: {{ number_format($totalVotes) }}
-                    </span>
-                        <span class="text-xs text-gray-500">
-                        Abstentions: {{ number_format($abstentions) }}
-                    </span>
+{{--                    <span class="text-xs text-gray-500">--}}
+{{--                        Total Votes Cast: {{ number_format($totalVotes) }}--}}
+{{--                    </span>--}}
+{{--                        <span class="text-xs text-gray-500">--}}
+{{--                        Abstentions: {{ number_format($abstentions) }}--}}
+{{--                    </span>--}}
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -132,8 +132,8 @@
                                         {{ $candidate->partyLists->name ?? 'Independent' }}
                                     </p>
 
-                                    <div class="text-center mb-3">
-                                <span class="inline-block bg-red-100 text-red-800 text-xs px-2 py-1 rounded">
+                                    <div class="text-center mb-2">
+                                <span class="inline-block bg-green-100 text-red-800 text-xs px-2 py-1 rounded">
                                      {{ number_format($candidateVoteCount) }} votes
                                     ({{ number_format($votePercentage, 1) }}%)
                                 </span>
