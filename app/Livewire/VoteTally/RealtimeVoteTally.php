@@ -36,13 +36,12 @@ class RealtimeVoteTally extends Component
     public $hasStudentCouncilCandidate = false;
     public $councilVoteCounts = [];
 
-    protected function calculateCouncilVotes(): void
+    protected function calculateCouncilVotes()
     {
         $this->councilVoteCounts = [];
 
         if (!$this->selectedElection) return;
 
-        // Get all councils with candidates in this election
         $councils = Council::whereHas('program.users.candidates.elections', function($q) {
             $q->where('elections.id', $this->selectedElection);
         })->get();
@@ -54,8 +53,8 @@ class RealtimeVoteTally extends Component
                 ->join('programs', 'users.program_id', '=', 'programs.id')
                 ->where('programs.council_id', $council->id)
                 ->where('votes.election_id', $this->selectedElection)
-                ->distinct('votes.user_id')
-                ->count('votes.user_id');
+                ->select(DB::raw('COUNT(DISTINCT votes.user_id) as count'))
+                ->value('count');
         }
     }
 
