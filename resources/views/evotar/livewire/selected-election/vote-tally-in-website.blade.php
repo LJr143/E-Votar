@@ -96,8 +96,8 @@
                     @if($separateByMajor && $positionId)
                         <!-- Display results separated by major -->
                         @php
-                            // Get all majors with voters in this council
-                            $majors = program_major::whereHas('users', function($query) use ($council) {
+                            // Get all majors that have voters in programs belonging to this council
+                            $majors = program_major::whereHas('program', function($query) use ($council) {
                                 $query->where('council_id', $council->id);
                             })->get();
 
@@ -105,14 +105,18 @@
                             $majorStats = [];
                             foreach ($majors as $major) {
                                 $totalMajorVoters = DB::table('users')
-                                    ->where('council_id', $council->id)
-                                    ->where('program_major_id', $major->id)
+                                    ->join('programs', 'users.program_id', '=', 'programs.id')
+                                    ->where('programs.council_id', $council->id)
+                                    ->where('users.program_id', $major->program_id)
+                                    ->where('users.program_major_id', $major->id)
                                     ->count();
 
                                 $totalMajorVoted = DB::table('votes')
                                     ->join('users', 'votes.user_id', '=', 'users.id')
+                                    ->join('programs', 'users.program_id', '=', 'programs.id')
                                     ->where('votes.election_id', $this->selectedElection)
-                                    ->where('users.council_id', $council->id)
+                                    ->where('programs.council_id', $council->id)
+                                    ->where('users.program_id', $major->program_id)
                                     ->where('users.program_major_id', $major->id)
                                     ->distinct('votes.user_id')
                                     ->count('votes.user_id');
@@ -128,8 +132,11 @@
                                 foreach ($positionCandidates as $candidate) {
                                     $votes = DB::table('votes')
                                         ->join('users', 'votes.user_id', '=', 'users.id')
+                                        ->join('programs', 'users.program_id', '=', 'programs.id')
                                         ->where('votes.election_id', $this->selectedElection)
                                         ->where('votes.candidate_id', $candidate->id)
+                                        ->where('programs.council_id', $council->id)
+                                        ->where('users.program_id', $major->program_id)
                                         ->where('users.program_major_id', $major->id)
                                         ->distinct('votes.user_id')
                                         ->count('votes.user_id');
