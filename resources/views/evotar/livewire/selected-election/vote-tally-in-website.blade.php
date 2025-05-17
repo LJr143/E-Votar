@@ -101,10 +101,6 @@
                                 $query->where('council_id', $council->id);
                             })->get();
 
-                            // Get position details to check for multiple winners
-                            $position = \App\Models\Position::find($positionId);
-                            $winnersCount = $position->number_of_winners ?? 1;
-
                             // Get total voters and votes per major
                             $majorStats = [];
                             foreach ($majors as $major) {
@@ -125,33 +121,15 @@
                                     ->distinct('votes.user_id')
                                     ->count('votes.user_id');
 
-                                // Get abstain votes for this major and position
-                                $abstainVotes = \App\Models\AbstainVote::where('election_id', $this->selectedElection)
-                                    ->where('position_id', $positionId)
-                                    ->whereHas('user', function($query) use ($major, $council) {
-                                        $query->where('program_id', $major->program_id)
-                                              ->where('program_major_id', $major->id)
-                                              ->whereHas('program', function($q) use ($council) {
-                                                  $q->where('council_id', $council->id);
-                                              });
-                                    })
-                                    ->count();
-
-                                // Filter candidates for this major
-                                $majorCandidates = $positionCandidates->filter(function($candidate) use ($major) {
-                                    return $candidate->users->program_major_id == $major->id;
-                                });
-
                                 $majorStats[$major->id] = [
                                     'name' => $major->name,
                                     'total_voters' => $totalMajorVoters,
                                     'total_voted' => $totalMajorVoted,
-                                    'abstain_votes' => $abstainVotes,
                                     'candidates' => []
                                 ];
 
                                 // Get votes per candidate for this major
-                                foreach ($majorCandidates as $candidate) {
+                                foreach ($positionCandidates as $candidate) {
                                     $votes = DB::table('votes')
                                         ->join('users', 'votes.user_id', '=', 'users.id')
                                         ->join('programs', 'users.program_id', '=', 'programs.id')
@@ -163,38 +141,10 @@
                                         ->distinct('votes.user_id')
                                         ->count('votes.user_id');
 
-                                    // Calculate partial abstentions (when user votes for fewer candidates than allowed)
-                                    $partialAbstain = 0;
-                                    if ($winnersCount > 1) {
-                                        $usersVotedForPosition = DB::table('votes')
-                                            ->join('users', 'votes.user_id', '=', 'users.id')
-                                            ->join('programs', 'users.program_id', '=', 'programs.id')
-                                            ->where('votes.election_id', $this->selectedElection)
-                                            ->where('votes.position_id', $positionId)
-                                            ->where('programs.council_id', $council->id)
-                                            ->where('users.program_id', $major->program_id)
-                                            ->where('users.program_major_id', $major->id)
-                                            ->distinct('votes.user_id')
-                                            ->count('votes.user_id');
-
-                                        $votesCastForPosition = DB::table('votes')
-                                            ->join('users', 'votes.user_id', '=', 'users.id')
-                                            ->join('programs', 'users.program_id', '=', 'programs.id')
-                                            ->where('votes.election_id', $this->selectedElection)
-                                            ->where('votes.position_id', $positionId)
-                                            ->where('programs.council_id', $council->id)
-                                            ->where('users.program_id', $major->program_id)
-                                            ->where('users.program_major_id', $major->id)
-                                            ->count();
-
-                                        $partialAbstain = ($usersVotedForPosition * $winnersCount) - $votesCastForPosition;
-                                    }
-
                                     $majorStats[$major->id]['candidates'][$candidate->id] = [
                                         'votes' => $votes,
                                         'percentage' => $totalMajorVoted > 0 ? ($votes / $totalMajorVoted) * 100 : 0,
-                                        'abstain' => $abstainVotes + $partialAbstain,
-                                        'candidate' => $candidate
+                                        'abstain' => $totalMajorVoted - $votes
                                     ];
                                 }
                             }
@@ -206,110 +156,83 @@
                                     <h4 class="text-sm font-semibold text-gray-700 mb-4">
                                         {{ $major->name }} Results
                                         <span class="text-xs text-gray-500">
-                        ({{ number_format($majorStats[$major->id]['total_voted']) }} of {{ number_format($majorStats[$major->id]['total_voters']) }} voted)
-                    </span>
-                                        <span class="text-xs text-red-500 ml-2">
-                        {{ number_format($majorStats[$major->id]['abstain_votes']) }} abstentions
-                    </span>
+                                        ({{ number_format($majorStats[$major->id]['total_voted']) }} of {{ number_format($majorStats[$major->id]['total_voters']) }} voted)
+                                    </span>
                                     </h4>
 
-                                    @if(count($majorStats[$major->id]['candidates']) > 0)
-                                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                                            @foreach($majorStats[$major->id]['candidates'] as $candidateData)
-                                                @php
-                                                    $candidate = $candidateData['candidate'];
-                                                @endphp
-                                                <div class="border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
-                                                    <!-- Vote Percentage Bar -->
-                                                    <div class="bg-gray-100 w-full h-2">
-                                                        <div class="bg-green-500 h-2" style="width: {{ $candidateData['percentage'] }}%"></div>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                                        @foreach($positionCandidates as $candidate)
+                                            @php
+                                                $candidateStats = $majorStats[$major->id]['candidates'][$candidate->id] ?? [
+                                                    'votes' => 0,
+                                                    'percentage' => 0,
+                                                    'abstain' => $majorStats[$major->id]['total_voted']
+                                                ];
+                                            @endphp
+
+                                            <div class="border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
+                                                <!-- Vote Percentage Bar -->
+                                                <div class="bg-gray-100 w-full h-2">
+                                                    <div class="bg-green-500 h-2" style="width: {{ $candidateStats['percentage'] }}%"></div>
+                                                </div>
+
+                                                <!-- Candidate Info -->
+                                                <div class="p-4">
+                                                    <div class="flex justify-center mb-3">
+                                                        <img class="w-20 h-20 rounded-full object-cover border-2 border-gray-300"
+                                                             src="{{ $candidate->users->profile_photo_path ? asset('storage/'.$candidate->users->profile_photo_path) : asset('storage/assets/profile/default.jpg') }}"
+                                                             alt="Candidate photo">
                                                     </div>
 
-                                                    <!-- Candidate Info -->
-                                                    <div class="p-4">
-                                                        <div class="flex justify-center mb-3">
-                                                            <img class="w-20 h-20 rounded-full object-cover border-2 border-gray-300"
-                                                                 src="{{ $candidate->users->profile_photo_path ? asset('storage/'.$candidate->users->profile_photo_path) : asset('storage/assets/profile/default.jpg') }}"
-                                                                 alt="Candidate photo">
-                                                        </div>
+                                                    <h4 class="text-center font-bold text-gray-800">
+                                                        {{ $candidate->users->first_name }} {{ $candidate->users->last_name }}
+                                                    </h4>
 
-                                                        <h4 class="text-center font-bold text-gray-800">
-                                                            {{ $candidate->users->first_name }} {{ $candidate->users->last_name }}
-                                                        </h4>
+                                                    <p class="text-center text-xs text-gray-600 mb-2">
+                                                        {{ $candidate->partyLists->name ?? 'Independent' }}
+                                                    </p>
 
-                                                        <p class="text-center text-xs text-gray-600 mb-2">
-                                                            {{ $candidate->partyLists->name ?? 'Independent' }}
-                                                        </p>
+                                                    <div class="text-center mb-2">
+                                                    <span class="inline-block bg-green-100 text-black font-semibold text-xs px-2 py-1 rounded">
+                                                        {{ number_format($candidateStats['votes']) }} votes
+                                                        ({{ number_format($candidateStats['percentage'], 1) }}%)
+                                                    </span>
+                                                    </div>
+                                                    <div class="text-center mb-3">
+                                                    <span class="inline-block bg-red-100 text-red-800 text-xs px-2 py-1 rounded">
+                                                        {{ number_format($candidateStats['abstain']) }} abstain
+                                                    </span>
+                                                    </div>
 
-                                                        <div class="text-center mb-2">
-                                        <span class="inline-block bg-green-100 text-black font-semibold text-xs px-2 py-1 rounded">
-                                            {{ number_format($candidateData['votes']) }} votes
-                                            ({{ number_format($candidateData['percentage'], 1) }}%)
-                                        </span>
-                                                        </div>
-                                                        <div class="text-center mb-3">
-                                        <span class="inline-block bg-red-100 text-red-800 text-xs px-2 py-1 rounded">
-                                            {{ number_format($candidateData['abstain']) }} abstain
-                                        </span>
-                                                        </div>
-
-                                                        <div class="text-xs mb-3 text-center text-gray-600 space-y-1">
-                                                            <p>{{ $candidate->users->year_level }} Year</p>
-                                                            <p>{{ $candidate->users->program->short_name ?? $candidate->users->program->name }}</p>
-                                                            @if($candidate->users->programMajor)
-                                                                <p>{{ $candidate->users->programMajor->name }}</p>
-                                                            @endif
-                                                        </div>
-
-                                                        @if($candidate->description)
-                                                            <div class="border-t border-gray-100 pt-3">
-                                                                <p class="text-[11px] font-semibold text-gray-500 text-center mb-1">ADVOCACY</p>
-                                                                <p class="text-[10px] text-gray-700 italic text-center">
-                                                                    "{{ $candidate->description }}"
-                                                                </p>
-                                                            </div>
+                                                    <div class="text-xs mb-3 text-center text-gray-600 space-y-1">
+                                                        <p>{{ $candidate->users->year_level }} Year</p>
+                                                        <p>{{ $candidate->users->program->short_name ?? $candidate->users->program->name }}</p>
+                                                        @if($candidate->users->programMajor)
+                                                            <p>{{ $candidate->users->programMajor->name }}</p>
                                                         @endif
                                                     </div>
+
+                                                    @if($candidate->description)
+                                                        <div class="border-t border-gray-100 pt-3">
+                                                            <p class="text-[11px] font-semibold text-gray-500 text-center mb-1">ADVOCACY</p>
+                                                            <p class="text-[10px] text-gray-700 italic text-center">
+                                                                "{{ $candidate->description }}"
+                                                            </p>
+                                                        </div>
+                                                    @endif
                                                 </div>
-                                            @endforeach
-                                        </div>
-                                    @else
-                                        <p class="text-sm text-gray-500 italic">No candidates from this major</p>
-                                    @endif
+                                            </div>
+                                        @endforeach
+                                    </div>
                                 </div>
                             @endif
                         @endforeach
+
                     @else
                         <!-- Original display for non-major separated positions -->
                         @php
-                            // Get position details to check for multiple winners
-                            $position = \App\Models\Position::find($positionId);
-                            $winnersCount = $position->number_of_winners ?? 1;
-
                             $totalVotes = $positionId ? ($positionVotes[$positionId] ?? 0) : 0;
-                            $abstentions = \App\Models\AbstainVote::where('election_id', $this->selectedElection)
-                                ->where('position_id', $positionId)
-                                ->distinct('user_id')
-                                 ->count('user_id');
-
-                            // Calculate partial abstentions for multiple winners
-                            $partialAbstentions = 0;
-                            if ($winnersCount > 1) {
-                                $usersVotedForPosition = DB::table('votes')
-                                    ->where('election_id', $this->selectedElection)
-                                    ->where('position_id', $positionId)
-                                    ->distinct('user_id')
-                                    ->count('user_id');
-
-                                $votesCastForPosition = DB::table('votes')
-                                    ->where('election_id', $this->selectedElection)
-                                    ->where('position_id', $positionId)
-                                    ->count();
-
-                                $partialAbstentions = ($usersVotedForPosition * $winnersCount) - $votesCastForPosition;
-                            }
-
-                            $totalAbstentions = $abstentions + $partialAbstentions;
+                            $abstentions = $positionId ? ($positionAbstentions[$positionId] ?? 0) : 0;
 
                             // Calculate individual candidate votes (distinct counts)
                             $candidateVotes = [];
@@ -322,24 +245,12 @@
                             }
                         @endphp
 
-                        <div class="mb-4">
-                            <p class="text-sm text-gray-700">
-                                Total Abstentions for this position:
-                                <span class="font-bold text-red-600">{{ number_format($totalAbstentions) }}</span>
-                                @if($winnersCount > 1)
-                                    <span class="text-xs text-gray-500 ml-2">
-                    (includes {{ number_format($partialAbstentions) }} partial abstentions)
-                </span>
-                                @endif
-                            </p>
-                        </div>
-
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                             @foreach($positionCandidates as $candidate)
                                 @php
                                     $candidateVoteCount = $candidateVotes[$candidate->id] ?? 0;
                                     $votePercentage = $totalVoterVoted > 0 ? ($candidateVoteCount/$totalVoterVoted)*100 : 0;
-                                    $abstainCountPerCandidate = $totalAbstentions;
+                                    $abstainCountPerCandidate = $totalVoterVoted - $candidateVoteCount;
                                 @endphp
                                 <div class="border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
                                     <!-- Vote Percentage Bar -->
