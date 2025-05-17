@@ -70,6 +70,9 @@
                 // Get position settings
                 $positionId = null;
                 $separateByMajor = false;
+                $positionWinnersCount = 1;
+                $positionAbstainCount = 0;
+                $positionTotalVotes = 0;
 
                 if ($positionCandidates->isNotEmpty()) {
                     $positionId = optional(optional($positionCandidates->first())->election_positions)->position->id ?? null;
@@ -78,6 +81,34 @@
                             ->where('position_id', $positionId)
                             ->first();
                         $separateByMajor = $positionSetting && $positionSetting->separate_by_major;
+
+                        // Get position details
+                        $position = \App\Models\Position::find($positionId);
+                        $positionWinnersCount = $position->number_of_winners ?? 1;
+
+                        // Calculate total votes for this position
+                        $positionTotalVotes = DB::table('votes')
+                            ->where('election_id', $this->selectedElection)
+                            ->where('position_id', $positionId)
+                            ->count();
+
+                        // Calculate abstain votes
+                        $positionAbstainCount = \App\Models\AbstainVote::where('election_id', $this->selectedElection)
+                            ->where('position_id', $positionId)
+                            ->count();
+
+                        // For multiple winners, calculate partial abstentions
+                        if ($positionWinnersCount > 1) {
+                            $distinctVoters = DB::table('votes')
+                                ->where('election_id', $this->selectedElection)
+                                ->where('position_id', $positionId)
+                                ->distinct('user_id')
+                                ->count('user_id');
+
+                            $expectedVotes = $distinctVoters * $positionWinnersCount;
+                            $partialAbstain = $expectedVotes - $positionTotalVotes;
+                            $positionAbstainCount += $partialAbstain;
+                        }
                     }
                 }
             @endphp
@@ -90,7 +121,22 @@
                             <span class="text-xs text-gray-300">(Voting by Major)</span>
                         @endif
                     </h3>
+
+                    <div class="text-center mb-3">
+                    <span class="inline-block bg-red-100 text-red-800 text-xs px-2 py-1 rounded">
+                        @if($separateByMajor)
+                            Total Abstentions: Calculated per major below
+                        @else
+                            Total Abstentions: {{ number_format($positionAbstainCount) }}
+                            ({{ $totalVoterVoted > 0 ? number_format(($positionAbstainCount/$totalVoterVoted)*100, 1) : 0 }}%)
+                            @if($positionWinnersCount > 1)
+                                <span class="text-xs">(includes partial abstentions)</span>
+                            @endif
+                        @endif
+                    </span>
+                    </div>
                 </div>
+
 
                 <div class="p-4">
                     @if($separateByMajor && $positionId)
@@ -257,11 +303,6 @@
                                     $abstainCountPerCandidate = $totalVoterVoted - $candidateVoteCount;
                                 @endphp
                                 <div class="border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
-                                    <div class="text-center mb-3">
-                                            <span class="inline-block bg-red-100 text-red-800 text-xs px-2 py-1 rounded">
-                                                {{ number_format($abstainCountPerCandidate) }} abstain
-                                            </span>
-                                    </div>
                                     <!-- Vote Percentage Bar -->
                                     <div class="bg-gray-100 w-full h-2">
                                         <div class="bg-green-500 h-2" style="width: {{ $votePercentage }}%"></div>
