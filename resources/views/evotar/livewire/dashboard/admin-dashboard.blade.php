@@ -41,7 +41,7 @@
                         <i class="fas fa-users-cog text-white text-lg"></i>
                     </div>
                     <div class="ml-3">
-                        <h2 class="text-sm text-gray-900 font-bold">{{ \App\Models\User::has('roles')->count() }}</h2>
+                        <h2 class="text-sm text-gray-900 font-bold">{{ \App\Models\User::count() }}</h2>
                         <p class="text-[10px] mb-2 font-semibold text-gray-500">TOTAL SYSTEM USER</p>
                     </div>
                 </div>
