@@ -1,5 +1,5 @@
 @php use App\Models\CouncilPositionSetting; @endphp
-@php use App\Models\ProgramMajor; @endphp
+@php use App\Models\program_major; @endphp
 @php use Illuminate\Support\Facades\DB; @endphp
 
 <div class="container mx-auto px-4 py-8" x-data="{
@@ -97,7 +97,7 @@
                         <!-- Display results separated by major -->
                         @php
                             // Get all majors with voters in this council
-                            $majors = ProgramMajor::whereHas('users', function($query) use ($council) {
+                            $majors = program_major::whereHas('users', function($query) use ($council) {
                                 $query->where('council_id', $council->id);
                             })->get();
 
