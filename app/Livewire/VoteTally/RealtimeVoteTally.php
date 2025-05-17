@@ -94,18 +94,19 @@ class RealtimeVoteTally extends Component
             return;
         }
 
-        // Total eligible voters
+        // Total eligible voters - matches VoteTallyInWebsite
         $this->totalVoters = User::where('campus_id', $election->campus_id)
             ->whereHas('roles', fn($q) => $q->where('name', '!=', 'faculty'))
             ->whereDoesntHave('electionExcludedVoters', fn($q) => $q->where('election_id', $election->id))
             ->count();
 
-        // Total voters who voted (distinct count)
-        $this->totalVoterVoted = User::where('campus_id', $election->campus_id)
-            ->whereHas('roles', fn($q) => $q->where('name', '!=', 'faculty'))
-            ->whereDoesntHave('electionExcludedVoters', fn($q) => $q->where('election_id', $election->id))
-            ->whereHas('votes', fn($q) => $q->where('election_id', $election->id))
-            ->count();
+        // Total voters who voted (distinct count) - matches VoteTallyInWebsite
+        $this->totalVoterVoted = DB::table('votes')
+            ->join('users', 'votes.user_id', '=', 'users.id')
+            ->where('votes.election_id', $election->id)
+            ->where('users.campus_id', $election->campus_id)
+            ->distinct('votes.user_id')
+            ->count('votes.user_id');
     }
 
     public function calculatePositionStats(): void
@@ -119,19 +120,20 @@ class RealtimeVoteTally extends Component
         }
 
         $positions = ElectionPosition::where('election_id', $election->id)
-            ->with('position')
+            ->with(['position', 'candidates' => function($query) use ($election) {
+                $query->where('election_id', $election->id)
+                    ->withCount([
+                        'votes as distinct_votes_count' => function($q) use ($election) {
+                            $q->select(DB::raw('COUNT(DISTINCT votes.user_id)'))
+                                ->where('votes.election_id', $election->id);
+                        }
+                    ]);
+            }])
             ->get();
 
         foreach ($positions as $position) {
-            // Count votes for this position
-            $this->positionVotes[$position->position_id] = User::where('campus_id', $election->campus_id)
-                ->whereHas('roles', fn($q) => $q->where('name', '!=', 'faculty'))
-                ->whereDoesntHave('electionExcludedVoters', fn($q) => $q->where('election_id', $election->id))
-                ->whereHas('votes', function($q) use ($election, $position) {
-                    $q->where('election_id', $election->id)
-                        ->whereHas('candidate', fn($q) => $q->where('election_position_id', $position->id));
-                })
-                ->count();
+            // Sum distinct votes from all candidates for this position
+            $this->positionVotes[$position->position_id] = $position->candidates->sum('distinct_votes_count');
 
             // Calculate abstentions for this position
             $this->positionAbstentions[$position->position_id] = max(

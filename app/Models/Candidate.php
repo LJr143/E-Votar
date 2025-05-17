@@ -28,7 +28,7 @@ class Candidate extends Model
 
     public function votes(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(Vote::class, 'candidate_id', 'id');
+        return $this->hasMany(Vote::class);
     }
 
     public function partyLists(): \Illuminate\Database\Eloquent\Relations\BelongsTo
