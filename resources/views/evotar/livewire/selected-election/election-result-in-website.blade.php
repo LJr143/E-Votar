@@ -43,7 +43,6 @@
                 </div>
 
                 <!-- Main Title -->
-                <!-- Main Title -->
                 <div class="h-0.5 w-36 sm:w-48 mx-auto mb-3 bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent"></div>
 
                 <!-- Subtitle -->
@@ -63,8 +62,8 @@
                         $isGovernor = strtolower($position) === 'governor';
                     @endphp
 
-                    <div class="{{ $isPresident ? 'flex justify-center mb-8 sm:mb-12' : 'grid sm:grid-cols-3 gap-4 sm:gap-6 md:gap-8 mb-8 sm:mb-12 justify-items-center mx-auto max-w-5xl' }}">
-                        @foreach($candidates as $winner)
+                    <div class="{{ $isPresident ? 'flex justify-center mb-8 sm:mb-12' : 'grid sm:grid-cols-3 gap-4 sm:gap-6 md:gap-8 mb-8 sm:mb-12 place-items-center mx-auto max-w-5xl' }}">
+                    @foreach($candidates as $winner)
                             <div class="flex flex-col items-center">
                                 <div class="relative rounded-full p-[3px] bg-gradient-to-r from-[#D4AF37] to-[#8B0000] mb-4">
                                     <div class="relative rounded-full overflow-hidden w-[140px] h-[140px] sm:w-[{{ $isPresident || $isGovernor ? '160px' : '120px' }}] sm:h-[{{ $isPresident || $isGovernor ? '160px' : '120px' }}]">
