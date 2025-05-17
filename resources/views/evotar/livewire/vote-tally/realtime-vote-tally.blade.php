@@ -301,7 +301,7 @@
                                                     ->distinct('votes.user_id')
                                                     ->count('votes.user_id');
 
-                                                $totalCouncilAbstain = \App\Models\AbstainVote::where('election_id', $selectedElection)
+                                              $totalCouncilAbstain = \App\Models\AbstainVote::where('election_id', $selectedElection)
                                                     ->whereHas('position', function($q) {
                                                         $q->whereHas('electionType', function($q) {
                                                             $q->where('name', 'Local Council Election');
@@ -310,7 +310,8 @@
                                                     ->whereHas('user.program.council', function($q) use ($councilId) {
                                                         $q->where('id', $councilId);
                                                     })
-                                                    ->count();
+                                                    ->distinct('user_id')
+                                                    ->count('user_id');
                                             @endphp
                                                 <!-- Council Header -->
                                             <div class="bg-white p-5 rounded-lg shadow-sm border-l-4 border-black mb-6">
