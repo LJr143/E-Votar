@@ -84,9 +84,12 @@ class ElectionResultInWebsite extends Component
 
             // Get total voters who voted in this election
             $totalVoterVoted = DB::table('votes')
-                ->where('election_id', $this->selectedElection)
-                ->distinct('user_id')
-                ->count('user_id');
+                ->join('users', 'votes.user_id', '=', 'users.id')
+                    ->join('programs', 'users.program_id', '=', 'programs.id')
+                    ->where('votes.election_id', $this->selectedElection)
+                    ->where('programs.council_id', $this->council->id)
+                    ->distinct('votes.user_id')
+                    ->count('votes.user_id');
 
             if (stripos($this->council->name, 'Student Council') !== false) {
                 $this->studentCouncilPositions->map(function ($position) use (&$candidatesByPosition, &$winnersByPosition, $election, $totalVoterVoted) {
