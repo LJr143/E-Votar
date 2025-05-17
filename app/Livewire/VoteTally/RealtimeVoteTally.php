@@ -33,6 +33,30 @@ class RealtimeVoteTally extends Component
 
     public $hasLocalCouncilCandidate = false;
     public $hasStudentCouncilCandidate = false;
+    public $councilVoteCounts = [];
+
+    protected function calculateCouncilVotes(): void
+    {
+        $this->councilVoteCounts = [];
+
+        if (!$this->selectedElection) return;
+
+        // Get all councils with candidates in this election
+        $councils = Council::whereHas('programs.users.candidates.elections', function($q) {
+            $q->where('elections.id', $this->selectedElection);
+        })->get();
+
+        foreach ($councils as $council) {
+            $this->councilVoteCounts[$council->id] = DB::table('votes')
+                ->join('candidates', 'votes.candidate_id', '=', 'candidates.id')
+                ->join('users', 'candidates.user_id', '=', 'users.id')
+                ->join('programs', 'users.program_id', '=', 'programs.id')
+                ->where('programs.council_id', $council->id)
+                ->where('votes.election_id', $this->selectedElection)
+                ->distinct('votes.user_id')
+                ->count('votes.user_id');
+        }
+    }
 
 
     public function mount(): void
@@ -48,6 +72,7 @@ class RealtimeVoteTally extends Component
             $this->councils = Council::all();
             $this->fetchCandidates();
             $this->fetchVoterTally();
+            $this->calculateCouncilVotes();
         }
     }
 
@@ -75,6 +100,7 @@ class RealtimeVoteTally extends Component
         $this->fetchElection($this->filter);
         $this->fetchCandidates();
         $this->fetchVoterTally();
+        $this->calculateCouncilVotes();
         $this->dispatch('updateChartData', $this->selectedElection);
     }
 
@@ -223,6 +249,7 @@ class RealtimeVoteTally extends Component
             'councils' => $this->councils,
             'hasStudentCouncilPositions' => $this->hasStudentCouncilPositions,
             'hasLocalCouncilPositions' => $this->hasLocalCouncilPositions,
+            'councilVoteCounts' => $this->councilVoteCounts,
 
         ]);
     }

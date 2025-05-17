@@ -289,28 +289,19 @@
 
                                         @foreach($candidates->where('election_positions.position.electionType.name', 'Local Council Election')->groupBy('users.program.council.name') as $councilName => $councilCandidates)
                                             @php
-                                                // Calculate total abstain votes for this entire council
+                                                $councilId = $councilCandidates->first()->users->program->council->id;
+                                                $totalCouncilVotes = $councilVoteCounts[$councilId] ?? 0;
                                                 $totalCouncilAbstain = \App\Models\AbstainVote::where('election_id', $selectedElection)
                                                     ->whereHas('position', function($q) {
                                                         $q->whereHas('electionType', function($q) {
                                                             $q->where('name', 'Local Council Election');
                                                         });
                                                     })
+                                                    ->whereHas('user.program.council', function($q) use ($councilId) {
+                                                        $q->where('id', $councilId);
+                                                    })
                                                     ->count();
-
-                                               $totalCouncilVotes = \Illuminate\Support\Facades\DB::table('votes')
-                                                    ->join('candidates', 'votes.candidate_id', '=', 'candidates.id')
-                                                    ->join('users', 'candidates.user_id', '=', 'users.id')
-                                                    ->join('programs', 'users.program_id', '=', 'programs.id')
-                                                    ->whereIn('candidates.id', $councilCandidates->pluck('id'))
-                                                    ->where('votes.election_id', $selectedElection)
-                                                    ->distinct('votes.user_id')
-                                                    ->count('votes.user_id');
-
-                                                // Add abstentions
-                                                $totalCouncilVotes += $totalCouncilAbstain;
                                             @endphp
-
                                                 <!-- Council Header -->
                                             <div class="bg-white p-5 rounded-lg shadow-sm border-l-4 border-black mb-6">
                                                 <div class="flex justify-between items-center flex-wrap gap-4">
@@ -323,7 +314,7 @@
                                                         </span>
                                                         <span
                                                             class="text-[11px] bg-blue-100 text-blue-800 px-3 py-1 rounded-full">
-                                                            {{ $councilCandidates->sum('votes_count') }} Votes Cast
+                                                            {{ $totalCouncilVotes }} Votes Cast
                                                         </span>
                                                         <span
                                                             class="text-[11px] bg-red-100 text-red-800 px-3 py-1 rounded-full">
