@@ -71,11 +71,11 @@
             </p>
         </div>
     @else
-        <div class="custom-countdown">
+        <div class="custom-countdown" wire:ignore>
             <div class="timer-header flex justify-center text-center">
                 <div class="flex items-center space-x-2">
                     <i class="fas fa-stopwatch text-black"></i>
-                    <span class="text-sm font-bold">Election Ends In:</span>
+                    <span class="text-sm font-bold">Election has Ended</span>
                 </div>
             </div>
             <div id="countdown-display">
