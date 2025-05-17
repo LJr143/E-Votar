@@ -97,7 +97,7 @@
                                     ->count('votes.user_id');
 
                         // Calculate abstain votes
-                        $positionAbstainCount = $totalVoterVoted - $this->positionTotalVotes;
+                        $positionAbstainCount = $totalVoterVoted - $positionTotalVotes;
                         // For multiple winners, calculate partial abstentions
                         if ($positionWinnersCount > 1) {
                             $distinctVoters = DB::table('votes')
