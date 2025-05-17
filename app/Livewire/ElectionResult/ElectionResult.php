@@ -500,7 +500,7 @@ class ElectionResult extends Component
                             ->where('votes.election_id', $this->latestElection->id)
                             ->where('candidates.election_position_id', $position->id)
                             ->where('programs.council_id', $program->id)
-                            ->where('programs.major_id', $candidates->first()->users->program_major_id ?? null)
+                            ->where('users.program_major_id', $candidates->first()->users->program_major_id ?? null)
                             ->distinct('votes.user_id')
                             ->count('votes.user_id');
 
