@@ -70,6 +70,13 @@
                 ({{ Carbon::parse($election->date_started)->diffForHumans() }})
             </p>
         </div>
+    @elseif(Carbon::parse($election->date_ended)->isPast())
+        <div>
+            <h2 class="text-[12px] sm:text-xl font-semibold mb-1">Election Has Ended</h2>
+            <p class="text-sm sm:text-base text-gray-300 text-center">
+                Voting ended on {{ Carbon::parse($election->date_ended)->isoFormat('MMMM D, YYYY') }}
+            </p>
+        </div>
     @else
         <div class="custom-countdown" wire:ignore>
             <div class="timer-header flex justify-center text-center">
@@ -143,7 +150,13 @@
 
                 if (diff <= 0) {
                     clearInterval(countdownInterval);
-                    document.getElementById('countdown-display').style.display = 'none';
+                    // Update all values to 00
+                    document.getElementById('days').textContent = '00';
+                    document.getElementById('hours').textContent = '00';
+                    document.getElementById('minutes').textContent = '00';
+                    document.getElementById('seconds').textContent = '00';
+
+                    // Show times up message
                     document.getElementById('times-up-message').style.display = 'block';
                     return;
                 }
