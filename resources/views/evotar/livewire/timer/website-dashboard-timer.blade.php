@@ -72,7 +72,7 @@
         </div>
     @elseif(Carbon::parse($election->date_ended)->isPast())
         <div>
-            <h2 class="text-[12px] sm:text-xl font-semibold mb-1">Election Has Ended</h2>
+            <h2 class="text-[12px] text-center sm:text-xl font-semibold mb-1">Election Has Ended</h2>
             <p class="text-sm sm:text-base text-gray-300 text-center">
                 Voting ended on {{ Carbon::parse($election->date_ended)->isoFormat('MMMM D, YYYY') }}
             </p>
