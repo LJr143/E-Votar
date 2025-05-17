@@ -93,16 +93,11 @@
                                     ->where('position_id', $positionId)
                                     ->where('votes.election_id', $this->selectedElection)
                                     ->where('programs.council_id', $council->id)
-                                    ->where('users.program_id', $major->program_id)
                                     ->distinct('votes.user_id')
                                     ->count('votes.user_id');
 
                         // Calculate abstain votes
-                        $positionAbstainCount = \App\Models\AbstainVote::where('election_id', $this->selectedElection)
-                            ->where('position_id', $positionId)
-                             ->distinct('user_id')
-                             ->count('user_id');
-
+                        $positionAbstainCount = $totalVoterVoted - $this->positionTotalVotes;
                         // For multiple winners, calculate partial abstentions
                         if ($positionWinnersCount > 1) {
                             $distinctVoters = DB::table('votes')
