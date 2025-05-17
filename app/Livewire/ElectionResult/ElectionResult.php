@@ -333,14 +333,13 @@ class ElectionResult extends Component
 
             // Get all votes for this position (distinct by user_id)
             $totalVotesForPosition = DB::table('votes')
-                ->where('election_id', $this->latestElection->id)
-                ->whereIn('candidate_id', function($query) use ($position) {
-                    $query->select('id')
-                        ->from('candidates')
-                        ->where('election_position_id', $position->id);
-                })
-                ->distinct('user_id')
-                ->count('user_id');
+                ->join('candidates', 'votes.candidate_id', '=', 'candidates.id')
+                ->join('users', 'candidates.user_id', '=', 'users.id')
+                ->join('programs', 'users.program_id', '=', 'programs.id')
+                ->where('candidates.election_position_id', $position->id)
+                ->where('votes.election_id', $this->selectedElection)
+                ->distinct('votes.user_id')
+                ->count('votes.user_id');
 
             // Fetch council-specific settings for this position
             $councilPositionSettings = DB::table('council_position_settings')
