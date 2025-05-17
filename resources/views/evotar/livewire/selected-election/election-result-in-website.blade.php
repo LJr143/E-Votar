@@ -62,26 +62,42 @@
                         $isGovernor = strtolower($position) === 'governor';
                     @endphp
 
-                    <div class="{{ $isPresident ? 'flex justify-center mb-8 sm:mb-12' : 'flex justify-center items-center mx-auto max-w-5xl' }}">
-                    @foreach($candidates as $winner)
-                            <div class="flex flex-col items-center">
-                                <div class="relative rounded-full p-[3px] bg-gradient-to-r from-[#D4AF37] to-[#8B0000] mb-4">
-                                    <div class="relative rounded-full overflow-hidden w-[140px] h-[140px] sm:w-[{{ $isPresident || $isGovernor ? '160px' : '120px' }}] sm:h-[{{ $isPresident || $isGovernor ? '160px' : '120px' }}]">
-                                        <div class="absolute top-1 left-1 right-1 bottom-1 rounded-full bg-white"></div>
-                                        <img src="{{ asset($winner->users->profile_photo_path ? 'storage/' . $winner->users->profile_photo_path : 'storage/assets/profile/default.jpg') }}"
-                                             alt="candidate profile"
-                                             class="w-full h-full object-cover relative">
+                    @php
+                        $rows = [];
+                        $rowLength = 1;
+                        $i = 0;
+
+                        while ($i < count($candidates)) {
+                            $rows[] = array_slice($candidates, $i, $rowLength);
+                            $i += $rowLength;
+                            $rowLength++;
+                        }
+                    @endphp
+
+                    <div class="space-y-8 mb-8 sm:mb-12">
+                        @foreach($rows as $row)
+                            <div class="grid justify-center gap-6" style="grid-template-columns: repeat({{ count($row) }}, minmax(0, 1fr));">
+                                @foreach($row as $winner)
+                                    <div class="flex flex-col items-center">
+                                        <div class="relative rounded-full p-[3px] bg-gradient-to-r from-[#D4AF37] to-[#8B0000] mb-4">
+                                            <div class="relative rounded-full overflow-hidden w-[140px] h-[140px] sm:w-[{{ $isPresident || $isGovernor ? '160px' : '120px' }}] sm:h-[{{ $isPresident || $isGovernor ? '160px' : '120px' }}]">
+                                                <div class="absolute top-1 left-1 right-1 bottom-1 rounded-full bg-white"></div>
+                                                <img src="{{ asset($winner->users->profile_photo_path ? 'storage/' . $winner->users->profile_photo_path : 'storage/assets/profile/default.jpg') }}"
+                                                     alt="candidate profile"
+                                                     class="w-full h-full object-cover relative">
+                                            </div>
+                                        </div>
+                                        <p class="text-[12px] sm:text-[14px] font-bold text-center text-black">
+                                            {{ strtoupper(($winner->users->first_name ?? '') . ' ' . ($winner->users->middle_initial ?? '') . ' ' . ($winner->users->last_name ?? '') . ' ' . ($winner->users->extension ?? '') ?? 'Unknown Candidate') }}
+                                        </p>
+                                        <p class="text-[#8B0000] text-[11px] sm:text-[12px] font-semibold text-center tracking-wider">
+                                            {{ strtoupper($position) }}
+                                            @if(!$isPresident && !$isGovernor && $winner->users->programMajor)
+                                                - {{ strtoupper($winner->users->programMajor->name ?? '') }}
+                                            @endif
+                                        </p>
                                     </div>
-                                </div>
-                                <p class="text-[12px] sm:text-[14px] font-bold text-center text-black">
-                                    {{ strtoupper(($winner->users->first_name ?? '') . ' ' . ($winner->users->middle_initial ?? '') . ' ' . ($winner->users->last_name ?? '') . ' ' . ($winner->users->extension ?? '') ?? 'Unknown Candidate') }}
-                                </p>
-                                <p class="text-[#8B0000] text-[11px] sm:text-[12px] font-semibold text-center tracking-wider">
-                                    {{ strtoupper($position) }}
-                                    @if(!$isPresident && !$isGovernor && $winner->users->programMajor)
-                                        - {{ strtoupper($winner->users->programMajor->name ?? '') }}
-                                    @endif
-                                </p>
+                                @endforeach
                             </div>
                         @endforeach
                     </div>
