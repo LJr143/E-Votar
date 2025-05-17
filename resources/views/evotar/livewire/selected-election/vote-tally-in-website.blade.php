@@ -84,7 +84,7 @@
 
                         // Get position details
                         $position = \App\Models\Position::find($positionId);
-                        $positionWinnersCount = $position->number_of_winners ?? 1;
+                        $positionWinnersCount = $position->num_winners ?? 1;
 
                         // Calculate total votes for this position
                          $positionTotalVotes = DB::table('votes')
