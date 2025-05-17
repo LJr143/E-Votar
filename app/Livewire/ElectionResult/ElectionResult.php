@@ -465,12 +465,19 @@ class ElectionResult extends Component
                     })
                     ->with('users', 'users.programMajor')
                     ->withCount([
-                        'votes as votes_count' => function($query) {
+                        'votes as votes_count' => function ($query) {
                             $query->select(DB::raw('count(distinct user_id)'))
-                                ->where('votes.election_id', $this->latestElection->id);
+                                ->where('election_id', $this->latestElection->id)
+                                ->where('candidate_id', DB::raw('candidates.id')); // Explicitly tie votes to the candidate
                         }
                     ])
                     ->having('votes_count', '>', 0)
+                    ->when($this->search, function ($query) { // Example filter based on search term
+                        $query->whereHas('users', function ($q) {
+                            $q->where('first_name', 'like', '%' . $this->search . '%')
+                                ->orWhere('last_name', 'like', '%' . $this->search . '%');
+                        });
+                    })
                     ->orderByDesc('votes_count');
 
                 if ($separateByMajor) {
