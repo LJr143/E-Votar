@@ -298,7 +298,17 @@
                                                     })
                                                     ->count();
 
-                                                $totalCouncilVotes = $councilCandidates->sum('votes_count') + $totalCouncilAbstain;
+                                               $totalCouncilVotes = \Illuminate\Support\Facades\DB::table('votes')
+                                                    ->join('candidates', 'votes.candidate_id', '=', 'candidates.id')
+                                                    ->join('users', 'candidates.user_id', '=', 'users.id')
+                                                    ->join('programs', 'users.program_id', '=', 'programs.id')
+                                                    ->whereIn('candidates.id', $councilCandidates->pluck('id'))
+                                                    ->where('votes.election_id', $selectedElection)
+                                                    ->distinct('votes.user_id')
+                                                    ->count('votes.user_id');
+
+                                                // Add abstentions
+                                                $totalCouncilVotes += $totalCouncilAbstain;
                                             @endphp
 
                                                 <!-- Council Header -->
