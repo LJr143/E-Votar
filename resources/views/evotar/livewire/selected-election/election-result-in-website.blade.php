@@ -59,10 +59,10 @@
                     @endphp
 
                     @foreach($chunks as $chunk)
-                        <div class="flex justify-center gap-6 flex-wrap mb-10">
+                        <div class="flex justify-center gap-8 flex-wrap mb-10">
                             @foreach($chunk as $position)
                                 @foreach($winners[$position] as $winner)
-                                    <div class="flex flex-col items-center w-[140px]">
+                                    <div class="flex flex-col items-center w-[160px]">
                                         <div class="relative rounded-full p-[3px] bg-gradient-to-r from-[#D4AF37] to-[#8B0000] mb-3">
                                             <div class="relative rounded-full overflow-hidden w-[120px] h-[120px]">
                                                 <div class="absolute top-1 left-1 right-1 bottom-1 rounded-full bg-white"></div>
