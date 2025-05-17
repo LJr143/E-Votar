@@ -87,18 +87,18 @@
                         $positionWinnersCount = $position->number_of_winners ?? 1;
 
                         // Calculate total votes for this position
-                        $positionTotalVotes = DB::table('votes')
-                            ->where('election_id', $this->selectedElection)
-                            ->where('position_id', $positionId)
-                             ->distinct('user_id')
-                             ->count('user_id');
+                         $positionTotalVotes = DB::table('votes')
+                             ->join('users', 'votes.user_id', '=', 'users.id')
+                                    ->join('programs', 'users.program_id', '=', 'programs.id')
+                                    ->where('position_id', $positionId)
+                                    ->where('votes.election_id', $this->selectedElection)
+                                    ->where('programs.council_id', $council->id)
+                                    ->where('users.program_id', $major->program_id)
+                                    ->distinct('votes.user_id')
+                                    ->count('votes.user_id');
 
                         // Calculate abstain votes
-                        $positionAbstainCount = \App\Models\AbstainVote::where('election_id', $this->selectedElection)
-                            ->where('position_id', $positionId)
-                             ->distinct('user_id')
-                             ->count('user_id');
-
+                        $positionAbstainCount = $totalVoterVoted - $this->positionTotalVotes;
                         // For multiple winners, calculate partial abstentions
                         if ($positionWinnersCount > 1) {
                             $distinctVoters = DB::table('votes')
@@ -130,7 +130,8 @@
                             Total Abstentions: Calculated per major below
                         @else
                             Total Abstentions: {{ number_format($positionAbstainCount) }}
-                            ({{ $totalVoterVoted > 0 ? number_format(($positionAbstainCount/$totalVoterVoted)*100, 1) : 0 }}%)
+                            ({{ $totalVoterVoted > 0 ? number_format(($positionAbstainCount/$totalVoterVoted)*100, 1) : 0 }}
+                            %)
                             @if($positionWinnersCount > 1)
                                 <span class="text-xs">(includes partial abstentions)</span>
                             @endif
@@ -215,23 +216,27 @@
                                     </h4>
 
                                     @if(count($majorStats[$major->id]['candidates']) > 0)
-                                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                                        <div
+                                            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                                             @foreach($majorStats[$major->id]['candidates'] as $candidateData)
                                                 @php
                                                     $candidate = $candidateData['candidate'];
                                                 @endphp
-                                                <div class="border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
+                                                <div
+                                                    class="border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
                                                     <!-- Vote Percentage Bar -->
                                                     <div class="bg-gray-100 w-full h-2">
-                                                        <div class="bg-green-500 h-2" style="width: {{ $candidateData['percentage'] }}%"></div>
+                                                        <div class="bg-green-500 h-2"
+                                                             style="width: {{ $candidateData['percentage'] }}%"></div>
                                                     </div>
 
                                                     <!-- Candidate Info -->
                                                     <div class="p-4">
                                                         <div class="flex justify-center mb-3">
-                                                            <img class="w-20 h-20 rounded-full object-cover border-2 border-gray-300"
-                                                                 src="{{ $candidate->users->profile_photo_path ? asset('storage/'.$candidate->users->profile_photo_path) : asset('storage/assets/profile/default.jpg') }}"
-                                                                 alt="Candidate photo">
+                                                            <img
+                                                                class="w-20 h-20 rounded-full object-cover border-2 border-gray-300"
+                                                                src="{{ $candidate->users->profile_photo_path ? asset('storage/'.$candidate->users->profile_photo_path) : asset('storage/assets/profile/default.jpg') }}"
+                                                                alt="Candidate photo">
                                                         </div>
 
                                                         <h4 class="text-center font-bold text-gray-800">
@@ -243,7 +248,8 @@
                                                         </p>
 
                                                         <div class="text-center mb-2">
-                                        <span class="inline-block bg-green-100 text-black font-semibold text-xs px-2 py-1 rounded">
+                                        <span
+                                            class="inline-block bg-green-100 text-black font-semibold text-xs px-2 py-1 rounded">
                                             {{ number_format($candidateData['votes']) }} votes
                                             ({{ number_format($candidateData['percentage'], 1) }}%)
                                         </span>
@@ -264,7 +270,8 @@
 
                                                         @if($candidate->description)
                                                             <div class="border-t border-gray-100 pt-3">
-                                                                <p class="text-[11px] font-semibold text-gray-500 text-center mb-1">ADVOCACY</p>
+                                                                <p class="text-[11px] font-semibold text-gray-500 text-center mb-1">
+                                                                    ADVOCACY</p>
                                                                 <p class="text-[10px] text-gray-700 italic text-center">
                                                                     "{{ $candidate->description }}"
                                                                 </p>
@@ -304,7 +311,8 @@
                                     $votePercentage = $totalVoterVoted > 0 ? ($candidateVoteCount/$totalVoterVoted)*100 : 0;
                                     $abstainCountPerCandidate = $totalVoterVoted - $candidateVoteCount;
                                 @endphp
-                                <div class="border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
+                                <div
+                                    class="border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
                                     <!-- Vote Percentage Bar -->
                                     <div class="bg-gray-100 w-full h-2">
                                         <div class="bg-green-500 h-2" style="width: {{ $votePercentage }}%"></div>
@@ -327,7 +335,8 @@
                                         </p>
 
                                         <div class="text-center mb-2">
-                                            <span class="inline-block bg-green-100 text-black font-semibold text-xs px-2 py-1 rounded">
+                                            <span
+                                                class="inline-block bg-green-100 text-black font-semibold text-xs px-2 py-1 rounded">
                                                 {{ number_format($candidateVoteCount) }} votes
                                                 ({{ number_format($votePercentage, 1) }}%)
                                             </span>
@@ -343,7 +352,8 @@
 
                                         @if($candidate->description)
                                             <div class="border-t border-gray-100 pt-3">
-                                                <p class="text-[11px] font-semibold text-gray-500 text-center mb-1">ADVOCACY</p>
+                                                <p class="text-[11px] font-semibold text-gray-500 text-center mb-1">
+                                                    ADVOCACY</p>
                                                 <p class="text-[10px] text-gray-700 italic text-center">
                                                     "{{ $candidate->description }}"
                                                 </p>
@@ -377,12 +387,12 @@
             slidesPerView: 1,
             spaceBetween: 16,
             grabCursor: true,
-            pagination: { el: '.swiper-pagination', clickable: true },
-            navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+            pagination: {el: '.swiper-pagination', clickable: true},
+            navigation: {nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev'},
             breakpoints: {
-                640: { slidesPerView: 2 },
-                768: { slidesPerView: 3 },
-                1024: { slidesPerView: 4 },
+                640: {slidesPerView: 2},
+                768: {slidesPerView: 3},
+                1024: {slidesPerView: 4},
             },
         });
 
@@ -390,12 +400,12 @@
             slidesPerView: 1,
             spaceBetween: 16,
             grabCursor: true,
-            pagination: { el: '.swiper-pagination', clickable: true },
-            navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+            pagination: {el: '.swiper-pagination', clickable: true},
+            navigation: {nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev'},
             breakpoints: {
-                640: { slidesPerView: 2 },
-                768: { slidesPerView: 3 },
-                1024: { slidesPerView: 4 },
+                640: {slidesPerView: 2},
+                768: {slidesPerView: 3},
+                1024: {slidesPerView: 4},
             },
         });
     });
@@ -408,12 +418,12 @@
                 slidesPerView: 1,
                 spaceBetween: 16,
                 grabCursor: true,
-                pagination: { el: '.swiper-pagination', clickable: true },
-                navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+                pagination: {el: '.swiper-pagination', clickable: true},
+                navigation: {nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev'},
                 breakpoints: {
-                    640: { slidesPerView: 2 },
-                    768: { slidesPerView: 3 },
-                    1024: { slidesPerView: 4 },
+                    640: {slidesPerView: 2},
+                    768: {slidesPerView: 3},
+                    1024: {slidesPerView: 4},
                 },
             });
         });
