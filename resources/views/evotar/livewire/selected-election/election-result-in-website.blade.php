@@ -3,24 +3,59 @@
         @keyframes shine {
             to { background-position: 200% center; }
         }
-        .pyramid-container {
+        .org-chart {
             display: flex;
             flex-direction: column;
             align-items: center;
             width: 100%;
+            margin-bottom: 2rem;
         }
-        .pyramid-level {
+        .org-level {
             display: flex;
             justify-content: center;
-            gap: 2rem;
-            margin-bottom: 1.5rem;
             width: 100%;
+            margin-bottom: 1.5rem;
         }
-        .candidate-card {
+        .org-node {
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-width: 140px;
+            position: relative;
+            margin: 0 1.5rem;
+        }
+        .org-node.leader {
+            margin-bottom: 2.5rem;
+        }
+        .org-node::after {
+            content: '';
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 25px;
+            background: #8B0000;
+        }
+        .org-node.leader::after {
+            display: none;
+        }
+        .org-children {
+            display: flex;
+            justify-content: center;
+            position: relative;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+        .org-children::before {
+            content: '';
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            right: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 2px;
+            background: #8B0000;
         }
         .photo-frame {
             position: relative;
@@ -28,6 +63,7 @@
             padding: 3px;
             background: linear-gradient(to right, #D4AF37, #8B0000);
             margin-bottom: 0.75rem;
+            z-index: 1;
         }
         .photo-container {
             position: relative;
@@ -49,18 +85,13 @@
             border-radius: 50%;
             background: white;
         }
-        .candidate-photo {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            position: relative;
-        }
         .position-title {
             text-align: center;
-            font-size: 1.25rem;
+            font-size: 1.5rem;
             font-weight: bold;
             color: #8B0000;
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
+            text-transform: uppercase;
         }
     </style>
 
@@ -111,70 +142,105 @@
                 @if(empty($winners))
                     <p class="text-center">No winners data available.</p>
                 @else
-                    <!-- Pyramid Layout for Winners -->
+                    <!-- Organizational Chart Layout -->
                     @foreach($winners as $position => $candidates)
                         @php
                             $isPresident = strtolower($position) === 'president';
                             $isGovernor = strtolower($position) === 'governor';
 
-                            // Create specific pyramid levels
-                            $levels = [];
-                            $total = count($candidates);
-
-                            // Level 1: 1 candidate
-                            if ($total >= 1) {
-                                $levels[] = array_slice($candidates, 0, 1);
-                            }
-
-                            // Level 2: 3 candidates
-                            if ($total >= 2) {
-                                $levels[] = array_slice($candidates, 1, 3);
-                            }
-
-                            // Level 3: 4 candidates
-                            if ($total >= 5) {
-                                $levels[] = array_slice($candidates, 4, 4);
-                            }
-
-                            // Add remaining candidates if any
-                            if ($total > 8) {
-                                $levels[] = array_slice($candidates, 8);
-                            }
+                            // Get the leader (first candidate)
+                            $leader = $candidates[0] ?? null;
+                            // Get next 3 as executives
+                            $executives = array_slice($candidates, 1, 3);
+                            // Get remaining as members
+                            $members = array_slice($candidates, 4);
                         @endphp
 
-                        <div class="mb-12">
+                        <div class="mb-16">
                             <h2 class="position-title">
                                 {{ strtoupper($position) }}
                             </h2>
 
-                            <div class="pyramid-container">
-                                @foreach($levels as $levelIndex => $levelCandidates)
-                                    <div class="pyramid-level" style="
-                                        @if($levelIndex == 0) justify-content: center;
-                                        @elseif($levelIndex == 1) justify-content: space-between; padding: 0 10%;
-                                        @else justify-content: space-evenly; @endif">
-                                        @foreach($levelCandidates as $winner)
-                                            <div class="candidate-card">
-                                                <div class="photo-frame">
-                                                    <div class="photo-container {{ $isPresident || $isGovernor ? 'large' : '' }}">
-                                                        <div class="photo-bg"></div>
-                                                        <img src="{{ asset($winner->users->profile_photo_path ? 'storage/' . $winner->users->profile_photo_path : 'storage/assets/profile/default.jpg') }}"
-                                                             alt="candidate profile"
-                                                             class="candidate-photo">
-                                                    </div>
+                            <div class="org-chart">
+                                @if($leader)
+                                    <!-- Leader Level -->
+                                    <div class="org-level">
+                                        <div class="org-node leader">
+                                            <div class="photo-frame">
+                                                <div class="photo-container {{ $isPresident || $isGovernor ? 'large' : '' }}">
+                                                    <div class="photo-bg"></div>
+                                                    <img src="{{ asset($leader->users->profile_photo_path ? 'storage/' . $leader->users->profile_photo_path : 'storage/assets/profile/default.jpg') }}"
+                                                         alt="leader profile"
+                                                         class="w-full h-full object-cover relative">
                                                 </div>
-                                                <p class="text-sm sm:text-base font-bold text-center text-black mb-1">
-                                                    {{ strtoupper(($winner->users->first_name ?? '') . ' ' . ($winner->users->middle_initial ?? '') . ' ' . ($winner->users->last_name ?? '') . ' ' . ($winner->users->extension ?? '') ?? 'Unknown Candidate') }}
-                                                </p>
-                                                @if(!$isPresident && !$isGovernor && $winner->users->programMajor)
-                                                    <p class="text-xs sm:text-sm text-center text-gray-600">
-                                                        {{ strtoupper($winner->users->programMajor->name ?? '') }}
-                                                    </p>
-                                                @endif
                                             </div>
-                                        @endforeach
+                                            <p class="text-[12px] sm:text-[14px] font-bold text-center text-black">
+                                                {{ strtoupper(($leader->users->first_name ?? '') . ' ' . ($leader->users->middle_initial ?? '') . ' ' . ($leader->users->last_name ?? '') . ' ' . ($leader->users->extension ?? '') ?? 'Unknown Candidate') }}
+                                            </p>
+                                            <p class="text-[#8B0000] text-[11px] sm:text-[12px] font-semibold text-center tracking-wider">
+                                                LEADER
+                                            </p>
+                                        </div>
                                     </div>
-                                @endforeach
+                                @endif
+
+                                @if(count($executives) > 0)
+                                    <!-- Executives Level -->
+                                    <div class="org-level">
+                                        <div class="org-children">
+                                            @foreach($executives as $executive)
+                                                <div class="org-node">
+                                                    <div class="photo-frame">
+                                                        <div class="photo-container">
+                                                            <div class="photo-bg"></div>
+                                                            <img src="{{ asset($executive->users->profile_photo_path ? 'storage/' . $executive->users->profile_photo_path : 'storage/assets/profile/default.jpg') }}"
+                                                                 alt="executive profile"
+                                                                 class="w-full h-full object-cover relative">
+                                                        </div>
+                                                    </div>
+                                                    <p class="text-[12px] sm:text-[14px] font-bold text-center text-black">
+                                                        {{ strtoupper(($executive->users->first_name ?? '') . ' ' . ($executive->users->middle_initial ?? '') . ' ' . ($executive->users->last_name ?? '') . ' ' . ($executive->users->extension ?? '') ?? 'Unknown Candidate') }}
+                                                    </p>
+                                                    <p class="text-[#8B0000] text-[11px] sm:text-[12px] font-semibold text-center tracking-wider">
+                                                        EXECUTIVE
+                                                        @if(!$isPresident && !$isGovernor && $executive->users->programMajor)
+                                                            - {{ strtoupper($executive->users->programMajor->name ?? '') }}
+                                                        @endif
+                                                    </p>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @endif
+
+                                @if(count($members) > 0)
+                                    <!-- Members Level -->
+                                    <div class="org-level">
+                                        <div class="org-children">
+                                            @foreach($members as $member)
+                                                <div class="org-node">
+                                                    <div class="photo-frame">
+                                                        <div class="photo-container">
+                                                            <div class="photo-bg"></div>
+                                                            <img src="{{ asset($member->users->profile_photo_path ? 'storage/' . $member->users->profile_photo_path : 'storage/assets/profile/default.jpg') }}"
+                                                                 alt="member profile"
+                                                                 class="w-full h-full object-cover relative">
+                                                        </div>
+                                                    </div>
+                                                    <p class="text-[12px] sm:text-[14px] font-bold text-center text-black">
+                                                        {{ strtoupper(($member->users->first_name ?? '') . ' ' . ($member->users->middle_initial ?? '') . ' ' . ($member->users->last_name ?? '') . ' ' . ($member->users->extension ?? '') ?? 'Unknown Candidate') }}
+                                                    </p>
+                                                    <p class="text-[#8B0000] text-[11px] sm:text-[12px] font-semibold text-center tracking-wider">
+                                                        MEMBER
+                                                        @if(!$isPresident && !$isGovernor && $member->users->programMajor)
+                                                            - {{ strtoupper($member->users->programMajor->name ?? '') }}
+                                                        @endif
+                                                    </p>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     @endforeach
