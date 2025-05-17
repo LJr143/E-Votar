@@ -2,14 +2,12 @@
 
 namespace App\Livewire\ElectionResult;
 
-use App\Exports\ElectionResultExport;
 use App\Models\Candidate;
 use App\Models\Council;
 use App\Models\Election;
 use App\Models\ElectionPosition;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
-use Maatwebsite\Excel\Facades\Excel;
 
 class ElectionResult extends Component
 {
@@ -30,6 +28,7 @@ class ElectionResult extends Component
 
     public function mount()
     {
+        $this->selectedElection = session('selectedElection');
         $this->elections = Election::with('campus', 'election_type')->get();
         if ($this->selectedElection) {
             $this->latestElection = Election::find($this->selectedElection);
@@ -393,14 +392,11 @@ class ElectionResult extends Component
 
     public function exportElectionResult()
     {
-        return Excel::download(new ElectionResultExport($this->search, $this->filter, $this->selectedElection), 'ELECTION_RESULT_' . strtoupper($this->latestElection->name) .'.xlsx');
-
+        // Implement export logic if needed
     }
 
     public function render()
     {
-        return view('evotar.livewire.election-result.election-result', [
-
-        ]);
+        return view('evotar.livewire.election-result.election-result');
     }
 }
