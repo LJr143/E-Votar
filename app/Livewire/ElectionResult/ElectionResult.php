@@ -337,7 +337,11 @@ class ElectionResult extends Component
             // Group candidates by council and major (if required)
             $candidatesByCouncil = Candidate::where('election_position_id', $position->id)
                 ->with('users.program.council')
-                ->withCount('votes')
+                ->withCount([
+                    'votes as votes_count' => function($query) {
+                        $query->select(DB::raw('count(distinct user_id)'));
+                    }
+                ])
                 ->having('votes_count', '>', 0)
                 ->get()
                 ->groupBy(function ($candidate) use ($councilPositionSettings) {
