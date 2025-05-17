@@ -91,8 +91,6 @@ class ElectionResultInWebsite extends Component
                     ->distinct('votes.user_id')
                     ->count('votes.user_id');
 
-            dd($totalVoterVoted);
-
             if (stripos($this->council->name, 'Student Council') !== false) {
                 $this->studentCouncilPositions->map(function ($position) use (&$candidatesByPosition, &$winnersByPosition, $election, $totalVoterVoted) {
                     $candidates = Candidate::where('election_id', $this->selectedElection)
@@ -177,8 +175,10 @@ class ElectionResultInWebsite extends Component
                         } else {
                             // Filter candidates with votes > 0 and at least 51% of total votes
                             $validCandidates = $candidates->filter(function ($candidate) use ($totalVoterVoted) {
+                                dd($candidate->votes_count);
                                 return $candidate->votes_count > 0 &&
                                     ($totalVoterVoted > 0 ? ($candidate->votes_count / $totalVoterVoted) >= 0.51 : false);
+
                             });
 
                             if ($validCandidates->isNotEmpty()) {
