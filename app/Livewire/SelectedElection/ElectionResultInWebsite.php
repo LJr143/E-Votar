@@ -125,7 +125,11 @@ class ElectionResultInWebsite extends Component
                         ->whereHas('election_positions.position', fn($q) => $q->where('id', $position->id))
                         ->whereHas('users.program', fn($q) => $q->where('council_id', $this->council->id))
                         ->with(['users.program', 'users.programMajor', 'partyLists'])
-                        ->withCount('votes')
+                        ->withCount([
+                            'votes as votes_count' => function($query) {
+                                $query->select(DB::raw('count(distinct user_id)'));
+                            }
+                        ])
                         ->get();
 
                     $candidatesByPosition[$position->name] = $candidates;
