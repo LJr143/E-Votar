@@ -289,7 +289,8 @@
                             $totalVotes = $positionId ? ($positionVotes[$positionId] ?? 0) : 0;
                             $abstentions = \App\Models\AbstainVote::where('election_id', $this->selectedElection)
                                 ->where('position_id', $positionId)
-                                ->count();
+                                ->distinct('user_id')
+                                 ->count('user_id');
 
                             // Calculate partial abstentions for multiple winners
                             $partialAbstentions = 0;
