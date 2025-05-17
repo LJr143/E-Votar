@@ -101,9 +101,9 @@
                         // For multiple winners, calculate partial abstentions
                         if ($positionWinnersCount > 1) {
                             $distinctVoters = DB::table('votes')
-                             ->join('users', 'votes.user_id', '=', 'users.id')
-                                ->where('election_id', $this->selectedElection)
-                                 ->where('position_id', $positionId)
+                              ->join('users', 'votes.user_id', '=', 'users.id')
+                                    ->join('programs', 'users.program_id', '=', 'programs.id')
+                                    ->where('position_id', $positionId)
                                     ->where('votes.election_id', $this->selectedElection)
                                     ->where('programs.council_id', $council->id)
                                     ->distinct('votes.user_id')
