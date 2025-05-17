@@ -179,7 +179,6 @@ class ElectionResultInWebsite extends Component
                         } else {
                             // Filter candidates with votes > 0 and at least 51% of total votes
                             $validCandidates = $candidates->filter(function ($candidate) use ($totalVoterVoted) {
-                                dd($candidate->votes_count);
                                 return $candidate->votes_count > 0 &&
                                     ($totalVoterVoted > 0 ? ($candidate->votes_count / $totalVoterVoted) >= 0.51 : false);
 
