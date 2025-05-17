@@ -257,6 +257,11 @@
                                     $abstainCountPerCandidate = $totalVoterVoted - $candidateVoteCount;
                                 @endphp
                                 <div class="border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
+                                    <div class="text-center mb-3">
+                                            <span class="inline-block bg-red-100 text-red-800 text-xs px-2 py-1 rounded">
+                                                {{ number_format($abstainCountPerCandidate) }} abstain
+                                            </span>
+                                    </div>
                                     <!-- Vote Percentage Bar -->
                                     <div class="bg-gray-100 w-full h-2">
                                         <div class="bg-green-500 h-2" style="width: {{ $votePercentage }}%"></div>
@@ -282,11 +287,6 @@
                                             <span class="inline-block bg-green-100 text-black font-semibold text-xs px-2 py-1 rounded">
                                                 {{ number_format($candidateVoteCount) }} votes
                                                 ({{ number_format($votePercentage, 1) }}%)
-                                            </span>
-                                        </div>
-                                        <div class="text-center mb-3">
-                                            <span class="inline-block bg-red-100 text-red-800 text-xs px-2 py-1 rounded">
-                                                {{ number_format($abstainCountPerCandidate) }} abstain
                                             </span>
                                         </div>
 
