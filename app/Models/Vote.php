@@ -15,6 +15,10 @@ class Vote extends Model
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
+    public function candidate(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Candidate::class, 'candidate_id', 'id');
+    }
     public function election(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Election::class, 'election_id', 'id');
