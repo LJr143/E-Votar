@@ -9,6 +9,7 @@ use App\Models\Council;
 use App\Models\Election;
 use App\Models\ElectionPosition;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Maatwebsite\Excel\Facades\Excel;
 
