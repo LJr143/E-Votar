@@ -1,3 +1,4 @@
+@php use Illuminate\Support\Facades\DB; @endphp
 <div class="flex flex-col items-start space-y-4 w-full px-0">
     <div class="hidden sm:block mb-2">
         <div class="border-b border-gray-200">
@@ -290,7 +291,16 @@
                                         @foreach($candidates->where('election_positions.position.electionType.name', 'Local Council Election')->groupBy('users.program.council.name') as $councilName => $councilCandidates)
                                             @php
                                                 $councilId = $councilCandidates->first()->users->program->council->id;
-                                                $totalCouncilVotes = $councilVoteCounts[$councilId] ?? 0;
+                                                $programId = $councilCandidates->first()->users->program_id;
+
+                                                // Get distinct voters count for this council's program
+                                                $totalCouncilVotes = DB::table('votes')
+                                                    ->join('users', 'users.id', '=', 'votes.user_id')
+                                                    ->where('users.program_id', $programId)
+                                                    ->where('votes.election_id', $selectedElection)
+                                                    ->distinct('votes.user_id')
+                                                    ->count('votes.user_id');
+
                                                 $totalCouncilAbstain = \App\Models\AbstainVote::where('election_id', $selectedElection)
                                                     ->whereHas('position', function($q) {
                                                         $q->whereHas('electionType', function($q) {
