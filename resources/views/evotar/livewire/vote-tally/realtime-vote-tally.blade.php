@@ -428,7 +428,7 @@
                                                                     <div
                                                                         class="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent opacity-30"></div>
                                                                     <img class="h-full w-full object-contain"
-                                                                         src="{{ asset($candidate->users->profile_photo_path ?? 'storage/assets/profile/default.jpg') }}"
+                                                                         src="{{ $candidate->users->profile_photo_path ? asset('storage/'.$candidate->users->profile_photo_path) : asset('storage/assets/profile/default.jpg') }}"
                                                                          alt="Candidate photo">
                                                                     <div class="absolute bottom-0 left-0 p-3">
                                                                 <span
