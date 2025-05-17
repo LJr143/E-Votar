@@ -124,41 +124,37 @@ class RealtimeVoteTally extends Component
                 $query->where('election_id', $election->id)
                     ->withCount([
                         'votes as distinct_votes_count' => function($q) use ($election) {
-                            $q->select(DB::raw('COUNT(DISTINCT votes.user_id)'))
-                                ->where('votes.election_id', $election->id);
+                            $q->where('votes.election_id', $election->id);
                         }
                     ]);
             }])
             ->get();
 
         foreach ($positions as $position) {
-            // Sum distinct votes from all candidates for this position
             $this->positionVotes[$position->position_id] = $position->candidates->sum('distinct_votes_count');
 
-            // Calculate abstentions for this position
             $this->positionAbstentions[$position->position_id] = max(
                 0,
                 $this->totalVoterVoted - ($this->positionVotes[$position->position_id] ?? 0)
             );
         }
 
-        // Total abstentions is sum of all position abstentions
         $this->totalAbstentions = array_sum($this->positionAbstentions);
     }
 
     public function fetchCandidates(): void
     {
-        $query = Candidate::with([
-            'users',
-            'users.program.council',
-            'elections',
-            'election_positions.position.electionType',
-            'partyLists'
-        ])
+        $query = Candidate::query()
+            ->with([
+                'users',
+                'users.program.council',
+                'elections',
+                'election_positions.position.electionType',
+                'partyLists'
+            ])
             ->withCount([
                 'votes as votes_count' => function($query) {
-                    $query->select(DB::raw('COUNT(DISTINCT votes.user_id)'))
-                        ->where('votes.election_id', $this->selectedElection);
+                    $query->where('votes.election_id', $this->selectedElection);
                 }
             ])
             ->whereHas('elections', function($q) {
