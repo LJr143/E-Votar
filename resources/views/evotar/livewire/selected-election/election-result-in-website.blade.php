@@ -3,25 +3,31 @@
         @keyframes shine {
             to { background-position: 200% center; }
         }
-        .pyramid-row {
-            display: flex;
-            justify-content: center;
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        .candidate-card {
-            flex: 0 0 auto;
+        .pyramid-container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            max-width: 160px;
+            width: 100%;
+        }
+        .pyramid-level {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            width: 100%;
+        }
+        .candidate-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 140px;
         }
         .photo-frame {
             position: relative;
             border-radius: 50%;
             padding: 3px;
             background: linear-gradient(to right, #D4AF37, #8B0000);
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
         }
         .photo-container {
             position: relative;
@@ -49,12 +55,19 @@
             object-fit: cover;
             position: relative;
         }
+        .position-title {
+            text-align: center;
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #8B0000;
+            margin-bottom: 1.5rem;
+        }
     </style>
 
     <div class="min-h-screen font-poppins text-black p-2 sm:p-4 bg-white">
-        <div class="container mx-auto max-w-4xl">
+        <div class="container mx-auto max-w-6xl">
             <div class="p-4">
-                <!-- Header Section (same as your original) -->
+                <!-- Header Section -->
                 <div class="mb-6 sm:mb-8 text-center">
                     <div class="flex justify-center gap-3 sm:gap-6 mb-4 sm:mb-6">
                         <img src="{{ asset('storage/assets/logo/tsc_logo.png') }}" alt="TSC Logo" class="h-12 w-12 sm:h-16 sm:w-16">
@@ -104,28 +117,43 @@
                             $isPresident = strtolower($position) === 'president';
                             $isGovernor = strtolower($position) === 'governor';
 
-                            // Create pyramid rows
-                            $rows = [];
-                            $candidatesCount = count($candidates);
-                            $rowSize = 1;
-                            $index = 0;
+                            // Create specific pyramid levels
+                            $levels = [];
+                            $total = count($candidates);
 
-                            while ($index < $candidatesCount) {
-                                $rows[] = array_slice($candidates, $index, $rowSize);
-                                $index += $rowSize;
-                                $rowSize++;
+                            // Level 1: 1 candidate
+                            if ($total >= 1) {
+                                $levels[] = array_slice($candidates, 0, 1);
+                            }
+
+                            // Level 2: 3 candidates
+                            if ($total >= 2) {
+                                $levels[] = array_slice($candidates, 1, 3);
+                            }
+
+                            // Level 3: 4 candidates
+                            if ($total >= 5) {
+                                $levels[] = array_slice($candidates, 4, 4);
+                            }
+
+                            // Add remaining candidates if any
+                            if ($total > 8) {
+                                $levels[] = array_slice($candidates, 8);
                             }
                         @endphp
 
                         <div class="mb-12">
-                            <h2 class="text-center text-xl font-bold mb-6 text-[#8B0000]">
+                            <h2 class="position-title">
                                 {{ strtoupper($position) }}
                             </h2>
 
                             <div class="pyramid-container">
-                                @foreach($rows as $row)
-                                    <div class="pyramid-row">
-                                        @foreach($row as $winner)
+                                @foreach($levels as $levelIndex => $levelCandidates)
+                                    <div class="pyramid-level" style="
+                                        @if($levelIndex == 0) justify-content: center;
+                                        @elseif($levelIndex == 1) justify-content: space-between; padding: 0 10%;
+                                        @else justify-content: space-evenly; @endif">
+                                        @foreach($levelCandidates as $winner)
                                             <div class="candidate-card">
                                                 <div class="photo-frame">
                                                     <div class="photo-container {{ $isPresident || $isGovernor ? 'large' : '' }}">
