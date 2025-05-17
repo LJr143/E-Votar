@@ -408,7 +408,11 @@ class ElectionResult extends Component
                         $q->where('id', $program->id);
                     })
                     ->with('users')
-                    ->withCount('votes')
+                    ->withCount([
+                        'votes as votes_count' => function($query) {
+                            $query->select(DB::raw('count(distinct user_id)'));
+                        }
+                    ])
                     ->having('votes_count', '>', 0)
                     ->orderByDesc('votes_count');
 
