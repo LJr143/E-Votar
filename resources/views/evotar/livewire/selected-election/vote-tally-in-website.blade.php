@@ -130,13 +130,10 @@
                     <span class="inline-block bg-red-100 text-red-800 text-xs px-2 py-1 rounded">
                         @if($separateByMajor)
                             Total Abstentions: Calculated per major below
-                        @else
+                        @elseif(!$positionWinnersCount > 1)
                             Total Abstentions: {{ number_format($positionAbstainCount) }}
                             ({{ $totalVoterVoted > 0 ? number_format(($positionAbstainCount/$totalVoterVoted)*100, 1) : 0 }}
                             %)
-                            @if($positionWinnersCount > 1)
-                                <span class="text-xs">(includes partial abstentions)</span>
-                            @endif
                         @endif
                     </span>
                     </div>
