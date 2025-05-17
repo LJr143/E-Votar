@@ -6,8 +6,8 @@ use App\Models\Candidate;
 use App\Models\Council;
 use App\Models\Election;
 use App\Models\program_major;
-use App\Models\ProgramMajor;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class ElectionResultInWebsite extends Component
@@ -82,8 +82,14 @@ class ElectionResultInWebsite extends Component
         if ($this->selectedElection) {
             $election = Election::find($this->selectedElection);
 
+            // Get total voters who voted in this election
+            $totalVoterVoted = DB::table('votes')
+                ->where('election_id', $this->selectedElection)
+                ->distinct('user_id')
+                ->count('user_id');
+
             if (stripos($this->council->name, 'Student Council') !== false) {
-                $this->studentCouncilPositions->map(function ($position) use (&$candidatesByPosition, &$winnersByPosition, $election) {
+                $this->studentCouncilPositions->map(function ($position) use (&$candidatesByPosition, &$winnersByPosition, $election, $totalVoterVoted) {
                     $candidates = Candidate::where('election_id', $this->selectedElection)
                         ->whereHas('election_positions.position', function ($query) use ($position) {
                             $query->where('id', $position->id);
@@ -95,9 +101,10 @@ class ElectionResultInWebsite extends Component
                     $candidatesByPosition[$position->name] = $candidates;
 
                     if ($election->hasEnded() && $candidates->isNotEmpty()) {
-                        // Filter candidates with votes > 0
-                        $validCandidates = $candidates->filter(function ($candidate) {
-                            return $candidate->votes_count > 0;
+                        // Filter candidates with votes > 0 and at least 51% of total votes
+                        $validCandidates = $candidates->filter(function ($candidate) use ($totalVoterVoted) {
+                            return $candidate->votes_count > 0 &&
+                                ($totalVoterVoted > 0 ? ($candidate->votes_count / $totalVoterVoted) >= 0.51 : false);
                         });
 
                         if ($validCandidates->isNotEmpty()) {
@@ -110,7 +117,7 @@ class ElectionResultInWebsite extends Component
                     return $position;
                 });
             } else {
-                $this->localCouncilPositions->map(function ($position) use (&$candidatesByPosition, &$winnersByPosition, $election) {
+                $this->localCouncilPositions->map(function ($position) use (&$candidatesByPosition, &$winnersByPosition, $election, $totalVoterVoted) {
                     $candidates = Candidate::where('election_id', $this->selectedElection)
                         ->whereHas('election_positions.position', fn($q) => $q->where('id', $position->id))
                         ->whereHas('users.program', fn($q) => $q->where('council_id', $this->council->id))
@@ -118,41 +125,58 @@ class ElectionResultInWebsite extends Component
                         ->withCount('votes')
                         ->get();
 
+                    $candidatesByPosition[$position->name] = $candidates;
+
                     if ($election->hasEnded() && $candidates->isNotEmpty()) {
-                        // Filter candidates with votes > 0
-                        $validCandidates = $candidates->filter(function ($candidate) {
-                            return $candidate->votes_count > 0;
-                        });
+                        $settings = DB::table('council_position_settings')
+                            ->where('position_id', $position->id)
+                            ->where('council_id', $this->council->id)
+                            ->first();
 
-                        if ($validCandidates->isNotEmpty()) {
-                            $settings = \DB::table('council_position_settings')
-                                ->where('position_id', $position->id)
-                                ->where('council_id', $this->council->id)
-                                ->first();
+                        $separateByMajor = $settings && $settings->separate_by_major;
+                        $numWinners = $position->num_winners ?? 1;
 
-                            $separateByMajor = $settings && $settings->separate_by_major;
-                            $numWinners = $position->num_winners ?? 1;
+                        if ($separateByMajor) {
+                            $majors = program_major::whereHas('program', fn($q) => $q->where('council_id', $this->council->id))
+                                ->distinct()
+                                ->pluck('id');
 
-                            if ($separateByMajor) {
-                                $majors = program_major::whereHas('program', fn($q) => $q->where('council_id', $this->council->id))
-                                    ->distinct()
-                                    ->pluck('id');
+                            $winners = [];
+                            foreach ($majors as $majorId) {
+                                // Get total voters who voted in this major
+                                $majorVoterCount = DB::table('votes')
+                                    ->join('users', 'votes.user_id', '=', 'users.id')
+                                    ->where('votes.election_id', $this->selectedElection)
+                                    ->where('users.program_major_id', $majorId)
+                                    ->distinct('votes.user_id')
+                                    ->count('votes.user_id');
 
-                                $winners = [];
-                                foreach ($majors as $majorId) {
-                                    $majorCandidates = $validCandidates->filter(function ($candidate) use ($majorId) {
-                                        return $candidate->users->programMajor->id === $majorId;
-                                    });
+                                $majorCandidates = $candidates->filter(function ($candidate) use ($majorId) {
+                                    return $candidate->users->program_major_id === $majorId;
+                                });
 
-                                    if ($majorCandidates->isNotEmpty()) {
-                                        $majorWinners = $majorCandidates->sortByDesc('votes_count')->take($numWinners)->all();
-                                        $winners = array_merge($winners, $majorWinners);
-                                    }
+                                // Filter candidates with votes > 0 and at least 51% of major votes
+                                $validMajorCandidates = $majorCandidates->filter(function ($candidate) use ($majorVoterCount) {
+                                    return $candidate->votes_count > 0 &&
+                                        ($majorVoterCount > 0 ? ($candidate->votes_count / $majorVoterCount) >= 0.51 : false);
+                                });
+
+                                if ($validMajorCandidates->isNotEmpty()) {
+                                    $majorWinners = $validMajorCandidates->sortByDesc('votes_count')->take($numWinners)->all();
+                                    $winners = array_merge($winners, $majorWinners);
                                 }
-                                if (!empty($winners)) {
-                                    $winnersByPosition[$position->name] = $winners;
-                                }
-                            } else {
+                            }
+                            if (!empty($winners)) {
+                                $winnersByPosition[$position->name] = $winners;
+                            }
+                        } else {
+                            // Filter candidates with votes > 0 and at least 51% of total votes
+                            $validCandidates = $candidates->filter(function ($candidate) use ($totalVoterVoted) {
+                                return $candidate->votes_count > 0 &&
+                                    ($totalVoterVoted > 0 ? ($candidate->votes_count / $totalVoterVoted) >= 0.51 : false);
+                            });
+
+                            if ($validCandidates->isNotEmpty()) {
                                 $winners = $validCandidates->sortByDesc('votes_count')->take($numWinners)->all();
                                 if (!empty($winners)) {
                                     $winnersByPosition[$position->name] = $winners;
