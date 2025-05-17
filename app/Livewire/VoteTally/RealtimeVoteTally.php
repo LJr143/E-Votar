@@ -43,7 +43,7 @@ class RealtimeVoteTally extends Component
         if (!$this->selectedElection) return;
 
         // Get all councils with candidates in this election
-        $councils = Council::whereHas('programs.users.candidates.elections', function($q) {
+        $councils = Council::whereHas('program.users.candidates.elections', function($q) {
             $q->where('elections.id', $this->selectedElection);
         })->get();
 
