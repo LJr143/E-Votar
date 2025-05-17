@@ -291,12 +291,11 @@
                                             @php
                                                 // Calculate total abstain votes for this entire council
                                                 $totalCouncilAbstain = \App\Models\AbstainVote::where('election_id', $selectedElection)
-                                                    ->whereHas('position', function($q) {
-                                                        $q->whereHas('electionType', function($q) {
-                                                            $q->where('name', 'Local Council Election');
-                                                        });
+                                                    ->whereHas('position.electionType', function($q) {
+                                                        $q->where('name', 'Local Council Election');
                                                     })
-                                                    ->count();
+                                                    ->distinct('user_id')
+                                                    ->count('user_id');
 
                                                 $totalCouncilVotes = $councilCandidates->sum('votes_count') + $totalCouncilAbstain;
                                             @endphp
