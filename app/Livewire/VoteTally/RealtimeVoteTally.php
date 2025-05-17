@@ -233,6 +233,7 @@ class RealtimeVoteTally extends Component
                 })
                 ->exists();
 
+
             $this->hasLocalCouncilPositions = ElectionPosition::where('election_id', $this->latestElection->id)
                 ->whereHas('position.electionType', function ($q) {
                     $q->where('name', 'Local Council Election');
