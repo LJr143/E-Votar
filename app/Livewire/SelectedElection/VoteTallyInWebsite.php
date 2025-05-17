@@ -64,6 +64,7 @@ class VoteTallyInWebsite extends Component
         $baseVoterQuery = User::whereHas('roles', function($q) {
             $q->where('name', '!=', 'faculty');
         })
+            ->orWhereDoesntHave('roles')
             ->when(!str($this->council->name)->contains('Student Council'), function($query) {
                 $query->whereHas('program', function($q) {
                     $q->where('council_id', $this->council->id);
