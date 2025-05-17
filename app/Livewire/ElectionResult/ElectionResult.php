@@ -399,22 +399,8 @@ class ElectionResult extends Component
 
     public function render()
     {
-        $voteTally = $this->getVoteTally();
         return view('evotar.livewire.election-result.election-result', [
-            'candidates' => $this->candidates,
-            'elections' => $this->elections,
-            'selectedElectionName' => $this->selectedElectionName,
-            'selectedElectionCampus' => $this->selectedElectionCampus,
-            'totalVoters' => $this->totalVoters,
-            'totalVoterVoted' => $this->totalVoterVoted,
-            'councils' => $this->councils,
-            'latestElection' => $this->latestElection,
-            'hasStudentCouncilPositions' => $this->hasStudentCouncilPositions,
-            'hasLocalCouncilPositions' => $this->hasLocalCouncilPositions,
-            'studentCouncilWinners' => $this->studentCouncilWinners,
-            'localCouncilWinners' => $this->localCouncilWinners,
-            'abstainCounts' => $this->abstainCounts ?? collect(),
-            'voteTally' => $voteTally,
+
         ]);
     }
 }
