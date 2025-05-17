@@ -91,6 +91,8 @@ class ElectionResultInWebsite extends Component
                     ->distinct('votes.user_id')
                     ->count('votes.user_id');
 
+            dd($totalVoterVoted);
+
             if (stripos($this->council->name, 'Student Council') !== false) {
                 $this->studentCouncilPositions->map(function ($position) use (&$candidatesByPosition, &$winnersByPosition, $election, $totalVoterVoted) {
                     $candidates = Candidate::where('election_id', $this->selectedElection)
