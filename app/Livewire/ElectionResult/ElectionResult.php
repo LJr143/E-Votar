@@ -227,7 +227,7 @@ class ElectionResult extends Component
                         ->join('candidates', 'votes.candidate_id', '=', 'candidates.id')
                         ->join('users', 'candidates.user_id', '=', 'users.id')
                         ->join('programs', 'users.program_id', '=', 'programs.id')
-//                        ->where('candidates.election_position_id', $position->id)
+                        ->where('candidates.election_position_id', $position->id)
                         ->where('votes.election_id', $this->latestElection->id)
                         ->where('programs.council_id', $council->id)
                         ->distinct('votes.user_id')
