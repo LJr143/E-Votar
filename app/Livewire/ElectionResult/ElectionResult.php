@@ -438,7 +438,7 @@ class ElectionResult extends Component
                 $positionName = $position->position->name;
                 $numWinners = $position->position->num_winners ?? 1;
 
-                // Get total votes for this position within this council
+                // Get total votes for this position within this council (aligned with VoteTallyInWebsite)
                 $totalVotesForPosition = DB::table('votes')
                     ->join('candidates', 'votes.candidate_id', '=', 'candidates.id')
                     ->join('users', 'candidates.user_id', '=', 'users.id')
@@ -465,14 +465,19 @@ class ElectionResult extends Component
                     })
                     ->with('users', 'users.programMajor')
                     ->withCount([
-                        'votes as votes_count' => function ($query) {
+                        'votes as votes_count' => function ($query) use ($program) {
                             $query->select(DB::raw('count(distinct user_id)'))
                                 ->where('election_id', $this->latestElection->id)
-                                ->where('candidate_id', DB::raw('candidates.id')); // Explicitly tie votes to the candidate
+                                ->where('candidate_id', DB::raw('candidates.id'))
+                                ->when($program->name !== 'Student Council', function ($q) use ($program) {
+                                    $q->join('users', 'votes.user_id', '=', 'users.id')
+                                        ->join('programs', 'users.program_id', '=', 'programs.id')
+                                        ->where('programs.council_id', $program->id);
+                                });
                         }
                     ])
                     ->having('votes_count', '>', 0)
-                    ->when($this->search, function ($query) { // Example filter based on search term
+                    ->when($this->search, function ($query) {
                         $query->whereHas('users', function ($q) {
                             $q->where('first_name', 'like', '%' . $this->search . '%')
                                 ->orWhere('last_name', 'like', '%' . $this->search . '%');
@@ -487,29 +492,27 @@ class ElectionResult extends Component
                     });
 
                     foreach ($candidatesByMajor as $major => $candidates) {
-                        // Calculate threshold for this major (51% of votes in this major)
-                        $majorVotes = $candidates->sum('votes_count');
-                        $threshold = $majorVotes * 0.51;
+                        // Calculate total votes for this major
+                        $majorVotes = DB::table('votes')
+                            ->join('candidates', 'votes.candidate_id', '=', 'candidates.id')
+                            ->join('users', 'candidates.user_id', '=', 'users.id')
+                            ->join('programs', 'users.program_id', '=', 'programs.id')
+                            ->where('votes.election_id', $this->latestElection->id)
+                            ->where('candidates.election_position_id', $position->id)
+                            ->where('programs.council_id', $program->id)
+                            ->where('programs.major_id', $candidates->first()->users->program_major_id ?? null)
+                            ->distinct('votes.user_id')
+                            ->count('votes.user_id');
 
-                        $winnersForMajor = [];
-                        foreach ($candidates as $candidate) {
-                            if ($candidate->votes_count >= $threshold) {
-                                $winnersForMajor[] = $candidate;
+                        // Sort candidates by vote count
+                        $sortedCandidates = $candidates->sortByDesc('votes_count')->values();
 
-                                if (count($winnersForMajor) >= $numWinners) {
-                                    break;
-                                }
-                            }
-                        }
-
-                        // If no candidates meet threshold, take top N
-                        if (empty($winnersForMajor)) {
-                            $winnersForMajor = $candidates->take($numWinners)->all();
-                        }
+                        // Select top N candidates (up to num_winners)
+                        $winnersForMajor = $sortedCandidates->take($numWinners)->all();
 
                         foreach ($winnersForMajor as $candidate) {
                             $winners[] = [
-                                'position' => $position->position->name,
+                                'position' => $positionName,
                                 'position_id' => $positionId,
                                 'candidate' => $candidate,
                                 'major' => $major,
@@ -524,27 +527,15 @@ class ElectionResult extends Component
                     // Select winners globally for the council (no separation by major)
                     $candidates = $query->get();
 
-                    $threshold = $totalVotesForPosition * 0.51;
-                    $winnersForCouncil = [];
+                    // Sort candidates by vote count
+                    $sortedCandidates = $candidates->sortByDesc('votes_count')->values();
 
-                    foreach ($candidates as $candidate) {
-                        if ($candidate->votes_count >= $threshold) {
-                            $winnersForCouncil[] = $candidate;
-
-                            if (count($winnersForCouncil) >= $numWinners) {
-                                break;
-                            }
-                        }
-                    }
-
-                    // If no candidates meet threshold, take top N
-                    if (empty($winnersForCouncil)) {
-                        $winnersForCouncil = $candidates->take($numWinners)->all();
-                    }
+                    // Select top N candidates (up to num_winners)
+                    $winnersForCouncil = $sortedCandidates->take($numWinners)->all();
 
                     foreach ($winnersForCouncil as $candidate) {
                         $winners[] = [
-                            'position' => $position->position->name,
+                            'position' => $positionName,
                             'position_id' => $positionId,
                             'candidate' => $candidate,
                             'major' => 'N/A',
