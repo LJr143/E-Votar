@@ -101,6 +101,10 @@
                                 $query->where('council_id', $council->id);
                             })->get();
 
+                            // Get position details to check for multiple winners
+                            $position = \App\Models\Position::find($positionId);
+                            $winnersCount = $position->number_of_winners ?? 1;
+
                             // Get total voters and votes per major
                             $majorStats = [];
                             foreach ($majors as $major) {
@@ -121,6 +125,18 @@
                                     ->distinct('votes.user_id')
                                     ->count('votes.user_id');
 
+                                // Get abstain votes for this major and position
+                                $abstainVotes = \App\Models\AbstainVote::where('election_id', $this->selectedElection)
+                                    ->where('position_id', $positionId)
+                                    ->whereHas('user', function($query) use ($major, $council) {
+                                        $query->where('program_id', $major->program_id)
+                                              ->where('program_major_id', $major->id)
+                                              ->whereHas('program', function($q) use ($council) {
+                                                  $q->where('council_id', $council->id);
+                                              });
+                                    })
+                                    ->count();
+
                                 // Filter candidates for this major
                                 $majorCandidates = $positionCandidates->filter(function($candidate) use ($major) {
                                     return $candidate->users->program_major_id == $major->id;
@@ -130,6 +146,7 @@
                                     'name' => $major->name,
                                     'total_voters' => $totalMajorVoters,
                                     'total_voted' => $totalMajorVoted,
+                                    'abstain_votes' => $abstainVotes,
                                     'candidates' => []
                                 ];
 
@@ -146,10 +163,37 @@
                                         ->distinct('votes.user_id')
                                         ->count('votes.user_id');
 
+                                    // Calculate partial abstentions (when user votes for fewer candidates than allowed)
+                                    $partialAbstain = 0;
+                                    if ($winnersCount > 1) {
+                                        $usersVotedForPosition = DB::table('votes')
+                                            ->join('users', 'votes.user_id', '=', 'users.id')
+                                            ->join('programs', 'users.program_id', '=', 'programs.id')
+                                            ->where('votes.election_id', $this->selectedElection)
+                                            ->where('votes.position_id', $positionId)
+                                            ->where('programs.council_id', $council->id)
+                                            ->where('users.program_id', $major->program_id)
+                                            ->where('users.program_major_id', $major->id)
+                                            ->distinct('votes.user_id')
+                                            ->count('votes.user_id');
+
+                                        $votesCastForPosition = DB::table('votes')
+                                            ->join('users', 'votes.user_id', '=', 'users.id')
+                                            ->join('programs', 'users.program_id', '=', 'programs.id')
+                                            ->where('votes.election_id', $this->selectedElection)
+                                            ->where('votes.position_id', $positionId)
+                                            ->where('programs.council_id', $council->id)
+                                            ->where('users.program_id', $major->program_id)
+                                            ->where('users.program_major_id', $major->id)
+                                            ->count();
+
+                                        $partialAbstain = ($usersVotedForPosition * $winnersCount) - $votesCastForPosition;
+                                    }
+
                                     $majorStats[$major->id]['candidates'][$candidate->id] = [
                                         'votes' => $votes,
                                         'percentage' => $totalMajorVoted > 0 ? ($votes / $totalMajorVoted) * 100 : 0,
-                                        'abstain' => $totalMajorVoted - $votes,
+                                        'abstain' => $abstainVotes + $partialAbstain,
                                         'candidate' => $candidate
                                     ];
                                 }
@@ -163,6 +207,9 @@
                                         {{ $major->name }} Results
                                         <span class="text-xs text-gray-500">
                         ({{ number_format($majorStats[$major->id]['total_voted']) }} of {{ number_format($majorStats[$major->id]['total_voters']) }} voted)
+                    </span>
+                                        <span class="text-xs text-red-500 ml-2">
+                        {{ number_format($majorStats[$major->id]['abstain_votes']) }} abstentions
                     </span>
                                     </h4>
 
@@ -235,8 +282,33 @@
                     @else
                         <!-- Original display for non-major separated positions -->
                         @php
+                            // Get position details to check for multiple winners
+                            $position = \App\Models\Position::find($positionId);
+                            $winnersCount = $position->number_of_winners ?? 1;
+
                             $totalVotes = $positionId ? ($positionVotes[$positionId] ?? 0) : 0;
-                            $abstentions = $positionId ? ($positionAbstentions[$positionId] ?? 0) : 0;
+                            $abstentions = \App\Models\AbstainVote::where('election_id', $this->selectedElection)
+                                ->where('position_id', $positionId)
+                                ->count();
+
+                            // Calculate partial abstentions for multiple winners
+                            $partialAbstentions = 0;
+                            if ($winnersCount > 1) {
+                                $usersVotedForPosition = DB::table('votes')
+                                    ->where('election_id', $this->selectedElection)
+                                    ->where('position_id', $positionId)
+                                    ->distinct('user_id')
+                                    ->count('user_id');
+
+                                $votesCastForPosition = DB::table('votes')
+                                    ->where('election_id', $this->selectedElection)
+                                    ->where('position_id', $positionId)
+                                    ->count();
+
+                                $partialAbstentions = ($usersVotedForPosition * $winnersCount) - $votesCastForPosition;
+                            }
+
+                            $totalAbstentions = $abstentions + $partialAbstentions;
 
                             // Calculate individual candidate votes (distinct counts)
                             $candidateVotes = [];
@@ -249,12 +321,24 @@
                             }
                         @endphp
 
+                        <div class="mb-4">
+                            <p class="text-sm text-gray-700">
+                                Total Abstentions for this position:
+                                <span class="font-bold text-red-600">{{ number_format($totalAbstentions) }}</span>
+                                @if($winnersCount > 1)
+                                    <span class="text-xs text-gray-500 ml-2">
+                    (includes {{ number_format($partialAbstentions) }} partial abstentions)
+                </span>
+                                @endif
+                            </p>
+                        </div>
+
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                             @foreach($positionCandidates as $candidate)
                                 @php
                                     $candidateVoteCount = $candidateVotes[$candidate->id] ?? 0;
                                     $votePercentage = $totalVoterVoted > 0 ? ($candidateVoteCount/$totalVoterVoted)*100 : 0;
-                                    $abstainCountPerCandidate = $totalVoterVoted - $candidateVoteCount;
+                                    $abstainCountPerCandidate = $totalAbstentions;
                                 @endphp
                                 <div class="border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
                                     <!-- Vote Percentage Bar -->
