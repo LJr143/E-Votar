@@ -62,7 +62,7 @@
                         $isGovernor = strtolower($position) === 'governor';
                     @endphp
 
-                    <div class="{{ $isPresident ? 'flex justify-center mb-8 sm:mb-12' : 'grid sm:grid-cols-3 gap-4 sm:gap-6 md:gap-8 mb-8 sm:mb-12 place-items-center mx-auto max-w-5xl' }}">
+                    <div class="{{ $isPresident ? 'flex justify-center mb-8 sm:mb-12' : 'flex justify-center items-center mx-auto max-w-5xl' }}">
                     @foreach($candidates as $winner)
                             <div class="flex flex-col items-center">
                                 <div class="relative rounded-full p-[3px] bg-gradient-to-r from-[#D4AF37] to-[#8B0000] mb-4">
