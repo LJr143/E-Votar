@@ -216,7 +216,7 @@
                                                                 <td class="py-3 px-6 text-left">{{ $winner['candidate'] ? $winner['candidate']->partyLists->name : '-' }}</td>
                                                                 <td class="py-3 px-6 text-left">{{ $abstainCount }}</td>
                                                                 <td class="py-3 px-6 text-left">
-                                                                    <div class="font-bold">{{ $voteTallyCount }} votes</div>
+                                                                    <div class="font-bold">{{ $winner['votes_count'] }} votes</div>
                                                                 </td>
                                                                 <td class="py-3 px-6 text-left">{{ $totalVoters }}</td>
                                                             </tr>

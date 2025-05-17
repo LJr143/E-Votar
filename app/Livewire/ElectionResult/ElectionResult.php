@@ -372,15 +372,20 @@ class ElectionResult extends Component
                 });
 
             foreach ($candidatesByCouncil as $groupKey => $candidates) {
+                // Sort candidates by vote count and take the top N
                 $sortedCandidates = $candidates->sortByDesc('votes_count');
-                $winnersForGroup = [];
 
-                // Only apply threshold for single-winner positions
-                if ($numWinners == 1) {
-                    $threshold = $totalVotesForPosition * 0.51;
-                    foreach ($sortedCandidates as $candidate) {
-                        if ($candidate->votes_count >= $threshold) {
-                            $winnersForGroup[] = $candidate;
+                // Calculate the threshold (51% of total votes for this position)
+                $threshold = $totalVotesForPosition * 0.51;
+
+                $winnersForGroup = [];
+                foreach ($sortedCandidates as $candidate) {
+                    // Only consider candidates who meet the 51% threshold
+                    if ($candidate->votes_count >= $threshold) {
+                        $winnersForGroup[] = $candidate;
+
+                        // Stop if we've reached the number of winners needed
+                        if (count($winnersForGroup) >= $numWinners) {
                             break;
                         }
                     }
