@@ -1,4 +1,3 @@
-@php use Illuminate\Support\Facades\DB; @endphp
 <div class="flex flex-col items-start space-y-4 w-full px-0">
     <div class="hidden sm:block mb-2">
         <div class="border-b border-gray-200">
@@ -290,33 +289,18 @@
 
                                         @foreach($candidates->where('election_positions.position.electionType.name', 'Local Council Election')->groupBy('users.program.council.name') as $councilName => $councilCandidates)
                                             @php
-                                                // Calculate total abstain votes grouped by council name
-                                                $abstainVotesByCouncil = \App\Models\AbstainVote::where('election_id', $selectedElection)
-                                                    ->whereHas('position.electionType', function($q) {
-                                                        $q->where('name', 'Local Council Election');
+                                                // Calculate total abstain votes for this entire council
+                                                $totalCouncilAbstain = \App\Models\AbstainVote::where('election_id', $selectedElection)
+                                                    ->whereHas('position', function($q) {
+                                                        $q->whereHas('electionType', function($q) {
+                                                            $q->where('name', 'Local Council Election');
+                                                        });
                                                     })
-                                                    ->join('users', 'abstain_votes.user_id', '=', 'users.id')
-                                                    ->join('programs', 'users.program_id', '=', 'programs.id')
-                                                    ->join('councils', 'programs.council_id', '=', 'councils.id')
-                                                    ->select(
-                                                        'councils.name as council_name',
-                                                        DB::raw('COUNT(DISTINCT abstain_votes.user_id) as abstain_count')
-                                                    )
-                                                    ->groupBy('councils.name')
-                                                    ->get()
-                                                    ->keyBy('council_name');
+                                                    ->count();
 
-                                                // Calculate total votes per council (candidates + abstentions)
-                                                $totalVotesByCouncil = $councilCandidates->groupBy('users.program.council.name')->map(function($candidates, $councilName) use ($abstainVotesByCouncil) {
-                                                    $abstainCount = $abstainVotesByCouncil->has($councilName) ? $abstainVotesByCouncil[$councilName]->abstain_count : 0;
-                                                    return [
-                                                        'candidates_count' => $candidates->count(),
-                                                        'votes_count' => $candidates->sum('votes_count'),
-                                                        'abstain_count' => $abstainCount,
-                                                        'total_votes' => $candidates->sum('votes_count') + $abstainCount
-                                                    ];
-                                                });
+                                                $totalCouncilVotes = $councilCandidates->sum('votes_count') + $totalCouncilAbstain;
                                             @endphp
+
                                                 <!-- Council Header -->
                                             <div class="bg-white p-5 rounded-lg shadow-sm border-l-4 border-black mb-6">
                                                 <div class="flex justify-between items-center flex-wrap gap-4">
