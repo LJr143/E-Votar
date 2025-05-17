@@ -94,19 +94,31 @@ class RealtimeVoteTally extends Component
             return;
         }
 
-        // Total eligible voters
+        // Total eligible voters - using Spatie permission
         $this->totalVoters = User::where('campus_id', $election->campus_id)
-            ->whereHas('roles', fn($q) => $q->where('name', 'voter'))
+            ->role('voter') // Using Spatie's role scope
             ->whereDoesntHave('electionExcludedVoters', fn($q) => $q->where('election_id', $election->id))
             ->count();
 
-        // Total voters who voted (distinct count)
+        // Total voters who voted (distinct count) - using Spatie permission
         $this->totalVoterVoted = DB::table('votes')
             ->join('users', 'votes.user_id', '=', 'users.id')
             ->where('votes.election_id', $election->id)
             ->where('users.campus_id', $election->campus_id)
-            ->whereHas('roles', fn($q) => $q->where('name', 'voter'))
-            ->whereDoesntHave('electionExcludedVoters', fn($q) => $q->where('election_id', $election->id))
+            ->whereExists(function ($query) {
+                $query->select(DB::raw(1))
+                    ->from('model_has_roles') // Spatie's permission table
+                    ->whereColumn('model_has_roles.model_id', 'users.id')
+                    ->where('model_has_roles.model_type', User::class)
+                    ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
+                    ->where('roles.name', 'voter');
+            })
+            ->whereNotExists(function ($query) use ($election) {
+                $query->select(DB::raw(1))
+                    ->from('election_excluded_voters')
+                    ->whereColumn('election_excluded_voters.user_id', 'users.id')
+                    ->where('election_excluded_voters.election_id', $election->id);
+            })
             ->distinct('votes.user_id')
             ->count('votes.user_id');
     }
@@ -126,15 +138,27 @@ class RealtimeVoteTally extends Component
             ->get();
 
         foreach ($positions as $position) {
-            // Count votes for this position using the exact specified method
+            // Count votes for this position - using Spatie permission
             $this->positionVotes[$position->position_id] = DB::table('votes')
                 ->join('candidates', 'votes.candidate_id', '=', 'candidates.id')
                 ->join('users', 'candidates.user_id', '=', 'users.id')
                 ->where('candidates.election_position_id', $position->id)
                 ->where('votes.election_id', $election->id)
                 ->where('users.campus_id', $election->campus_id)
-                ->whereHas('roles', fn($q) => $q->where('name', 'voter'))
-                ->whereDoesntHave('electionExcludedVoters', fn($q) => $q->where('election_id', $election->id))
+                ->whereExists(function ($query) {
+                    $query->select(DB::raw(1))
+                        ->from('model_has_roles') // Spatie's permission table
+                        ->whereColumn('model_has_roles.model_id', 'users.id')
+                        ->where('model_has_roles.model_type', User::class)
+                        ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
+                        ->where('roles.name', 'voter');
+                })
+                ->whereNotExists(function ($query) use ($election) {
+                    $query->select(DB::raw(1))
+                        ->from('election_excluded_voters')
+                        ->whereColumn('election_excluded_voters.user_id', 'users.id')
+                        ->where('election_excluded_voters.election_id', $election->id);
+                })
                 ->distinct('votes.user_id')
                 ->count('votes.user_id');
 
@@ -167,7 +191,7 @@ class RealtimeVoteTally extends Component
                 $q->where('elections.id', $this->selectedElection);
             });
 
-        // Check if the logged-in user has the 'local-council-watcher' role
+        // Check if the logged-in user has the 'local-council-watcher' role using Spatie
         $user = auth()->user();
         if ($user && $user->hasRole('local-council-watcher')) {
             $query->whereHas('election_positions.position.electionType', function ($q) {
