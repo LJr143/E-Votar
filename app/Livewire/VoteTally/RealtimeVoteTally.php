@@ -152,7 +152,8 @@ class RealtimeVoteTally extends Component
             'users',
             'users.program.council',
             'elections',
-            'election_positions.position.electionType'
+            'election_positions.position.electionType',
+            'partyLists'
         ])
             ->withCount([
                 'votes as votes_count' => function($query) {
@@ -193,7 +194,8 @@ class RealtimeVoteTally extends Component
         // Get results with proper ordering
         $this->candidates = $query
             ->orderBy('election_position_id')
-            ->get();
+            ->get()
+            ->groupBy('election_positions.position.name');
 
         $this->hasStudentCouncilCandidate = Candidate::whereHas('election_positions.position.electionType', function ($q) {
             $q->where('name', 'Student Council Election');

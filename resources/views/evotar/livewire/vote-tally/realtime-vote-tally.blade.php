@@ -105,6 +105,7 @@
                                         <div id="studentCouncil"
                                              class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 px-4 py-4"
                                              wire:key="student-council-list" wire:poll="$refresh">
+
                                             @foreach($candidates->where('election_positions.position.electionType.name', 'Student Council Election')->groupBy('election_positions.position.name') as $position => $candidatesForPosition)
                                                 @php
                                                     $positionId = $candidatesForPosition->first()->election_positions->position->id;
@@ -120,16 +121,16 @@
                                                         <h3 class="text-[14px] font-bold text-gray-800">{{ $position }}</h3>
                                                         <div class="flex justify-between items-center mt-2">
                                                             <div class="flex space-x-4">
-                                <span class="text-[12px] text-gray-600">
-                                    <span class="font-semibold">{{ $candidatesForPosition->count() }}</span> Candidates
-                                </span>
+                                    <span class="text-[12px] text-gray-600">
+                                        <span class="font-semibold">{{ $candidatesForPosition->count() }}</span> Candidates
+                                    </span>
                                                                 <span class="text-[12px] text-gray-600">
-                                    <span class="font-semibold">{{ $totalVotes }}</span> Total Votes
-                                </span>
+                                        <span class="font-semibold">{{ $totalVotes }}</span> Total Votes
+                                    </span>
                                                             </div>
                                                             <span class="text-[12px] bg-black-100 text-black-800 px-2 py-1 rounded-full">
-                                {{ $abstainCount }} Abstention{{ $abstainCount != 1 ? 's' : '' }}
-                            </span>
+                                    {{ $abstainCount }} Abstention{{ $abstainCount != 1 ? 's' : '' }}
+                                </span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -153,9 +154,9 @@
                                                         <div class="relative pt-1 mb-4">
                                                             <div class="flex items-center justify-between">
                                                                 <div>
-                                    <span class="text-xs font-semibold inline-block text-red-600">
-                                        {{ $abstainPercentage }}%
-                                    </span>
+                                        <span class="text-xs font-semibold inline-block text-red-600">
+                                            {{ $abstainPercentage }}%
+                                        </span>
                                                                 </div>
                                                             </div>
                                                             <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-red-200">
@@ -186,9 +187,9 @@
                                                                  src="{{ $candidate->users->profile_photo_path ? asset('storage/' . $candidate->users->profile_photo_path) : asset('storage/assets/profile/default.jpg') }}"
                                                                  alt="Candidate photo">
                                                             <div class="absolute bottom-0 left-0 p-3">
-                                <span class="bg-black text-white text-xs px-2 py-1 rounded-full">
-                                    {{ $candidate->election_positions->position->name }}
-                                </span>
+                                    <span class="bg-black text-white text-xs px-2 py-1 rounded-full">
+                                        {{ $candidate->election_positions->position->name }}
+                                    </span>
                                                             </div>
                                                         </div>
 
@@ -202,24 +203,24 @@
                                                                 {{ $candidate->users->last_name }}
                                                             </h3>
 
-                                                            <div class=" text-center uppercase text-[10px] text-gray-600 mb-3">
+                                                            <div class="text-center uppercase text-[10px] text-gray-600 mb-3">
                                                                 <div>
                                                                     <span>{{ $candidate->users->year_level }}</span>
                                                                 </div>
                                                                 <div>
-                                    <span>
-                                        @php
-                                            $programName = $candidate->users->program->name;
-                                            echo str_starts_with($programName, 'Bachelor of Science')
-                                                ? 'BS ' . substr($programName, strlen('Bachelor of Science'))
-                                                : $programName;
-                                        @endphp
-                                    </span>
+                                        <span>
+                                            @php
+                                                $programName = $candidate->users->program->name;
+                                                echo str_starts_with($programName, 'Bachelor of Science')
+                                                    ? 'BS ' . substr($programName, strlen('Bachelor of Science'))
+                                                    : $programName;
+                                            @endphp
+                                        </span>
                                                                 </div>
                                                                 <div>
-                                    <span>
-                                        {{ optional($candidate->users->programMajor)->name ?? '' }}
-                                    </span>
+                                        <span>
+                                            {{ optional($candidate->users->programMajor)->name ?? '' }}
+                                        </span>
                                                                 </div>
                                                             </div>
 
@@ -228,8 +229,8 @@
                                                                 <div class="flex justify-between items-center mb-1">
                                                                     <span class="text-[12px] font-semibold text-gray-700">VOTES</span>
                                                                     <span class="text-sm font-bold text-black">
-                                        {{ $candidate->votes_count }} ({{ $votePercentage }}%)
-                                    </span>
+                                            {{ $candidate->votes_count }} ({{ $votePercentage }}%)
+                                        </span>
                                                                 </div>
                                                                 <div class="w-full bg-gray-200 rounded-full h-2">
                                                                     <div class="bg-black h-2 rounded-full"
@@ -274,18 +275,18 @@
                                                 <div class="flex justify-between items-center flex-wrap gap-4">
                                                     <h3 class="text-[14px] font-bold text-gray-800">{{ $councilName }} Council</h3>
                                                     <div class="flex flex-wrap gap-3">
-                        <span class="text-[11px] bg-green-100 text-green-800 px-3 py-1 rounded-full">
-                            {{ $councilCandidates->count() }} Candidates
-                        </span>
+                            <span class="text-[11px] bg-green-100 text-green-800 px-3 py-1 rounded-full">
+                                {{ $councilCandidates->count() }} Candidates
+                            </span>
                                                         <span class="text-[11px] bg-blue-100 text-blue-800 px-3 py-1 rounded-full">
-                            {{ $councilCandidates->sum('votes_count') }} Votes Cast
-                        </span>
+                                {{ $councilCandidates->sum('votes_count') }} Votes Cast
+                            </span>
                                                         <span class="text-[11px] bg-red-100 text-red-800 px-3 py-1 rounded-full">
-                            {{ $totalCouncilAbstain }} Total Abstentions
-                        </span>
+                                {{ $totalCouncilAbstain }} Total Abstentions
+                            </span>
                                                         <span class="text-[11px] bg-gray-100 text-gray-800 px-3 py-1 rounded-full">
-                            {{ $totalCouncilVotes }} Total Votes
-                        </span>
+                                {{ $totalCouncilVotes }} Total Votes
+                            </span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -306,8 +307,8 @@
                                                         <h4 class="text-[14px] font-semibold text-gray-700">
                                                             {{ $positionName }} Position
                                                             <span class="text-[12px] font-normal text-gray-500 ml-2">
-                                ({{ $positionCandidates->count() }} candidates, {{ $positionAbstainCount }} abstentions)
-                            </span>
+                                    ({{ $positionCandidates->count() }} candidates, {{ $positionAbstainCount }} abstentions)
+                                </span>
                                                         </h4>
                                                     </div>
 
@@ -333,9 +334,9 @@
                                                                 <div class="relative pt-1 mb-4">
                                                                     <div class="flex items-center justify-between">
                                                                         <div>
-                                            <span class="text-xs font-semibold inline-block text-red-600">
-                                                {{ $abstainPercentage }}%
-                                            </span>
+                                                <span class="text-xs font-semibold inline-block text-red-600">
+                                                    {{ $abstainPercentage }}%
+                                                </span>
                                                                         </div>
                                                                     </div>
                                                                     <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-red-200">
@@ -362,9 +363,9 @@
                                                                          src="{{ asset($candidate->users->profile_photo_path ?? 'storage/assets/profile/default.jpg') }}"
                                                                          alt="Candidate photo">
                                                                     <div class="absolute bottom-0 left-0 p-3">
-                                        <span class="bg-black text-white text-xs px-2 py-1 rounded-full">
-                                            {{ $candidate->election_positions->position->name }}
-                                        </span>
+                                            <span class="bg-black text-white text-xs px-2 py-1 rounded-full">
+                                                {{ $candidate->election_positions->position->name }}
+                                            </span>
                                                                     </div>
                                                                 </div>
 
@@ -378,24 +379,24 @@
                                                                         {{ $candidate->users->last_name }}
                                                                     </h3>
 
-                                                                    <div class=" text-center uppercase text-[10px] text-gray-600 mb-3">
+                                                                    <div class="text-center uppercase text-[10px] text-gray-600 mb-3">
                                                                         <div>
                                                                             <span>{{ $candidate->users->year_level }}</span>
                                                                         </div>
                                                                         <div>
-                                            <span>
-                                                @php
-                                                    $programName = $candidate->users->program->name;
-                                                    echo str_starts_with($programName, 'Bachelor of Science')
-                                                        ? 'BS ' . substr($programName, strlen('Bachelor of Science'))
-                                                        : $programName;
-                                                @endphp
-                                            </span>
+                                                <span>
+                                                    @php
+                                                        $programName = $candidate->users->program->name;
+                                                        echo str_starts_with($programName, 'Bachelor of Science')
+                                                            ? 'BS ' . substr($programName, strlen('Bachelor of Science'))
+                                                            : $programName;
+                                                    @endphp
+                                                </span>
                                                                         </div>
                                                                         <div>
-                                            <span>
-                                                {{ optional($candidate->users->programMajor)->name ?? '' }}
-                                            </span>
+                                                <span>
+                                                    {{ optional($candidate->users->programMajor)->name ?? '' }}
+                                                </span>
                                                                         </div>
                                                                     </div>
 
@@ -404,8 +405,8 @@
                                                                         <div class="flex justify-between items-center mb-1">
                                                                             <span class="text-[12px] font-semibold text-gray-700">VOTES</span>
                                                                             <span class="text-sm font-bold text-black">
-                                                {{ $candidate->votes_count }} ({{ $votePercentage }}%)
-                                            </span>
+                                                    {{ $candidate->votes_count }} ({{ $votePercentage }}%)
+                                                </span>
                                                                         </div>
                                                                         <div class="w-full bg-gray-200 rounded-full h-2">
                                                                             <div class="bg-black h-2 rounded-full"
