@@ -46,16 +46,16 @@ class RealtimeVoteTally extends Component
             $q->where('elections.id', $this->selectedElection);
         })->get();
 
-        foreach ($councils as $council) {
-            $this->councilVoteCounts[$council->id] = DB::table('votes')
-                ->join('candidates', 'votes.candidate_id', '=', 'candidates.id')
-                ->join('users', 'candidates.user_id', '=', 'users.id') // Changed from user_id to id
-                ->join('programs', 'users.program_id', '=', 'programs.id')
-                ->where('programs.council_id', $council->id)
-                ->where('votes.election_id', $this->selectedElection)
-                ->distinct('votes.user_id')
-                ->count('votes.user_id');
-        }
+//        foreach ($councils as $council) {
+//            $this->councilVoteCounts[$council->id] = DB::table('votes')
+//                ->join('candidates', 'votes.candidate_id', '=', 'candidates.id')
+//                ->join('users', 'candidates.user_id', '=', 'users.id') // Changed from user_id to id
+//                ->join('programs', 'users.program_id', '=', 'programs.id')
+//                ->where('programs.council_id', $council->id)
+//                ->where('votes.election_id', $this->selectedElection)
+//                ->distinct('votes.user_id')
+//                ->count('votes.user_id');
+//        }
     }
 
 
