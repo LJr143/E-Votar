@@ -76,7 +76,6 @@ class LoginController extends Controller
             if (auth()->user()->hasRole('voter')) {
                 $request->session()->regenerate();
                 $user = User::find(auth()->user()->id);
-                Log::info('Dispatching UserLoggedIn for user: ' . $user->id);
                 UserLoggedIn::dispatch($user);
                 return $this->authenticated($request, auth()->user());
             } else {
