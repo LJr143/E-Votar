@@ -74,7 +74,6 @@ class VotersImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFa
 
         $this->rowCount++;
 
-        Log::info("Row {$this->currentRow} - Successfully processed");
 
         $user = new User([
             'first_name'        => $normalized['first_name'],
