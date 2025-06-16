@@ -19,3 +19,8 @@ Broadcast::channel('election-status', function ($user) {
 Broadcast::channel('vote-tally', function ($user) {
     return true;
 });
+
+Broadcast::channel('user-actions', function ($user) {
+    return true;
+});
+
