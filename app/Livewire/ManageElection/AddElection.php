@@ -202,7 +202,7 @@ class AddElection extends Component
             }
         }
 
-        event(new TableUpdated());
+//        event(new TableUpdated());
         $this->dispatch('election-created');
         $this->reset();
     }
