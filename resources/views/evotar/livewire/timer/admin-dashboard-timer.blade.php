@@ -3,7 +3,14 @@
         <div class="flex justify-between items-center mb-3 px-4 pt-4">
             <div class="flex items-center space-x-2">
                 <i class="fas fa-stopwatch text-white text-sm"></i>
+                @if($election->status == 'ongoing')
                 <span class="text-sm font-bold text-white">Election Ends In:</span>
+                @elseif($election->status == 'completed')
+                    <span class="text-sm font-bold text-white">Election Ended:</span>
+                @else
+                    <span class="text-sm font-bold text-white">Election Starts In:</span>
+                @endif
+
             </div>
 
             @if(auth()->user()->hasRole('superadmin'))
