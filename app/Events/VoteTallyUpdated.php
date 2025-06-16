@@ -15,8 +15,6 @@ class VoteTallyUpdated implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $connection = 'sync';
-
     public function __construct()
     {
         logger('Event initialized');
