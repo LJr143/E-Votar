@@ -328,7 +328,7 @@ class VotingProcess extends Component
         ]);
 
         // Reset selections and show success message
-        event(new VoteTallyUpdated());
+        event(new \App\Events\VoteTallyUpdated());
         $this->selectedCandidates = [];
         logger()->info("🚀 Dispatching vote-submitted event for election ID: " . $this->election->id);
         $this->dispatch('updateChartData', $this->election->id);
