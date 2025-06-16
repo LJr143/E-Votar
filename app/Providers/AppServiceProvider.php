@@ -42,7 +42,7 @@ class AppServiceProvider extends ServiceProvider
         Blade::stringable(function (\Carbon\Carbon $date) {
             return $date->format('M j, Y');
         });
-        DB::statement("SET time_zone = '+08:00'");
+//        DB::statement("SET time_zone = '+08:00'");
 
 //        // Force Livewire to use HTTPS
 //        Livewire::forceAssetInjection();
