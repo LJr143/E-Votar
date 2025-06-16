@@ -44,7 +44,7 @@ class AddElection extends Component
 
     protected $messages = [
         'selectedPositions.required' => 'Please select at least one position.',
-        'electionImage.max' => 'The election image must not exceed 2MB.',
+        'electionImage.max' => 'The election image must not exceed 12MB.',
     ];
     protected $rules = [
         'election_name' => 'required|string|max:255',
@@ -53,7 +53,7 @@ class AddElection extends Component
         'election_start' => 'required|date',
         'election_end' => 'required|date|after:election_start',
         'selectedPositions' => 'required|array|min:1',
-        'electionImage' => 'required|mimes:png|image|max:10048',
+        'electionImage' => 'required|mimes:png|image|max:12288',
     ];
 
     public function mount(): void
