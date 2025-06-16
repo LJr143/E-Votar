@@ -23,10 +23,7 @@ require __DIR__ . '/admin/routes.php';
 require __DIR__ . '/voter/routes.php';
 require __DIR__ . '/common/routes.php';
 require __DIR__ . '/comelec-website/routes.php';
-require __DIR__ . '/channels.php';
 
-Broadcast::routes(['middleware' => ['web']]);
-Broadcast::routes(['middleware' => ['web', 'auth']]);
 Route::group(['middleware' => ['check.first.creation.superadmin']], function () {
     Route::get('register/first', [ViewController::class, 'viewSuperadminRegister'])->name('admin.register.get.superadmin');
     Route::post('register/first', [ViewController::class, 'registerSuperadminRegister'])->name('admin.register.post.superadmin');
