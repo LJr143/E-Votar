@@ -23,6 +23,7 @@ require __DIR__ . '/admin/routes.php';
 require __DIR__ . '/voter/routes.php';
 require __DIR__ . '/common/routes.php';
 require __DIR__ . '/comelec-website/routes.php';
+require __DIR__ . '/channels.php';
 
 Broadcast::routes(['middleware' => ['web']]);
 Broadcast::routes(['middleware' => ['web', 'auth']]);
