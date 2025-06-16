@@ -1,7 +1,7 @@
 import Echo from 'laravel-echo';
-import Pusher from 'pusher-js';
-
-window.Pusher = Pusher;
+// import Pusher from 'pusher-js';
+//
+// window.Pusher = Pusher;
 
 const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
 
@@ -27,11 +27,11 @@ window.Echo = new Echo({
 });
 
 // Debugging
-window.Echo.connector.pusher.connection.bind('state_change', (states) => {
-    console.log('Connection state:', states.current);
-});
-
-window.Echo.connector.pusher.connection.bind('error', (error) => {
-    console.error('WebSocket error:', error);
-});
+// window.Echo.connector.pusher.connection.bind('state_change', (states) => {
+//     console.log('Connection state:', states.current);
+// });
+//
+// window.Echo.connector.pusher.connection.bind('error', (error) => {
+//     console.error('WebSocket error:', error);
+// });
 
