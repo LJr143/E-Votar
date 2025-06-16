@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Voter;
 
-use App\Events\TableUpdated;
 use App\Events\VoteTallyUpdated;
 use App\Helpers\EncryptionHelper;
 use App\Helpers\SteganographyHelper;

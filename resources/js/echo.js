@@ -27,11 +27,15 @@ window.Echo = new Echo({
 });
 
 // Debugging
-// window.Echo.connector.pusher.connection.bind('state_change', (states) => {
-//     console.log('Connection state:', states.current);
-// });
-//
-// window.Echo.connector.pusher.connection.bind('error', (error) => {
-//     console.error('WebSocket error:', error);
-// });
+window.Echo.connector.pusher.connection.bind('state_change', (states) => {
+    console.log('Connection state:', states.current);
+});
 
+window.Echo.connector.pusher.connection.bind('error', (error) => {
+    console.error('WebSocket error:', error);
+});
+
+window.Echo.channel('vote-tally')
+    .listen('VoteTallyUpdated', (e) => {
+        console.log('Vote tally updated:', e);
+    });
