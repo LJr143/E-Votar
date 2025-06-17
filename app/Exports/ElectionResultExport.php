@@ -53,6 +53,7 @@ class ElectionResultExport implements FromView, ShouldAutoSize, WithDrawings
             ->whereDoesntHave('electionExcludedVoters', fn($q) => $q->where('election_id', $this->election->id))
             ->whereHas('votes', fn($q) => $q->where('election_id', $this->election->id))
             ->count();
+
     }
 
     protected function fetchAbstainCounts(): void

@@ -182,7 +182,7 @@
                                                 <!-- Candidate Cards -->
                                                 @foreach($candidatesForPosition->sortByDesc('votes_count') as $candidate)
                                                     @php
-                                                        $votePercentage = $totalVotes > 0 ? round(($candidate->votes_count / $totalVoterVoted) * 100) : 0;
+                                                        $votePercentage = $totalVotes > 0 ? round(($candidate->votes_count / $totalVotes) * 100) : 0;
                                                         $isLeading = $candidatesForPosition->max('votes_count') == $candidate->votes_count;
                                                     @endphp
 
