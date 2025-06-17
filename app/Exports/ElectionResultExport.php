@@ -46,12 +46,10 @@ class ElectionResultExport implements FromView, ShouldAutoSize, WithDrawings
     protected function fetchVoterTally(): void
     {
         $this->totalVoters = User::where('campus_id', $this->election->campus_id)
-            ->whereHas('roles', fn($q) => $q->where('name', 'voter'))
             ->whereDoesntHave('electionExcludedVoters', fn($q) => $q->where('election_id', $this->election->id))
             ->count();
 
         $this->totalVoterVoted = User::where('campus_id', $this->election->campus_id)
-            ->whereHas('roles', fn($q) => $q->where('name', 'voter'))
             ->whereDoesntHave('electionExcludedVoters', fn($q) => $q->where('election_id', $this->election->id))
             ->whereHas('votes', fn($q) => $q->where('election_id', $this->election->id))
             ->count();
