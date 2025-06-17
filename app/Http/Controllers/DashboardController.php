@@ -8,6 +8,7 @@ use App\Models\Program;
 use App\Models\User;
 use App\Models\Vote;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -90,10 +91,24 @@ class DashboardController extends Controller
         $programs = Program::pluck('name', 'id'); // Get all programs with their IDs and names
 
         // Fetch the count of distinct users who voted for each program in the selected election
-        $votesPerProgram = Vote::where('election_id', $selectedElectionId)
-            ->join('users', 'votes.user_id', '=', 'users.id') // Join the users table
-            ->selectRaw('users.program_id, count(distinct votes.user_id) as user_count')
-            ->groupBy('users.program_id')
+        $votesPerProgram = DB::table('users')
+            ->whereNotNull('program_id')
+            ->where(function($query) use ($selectedElectionId) {
+                $query->whereExists(function($subQuery) use ($selectedElectionId) {
+                    $subQuery->select(DB::raw(1))
+                        ->from('votes')
+                        ->whereColumn('votes.user_id', 'users.id')
+                        ->where('votes.election_id', $selectedElectionId);
+                })
+                    ->orWhereExists(function($subQuery) use ($selectedElectionId) {
+                        $subQuery->select(DB::raw(1))
+                            ->from('abstain_votes')
+                            ->whereColumn('abstain_votes.user_id', 'users.id')
+                            ->where('abstain_votes.election_id', $selectedElectionId);
+                    });
+            })
+            ->selectRaw('program_id, count(distinct id) as user_count')
+            ->groupBy('program_id')
             ->pluck('user_count', 'program_id'); // Get the user count per program
 
         // Map all programs and include those with zero votes
