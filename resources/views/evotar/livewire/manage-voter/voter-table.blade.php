@@ -336,7 +336,7 @@
                                     <td class="py-3 px-6 text-center">
                                             <span class="inline-block w-auto px-2 py-1 text-center whitespace-nowrap rounded
                                                 @if($voter->votes->isNotEmpty()) bg-purple-500 text-white @else bg-gray-500 text-white @endif">
-                                                @if($voter->votes->isNotEmpty() || $voter->abstained->isNotEmpty) Voted @else Not Voted @endif
+                                                @if($voter->votes->isNotEmpty() || $voter->abstained->isNotEmpty()) Voted @else Not Voted @endif
                                             </span>
                                     </td>
                                     <td class="py-3 px-6 text-center flex justify-center items-center exclude-print">
