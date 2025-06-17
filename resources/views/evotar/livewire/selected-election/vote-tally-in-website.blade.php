@@ -309,7 +309,7 @@
                             @foreach($positionCandidates as $candidate)
                                 @php
                                     $candidateVoteCount = $candidateVotes[$candidate->id] ?? 0;
-                                    $votePercentage = $totalVoterVoted > 0 ? ($candidateVoteCount/$totalVoterVoted)*100 : 0;
+                                    $votePercentage = $totalVoterVoted > 0 ? ($candidateVoteCount/$totalVoters)*100 : 0;
                                     $abstainCountPerCandidate = $totalVoterVoted - $candidateVoteCount;
                                 @endphp
                                 <div
