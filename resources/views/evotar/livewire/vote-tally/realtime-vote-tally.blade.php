@@ -113,7 +113,7 @@
                                                         ->where('position_id', $positionId)
                                                         ->count();
                                                     $totalVotes = $candidatesForPosition->sum('votes_count') + $abstainCount;
-                                                    $abstainPercentage = $totalVotes > 0 ? round(($abstainCount / $totalVoters) * 100) : 0;
+                                                    $abstainPercentage = $totalVotes > 0 ? round(($abstainCount / $totalVotes) * 100) : 0;
                                                 @endphp
 
                                                     <!-- Position Header Card -->
