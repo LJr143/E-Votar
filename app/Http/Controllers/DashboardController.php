@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AbstainVote;
 use App\Models\Candidate;
 use App\Models\Election;
 use App\Models\Program;
@@ -83,50 +82,25 @@ class DashboardController extends Controller
         return $colors;
     }
 
-    private function getVotesPerPrograms() {
+    private function getVotesPerPrograms()
+    {
         $selectedElectionId = session('selectedElection');
 
-        // Debug: Check if selectedElectionId exists
-        if (!$selectedElectionId) {
-            \Log::warning('No selectedElection in session');
-            return collect(); // Return empty collection
-        }
-
         // Fetch all programs
-        $programs = Program::pluck('name', 'id');
+        $programs = Program::pluck('name', 'id'); // Get all programs with their IDs and names
 
-        if ($programs->isEmpty()) {
-            \Log::warning('No programs found');
-            return collect();
-        }
-
-        // Count regular votes per program
+        // Fetch the count of distinct users who voted for each program in the selected election
         $votesPerProgram = Vote::where('election_id', $selectedElectionId)
-            ->join('users', 'votes.user_id', '=', 'users.id')
-            ->whereNotNull('users.program_id') // Ensure program_id exists
+            ->join('users', 'votes.user_id', '=', 'users.id') // Join the users table
             ->selectRaw('users.program_id, count(distinct votes.user_id) as user_count')
             ->groupBy('users.program_id')
-            ->pluck('user_count', 'program_id');
+            ->pluck('user_count', 'program_id'); // Get the user count per program
 
-        // Count abstentions per program
-        $abstentionsPerProgram = AbstainVote::where('election_id', $selectedElectionId)
-            ->join('users', 'abstain_votes.user_id', '=', 'users.id')
-            ->whereNotNull('users.program_id') // Ensure program_id exists
-            ->selectRaw('users.program_id, count(distinct abstain_votes.user_id) as abstention_count')
-            ->groupBy('users.program_id')
-            ->pluck('abstention_count', 'program_id');
-
-        // Debug: Log the query results
-        \Log::info('Votes per program:', $votesPerProgram->toArray());
-        \Log::info('Abstentions per program:', $abstentionsPerProgram->toArray());
-
-        // Combine both counts
-        $result = $programs->map(function ($programName, $programId) use ($votesPerProgram, $abstentionsPerProgram) {
+        // Map all programs and include those with zero votes
+        $result = $programs->map(function ($programName, $programId) use ($votesPerProgram) {
             return [
                 'program_name' => $programName,
-                'voter_count' => $votesPerProgram->get($programId, 0) + $abstentionsPerProgram->get($programId, 0),
-                'regular_votes' => $votesPerProgram->get($programId, 0),
-                'abstentions' => $abstentionsPerProgram->get($programId, 0)
+                'user_count' => $votesPerProgram->get($programId, 0), // Default to 0 if no votes exist
             ];
         });
 
