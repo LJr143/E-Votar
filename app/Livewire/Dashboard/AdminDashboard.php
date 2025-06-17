@@ -218,7 +218,7 @@ class AdminDashboard extends Component
                     $query->whereHas('votes', function ($subQuery) use ($election) {
                         $subQuery->where('election_id', $election->id);
                     })
-                        ->orWhereHas('abstainVotes', function ($subQuery) use ($election) {
+                        ->orWhereHas('abstained', function ($subQuery) use ($election) {
                             $subQuery->where('election_id', $election->id);
                         });
                 })
