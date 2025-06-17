@@ -78,7 +78,6 @@ class RealtimeVoteTally extends Component
         $this->dispatch('updateChartData', $this->selectedElection);
     }
 
-
     public function fetchVoterTally(): void
     {
         $election = Election::find($this->selectedElection);
