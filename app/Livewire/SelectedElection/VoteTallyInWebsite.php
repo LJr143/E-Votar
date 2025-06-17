@@ -112,10 +112,22 @@ class VoteTallyInWebsite extends Component
                     });
             },
             'program as voted_count' => function($query) {
-                $query->select(DB::raw('count(distinct votes.user_id)'))
+                $query->select(DB::raw('count(distinct users.id)'))
                     ->join('users', 'programs.id', '=', 'users.program_id')
-                    ->join('votes', 'users.id', '=', 'votes.user_id')
-                    ->where('votes.election_id', $this->selectedElection);
+                    ->where(function($subQuery) {
+                        $subQuery->whereExists(function($existsQuery) {
+                            $existsQuery->select(DB::raw(1))
+                                ->from('votes')
+                                ->whereColumn('votes.user_id', 'users.id')
+                                ->where('votes.election_id', $this->selectedElection);
+                        })
+                            ->orWhereExists(function($existsQuery) {
+                                $existsQuery->select(DB::raw(1))
+                                    ->from('abstain_votes')
+                                    ->whereColumn('abstain_votes.user_id', 'users.id')
+                                    ->where('abstain_votes.election_id', $this->selectedElection);
+                            });
+                    });
             }
         ])
             ->when(str($this->council->name)->contains('Student Council'), function($query) {
