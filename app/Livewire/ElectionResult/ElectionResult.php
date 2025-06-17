@@ -108,10 +108,7 @@ class ElectionResult extends Component
             $this->totalVoterVoted = User::where('campus_id', $election->campus_id)
 //                ->whereHas('roles', fn($q) => $q->where('name', 'voter'))
                 ->whereDoesntHave('electionExcludedVoters', fn($q) => $q->where('election_id', $election->id))
-                ->where(function($query) use ($election) {
-                    $query->whereHas('votes', fn($q) => $q->where('election_id', $election->id))
-                        ->orWhereHas('abstainVotes', fn($q) => $q->where('election_id', $election->id));
-                })
+                ->whereHas('votes', fn($q) => $q->where('election_id', $election->id))
                 ->count();
 
         } catch (\Exception $e) {
