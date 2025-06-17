@@ -150,6 +150,11 @@ class User extends Authenticatable
 
     }
 
+    public function abstained()
+    {
+        return $this->hasMany(AbstainVote::class);
+    }
+
     public function sessions()
     {
         return $this->hasMany(Session::class, 'user_id');
