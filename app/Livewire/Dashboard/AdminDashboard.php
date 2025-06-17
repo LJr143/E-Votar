@@ -199,9 +199,9 @@ class AdminDashboard extends Component
         $election = Election::find($this->selectedElection);
         if ($election) {
             $this->totalVoters = User::where('campus_id', $election->campus_id)
-                ->whereHas('roles', function ($query) {
-                    $query->where('name', 'voter');
-                })
+//                ->whereHas('roles', function ($query) {
+//                    $query->where('name', 'voter');
+//                })
                 ->whereDoesntHave('electionExcludedVoters', function ($query) use ($election) {
                     $query->where('election_id', $election->id);
                 })
@@ -214,8 +214,13 @@ class AdminDashboard extends Component
                 ->whereDoesntHave('electionExcludedVoters', function ($query) use ($election) {
                     $query->where('election_id', $election->id);
                 })
-                ->whereHas('votes', function ($query) use ($election) {
-                    $query->where('election_id', $election->id);
+                ->where(function ($query) use ($election) {
+                    $query->whereHas('votes', function ($subQuery) use ($election) {
+                        $subQuery->where('election_id', $election->id);
+                    })
+                        ->orWhereHas('abstainVotes', function ($subQuery) use ($election) {
+                            $subQuery->where('election_id', $election->id);
+                        });
                 })
                 ->count();
 
