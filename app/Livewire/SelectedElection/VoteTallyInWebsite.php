@@ -77,15 +77,27 @@ class VoteTallyInWebsite extends Component
         $this->totalVoters = $baseVoterQuery->count();
 
         // Total voters who voted (distinct count)
-        $this->totalVoterVoted = DB::table('votes')
-            ->join('users', 'votes.user_id', '=', 'users.id')
+        $this->totalVoterVoted = DB::table('users')
             ->when(!str($this->council->name)->contains('Student Council'), function($query) {
                 $query->join('programs', 'users.program_id', '=', 'programs.id')
                     ->where('programs.council_id', $this->council->id);
             })
-            ->where('votes.election_id', $this->selectedElection)
-            ->distinct('votes.user_id')
-            ->count('votes.user_id');
+            ->where(function($query) {
+                $query->whereExists(function($subQuery) {
+                    $subQuery->select(DB::raw(1))
+                        ->from('votes')
+                        ->whereColumn('votes.user_id', 'users.id')
+                        ->where('votes.election_id', $this->selectedElection);
+                })
+                    ->orWhereExists(function($subQuery) {
+                        $subQuery->select(DB::raw(1))
+                            ->from('abstain_votes')
+                            ->whereColumn('abstain_votes.user_id', 'users.id')
+                            ->where('abstain_votes.election_id', $this->selectedElection);
+                    });
+            })
+            ->distinct()
+            ->count('users.id');
 
         // College-wise turnout
         $this->collegeTurnout = Council::withCount([
